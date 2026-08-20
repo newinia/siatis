@@ -35,4 +35,11 @@ return [
         ],
     ],
 
+    'google' => [
+        'credentials' => base_path(env(
+            'GOOGLE_CREDENTIALS',
+            'google-credentials/siatis-eb3ed15cb044.json'
+        )),
+    ],
+
 ];
