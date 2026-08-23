@@ -11,6 +11,9 @@ class Ppks extends Model
     protected $fillable = [
         'sheet_row',
         'data',
+        'status',
+        'possible_duplicate_of',
+        'duplicate_note',
         'imported_at',
     ];
 

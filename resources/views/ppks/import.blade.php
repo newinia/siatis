@@ -20,11 +20,12 @@
             </h1>
 
             <p class="text-gray-500 mt-2">
-                Ambil data dari Google Sheets ke database SIATIS secara bertahap.
+                Ambil data baru dari Google Sheets ke database SIATIS.
             </p>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mt-8">
 
+                {{-- Jumlah data di database --}}
                 <div class="bg-blue-50 rounded-xl p-5">
                     <p class="text-sm text-gray-500">
                         Data di Database
@@ -35,20 +36,22 @@
                     </p>
                 </div>
 
+                {{-- Sistem import --}}
                 <div class="bg-green-50 rounded-xl p-5">
                     <p class="text-sm text-gray-500">
-                        Batch Import
+                        Sistem Import
                     </p>
 
-                    <p class="text-3xl font-bold text-green-600 mt-2">
-                        100
+                    <p class="text-lg font-bold text-green-600 mt-3">
+                        Data Baru
                     </p>
 
                     <p class="text-sm text-gray-500 mt-1">
-                        data per import
+                        Tidak dibatasi jumlah
                     </p>
                 </div>
 
+                {{-- Status --}}
                 <div class="bg-yellow-50 rounded-xl p-5">
                     <p class="text-sm text-gray-500">
                         Status
@@ -64,18 +67,18 @@
             <div class="mt-8 border-t pt-6">
 
                 <h2 class="text-lg font-semibold text-gray-800">
-                    Import Data Berikutnya
+                    Import Data Baru
                 </h2>
 
                 <p class="text-gray-500 mt-2">
-                    Sistem akan otomatis mengambil 100 data yang belum pernah diimport.
+                    Sistem akan mencari dan mengambil semua data yang belum ada di database.
                 </p>
 
                 <a
                     href="{{ url('/ppks/import') }}"
                     class="inline-block mt-5 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700"
                 >
-                    Import 100 Data
+                    Import Data Baru
                 </a>
 
             </div>

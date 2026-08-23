@@ -27,14 +27,16 @@ class GoogleSheetService
         return $this->sheets->spreadsheets->get($spreadsheetId);
     }
 
-    public function getValues(string $spreadsheetId, string $range)
-    {
+    public function getValues(
+        string $spreadsheetId,
+        string $range
+    ): array {
         $response = $this->sheets->spreadsheets_values->get(
             $spreadsheetId,
             $range
         );
 
-        return $response->getValues();
+        return $response->getValues() ?? [];
     }
 
     public function getRows(
@@ -52,6 +54,9 @@ class GoogleSheetService
             $endRow
         );
 
-        return $this->getValues($spreadsheetId, $range);
+        return $this->getValues(
+            $spreadsheetId,
+            $range
+        );
     }
 }
