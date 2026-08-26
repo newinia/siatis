@@ -30,11 +30,15 @@
 
         {{-- NOTIFICATION --}}
         @if (session('success'))
-
             <div class="mb-5 px-4 py-3 bg-green-50 border border-green-200 rounded-lg text-sm text-green-700">
                 {{ session('success') }}
             </div>
+        @endif
 
+        @if (session('error'))
+            <div class="mb-5 px-4 py-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+                {{ session('error') }}
+            </div>
         @endif
 
 
@@ -86,8 +90,7 @@
 
                                 $comparison = $case['comparison'];
 
-                                $comparisonData =
-                                    $comparison?->data ?? [];
+                                $comparisonData = $comparison?->data ?? [];
 
                                 $type = $case['type'];
 
@@ -114,6 +117,16 @@
                                         {{ $data[2] ?? '-' }}
                                     </div>
 
+                                    <div class="text-xs text-gray-400 mt-1">
+                                        Timestamp:
+                                        {{ $data[0] ?? '-' }}
+                                    </div>
+
+                                    <div class="text-xs text-gray-400 mt-1">
+                                        Sheet Row:
+                                        {{ $ppks->sheet_row ?? '-' }}
+                                    </div>
+
                                 </td>
 
 
@@ -129,6 +142,16 @@
                                         <div class="text-xs text-gray-500 mt-1">
                                             NIK:
                                             {{ $comparisonData[2] ?? '-' }}
+                                        </div>
+
+                                        <div class="text-xs text-gray-400 mt-1">
+                                            Timestamp:
+                                            {{ $comparisonData[0] ?? '-' }}
+                                        </div>
+
+                                        <div class="text-xs text-gray-400 mt-1">
+                                            Sheet Row:
+                                            {{ $comparison->sheet_row ?? '-' }}
                                         </div>
 
                                     @else
@@ -227,31 +250,32 @@
 
             $comparison = $case['comparison'];
 
-            $comparisonData =
-                $comparison?->data ?? [];
+            $comparisonData = $comparison?->data ?? [];
 
         @endphp
 
 
         <div
             id="detailModal{{ $ppks->id }}"
-            class="hidden fixed inset-0 z-50 overflow-y-auto">
+            class="hidden fixed inset-0 z-50">
 
             {{-- BACKDROP --}}
             <div
-                class="fixed inset-0 bg-black/50"
+                class="absolute inset-0 bg-black/50"
                 onclick="closeDetail({{ $ppks->id }})">
             </div>
 
 
-            {{-- MODAL --}}
-            <div class="relative min-h-screen flex items-center justify-center p-4">
+            {{-- MODAL CONTAINER --}}
+            <div class="relative z-10 h-full w-full flex items-center justify-center p-4">
 
-                <div class="relative bg-white w-full max-w-4xl rounded-2xl shadow-2xl overflow-hidden">
+                {{-- MODAL --}}
+                <div
+                    class="relative bg-white w-full max-w-5xl max-h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden">
 
 
                     {{-- HEADER --}}
-                    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+                    <div class="flex-shrink-0 flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white">
 
                         <div>
 
@@ -260,8 +284,11 @@
                             </h2>
 
                             <p class="text-xs text-gray-500 mt-1">
-                                Data ID #{{ $ppks->id }}
-                                · Sheet Row {{ $ppks->sheet_row }}
+                                Sheet Row {{ $ppks->sheet_row }}
+
+                                @if ($comparison)
+                                    · Pembanding Sheet Row {{ $comparison->sheet_row }}
+                                @endif
                             </p>
 
                         </div>
@@ -279,8 +306,8 @@
                     </div>
 
 
-                    {{-- BODY --}}
-                    <div class="p-6">
+                    {{-- BODY SCROLL --}}
+                    <div class="flex-1 overflow-y-auto p-6">
 
 
                         {{-- ALASAN --}}
@@ -310,11 +337,28 @@
                                         Data A
                                     </h3>
 
+                                    <p class="text-xs text-blue-600 mt-1">
+                                        Sheet Row #{{ $ppks->sheet_row }}
+                                    </p>
+
                                 </div>
 
 
                                 <div class="p-5 space-y-4">
 
+                                    {{-- TIMESTAMP --}}
+                                    <div>
+                                        <p class="text-xs text-gray-400">
+                                            Timestamp
+                                        </p>
+
+                                        <p class="text-sm font-medium text-gray-800">
+                                            {{ $data[0] ?? '-' }}
+                                        </p>
+                                    </div>
+
+
+                                    {{-- NAMA --}}
                                     <div>
                                         <p class="text-xs text-gray-400">
                                             Nama
@@ -326,6 +370,7 @@
                                     </div>
 
 
+                                    {{-- NIK --}}
                                     <div>
                                         <p class="text-xs text-gray-400">
                                             NIK
@@ -337,6 +382,7 @@
                                     </div>
 
 
+                                    {{-- JENIS KELAMIN --}}
                                     <div>
                                         <p class="text-xs text-gray-400">
                                             Jenis Kelamin
@@ -348,6 +394,7 @@
                                     </div>
 
 
+                                    {{-- TEMPAT LAHIR --}}
                                     <div>
                                         <p class="text-xs text-gray-400">
                                             Tempat Lahir
@@ -359,6 +406,7 @@
                                     </div>
 
 
+                                    {{-- TANGGAL LAHIR --}}
                                     <div>
                                         <p class="text-xs text-gray-400">
                                             Tanggal Lahir
@@ -366,6 +414,48 @@
 
                                         <p class="text-sm font-medium text-gray-800">
                                             {{ $data[5] ?? '-' }}
+                                        </p>
+                                    </div>
+
+
+                                    {{-- KTP --}}
+                                    <div>
+
+                                        <p class="text-xs text-gray-400">
+                                            KTP
+                                        </p>
+
+                                        @if (!empty($data[15]))
+
+                                            <a
+                                                href="{{ $data[15] }}"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                class="inline-flex items-center mt-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition">
+
+                                                Lihat KTP
+
+                                            </a>
+
+                                        @else
+
+                                            <p class="text-sm text-gray-400 mt-1">
+                                                KTP tidak tersedia
+                                            </p>
+
+                                        @endif
+
+                                    </div>
+
+
+                                    {{-- SHEET ROW --}}
+                                    <div>
+                                        <p class="text-xs text-gray-400">
+                                            Sheet Row
+                                        </p>
+
+                                        <p class="text-sm font-medium text-gray-800">
+                                            {{ $ppks->sheet_row ?? '-' }}
                                         </p>
                                     </div>
 
@@ -383,6 +473,14 @@
                                         Data Pembanding
                                     </h3>
 
+                                    @if ($comparison)
+
+                                        <p class="text-xs text-gray-500 mt-1">
+                                            Sheet Row #{{ $comparison->sheet_row }}
+                                        </p>
+
+                                    @endif
+
                                 </div>
 
 
@@ -390,6 +488,19 @@
 
                                     <div class="p-5 space-y-4">
 
+                                        {{-- TIMESTAMP --}}
+                                        <div>
+                                            <p class="text-xs text-gray-400">
+                                                Timestamp
+                                            </p>
+
+                                            <p class="text-sm font-medium text-gray-800">
+                                                {{ $comparisonData[0] ?? '-' }}
+                                            </p>
+                                        </div>
+
+
+                                        {{-- NAMA --}}
                                         <div>
                                             <p class="text-xs text-gray-400">
                                                 Nama
@@ -401,6 +512,7 @@
                                         </div>
 
 
+                                        {{-- NIK --}}
                                         <div>
                                             <p class="text-xs text-gray-400">
                                                 NIK
@@ -412,6 +524,7 @@
                                         </div>
 
 
+                                        {{-- JENIS KELAMIN --}}
                                         <div>
                                             <p class="text-xs text-gray-400">
                                                 Jenis Kelamin
@@ -423,6 +536,7 @@
                                         </div>
 
 
+                                        {{-- TEMPAT LAHIR --}}
                                         <div>
                                             <p class="text-xs text-gray-400">
                                                 Tempat Lahir
@@ -434,6 +548,7 @@
                                         </div>
 
 
+                                        {{-- TANGGAL LAHIR --}}
                                         <div>
                                             <p class="text-xs text-gray-400">
                                                 Tanggal Lahir
@@ -441,6 +556,48 @@
 
                                             <p class="text-sm font-medium text-gray-800">
                                                 {{ $comparisonData[5] ?? '-' }}
+                                            </p>
+                                        </div>
+
+
+                                        {{-- KTP --}}
+                                        <div>
+
+                                            <p class="text-xs text-gray-400">
+                                                KTP
+                                            </p>
+
+                                            @if (!empty($comparisonData[15]))
+
+                                                <a
+                                                    href="{{ $comparisonData[15] }}"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    class="inline-flex items-center mt-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition">
+
+                                                    Lihat KTP
+
+                                                </a>
+
+                                            @else
+
+                                                <p class="text-sm text-gray-400 mt-1">
+                                                    KTP tidak tersedia
+                                                </p>
+
+                                            @endif
+
+                                        </div>
+
+
+                                        {{-- SHEET ROW --}}
+                                        <div>
+                                            <p class="text-xs text-gray-400">
+                                                Sheet Row
+                                            </p>
+
+                                            <p class="text-sm font-medium text-gray-800">
+                                                {{ $comparison->sheet_row ?? '-' }}
                                             </p>
                                         </div>
 
@@ -458,76 +615,125 @@
 
                         </div>
 
+
+                        {{-- PENJELASAN KEPUTUSAN --}}
+                        <div class="mt-6 px-4 py-3 bg-blue-50 border border-blue-200 rounded-lg">
+
+                            <p class="text-xs font-semibold text-blue-700 uppercase">
+                                Keputusan Admin
+                            </p>
+
+                            <p class="mt-1 text-sm text-blue-800">
+                                Pilih salah satu data yang benar untuk digunakan
+                                dalam proses asesmen. Jika keduanya merupakan data
+                                yang berbeda, pilih "Keduanya Bukan Duplikat".
+                            </p>
+
+                        </div>
+
                     </div>
 
 
                     {{-- FOOTER --}}
-                    <div class="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-gray-50">
+                    <div class="flex-shrink-0 px-6 py-4 border-t border-gray-200 bg-gray-50">
+
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
 
 
-                        {{-- TUTUP --}}
-                        <button
-                            type="button"
-                            onclick="closeDetail({{ $ppks->id }})"
-                            class="px-4 py-2 bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 text-sm font-medium rounded-lg transition">
+                            {{-- TUTUP --}}
+                            <button
+                                type="button"
+                                onclick="closeDetail({{ $ppks->id }})"
+                                class="px-4 py-2 bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 text-sm font-medium rounded-lg transition">
 
-                            Tutup
+                                Tutup
 
-                        </button>
-
-
-                        {{-- KEPUTUSAN ADMIN --}}
-                        <div class="flex gap-3">
+                            </button>
 
 
-                            {{-- BUKAN DUPLIKAT --}}
-                            <form
-                                method="POST"
-                                action="{{ route('ppks.duplicate-decision', $ppks->id) }}">
-
-                                @csrf
-                                @method('PATCH')
-
-                                <input
-                                    type="hidden"
-                                    name="decision"
-                                    value="bukan_duplikat">
-
-                                <button
-                                    type="submit"
-                                    onclick="return confirm('Yakin data ini bukan duplikat?')"
-                                    class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition">
-
-                                    Bukan Duplikat
-
-                                </button>
-
-                            </form>
+                            {{-- KEPUTUSAN --}}
+                            <div class="flex flex-col sm:flex-row gap-2">
 
 
-                            {{-- DUPLIKAT --}}
-                            <form
-                                method="POST"
-                                action="{{ route('ppks.duplicate-decision', $ppks->id) }}">
+                                {{-- PILIH DATA A --}}
+                                <form
+                                    method="POST"
+                                    action="{{ route('ppks.duplicate-decision', $ppks->id) }}">
 
-                                @csrf
-                                @method('PATCH')
+                                    @csrf
+                                    @method('PATCH')
 
-                                <input
-                                    type="hidden"
-                                    name="decision"
-                                    value="duplikat">
+                                    <input
+                                        type="hidden"
+                                        name="decision"
+                                        value="pilih_data_ini">
 
-                                <button
-                                    type="submit"
-                                    onclick="return confirm('Yakin data ini adalah duplikat?')"
-                                    class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition">
+                                    <button
+                                        type="submit"
+                                        onclick="return confirm('Pilih Data A ini untuk proses asesmen? Data pembanding akan ditandai sebagai duplikat.')"
+                                        class="w-full sm:w-auto px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition">
 
-                                    Tandai Duplikat
+                                        Pilih Data A
 
-                                </button>
+                                    </button>
 
-                            </form>
+                                </form>
+
+
+                                {{-- PILIH DATA PEMBANDING --}}
+                                @if ($comparison)
+
+                                    <form
+                                        method="POST"
+                                        action="{{ route('ppks.duplicate-decision', $ppks->id) }}">
+
+                                        @csrf
+                                        @method('PATCH')
+
+                                        <input
+                                            type="hidden"
+                                            name="decision"
+                                            value="pilih_data_pembanding">
+
+                                        <button
+                                            type="submit"
+                                            onclick="return confirm('Pilih Data Pembanding untuk proses asesmen? Data A akan ditandai sebagai duplikat.')"
+                                            class="w-full sm:w-auto px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition">
+
+                                            Pilih Pembanding
+
+                                        </button>
+
+                                    </form>
+
+                                @endif
+
+
+                                {{-- BUKAN DUPLIKAT --}}
+                                <form
+                                    method="POST"
+                                    action="{{ route('ppks.duplicate-decision', $ppks->id) }}">
+
+                                    @csrf
+                                    @method('PATCH')
+
+                                    <input
+                                        type="hidden"
+                                        name="decision"
+                                        value="bukan_duplikat">
+
+                                    <button
+                                        type="submit"
+                                        onclick="return confirm('Yakin kedua data ini bukan duplikat?')"
+                                        class="w-full sm:w-auto px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition">
+
+                                        Keduanya Bukan Duplikat
+
+                                    </button>
+
+                                </form>
+
+                            </div>
 
                         </div>
 
