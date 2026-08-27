@@ -1,3 +1,2957 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+:root {
+    /* =========================
+       BLUE
+    ========================= */
+    --blue: #205d91;
+    --blue-light: #eaf2f8;
+
+    /* =========================
+       PURPLE
+    ========================= */
+    --purple: #7c3aed;
+    --purple-light: #f5ebff;
+
+    /* =========================
+       GREEN
+    ========================= */
+    --green: #22c55e;
+    --green-light: #eaf8ef;
+
+    /* =========================
+       ORANGE
+    ========================= */
+    --orange: #f59e0b;
+    --orange-light: #fff5df;
+
+    /* =========================
+       RED
+    ========================= */
+    --red: #dc2626;
+    --red-light: #fef2f2;
+
+    /* =========================
+       NEUTRAL
+    ========================= */
+    --background: #f3f4f8;
+    --white: #ffffff;
+
+    --text: #222222;
+    --text-secondary: #555555;
+    --muted: #9ca3af;
+    --gray: #F1F3F5;
+    --border: #e5e7eb;
+
+    /* =========================
+       LAYOUT
+    ========================= */
+    --sidebar-width: 260px;
+    --gap: 20px;
+    --radius: 20px;
+}
+
+
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    min-height: 100%;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    background: var(--background);
+    color: var(--text);
+}
+
+a {
+    text-decoration: none;
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.app-sidebar {
+    position: fixed;
+
+    top: 10px;
+    left: 10px;
+    bottom: 10px;
+
+    width: var(--sidebar-width);
+
+    display: flex;
+    flex-direction: column;
+
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+
+    overflow: hidden;
+    z-index: 1000;
+
+    transition: transform .25s ease;
+}
+
+.app-sidebar.sidebar-closed {
+    transform: translateX(calc(-100% - 20px));
+}
+
+
+/* Header */
+
+.sidebar-header {
+    padding: 24px 20px 16px;
+}
+
+.sidebar-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+}
+
+.sidebar-divider {
+    height: 1px;
+    margin-top: 15px;
+    background: var(--border);
+}
+
+
+/* Menu */
+
+.sidebar-menu {
+    flex: 1;
+    padding: 12px;
+
+    overflow-y: auto;
+}
+
+.nav-group {
+    width: 100%;
+}
+
+.nav-item {
+    width: 100%;
+    min-height: 46px;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    margin-bottom: 3px;
+    padding: 0 12px;
+
+    border: 0;
+    border-radius: 20px;
+
+    background: transparent;
+    color: var(--text);
+
+    font: 500 14px "Poppins", sans-serif;
+
+    cursor: pointer;
+    transition: .2s;
+}
+
+.nav-item:hover {
+    background: var(--background);
+}
+
+.nav-item.active {
+    background: var(--blue);
+    color: var(--white);
+    font-weight: 600;
+}
+
+.nav-item.active:hover {
+    background: var(--blue);
+}
+
+.nav-icon {
+    width: 22px;
+    min-width: 22px;
+
+    display: flex;
+    justify-content: center;
+}
+
+.nav-text {
+    flex: 1;
+
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.nav-left {
+    flex: 1;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    min-width: 0;
+}
+
+.nav-parent {
+    justify-content: space-between;
+}
+
+.nav-parent.menu-open {
+    background: transparent;
+    color: var(--text);
+}
+
+.nav-parent.menu-open:hover {
+    background: var(--background);
+}
+
+.nav-arrow,
+.mobile-nav-arrow {
+    color: var(--muted);
+    transition: transform .2s ease;
+}
+
+.nav-arrow.rotate,
+.mobile-nav-arrow.rotate {
+    transform: rotate(180deg);
+}
+
+
+/* Submenu */
+
+.nav-submenu,
+.mobile-submenu {
+    position: relative;
+
+    margin-left: 23px;
+    padding: 3px 0 5px 28px;
+
+    border-left: 1px solid var(--border);
+}
+
+.nav-submenu-item,
+.mobile-submenu-item {
+    position: relative;
+
+    min-height: 38px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 10px;
+
+    border-radius: 20px;
+
+    color: #6b7280;
+
+    font-size: 13px;
+
+    transition: .2s;
+}
+
+.nav-submenu-item:hover,
+.mobile-submenu-item:hover {
+    background: var(--blue-light);
+    color: var(--blue);
+}
+
+.nav-submenu-item::before,
+.mobile-submenu-item::before {
+    content: "";
+
+    position: absolute;
+    left: -28px;
+
+    width: 20px;
+    height: 1px;
+
+    background: var(--border);
+}
+
+.nav-submenu-item::after,
+.mobile-submenu-item::after {
+    content: "";
+
+    position: absolute;
+    left: -31px;
+
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+    background: var(--muted);
+}
+
+
+/* Footer */
+
+.sidebar-footer {
+    padding: 14px;
+    border-top: 1px solid var(--border);
+}
+
+.logout-button {
+    width: 100%;
+    min-height: 44px;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 0 12px;
+
+    border: 0;
+    border-radius: 20px;
+
+    background: transparent;
+    color: var(--red);
+
+    font: 500 14px "Poppins", sans-serif;
+
+    cursor: pointer;
+}
+
+.logout-button:hover {
+    background: var(--red-light);
+}
+
+
+/* =========================================================
+   TOP NAVBAR
+========================================================= */
+
+.top-navbar {
+    position: fixed;
+
+    top: 10px;
+    left: calc(var(--sidebar-width) + 30px);
+    right: 10px;
+
+    height: 70px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 24px;
+
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+
+    z-index: 900;
+
+    transition: left .25s ease;
+}
+
+.top-navbar.sidebar-closed {
+    left: 10px;
+}
+
+
+/* Hamburger */
+
+.navbar-hamburger {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: 0;
+    border-radius: 20px;
+
+    background: transparent;
+    color: var(--text);
+
+    cursor: pointer;
+}
+
+.navbar-hamburger:hover {
+    background: var(--background);
+    color: var(--blue);
+}
+
+
+/* User */
+
+.navbar-user {
+    margin-left: auto;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.navbar-user-info {
+    text-align: right;
+}
+
+.navbar-user-name {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.navbar-user-role {
+    margin-top: 2px;
+
+    color: #6b7280;
+    font-size: 12px;
+}
+
+.navbar-avatar {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: var(--blue-light);
+    color: var(--blue);
+}
+
+
+/* =========================================================
+   MAIN CONTENT
+========================================================= */
+
+.main-content {
+    min-height: 100vh;
+
+    margin-left: calc(var(--sidebar-width) + 30px);
+
+    padding-top: 88px;
+    padding-right: 18px;
+    padding-bottom: 18px;
+
+    transition: margin-left .25s ease;
+
+    min-width: 0;
+}
+
+.main-content.sidebar-closed {
+    margin-left: 10px;
+}
+
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+.dashboard-filter {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 14px;
+}
+
+.date-filter-button {
+    height: 38px;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+
+    padding: 0 12px;
+
+    border: 1px solid var(--border);
+    border-radius: 20px;
+
+    background: var(--white);
+    color: var(--text);
+
+    font-family: inherit;
+    font-size: 12px;
+
+    cursor: pointer;
+}
+
+.date-filter-button .material-symbols-outlined {
+    font-size: 18px;
+    line-height: 1;
+}
+
+.date-filter-button .date-filter-arrow {
+    color: var(--text);
+    font-size: 20px;
+}
+
+
+/* =========================================================
+   STATISTICS
+========================================================= */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 14px;
+}
+
+.stat-card {
+    padding: 18px;
+
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+.stat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.stat-title {
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.stat-icon {
+    font-size: 21px;
+}
+
+.stat-icon.blue {
+    color: var(--blue);
+}
+
+.stat-icon.green {
+    color: var(--green);
+}
+
+.stat-icon.orange {
+    color: var(--orange);
+}
+
+.stat-icon.purple {
+    color: var(--purple);
+}
+
+.stat-value {
+    margin-top: 14px;
+
+    color: var(--text);
+    font-size: 27px;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.stat-value span {
+    margin-left: 3px;
+
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 400;
+}
+
+.stat-progress {
+    width: 100%;
+    height: 6px;
+
+    margin-top: 16px;
+
+    overflow: hidden;
+
+    background: #eef0f3;
+    border-radius: 10px;
+}
+
+.stat-progress-fill {
+    height: 100%;
+    border-radius: inherit;
+}
+
+.stat-progress-fill.blue {
+    background: var(--blue);
+}
+
+.stat-progress-fill.green {
+    background: var(--green);
+}
+
+.stat-progress-fill.orange {
+    background: var(--orange);
+}
+
+.stat-progress-fill.purple {
+    background: var(--purple);
+}
+
+.stat-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 8px;
+
+    margin-top: 8px;
+
+    color: var(--muted);
+    font-size: 10px;
+}
+
+.stat-meta strong {
+    flex-shrink: 0;
+
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   DASHBOARD GRID
+========================================================= */
+
+.dashboard-grid {
+    display: grid;
+    gap: 14px;
+
+    margin-bottom: 14px;
+}
+
+.grid-large-small {
+    grid-template-columns: 1.7fr 1fr;
+}
+
+.grid-medium-medium {
+    grid-template-columns: 1.35fr 1fr;
+}
+
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.content-card,
+.table-card {
+    padding: 18px;
+
+    background: var(--white);
+    border-radius: var(--radius);
+
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .04);
+}
+
+.section-title {
+    margin: 0 0 14px;
+
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: 230px;
+    min-width: 0;
+}
+
+
+
+/* =========================================================
+   STAGE
+========================================================= */
+
+.stage {
+    min-width: 180px;
+    min-height: 38px;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 5px 8px;
+
+    border-radius: 9px;
+}
+
+.stage-yellow {
+    background: var(--orange-light);
+}
+
+.stage-purple {
+    background: var(--purple-light);
+}
+
+.stage-icon {
+    width: 22px;
+    height: 22px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 6px;
+
+    color: var(--white);
+    font-size: 10px;
+}
+
+.stage-yellow .stage-icon {
+    background: var(--orange);
+}
+
+.stage-purple .stage-icon {
+    background: var(--purple);
+}
+
+.stage-info {
+    flex: 1;
+}
+
+.stage-title {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.stage-status {
+    margin-top: 2px;
+
+    color: var(--muted);
+    font-size: 10px;
+}
+
+.stage-arrow {
+    color: var(--text-secondary);
+    font-size: 20px;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+.mobile-navigation {
+    display: none;
+}
+
+
+/* =========================================================
+   LAPTOP
+========================================================= */
+
+@media (max-width: 1100px) {
+
+    :root {
+        --sidebar-width: 210px;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grid-large-small,
+    .grid-medium-medium {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* =========================================================
+   TABLET / MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    :root {
+        --sidebar-width: 0px;
+    }
+
+
+    /* Desktop sidebar hilang */
+
+    .app-sidebar {
+        display: none;
+    }
+
+
+    /* Navbar */
+
+    .top-navbar,
+    .top-navbar.sidebar-closed {
+        top: 10px;
+        left: 10px;
+        right: 10px;
+
+        height: 64px;
+
+        padding: 0 16px;
+
+        border-radius: 12px;
+    }
+
+    .navbar-user-info {
+        display: none;
+    }
+
+    .navbar-avatar {
+        width: 38px;
+        height: 38px;
+    }
+
+
+    /* Main */
+
+    .main-content,
+    .main-content.sidebar-closed {
+        margin-left: 0;
+
+        padding:
+            84px
+            10px
+            10px;
+    }
+
+
+    /* Stats */
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+
+    /* Dashboard */
+
+    .dashboard-grid {
+        display: grid;
+        width: 100%;
+        min-width: 0;
+        gap: 14px;
+        margin-bottom: 14px;
+    }
+
+
+    /* Cards */
+
+    .content-card,
+    .table-card {
+        padding: 14px;
+    }
+
+
+    /* Chart */
+
+    .chart-container {
+        height: 220px;
+    }
+
+
+    /* Mobile menu */
+
+    .mobile-navigation {
+        position: fixed;
+
+        top: 84px;
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+
+        display: flex;
+        flex-direction: column;
+
+        background: var(--white);
+
+        border: 1px solid var(--border);
+        border-radius: 12px;
+
+        box-shadow: 0 10px 30px rgba(0, 0, 0, .1);
+
+        z-index: 1100;
+        overflow: hidden;
+    }
+
+    .mobile-nav-header {
+        min-height: 58px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        padding: 0 18px;
+
+        border-bottom: 1px solid var(--border);
+
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .mobile-close-button {
+        width: 38px;
+        height: 38px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border: 0;
+        border-radius: 20px;
+
+        background: transparent;
+        cursor: pointer;
+    }
+
+    .mobile-nav-menu {
+        flex: 1;
+
+        padding: 10px 12px;
+
+        overflow-y: auto;
+    }
+
+
+    /* Mobile item */
+
+    .mobile-nav-item {
+        width: 100%;
+        min-height: 48px;
+
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        margin-bottom: 3px;
+        padding: 0 12px;
+
+        border-radius: 20px;
+
+        color: var(--text);
+
+        font-size: 14px;
+    }
+
+    .mobile-nav-item.active {
+        background: var(--blue);
+        color: var(--white);
+        font-weight: 600;
+    }
+
+
+    /* Mobile parent */
+
+    .mobile-nav-parent {
+        width: 100%;
+        min-height: 48px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        padding: 0 12px;
+
+        border: 0;
+        border-radius: 20px;
+
+        background: transparent;
+
+        font: 500 14px "Poppins", sans-serif;
+
+        cursor: pointer;
+    }
+
+    .mobile-nav-parent:hover {
+        background: var(--background);
+    }
+
+    .mobile-nav-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+
+    /* Mobile submenu */
+
+    .mobile-submenu-item {
+        min-height: 40px;
+    }
+
+
+    /* Logout */
+
+    .mobile-logout {
+        padding: 12px;
+
+        border-top: 1px solid var(--border);
+    }
+
+    .mobile-logout-button {
+        width: 100%;
+        min-height: 46px;
+
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        padding: 0 12px;
+
+        border: 0;
+        border-radius: 20px;
+
+        background: var(--red-light);
+        color: var(--red);
+
+        font: 500 14px "Poppins", sans-serif;
+
+        cursor: pointer;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .top-navbar,
+    .top-navbar.sidebar-closed {
+        left: 8px;
+        right: 8px;
+
+        padding: 0 12px;
+    }
+
+    .mobile-navigation {
+        top: 82px;
+        left: 8px;
+        right: 8px;
+        bottom: 8px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-number {
+        font-size: 26px;
+    }
+
+    .table-card-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+
+/* =========================================================
+   CASE CONFERENCE
+========================================================= */
+
+.case-conference-page {
+    padding: 24px;
+
+    background: var(--white);
+
+    font-family: "Poppins", sans-serif;
+
+    border-radius: 20px;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.case-conference-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 18px;
+}
+
+.case-conference-header h1 {
+    margin: 0;
+
+    font-size: 18px;
+    font-weight: 600;
+
+    color: var(--text);
+}
+
+.case-conference-header p {
+    margin: 4px 0 0;
+
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+
+/* =========================================================
+   DATE FILTER
+========================================================= */
+
+.date-filter {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    padding: 9px 11px;
+
+    background: transparent;
+    border: none;
+
+    cursor: pointer;
+
+    color: var(--text);
+
+    font-family: inherit;
+    font-size: 13px;
+}
+
+.date-filter:hover {
+    color: var(--blue);
+}
+
+
+/* =========================================================
+   FILTER
+========================================================= */
+
+.case-filter-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    margin-bottom: 14px;
+}
+
+.case-search {
+    width: 220px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    padding: 0 10px;
+
+    background: var(--white);
+    border: 1px solid var(--blue);
+    border-radius: 16px;
+
+    color: var(--muted);
+}
+
+.case-search input {
+    width: 100%;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+
+    font-family: inherit;
+    font-size: 10px;
+
+    color: var(--text);
+}
+
+.case-search input::placeholder {
+    color: var(--muted);
+}
+
+.case-filter-button {
+    height: 30px;
+    min-width: 110px;
+
+    padding: 0 11px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 8px;
+
+    background: var(--white);
+    border: 1px solid var(--blue);
+    border-radius: 16px;
+
+    color: var(--text-secondary);
+
+    cursor: pointer;
+
+    font-family: inherit;
+    font-size: 9px;
+}
+
+.case-filter-button:hover {
+    background: var(--blue-light);
+}
+
+
+/* =========================================================
+   GENERIC TABLE
+========================================================= */
+
+.table-wrapper {
+    width: 100%;
+
+    overflow-x: auto;
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+.table {
+    width: 100%;
+    min-width: 900px;
+
+    border-collapse: collapse;
+
+    font-size: 12px;
+}
+
+.table thead {
+    background: var(--blue);
+    color: var(--white);
+}
+
+.table th {
+    height: 45px;
+
+    padding: 0 18px;
+
+    text-align: left;
+
+    color: var(--white);
+
+    font-size: 10px;
+    font-weight: 400;
+
+    white-space: nowrap;
+}
+
+.table th:first-child {
+    width: 35px;
+    text-align: center;
+}
+
+.table tbody tr {
+    border-bottom: 1px solid var(--border);
+
+    transition: .15s ease;
+}
+
+.table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.table tbody tr:hover {
+    background: var(--blue-light);
+}
+
+.table td {
+    height: 48px;
+
+    padding: 0 18px;
+
+    color: var(--text-secondary);
+
+    font-size: 9px;
+
+    white-space: nowrap;
+}
+
+.table td:first-child {
+    text-align: center;
+}
+
+/* =========================================================
+   RESULT BADGE
+========================================================= */
+
+.result-badge {
+    width: 100%;
+    max-width: 190px;
+    min-height: 32px;
+
+    padding: 5px 8px 5px 10px;
+
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    border-radius: 16px;
+
+    text-decoration: none;
+
+    transition: 0.15s ease;
+}
+
+.result-badge:hover {
+    transform: translateX(2px);
+}
+
+.result-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+}
+
+.result-badge > span {
+    font-size: 9px;
+    font-weight: 400;
+}
+
+.result-arrow {
+    margin-left: auto;
+
+    font-size: 20px;
+    line-height: 1;
+
+    font-weight: 300;
+}
+
+
+/* =========================================================
+   ACCEPTED
+========================================================= */
+
+.result-accepted {
+    background: var(--green-light);
+    color: var(--green);
+}
+
+
+/* =========================================================
+   REJECTED
+========================================================= */
+
+.result-rejected {
+    background: var(--red-light);
+    color: var(--red);
+}
+
+
+/* =========================================================
+   HEALTH
+========================================================= */
+
+.result-health {
+    background: var(--purple-light);
+    color: var(--purple);
+}
+
+/* =========================================================
+   ASESMEN kesehatan
+========================================================= */
+
+.result-instructor {
+    background: var(--orange-light);
+    color: var(--orange);
+}
+/* =========================================================
+   BELUM DIMULAI
+========================================================= */
+
+.result-not-done {
+    background: var(--gray);
+    color: var(--text);
+}
+
+.result-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.result-title {
+    font-size: 9px;
+    line-height: 1.1;
+}
+
+.result-health {
+    color: var(--purple);
+}
+
+.result-instructor {
+    color: var(--orange);
+}
+
+
+
+.result-status {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+
+    font-size: 7px;
+    line-height: 1;
+}
+
+.result-status.pending {
+    color: var(--muted);
+}
+
+.result-status.lolos {
+    color: var(--green);
+}
+
+.result-status.tidak-lolos {
+    color: var(--red);
+}
+
+
+.status-dot {
+    width: 4px;
+    height: 4px;
+    flex-shrink: 0;
+    border-radius: 50%;
+}
+
+.status-dot.lolos {
+    background: var(--green);
+}
+
+.status-dot.tidak-lolos {
+    background: var(--red);
+}
+
+.status-dot.pending {
+    background: var(--muted);
+}
+
+
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .case-conference-page {
+        padding: 16px;
+    }
+
+    .case-conference-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .case-filter-wrapper {
+        flex-wrap: wrap;
+    }
+
+    .case-search {
+        width: 100%;
+    }
+}
+/* =====================================================
+   STATUS + JURUSAN CHART
+===================================================== */
+
+.grid-status-major {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: var(--gap);
+}
+
+
+/* =====================================================
+   STATUS / POLAR AREA
+===================================================== */
+
+.status-chart-card {
+    min-width: 0;
+}
+
+.chart-status {
+    height: 280px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chart-status canvas {
+    max-width: 290px;
+    max-height: 290px;
+}
+
+
+/* =====================================================
+   JURUSAN
+===================================================== */
+
+.major-chart-card {
+    min-width: 0;
+}
+
+.chart-major {
+    height: 280px;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 900px) {
+
+    .grid-status-major {
+        grid-template-columns: 1fr;
+    }
+
+    .chart-status {
+        height: 150px;
+    }
+
+    .chart-major {
+        height: 180px;
+    }
+
+}
+/* =========================================================
+   DETAIL PESERTA / DATA PPKS
+========================================================= */
+
+.participant-detail-page {
+    padding: 6px 0 24px;
+}
+
+
+/* =========================================================
+   PROGRESS TAHAPAN
+========================================================= */
+
+.participant-progress {
+    width: 100%;
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+
+    margin-bottom: 20px;
+
+    padding: 4px 24px 18px;
+
+    overflow-x: auto;
+}
+
+
+/* =========================================================
+   PROGRESS STEP
+========================================================= */
+
+.progress-step {
+    position: relative;
+
+    min-width: 120px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   PROGRESS CIRCLE
+========================================================= */
+
+.progress-circle {
+    width: 24px;
+    height: 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    /*
+     * Default = belum dikerjakan
+     */
+    background: #d1d5db;
+
+    border: 2px solid #d1d5db;
+
+    color: var(--white);
+
+    box-sizing: border-box;
+}
+
+
+/* Icon checklist */
+.progress-circle .material-symbols-outlined {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   COMPLETED
+   Sudah selesai:
+   - Biru penuh
+   - Ada checklist
+========================================================= */
+
+.progress-step.completed .progress-circle {
+    background: var(--blue);
+
+    border: 2px solid var(--blue);
+
+    color: var(--white);
+}
+
+
+/* =========================================================
+   CURRENT
+   Sedang dikerjakan:
+   - Outline biru
+   - Tengah putih
+   - Tidak ada checklist
+========================================================= */
+
+.progress-step.current .progress-circle {
+    background: var(--white);
+
+    border: 2px solid var(--blue);
+
+    color: var(--blue);
+}
+
+
+/*
+ * Jika current menggunakan icon kosong,
+ * icon tidak perlu ditampilkan.
+ */
+.progress-step.current .progress-circle .material-symbols-outlined {
+    display: none;
+}
+
+
+/* =========================================================
+   PENDING
+   Belum dikerjakan
+========================================================= */
+
+.progress-step.pending .progress-circle {
+    background: #d1d5db;
+
+    border: 2px solid #d1d5db;
+
+    color: var(--white);
+}
+
+
+/*
+ * Tidak ada icon checklist untuk pending
+ */
+.progress-step.pending .progress-circle .material-symbols-outlined {
+    display: none;
+}
+
+
+/* =========================================================
+   LABEL
+========================================================= */
+
+.progress-label {
+    margin-top: 8px;
+
+    color: var(--text-secondary);
+
+    font-size: 10px;
+    line-height: 1.45;
+
+    white-space: nowrap;
+}
+
+
+/* Label selesai */
+.progress-step.completed .progress-label {
+    color: var(--text);
+}
+
+
+/* Label sedang dikerjakan */
+.progress-step.current .progress-label {
+    color: var(--blue);
+
+    font-weight: 600;
+}
+
+
+/* Label belum dikerjakan */
+.progress-step.pending .progress-label {
+    color: var(--text-secondary);
+}
+
+
+/* =========================================================
+   PROGRESS LINE
+========================================================= */
+
+.progress-line {
+    flex: 1;
+
+    min-width: 40px;
+    max-width: 140px;
+
+    height: 2px;
+
+    margin-top: 11px;
+
+    background: #d1d5db;
+}
+
+
+/* Garis setelah step yang sudah selesai */
+.progress-line.completed {
+    background: var(--blue);
+}
+
+
+/* Garis yang belum dilewati */
+.progress-line.pending {
+    background: #d1d5db;
+}
+
+/* =========================================================
+   CARD UTAMA
+========================================================= */
+
+.participant-detail-card {
+    padding: 18px;
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .04);
+}
+
+
+/* =========================================================
+   SECTION
+========================================================= */
+
+.detail-section {
+    margin-bottom: 18px;
+}
+
+
+.detail-section:last-child {
+    margin-bottom: 0;
+}
+
+
+.detail-section-title {
+    width: 100%;
+
+    min-height: 44px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 14px;
+
+    margin-bottom: 18px;
+
+    background: #f9fafb;
+
+    border: 1px solid var(--border);
+
+    border-radius: 10px;
+
+    color: var(--text);
+
+    font-size: 14px;
+    font-weight: 600;
+
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .08);
+}
+
+
+/* =========================================================
+   DATA PPKS
+========================================================= */
+
+.participant-profile-layout {
+    display: grid;
+
+    grid-template-columns: 145px minmax(0, 1fr);
+
+    gap: 24px;
+
+    padding: 8px 10px 4px;
+}
+
+
+.participant-photo-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.participant-photo {
+    width: 130px;
+    height: 154px;
+
+    overflow: hidden;
+
+    background: var(--background);
+
+    border: 1px solid var(--border);
+}
+
+
+.participant-photo img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+}
+
+
+.participant-import-info {
+    margin-top: 6px;
+
+    text-align: center;
+
+    color: var(--text-secondary);
+
+    font-size: 8px;
+}
+
+
+.participant-import-info strong {
+    color: var(--green);
+
+    font-weight: 500;
+}
+
+
+/* =========================================================
+   GRID FORM
+========================================================= */
+
+.participant-data-grid {
+    display: grid;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    column-gap: 28px;
+    row-gap: 12px;
+}
+
+
+.detail-address-grid {
+    display: grid;
+
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    gap: 14px 22px;
+
+    padding: 0 2px;
+}
+
+
+.detail-contact-grid {
+    display: grid;
+
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    gap: 22px;
+
+    padding: 0 2px;
+}
+
+
+/* =========================================================
+   FIELD
+========================================================= */
+
+.detail-field {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+
+.detail-field label {
+    color: var(--text-secondary);
+
+    font-size: 10px;
+    font-weight: 400;
+}
+
+
+.detail-field input {
+    width: 100%;
+    height: 32px;
+
+    padding: 0 10px;
+
+    outline: none;
+
+    background: #f9fafb;
+
+    border: 1px solid #9ca3af;
+
+    border-radius: 9px;
+
+    color: var(--text);
+
+    font-family: inherit;
+    font-size: 10px;
+}
+
+
+.detail-field input:focus {
+    border-color: var(--blue);
+
+    box-shadow: 0 0 0 3px rgba(32, 93, 145, .08);
+}
+
+
+.detail-field input[readonly] {
+    cursor: default;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1000px) {
+
+    .participant-progress {
+        justify-content: flex-start;
+    }
+
+
+    .progress-step {
+        min-width: 105px;
+    }
+
+
+    .detail-address-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+
+    .detail-contact-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+
+@media (max-width: 768px) {
+
+    .participant-detail-card {
+        padding: 14px;
+    }
+
+
+    .participant-profile-layout {
+        grid-template-columns: 1fr;
+
+        gap: 20px;
+    }
+
+
+    .participant-photo-wrapper {
+        align-items: flex-start;
+    }
+
+
+    .participant-import-info {
+        text-align: left;
+    }
+
+
+    .participant-data-grid {
+        grid-template-columns: 1fr;
+
+        gap: 12px;
+    }
+
+
+    .detail-address-grid {
+        grid-template-columns: 1fr;
+
+        gap: 12px;
+    }
+
+
+    .detail-contact-grid {
+        grid-template-columns: 1fr;
+
+        gap: 12px;
+    }
+
+
+    .detail-section-title {
+        min-height: 42px;
+
+        font-size: 13px;
+    }
+
+}
+
+
+@media (max-width: 480px) {
+
+    .participant-progress {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+
+    .progress-step {
+        min-width: 90px;
+    }
+
+
+    .progress-label {
+        font-size: 8px;
+    }
+
+
+    .progress-line {
+        min-width: 20px;
+    }
+
+}
+/* =========================================================
+   BERKAS DOKUMEN
+========================================================= */
+
+.document-grid {
+    display: grid;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 22px 40px;
+
+    padding: 0 36px 8px;
+}
+
+
+.document-item {
+    min-width: 0;
+}
+
+
+.document-label {
+    margin-bottom: 8px;
+
+    color: var(--text-secondary);
+
+    font-size: 10px;
+}
+
+
+.document-preview {
+    width: 100%;
+    height: 150px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 6px;
+
+    background: #f9fafb;
+
+    border: 1px dashed #9ca3af;
+
+    color: var(--text-secondary);
+
+    font-size: 10px;
+
+    transition: .2s ease;
+}
+
+
+.document-preview:hover {
+    border-color: var(--blue);
+
+    background: rgba(32, 93, 145, .03);
+}
+
+
+.document-icon {
+    font-size: 28px;
+
+    color: var(--blue);
+}
+
+
+/* =========================================================
+   RESPONSIVE BERKAS
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .document-grid {
+        grid-template-columns: 1fr;
+
+        padding: 0 2px;
+
+        gap: 16px;
+    }
+
+
+    .document-preview {
+        height: 180px;
+    }
+
+}
+.btn {
+    width: 109px;
+    height: 26px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    background: var(--blue);
+    color: var(--white);
+
+    border: none;
+    border-radius: 8px;
+
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition: .2s ease;
+}
+
+
+.btn:hover {
+    filter: brightness(.92);
+}
+
+
+.btn:active {
+    transform: scale(.98);
+}
+
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+
+    color: var(--text);
+    text-decoration: none;
+
+    cursor: pointer;
+}
+
+.btn-back-text {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* =========================================================
+   ASESMEN kesehatan
+========================================================= */
+
+.assessment-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    gap: 14px 12px;
+}
+
+
+/* hasil asesmen di baris kedua */
+.assessment-grid .detail-field:nth-child(4) {
+    grid-column: 1 / 2;
+}
+
+
+/* =========================================================
+   SELECT
+========================================================= */
+
+.detail-field select {
+    width: 100%;
+    height: 32px;
+
+    padding: 0 10px;
+
+    outline: none;
+
+    background: #f9fafb;
+
+    border: 1px solid #9ca3af;
+    border-radius: 9px;
+
+    color: var(--text);
+
+    font-family: inherit;
+    font-size: 9px;
+
+    cursor: pointer;
+}
+
+
+.detail-field select:focus {
+    border-color: var(--blue);
+
+    box-shadow: 0 0 0 3px rgba(32, 93, 145, .08);
+}
+
+
+/* =========================================================
+   TEXTAREA
+========================================================= */
+
+.assessment-note {
+    margin-top: 12px;
+}
+
+
+.detail-field textarea {
+    width: 100%;
+    min-height: 82px;
+
+    padding: 10px;
+
+    resize: vertical;
+
+    outline: none;
+
+    background: #f9fafb;
+
+    border: 1px solid #9ca3af;
+    border-radius: 12px;
+
+    color: var(--text);
+
+    font-family: inherit;
+    font-size: 9px;
+}
+
+
+.detail-field textarea::placeholder {
+    color: #9ca3af;
+}
+
+
+/* =========================================================
+   CARD ASESMEN LURING
+========================================================= */
+
+.offline-assessment-card {
+    margin-top: 18px;
+
+    padding: 16px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(34, 197, 94, .08),
+            rgba(32, 93, 145, .08)
+        );
+
+    border: 1px solid rgba(34, 139, 74, .45);
+
+    border-radius: 14px;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.offline-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 20px;
+}
+
+
+.offline-title-group {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 8px;
+}
+
+
+.offline-icon {
+    width: 22px;
+    height: 22px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 5px;
+
+    background: var(--green);
+    color: var(--white);
+}
+
+
+.offline-icon .material-symbols-outlined {
+    font-size: 14px;
+}
+
+
+.offline-title {
+    color: var(--green);
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+
+.offline-subtitle {
+    margin-top: 2px;
+
+    color: var(--text-secondary);
+
+    font-size: 8px;
+}
+
+
+/* =========================================================
+   SWITCH
+========================================================= */
+
+.offline-toggle {
+    display: flex;
+    align-items: center;
+
+    gap: 6px;
+
+    flex-shrink: 0;
+
+    color: var(--text-secondary);
+
+    font-size: 8px;
+
+    cursor: pointer;
+}
+
+
+.offline-toggle input {
+    display: none;
+}
+
+
+.toggle-slider {
+    position: relative;
+
+    width: 30px;
+    height: 17px;
+
+    flex-shrink: 0;
+
+    border-radius: 20px;
+
+    background: #9ca3af;
+
+    transition: .2s ease;
+}
+
+
+.toggle-slider::before {
+    content: "";
+
+    position: absolute;
+
+    width: 13px;
+    height: 13px;
+
+    top: 2px;
+    left: 2px;
+
+    border-radius: 50%;
+
+    background: var(--white);
+
+    transition: .2s ease;
+}
+
+
+.offline-toggle input:checked + .toggle-slider {
+    background: var(--green);
+}
+
+
+.offline-toggle input:checked + .toggle-slider::before {
+    transform: translateX(13px);
+}
+
+
+/* =========================================================
+   FORM LURING
+
+   AWAL = BENAR-BENAR TIDAK MUNCUL
+========================================================= */
+
+.offline-form {
+    display: none;
+
+    margin-top: 20px;
+}
+
+
+/* MUNCUL SAAT SWITCH ON */
+
+.offline-form.show {
+    display: block;
+
+    animation: showOfflineForm .25s ease;
+}
+
+
+@keyframes showOfflineForm {
+
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+
+/* =========================================================
+   GRID FORM LURING
+========================================================= */
+
+.offline-fields {
+    display: grid;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 12px 32px;
+}
+
+
+.offline-note {
+    margin-top: 14px;
+}
+
+
+/* =========================================================
+   ACTION BUTTON
+========================================================= */
+
+.form-action {
+    display: flex;
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    margin-top: 20px;
+}
+
+
+.btn-save {
+    min-width: 80px;
+    height: 31px;
+
+    padding: 0 16px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: var(--green);
+    color: var(--white);
+
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: .2s ease;
+}
+
+
+.form-action .btn {
+    min-width: 90px;
+    height: 31px;
+
+    padding: 0 14px;
+
+    border-radius: 10px;
+}
+
+
+.btn-save:hover,
+.form-action .btn:hover {
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .assessment-grid,
+    .offline-fields {
+        grid-template-columns: 1fr;
+    }
+
+
+    .assessment-grid .detail-field:nth-child(4) {
+        grid-column: auto;
+    }
+
+
+    .offline-header {
+        flex-direction: column;
+    }
+
+
+    .form-action {
+        width: 100%;
+    }
+
+
+    .btn-save,
+    .form-action .btn {
+        flex: 1;
+    }
+
+}
+/* =========================================================
+   ASESMEN kesehatan - GRID UTAMA
+========================================================= */
+
+.assessment-grid {
+    display: grid;
+
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    gap: 14px 12px;
+}
+
+
+/* =========================================================
+   GELOMBANG & TAHUN
+========================================================= */
+
+.wave-year-group {
+    display: grid;
+
+    grid-template-columns: 1.4fr 1fr;
+
+    gap: 0;
+
+    width: 100%;
+}
+
+
+.wave-year-group select {
+    width: 100%;
+
+    border-radius: 0;
+}
+
+
+/* SELECT GELOMBANG */
+.wave-year-group select:first-child {
+    border-top-left-radius: 9px;
+    border-bottom-left-radius: 9px;
+
+    border-right: none;
+}
+
+
+/* SELECT TAHUN */
+.wave-year-group select:last-child {
+    border-top-right-radius: 9px;
+    border-bottom-right-radius: 9px;
+}
+
+
+/* =========================================================
+   CATATAN
+========================================================= */
+
+.assessment-note {
+    margin-top: 14px;
+}
+
+
+/* =========================================================
+   ASESMEN LURING
+========================================================= */
+
+.offline-assessment-card {
+    margin-top: 18px;
+
+    padding: 16px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(34, 197, 94, .08),
+            rgba(32, 93, 145, .08)
+        );
+
+    border: 1px solid rgba(34, 139, 74, .45);
+
+    border-radius: 14px;
+}
+
+
+.offline-header {
+    display: flex;
+
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 20px;
+}
+
+
+.offline-title-group {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 8px;
+}
+
+
+.offline-icon {
+    width: 22px;
+    height: 22px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 5px;
+
+    background: var(--green);
+    color: var(--white);
+}
+
+
+.offline-icon .material-symbols-outlined {
+    font-size: 14px;
+}
+
+
+.offline-title {
+    color: var(--green);
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+
+.offline-subtitle {
+    margin-top: 2px;
+
+    color: var(--text-secondary);
+
+    font-size: 8px;
+}
+
+
+/* =========================================================
+   SWITCH
+========================================================= */
+
+.offline-toggle {
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    flex-shrink: 0;
+
+    color: var(--text-secondary);
+
+    font-size: 8px;
+
+    cursor: pointer;
+}
+
+
+.offline-toggle input {
+    display: none;
+}
+
+
+.toggle-slider {
+    position: relative;
+
+    width: 30px;
+    height: 17px;
+
+    flex-shrink: 0;
+
+    border-radius: 20px;
+
+    background: #9ca3af;
+
+    transition: .2s ease;
+}
+
+
+.toggle-slider::before {
+    content: "";
+
+    position: absolute;
+
+    width: 13px;
+    height: 13px;
+
+    top: 2px;
+    left: 2px;
+
+    border-radius: 50%;
+
+    background: var(--white);
+
+    transition: .2s ease;
+}
+
+
+.offline-toggle input:checked + .toggle-slider {
+    background: var(--green);
+}
+
+
+.offline-toggle input:checked + .toggle-slider::before {
+    transform: translateX(13px);
+}
+
+
+/* =========================================================
+   FORM LURING
+
+   AWALNYA TIDAK MUNCUL
+========================================================= */
+
+.offline-form {
+    display: none;
+
+    margin-top: 20px;
+}
+
+
+.offline-form.show {
+    display: block;
+
+    animation: showOfflineForm .25s ease;
+}
+
+
+@keyframes showOfflineForm {
+
+    from {
+        opacity: 0;
+
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateY(0);
+    }
+
+}
+
+
+/* =========================================================
+   GRID LURING
+========================================================= */
+
+.offline-fields {
+    display: grid;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 12px 32px;
+}
+
+
+.offline-note {
+    margin-top: 14px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .assessment-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .offline-fields {
+        grid-template-columns: 1fr;
+    }
+
+
+    .offline-header {
+        flex-direction: column;
+    }
+
+
+    .wave-year-group {
+        grid-template-columns: 1.3fr 1fr;
+    }
+
+}
+/* =========================================================
+   POPUP BERHASIL
+========================================================= */
+
+.save-modal-overlay {
+    position: fixed;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(0, 0, 0, 0.5);
+
+    z-index: 99999;
+}
+
+
+.save-modal {
+    width: 400px;
+    max-width: calc(100% - 40px);
+
+    padding: 32px;
+
+    background: #ffffff;
+
+    border-radius: 16px;
+
+    text-align: center;
+
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+}
+
+
+.save-modal-icon {
+    margin-bottom: 16px;
+}
+
+
+.save-modal-icon .material-symbols-outlined {
+    font-size: 64px;
+
+    color: var(--blue);
+}
+
+
+.save-modal-title {
+    margin: 0 0 10px;
+
+    font-size: 20px;
+    font-weight: 600;
+
+    color: var(--text);
+}
+
+
+.save-modal-message {
+    margin: 0 0 24px;
+
+    font-size: 14px;
+    line-height: 1.5;
+
+    color: var(--text-secondary);
+}
+
+
+.save-modal-button {
+    width: 100%;
+
+    padding: 12px 20px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: var(--blue);
+
+    color: #ffffff;
+
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+
+.save-modal-button:hover {
+    opacity: 0.9;
+}

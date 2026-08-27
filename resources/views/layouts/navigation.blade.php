@@ -1,100 +1,528 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
-    <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <div class="flex">
-                <!-- Logo -->
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
-                    </a>
-                </div>
+<nav x-data="{
+        open: false,
+        sidebarOpen: true,
+        instructorOpen: false,
+        healthOpen: false
+    }" class="app-navigation">
 
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                </div>
+
+    {{-- =====================================================
+    SIDEBAR DESKTOP
+    ====================================================== --}}
+
+    <aside class="app-sidebar" :class="{ 'sidebar-closed': !sidebarOpen }">
+
+        {{-- HEADER --}}
+
+        <div class="sidebar-header">
+
+            <div class="sidebar-label">
+                MENU UTAMA
             </div>
 
-            <!-- Settings Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
-                <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                            <div>{{ Auth::user()->name }}</div>
+            <div class="sidebar-divider"></div>
 
-                            <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </button>
-                    </x-slot>
+        </div>
 
-                    <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
 
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
+        {{-- =================================================
+        MENU
+        ================================================== --}}
 
-                            <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                {{ __('Log Out') }}
-                            </x-dropdown-link>
-                        </form>
-                    </x-slot>
-                </x-dropdown>
-            </div>
+        <div class="sidebar-menu">
 
-            <!-- Hamburger -->
-            <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
-                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+
+            {{-- DASHBOARD --}}
+
+            <a href="{{ route('dashboard') }}" class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+
+                <span class="material-symbols-outlined nav-icon">
+                    dashboard
+                </span>
+
+                <span class="nav-text">
+                    Dashboard
+                </span>
+
+            </a>
+
+
+            {{-- CASE CONFERENCE --}}
+
+            <a href="{{ route('case-conference') }}"
+                class="nav-item {{ request()->routeIs('case-conference') ? 'active' : '' }}">
+
+                <span class="material-symbols-outlined nav-icon">
+                    groups
+                </span>
+
+                <span class="nav-text">
+                    Case Conference
+                </span>
+
+            </a>
+
+
+            {{-- DATA --}}
+
+            <a href="#" class="nav-item">
+
+                <span class="material-symbols-outlined nav-icon">
+                    description
+                </span>
+
+                <span class="nav-text">
+                    Data
+                </span>
+
+            </a>
+
+
+            {{-- =================================================
+            ASESMEN kesehatan
+            ================================================== --}}
+
+            <div class="nav-group">
+
+                <button type="button" class="nav-item nav-parent" :class="{ 'menu-open': instructorOpen }"
+                    @click="instructorOpen = !instructorOpen">
+
+                    <span class="nav-left">
+
+                        <span class="material-symbols-outlined nav-icon">
+                            badge
+                        </span>
+
+                        <span class="nav-text">
+                            Asesmen kesehatan
+                        </span>
+
+                    </span>
+
+                    <span class="material-symbols-outlined nav-arrow" :class="{ 'rotate': instructorOpen }">
+                        expand_more
+                    </span>
+
                 </button>
+
+
+                <div x-show="instructorOpen" x-transition class="nav-submenu">
+
+                    <a href="#" class="nav-submenu-item">
+                        Data Lolos
+                    </a>
+
+                    <a href="#" class="nav-submenu-item">
+                        Data Pending
+                    </a>
+
+                    <a href="#" class="nav-submenu-item">
+                        Data Tidak Lolos
+                    </a>
+
+                </div>
+
             </div>
+
+
+            {{-- =================================================
+            ASESMEN KESEHATAN
+            ================================================== --}}
+
+            <div class="nav-group">
+
+                <button type="button" class="nav-item nav-parent" :class="{ 'menu-open': healthOpen }"
+                    @click="healthOpen = !healthOpen">
+
+                    <span class="nav-left">
+
+                        <span class="material-symbols-outlined nav-icon">
+                            medical_information
+                        </span>
+
+                        <span class="nav-text">
+                            Asesmen Kesehatan
+                        </span>
+
+                    </span>
+
+                    <span class="material-symbols-outlined nav-arrow" :class="{ 'rotate': healthOpen }">
+                        expand_more
+                    </span>
+
+                </button>
+
+
+                <div x-show="healthOpen" x-transition class="nav-submenu">
+
+                    <a href="#" class="nav-submenu-item">
+                        Data Lolos
+                    </a>
+
+                    <a href="#" class="nav-submenu-item">
+                        Data Pending
+                    </a>
+
+                    <a href="#" class="nav-submenu-item">
+                        Data Tidak Lolos
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            {{-- PEMANGGILAN PESERTA --}}
+
+            <a href="#" class="nav-item">
+
+                <span class="material-symbols-outlined nav-icon">
+                    record_voice_over
+                </span>
+
+                <span class="nav-text">
+                    Pemanggilan Peserta
+                </span>
+
+            </a>
+
+
+            {{-- PESERTA AKTIF --}}
+
+            <a href="#" class="nav-item">
+
+                <span class="material-symbols-outlined nav-icon">
+                    person_add
+                </span>
+
+                <span class="nav-text">
+                    Peserta Aktif
+                </span>
+
+            </a>
+
         </div>
+
+
+        {{-- =====================================================
+        LOGOUT
+        ====================================================== --}}
+
+        <div class="sidebar-footer">
+
+            <form method="POST" action="{{ route('logout') }}">
+
+                @csrf
+
+                <button type="submit" class="logout-button">
+
+                    <span class="material-symbols-outlined nav-icon">
+                        logout
+                    </span>
+
+                    <span>
+                        Keluar
+                    </span>
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </aside>
+
+
+
+    {{-- =====================================================
+    TOP NAVBAR
+    ====================================================== --}}
+
+    <header class="top-navbar" :class="{ 'sidebar-closed': !sidebarOpen }">
+
+        {{-- HAMBURGER --}}
+
+        <button type="button" class="navbar-hamburger" @click="
+                if (window.innerWidth <= 768) {
+                    open = !open;
+                } else {
+                    sidebarOpen = !sidebarOpen;
+                }
+            " aria-label="Toggle Navigation">
+
+            <span class="material-symbols-outlined" x-text="
+                    window.innerWidth <= 768
+                        ? (open ? 'close' : 'menu')
+                        : (sidebarOpen ? 'menu_open' : 'menu')
+                "></span>
+
+        </button>
+
+
+        {{-- USER --}}
+
+        <div class="navbar-user">
+
+            <div class="navbar-user-info">
+
+                <div class="navbar-user-name">
+                    {{ Auth::user()->name }}
+                </div>
+
+                <div class="navbar-user-role">
+                    {{ Auth::user()->role ?? 'Super Admin' }}
+                </div>
+
+            </div>
+
+
+            <div class="navbar-avatar">
+
+                <span class="material-symbols-outlined">
+                    person
+                </span>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    {{-- =====================================================
+    MOBILE NAVIGATION
+    ====================================================== --}}
+
+    <div x-show="open" x-transition class="mobile-navigation">
+
+        {{-- HEADER MOBILE --}}
+
+        <div class="mobile-nav-header">
+
+            <span>
+                MENU UTAMA
+            </span>
+
+            <button type="button" @click="open = false" class="mobile-close-button">
+
+                <span class="material-symbols-outlined">
+                    close
+                </span>
+
+            </button>
+
+        </div>
+
+
+        {{-- =================================================
+        MENU MOBILE
+        ================================================== --}}
+
+        <div class="mobile-nav-menu">
+
+
+            {{-- DASHBOARD --}}
+
+            <a href="{{ route('dashboard') }}"
+                class="mobile-nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+
+                <span class="material-symbols-outlined">
+                    dashboard
+                </span>
+
+                <span>
+                    Dashboard
+                </span>
+
+            </a>
+
+
+            {{-- CASE CONFERENCE --}}
+
+            <a href="{{ route('case-conference') }}"
+                class="mobile-nav-item {{ request()->routeIs('case-conference') ? 'active' : '' }}">
+
+                <span class="material-symbols-outlined">
+                    groups
+                </span>
+
+                <span>
+                    Case Conference
+                </span>
+
+            </a>
+
+
+            {{-- DATA --}}
+
+            <a href="#" class="mobile-nav-item">
+
+                <span class="material-symbols-outlined">
+                    description
+                </span>
+
+                <span>
+                    Data
+                </span>
+
+            </a>
+
+
+            {{-- =================================================
+            ASESMEN kesehatan
+            ================================================== --}}
+
+            <div class="mobile-nav-group">
+
+                <button type="button" class="mobile-nav-parent" :class="{ 'menu-open': instructorOpen }"
+                    @click="instructorOpen = !instructorOpen">
+
+                    <span class="mobile-nav-left">
+
+                        <span class="material-symbols-outlined">
+                            badge
+                        </span>
+
+                        <span>
+                            Asesmen kesehatan
+                        </span>
+
+                    </span>
+
+
+                    <span class="material-symbols-outlined mobile-nav-arrow" :class="{ 'rotate': instructorOpen }">
+                        expand_more
+                    </span>
+
+                </button>
+
+
+                <div x-show="instructorOpen" x-transition class="mobile-submenu">
+
+                    <a href="#" class="mobile-submenu-item">
+                        Data Lolos
+                    </a>
+
+                    <a href="#" class="mobile-submenu-item">
+                        Data Pending
+                    </a>
+
+                    <a href="#" class="mobile-submenu-item">
+                        Data Tidak Lolos
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            {{-- =================================================
+            ASESMEN KESEHATAN
+            ================================================== --}}
+
+            <div class="mobile-nav-group">
+
+                <button type="button" class="mobile-nav-parent" :class="{ 'menu-open': healthOpen }"
+                    @click="healthOpen = !healthOpen">
+
+                    <span class="mobile-nav-left">
+
+                        <span class="material-symbols-outlined">
+                            medical_information
+                        </span>
+
+                        <span>
+                            Asesmen Kesehatan
+                        </span>
+
+                    </span>
+
+
+                    <span class="material-symbols-outlined mobile-nav-arrow" :class="{ 'rotate': healthOpen }">
+                        expand_more
+                    </span>
+
+                </button>
+
+
+                <div x-show="healthOpen" x-transition class="mobile-submenu">
+
+                    <a href="#" class="mobile-submenu-item">
+                        Data Lolos
+                    </a>
+
+                    <a href="#" class="mobile-submenu-item">
+                        Data Pending
+                    </a>
+
+                    <a href="#" class="mobile-submenu-item">
+                        Data Tidak Lolos
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            {{-- PEMANGGILAN PESERTA --}}
+
+            <a href="#" class="mobile-nav-item">
+
+                <span class="material-symbols-outlined">
+                    record_voice_over
+                </span>
+
+                <span>
+                    Pemanggilan Peserta
+                </span>
+
+            </a>
+
+
+            {{-- PESERTA AKTIF --}}
+
+            <a href="#" class="mobile-nav-item">
+
+                <span class="material-symbols-outlined">
+                    person_add
+                </span>
+
+                <span>
+                    Peserta Aktif
+                </span>
+
+            </a>
+
+        </div>
+
+
+        {{-- =====================================================
+        LOGOUT MOBILE
+        ====================================================== --}}
+
+        <div class="mobile-logout">
+
+            <form method="POST" action="{{ route('logout') }}">
+
+                @csrf
+
+                <button type="submit" class="mobile-logout-button">
+
+                    <span class="material-symbols-outlined">
+                        logout
+                    </span>
+
+                    <span>
+                        Keluar
+                    </span>
+
+                </button>
+
+            </form>
+
+        </div>
+
     </div>
 
-    <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-        </div>
-
-        <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200">
-            <div class="px-4">
-                <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-            </div>
-
-            <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
-
-                <!-- Authentication -->
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                        {{ __('Log Out') }}
-                    </x-responsive-nav-link>
-                </form>
-            </div>
-        </div>
-    </div>
 </nav>

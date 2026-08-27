@@ -45,7 +45,7 @@ class RegisteredUserController extends Controller
             'role' => [
                 'required',
                 'string',
-                'in:instruktur,medis',
+                'in:kesehatan,medis',
             ],
 
             'password' => [

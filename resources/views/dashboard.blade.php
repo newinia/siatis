@@ -1,931 +1,980 @@
 <x-app-layout>
 
-    <div class="min-h-screen bg-[#f3f4f8] text-gray-800">
-
-        <div class="flex min-h-screen p-[18px] gap-[12px]">
-
-            {{-- =========================================================
-                 SIDEBAR
-            ========================================================== --}}
-            <aside
-                id="sidebar"
-                class="w-[180px] min-w-[180px] bg-white rounded-[14px] flex flex-col px-[10px] py-[14px] shadow-sm">
-
-                {{-- Judul --}}
-                <div class="px-[5px] pb-[8px]">
-                    <div class="text-[8px] text-gray-400 mb-[6px]">
-                        Dashboard
-                    </div>
-
-                    <div class="h-[1px] bg-gray-200"></div>
-                </div>
-
-
-                {{-- ================= DASHBOARD ================= --}}
-                <a href="{{ route('dashboard') }}"
-                   class="flex items-center gap-[9px] h-[35px] px-[10px] rounded-[11px] bg-[#205d91] text-white text-[11px] mb-[3px]">
-
-                    <svg width="13" height="13" viewBox="0 0 24 24"
-                         fill="none" stroke="currentColor" stroke-width="1.8">
-                        <rect x="4" y="4" width="6" height="6"/>
-                        <rect x="14" y="4" width="6" height="6"/>
-                        <rect x="4" y="14" width="6" height="6"/>
-                        <rect x="14" y="14" width="6" height="6"/>
-                    </svg>
-
-                    <span>Dashboard</span>
-                </a>
-
-
-                {{-- ================= CASE CONFERENCE ================= --}}
-                <a href="#"
-                   class="menu-item">
-
-                    <svg width="13" height="13" viewBox="0 0 24 24"
-                         fill="none" stroke="currentColor" stroke-width="1.7">
-                        <circle cx="8" cy="8" r="3"/>
-                        <circle cx="16" cy="8" r="3"/>
-                        <path d="M3 20c0-3 2-5 5-5"/>
-                        <path d="M21 20c0-3-2-5-5-5"/>
-                        <path d="M8 20c0-3 1.5-5 4-5s4 2 4 5"/>
-                    </svg>
-
-                    <span>Case Conference</span>
-                </a>
-
-
-                {{-- ================= DATA ================= --}}
-                <a href="#" class="menu-item">
-
-                    <svg width="13" height="13" viewBox="0 0 24 24"
-                         fill="none" stroke="currentColor" stroke-width="1.7">
-                        <path d="M6 3h12v18H6z"/>
-                        <path d="M9 7h6"/>
-                        <path d="M9 11h6"/>
-                        <path d="M9 15h4"/>
-                    </svg>
-
-                    <span>Data</span>
-                </a>
-
-
-                {{-- ================= ASESMEN INSTRUKTUR ================= --}}
-                <a href="#" class="menu-item">
-
-                    <svg width="13" height="13" viewBox="0 0 24 24"
-                         fill="none" stroke="currentColor" stroke-width="1.7">
-                        <rect x="5" y="4" width="14" height="16" rx="1"/>
-                        <circle cx="12" cy="9" r="2.5"/>
-                        <path d="M8 17c.8-2 2.1-3 4-3s3.2 1 4 3"/>
-                    </svg>
-
-                    <span>Asesmen Instruktur</span>
-                </a>
-
-
-                {{-- SUB MENU --}}
-                <a href="#" class="submenu">
-                    <span class="arrow">↳</span>
-                    <span>Data Lolos</span>
-                </a>
-
-                <a href="#" class="submenu">
-                    <span class="arrow">↳</span>
-                    <span>Data Pending</span>
-                </a>
-
-                <a href="#" class="submenu">
-                    <span class="arrow">↳</span>
-                    <span>Data Tidak Lolos</span>
-                </a>
-
-
-                {{-- ================= ASESMEN KESEHATAN ================= --}}
-                <a href="#" class="menu-item">
-
-                    <svg width="13" height="13" viewBox="0 0 24 24"
-                         fill="none" stroke="currentColor" stroke-width="1.7">
-                        <rect x="5" y="4" width="14" height="16" rx="1"/>
-                        <path d="M9 12h6"/>
-                        <path d="M12 9v6"/>
-                    </svg>
-
-                    <span>Asesmen Kesehatan</span>
-                </a>
-
-
-                <a href="#" class="submenu">
-                    <span class="arrow">↳</span>
-                    <span>Data Lolos</span>
-                </a>
-
-                <a href="#" class="submenu">
-                    <span class="arrow">↳</span>
-                    <span>Data Pending</span>
-                </a>
-
-                <a href="#" class="submenu">
-                    <span class="arrow">↳</span>
-                    <span>Data Tidak Lolos</span>
-                </a>
-
-
-                {{-- ================= PEMANGGILAN ================= --}}
-                <a href="#" class="menu-item">
-
-                    <svg width="13" height="13" viewBox="0 0 24 24"
-                         fill="none" stroke="currentColor" stroke-width="1.7">
-                        <rect x="4" y="6" width="16" height="12" rx="1"/>
-                        <path d="M8 10h8"/>
-                        <path d="M8 14h5"/>
-                    </svg>
-
-                    <span>Pemanggilan Peserta</span>
-                </a>
-
-
-                {{-- ================= PESERTA AKTIF ================= --}}
-                <a href="#" class="menu-item">
-
-                    <svg width="13" height="13" viewBox="0 0 24 24"
-                         fill="none" stroke="currentColor" stroke-width="1.7">
-                        <circle cx="9" cy="8" r="3"/>
-                        <path d="M3 20c0-4 2-6 6-6"/>
-                        <path d="M16 11v6"/>
-                        <path d="M13 14h6"/>
-                    </svg>
-
-                    <span>Peserta Aktif</span>
-                </a>
-
-
-                {{-- ================= KELUAR ================= --}}
-                <div class="mt-auto pt-[12px] px-[9px]">
-
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-
-                        <button type="submit"
-                            class="w-full h-[38px] border border-gray-300 rounded-[10px] flex items-center gap-[9px] px-[12px] text-[10px] text-gray-700 hover:bg-gray-50">
-
-                            <svg width="13" height="13" viewBox="0 0 24 24"
-                                 fill="none" stroke="currentColor" stroke-width="1.7">
-                                <path d="M10 5H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h4"/>
-                                <path d="M14 8l4 4-4 4"/>
-                                <path d="M18 12H9"/>
-                            </svg>
-
-                            <span>Keluar</span>
-
-                        </button>
-                    </form>
-
-                </div>
-
-            </aside>
-
-
-            {{-- =========================================================
-                 MAIN CONTENT
-            ========================================================== --}}
-            <main class="flex-1 min-w-0">
-
-
-                {{-- =====================================================
-                     TOP NAVBAR
-                ====================================================== --}}
-                <div
-                    class="h-[42px] bg-white rounded-[13px] shadow-sm flex items-center justify-between px-[14px]">
-
-                    {{-- Hamburger --}}
-                    <button
-                        type="button"
-                        class="w-[28px] h-[28px] flex items-center justify-center">
-
-                        <svg width="19" height="19" viewBox="0 0 24 24"
-                             fill="none" stroke="currentColor" stroke-width="1.7">
-
-                            <path d="M4 6h16"/>
-                            <path d="M4 12h16"/>
-                            <path d="M4 18h16"/>
-
-                        </svg>
-
-                    </button>
-
-
-                    {{-- USER --}}
-                    <div class="flex items-center gap-[7px]">
-
-                        <div class="text-right leading-tight">
-
-                            <div class="text-[8px] font-semibold text-gray-800">
-                                {{ Auth::user()->name }}
-                            </div>
-
-                            <div class="text-[6px] text-gray-500">
-                                {{ Auth::user()->role ?? 'Super Admin' }}
-                            </div>
-
-                        </div>
-
-
-                        <div
-                            class="w-[21px] h-[21px] rounded-full bg-gray-700 flex items-center justify-center text-white">
-
-                            <svg width="14" height="14" viewBox="0 0 24 24"
-                                 fill="none" stroke="currentColor" stroke-width="2">
-
-                                <circle cx="12" cy="8" r="3"/>
-                                <path d="M5 21c0-4 3-7 7-7s7 3 7 7"/>
-
-                            </svg>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                {{-- =====================================================
-                     DATE FILTER
-                ====================================================== --}}
-                <div class="mt-[9px] mb-[10px]">
-
-                    <button
-                        class="h-[31px] bg-white rounded-[10px] px-[9px] flex items-center gap-[7px] text-[9px] text-gray-700 shadow-sm">
-
-                        <svg width="11" height="11" viewBox="0 0 24 24"
-                             fill="none" stroke="currentColor" stroke-width="1.8">
-
-                            <rect x="4" y="5" width="16" height="15" rx="1"/>
-                            <path d="M8 3v4"/>
-                            <path d="M16 3v4"/>
-                            <path d="M4 10h16"/>
-
-                        </svg>
-
-                        Oct 12, 2023 – Oct 19, 2023
-
-                        <svg width="10" height="10" viewBox="0 0 24 24"
-                             fill="none" stroke="currentColor" stroke-width="2">
-
-                            <path d="M6 9l6 6 6-6"/>
-
-                        </svg>
-
-                    </button>
-
-                </div>
-
-
-                {{-- =====================================================
-                     STATISTICS
-                ====================================================== --}}
-                <div class="grid grid-cols-4 gap-[14px] mb-[10px]">
-
-                    <div class="dashboard-card">
-                        <div class="card-title">Total Response</div>
-                        <div class="card-number">300</div>
-                    </div>
-
-                    <div class="dashboard-card">
-                        <div class="card-title">Sudah Dilayani</div>
-                        <div class="card-number">300</div>
-                    </div>
-
-                    <div class="dashboard-card">
-                        <div class="card-title">Belum Dilayani</div>
-                        <div class="card-number">300</div>
-                    </div>
-
-                    <div class="dashboard-card">
-                        <div class="card-title">Siswa Pending</div>
-                        <div class="card-number">300</div>
-                    </div>
-
-                </div>
-
-
-                {{-- =====================================================
-                     CHART ROW 1
-                ====================================================== --}}
-                <div class="grid grid-cols-[1.7fr_1fr] gap-[10px] mb-[10px]">
-
-
-                    {{-- LINE --}}
-                    <div class="chart-card">
-
-                        <div class="chart-title">
-                            Google Form Response
-                        </div>
-
-                        <div class="h-[132px]">
-                            <canvas id="responseChart"></canvas>
-                        </div>
-
-                    </div>
-
-
-                    {{-- PIE --}}
-                    <div class="chart-card">
-
-                        <div class="chart-title">
-                            Disabilitas Fisik
-                        </div>
-
-                        <div class="h-[132px]">
-                            <canvas id="disabilityChart"></canvas>
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                {{-- =====================================================
-                     CHART ROW 2
-                ====================================================== --}}
-                <div class="grid grid-cols-[1.35fr_1fr] gap-[10px] mb-[12px]">
-
-
-                    {{-- BAR --}}
-                    <div class="chart-card">
-
-                        <div class="chart-title">
-                            Pendaftar Berdasarkan PPKS
-                        </div>
-
-                        <div class="h-[132px]">
-                            <canvas id="ppksBar"></canvas>
-                        </div>
-
-                    </div>
-
-
-                    {{-- DONUT --}}
-                    <div class="chart-card">
-
-                        <div class="chart-title">
-                            Pendaftar Berdasarkan PPKS
-                        </div>
-
-                        <div class="h-[132px]">
-                            <canvas id="ppksDonut"></canvas>
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                {{-- =====================================================
-                     TABLE
-                ====================================================== --}}
-                <div class="bg-white rounded-[13px] shadow-sm px-[16px] pt-[15px] pb-[12px]">
-
-
-                    {{-- TITLE --}}
-                    <div class="flex items-center justify-between mb-[10px]">
-
-                        <div class="text-[10px] font-semibold text-gray-800">
-                            Rekomendasi Siswa Berdasarkan Data Pending
-                        </div>
-
-                        <a href="#"
-                           class="text-[7px] text-[#205d91] hover:underline">
-
-                            Lihat Semua
-
-                        </a>
-
-                    </div>
-
-
-                    {{-- TABLE --}}
-                    <div class="overflow-hidden rounded-[11px] border border-gray-100">
-
-                        <table class="w-full border-collapse">
-
-                            <thead>
-
-                                <tr class="bg-[#205d91] text-white">
-
-                                    <th class="table-head w-[38px]">No</th>
-                                    <th class="table-head">Nama</th>
-                                    <th class="table-head">NIK</th>
-                                    <th class="table-head">No HP</th>
-                                    <th class="table-head">Jenis PPKS</th>
-                                    <th class="table-head w-[175px]">Tahapan</th>
-                                    <th class="table-head">Keterangan</th>
-
-                                </tr>
-
-                            </thead>
-
-
-                            <tbody>
-
-                                @php
-
-                                    $students = [
-
-                                        [
-                                            'nama' => 'Siti Rahmawati',
-                                            'nik' => '012345678',
-                                            'hp' => '0897654321',
-                                            'ppks' => 'Disabilitas fisik',
-                                            'tahapan' => 'Asesmen Instruktur',
-                                            'ket' => 'Masih Sekolah',
-                                            'warna' => 'yellow'
-                                        ],
-
-                                        [
-                                            'nama' => 'Siti Rahmawati',
-                                            'nik' => '012345678',
-                                            'hp' => '0897654321',
-                                            'ppks' => 'Disabilitas fisik',
-                                            'tahapan' => 'Asesmen Instruktur',
-                                            'ket' => 'Sudah bekerja',
-                                            'warna' => 'yellow'
-                                        ],
-
-                                        [
-                                            'nama' => 'Siti Rahmawati',
-                                            'nik' => '012345678',
-                                            'hp' => '0897654321',
-                                            'ppks' => 'Disabilitas fisik',
-                                            'tahapan' => 'Asesmen Kesehatan Awal',
-                                            'ket' => 'Minum obat',
-                                            'warna' => 'purple'
-                                        ],
-
-                                        [
-                                            'nama' => 'Siti Rahmawati',
-                                            'nik' => '012345678',
-                                            'hp' => '0897654321',
-                                            'ppks' => 'Disabilitas fisik',
-                                            'tahapan' => 'Asesmen Instruktur',
-                                            'ket' => 'Masih Sekolah',
-                                            'warna' => 'yellow'
-                                        ],
-
-                                        [
-                                            'nama' => 'Siti Rahmawati',
-                                            'nik' => '012345678',
-                                            'hp' => '0897654321',
-                                            'ppks' => 'Disabilitas fisik',
-                                            'tahapan' => 'Asesmen Instruktur',
-                                            'ket' => 'Sudah bekerja',
-                                            'warna' => 'yellow'
-                                        ]
-
-                                    ];
-
-                                @endphp
-
-
-                                @foreach ($students as $index => $student)
-
-                                    <tr class="border-b border-gray-100 last:border-b-0 hover:bg-gray-50">
-
-
-                                        <td class="table-cell text-center">
-                                            {{ $index + 1 }}
-                                        </td>
-
-
-                                        <td class="table-cell">
-                                            {{ $student['nama'] }}
-                                        </td>
-
-
-                                        <td class="table-cell">
-                                            {{ $student['nik'] }}
-                                        </td>
-
-
-                                        <td class="table-cell">
-                                            {{ $student['hp'] }}
-                                        </td>
-
-
-                                        <td class="table-cell">
-                                            {{ $student['ppks'] }}
-                                        </td>
-
-
-                                        <td class="table-cell">
-
-                                            @if($student['warna'] === 'purple')
-
-                                                <div class="stage purple-stage">
-
-                                                    <div class="stage-icon purple-icon">
-                                                        ✓
-                                                    </div>
-
-                                                    <div class="flex-1">
-
-                                                        <div class="stage-title">
-                                                            {{ $student['tahapan'] }}
-                                                        </div>
-
-                                                        <div class="stage-status">
-                                                            Pending
-                                                        </div>
-
-                                                    </div>
-
-                                                    <div class="stage-arrow">
-                                                        ›
-                                                    </div>
-
-                                                </div>
-
-                                            @else
-
-                                                <div class="stage yellow-stage">
-
-                                                    <div class="stage-icon yellow-icon">
-                                                        ✓
-                                                    </div>
-
-                                                    <div class="flex-1">
-
-                                                        <div class="stage-title">
-                                                            {{ $student['tahapan'] }}
-                                                        </div>
-
-                                                        <div class="stage-status">
-                                                            Pending
-                                                        </div>
-
-                                                    </div>
-
-                                                    <div class="stage-arrow">
-                                                        ›
-                                                    </div>
-
-                                                </div>
-
-                                            @endif
-
-                                        </td>
-
-
-                                        <td class="table-cell">
-                                            {{ $student['ket'] }}
-                                        </td>
-
-                                    </tr>
-
-                                @endforeach
-
-                            </tbody>
-
-                        </table>
-
-                    </div>
-
-                </div>
-
-            </main>
+    {{-- =====================================================
+    STATISTICS
+    ====================================================== --}}
+    <section class="stats-grid">
+
+        {{-- TOTAL PENDAFTAR --}}
+        <div class="stat-card">
+
+            <div class="stat-header">
+                <span class="stat-title">
+                    Total Pendaftar
+                </span>
+
+                <span class="material-symbols-outlined stat-icon blue">
+                    groups
+                </span>
+            </div>
+
+            <div class="stat-value">
+                500
+                <span>peserta</span>
+            </div>
+
+            <div class="stat-progress">
+                <div class="stat-progress-fill blue" style="width: 100%"></div>
+            </div>
+
+            <div class="stat-meta">
+                <span>Seluruh peserta mendaftar</span>
+                <strong>100%</strong>
+            </div>
 
         </div>
 
-    </div>
+
+        {{-- SUDAH DILAYANI --}}
+        <div class="stat-card">
+
+            <div class="stat-header">
+                <span class="stat-title">
+                    Sudah Dilayani
+                </span>
+
+                <span class="material-symbols-outlined stat-icon green">
+                    task_alt
+                </span>
+            </div>
+
+            <div class="stat-value">
+                300
+                <span>peserta</span>
+            </div>
+
+            <div class="stat-progress">
+                <div class="stat-progress-fill green" style="width: 60%"></div>
+            </div>
+
+            <div class="stat-meta">
+                <span>Dari 500 pendaftar</span>
+                <strong>60%</strong>
+            </div>
+
+        </div>
 
 
-    {{-- ================================================================
-         CSS
-    ================================================================= --}}
-    <style>
+        {{-- BELUM DILAYANI --}}
+        <div class="stat-card">
 
-        * {
-            box-sizing: border-box;
-        }
+            <div class="stat-header">
+                <span class="stat-title">
+                    Belum Dilayani
+                </span>
 
-        body {
-            margin: 0;
-            overflow-x: hidden;
-        }
+                <span class="material-symbols-outlined stat-icon orange">
+                    pending_actions
+                </span>
+            </div>
 
-        .menu-item {
-            display: flex;
-            align-items: center;
-            gap: 9px;
-            height: 30px;
-            padding: 0 10px;
-            border-radius: 9px;
-            color: #202020;
-            font-size: 9px;
-            transition: .15s;
-        }
+            <div class="stat-value">
+                200
+                <span>peserta</span>
+            </div>
 
-        .menu-item:hover {
-            background: #f3f4f6;
-        }
+            <div class="stat-progress">
+                <div class="stat-progress-fill orange" style="width: 40%"></div>
+            </div>
 
-        .submenu {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            height: 25px;
-            padding-left: 13px;
-            color: #202020;
-            font-size: 9px;
-            transition: .15s;
-        }
+            <div class="stat-meta">
+                <span>Dari 500 pendaftar</span>
+                <strong>40%</strong>
+            </div>
 
-        .submenu:hover {
-            color: #205d91;
-        }
-
-        .arrow {
-            font-size: 15px;
-            line-height: 1;
-        }
-
-        .dashboard-card {
-            height: 69px;
-            background: white;
-            border-radius: 13px;
-            padding: 14px;
-            box-shadow: 0 1px 2px rgba(0,0,0,.02);
-        }
-
-        .card-title {
-            font-size: 9px;
-            color: #222;
-            margin-bottom: 6px;
-        }
-
-        .card-number {
-            font-size: 21px;
-            line-height: 1;
-            font-weight: 700;
-            color: #205d91;
-        }
-
-        .chart-card {
-            background: white;
-            border-radius: 13px;
-            padding: 12px 14px;
-            min-width: 0;
-        }
-
-        .chart-title {
-            font-size: 10px;
-            font-weight: 500;
-            color: #1d1d1d;
-            margin-bottom: 4px;
-        }
-
-        .table-head {
-            height: 31px;
-            padding: 0 9px;
-            text-align: left;
-            font-size: 7px;
-            font-weight: 500;
-        }
-
-        .table-cell {
-            height: 31px;
-            padding: 3px 9px;
-            font-size: 7px;
-            color: #222;
-            white-space: nowrap;
-        }
-
-        .stage {
-            height: 25px;
-            width: 100%;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 3px 6px;
-        }
-
-        .yellow-stage {
-            background: #fff9e8;
-        }
-
-        .purple-stage {
-            background: #f5ebff;
-        }
-
-        .stage-icon {
-            width: 15px;
-            height: 15px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 8px;
-            color: white;
-            flex-shrink: 0;
-        }
-
-        .yellow-icon {
-            background: #f4bd18;
-        }
-
-        .purple-icon {
-            background: #a855f7;
-        }
-
-        .stage-title {
-            font-size: 7px;
-            font-weight: 500;
-            line-height: 8px;
-        }
-
-        .stage-status {
-            font-size: 6px;
-            color: #9ca3af;
-            line-height: 7px;
-        }
-
-        .stage-arrow {
-            font-size: 14px;
-            color: #555;
-            margin-left: auto;
-        }
+        </div>
 
 
-        /* Desktop */
-        @media (min-width: 1200px) {
+        {{-- PENDING --}}
+        <div class="stat-card">
 
-            .table-cell {
-                font-size: 7px;
-            }
+            <div class="stat-header">
+                <span class="stat-title">
+                    Siswa Pending
+                </span>
 
-        }
+                <span class="material-symbols-outlined stat-icon purple">
+                    person_alert
+                </span>
+            </div>
 
+            <div class="stat-value">
+                45
+                <span>peserta</span>
+            </div>
 
-        /* Laptop */
-        @media (max-width: 1100px) {
+            <div class="stat-progress">
+                <div class="stat-progress-fill purple" style="width: 9%"></div>
+            </div>
 
-            .flex.min-h-screen {
-                padding: 10px !important;
-            }
+            <div class="stat-meta">
+                <span>Dari 500 pendaftar</span>
+                <strong>9%</strong>
+            </div>
 
-            aside {
-                width: 170px !important;
-                min-width: 170px !important;
-            }
+        </div>
 
-            .grid-cols-4 {
-                gap: 8px !important;
-            }
-
-            .dashboard-card {
-                padding: 10px;
-            }
-
-            .card-number {
-                font-size: 18px;
-            }
-
-        }
+    </section>
 
 
-        /* Mobile */
-        @media (max-width: 768px) {
+    {{-- =====================================================
+    ROW 1 — TREN PENDAFTAR
+    ====================================================== --}}
+    <section class="dashboard-grid">
 
-            aside {
-                display: none;
-            }
+        <div class="content-card">
 
-            .grid-cols-4 {
-                grid-template-columns: repeat(2, 1fr) !important;
-            }
+            <div class="table-card-header">
 
-            .grid-cols-\[1\.7fr_1fr\],
-            .grid-cols-\[1\.35fr_1fr\] {
-                grid-template-columns: 1fr !important;
-            }
+                <div>
 
-            .table-cell {
-                font-size: 8px;
-            }
+                    <h2 class="section-title">
+                        Pendaftar Berdasarkan Periode
+                    </h2>
 
-        }
+                    <div class="chart-subtitle">
+                        Tren jumlah pendaftar setiap bulan
+                    </div>
 
-    </style>
+                </div>
+
+                <select id="yearFilter" class="chart-filter">
+
+                    <option value="2025">
+                        2025
+                    </option>
+
+                    <option value="2024">
+                        2024
+                    </option>
+
+                    <option value="2023">
+                        2023
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="chart-container chart-large">
+                <canvas id="registrationTrend"></canvas>
+            </div>
+
+        </div>
+
+    </section>
 
 
-    {{-- ================================================================
-         CHART.JS
-    ================================================================= --}}
+    {{-- =====================================================
+    ROW 2
+    ====================================================== --}}
+    <section class="dashboard-grid grid-large-small">
+
+
+        {{-- 10 WILAYAH TERTINGGI --}}
+        <div class="content-card">
+
+            <div class="section-title">
+                10 Wilayah Pendaftar Tertinggi
+            </div>
+
+            <div class="chart-subtitle">
+                Berdasarkan jumlah pendaftar
+            </div>
+
+            <div class="chart-container">
+                <canvas id="regionChart"></canvas>
+            </div>
+
+        </div>
+
+
+        {{-- JENIS DISABILITAS --}}
+        <div class="content-card">
+
+            <div class="section-title">
+                Jenis Disabilitas
+            </div>
+
+            <div class="chart-subtitle">
+                Komposisi pendaftar
+            </div>
+
+            <div class="chart-container">
+                <canvas id="disabilityChart"></canvas>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    {{-- =====================================================
+    ROW 3
+    ====================================================== --}}
+    <section class="dashboard-grid grid-status-major">
+
+
+        {{-- TAHAPAN PESERTA --}}
+        <div class="content-card status-chart-card">
+
+            <div class="section-title">
+                Tahapan Peserta
+            </div>
+
+            <div class="chart-subtitle">
+                Posisi peserta dalam proses pendaftaran
+            </div>
+
+            <div class="chart-container chart-status">
+                <canvas id="statusChart"></canvas>
+            </div>
+
+        </div>
+
+
+        {{-- JURUSAN DIMINATI --}}
+        <div class="content-card major-chart-card">
+
+            <div class="section-title">
+                Jurusan yang Diminati
+            </div>
+
+            <div class="chart-subtitle">
+                Berdasarkan pilihan peserta
+            </div>
+
+            <div class="chart-container chart-major">
+                <canvas id="majorChart"></canvas>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    {{-- =====================================================
+    TABLE
+    ====================================================== --}}
+    <section class="table-card">
+
+        <div class="table-card-header">
+
+            <h2 class="section-title">
+                Rekomendasi Siswa Berdasarkan Data Pending
+            </h2>
+
+            <a href="#" class="view-all-link">
+                Lihat Semua
+            </a>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table class="table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>No</th>
+                        <th>Nama</th>
+                        <th>NIK</th>
+                        <th>Umur</th>
+                        <th>Jenis PPKS</th>
+                        <th>Jurusan</th>
+                        <th>Hasil</th>
+                        <th>Keterangan</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    @php
+
+                        $students = [
+
+                            [
+                                'nama' => 'Siti Rahmawati',
+                                'nik' => '012345678',
+                                'umur' => '18',
+                                'ppks' => 'Disabilitas Fisik',
+                                'jurusan' => 'Contact Center',
+                                'hasil' => 'Asesmen Kesehatan',
+                                'status' => 'health',
+                                'keterangan' => '-',
+                            ],
+
+                            [
+                                'nama' => 'Andi Saputra',
+                                'nik' => '012345679',
+                                'umur' => '20',
+                                'ppks' => 'Disabilitas Fisik',
+                                'jurusan' => 'Komputer',
+                                'hasil' => 'Asesmen Kesehatan',
+                                'status' => 'health',
+                                'keterangan' => 'Tidak memenuhi syarat',
+                            ],
+
+                            [
+                                'nama' => 'Budi Santoso',
+                                'nik' => '012345680',
+                                'umur' => '19',
+                                'ppks' => 'Disabilitas Fisik',
+                                'jurusan' => 'Desain Grafis',
+                                'hasil' => 'Asesmen kesehatan',
+                                'status' => 'instructor',
+                                'keterangan' => '-',
+                            ],
+
+                            [
+                                'nama' => 'Citra Lestari',
+                                'nik' => '012345681',
+                                'umur' => '23',
+                                'ppks' => 'Disabilitas Fisik',
+                                'jurusan' => 'Menjahit',
+                                'hasil' => 'Asesmen kesehatan',
+                                'status' => 'instructor',
+                                'keterangan' => '-',
+                            ],
+
+                            [
+                                'nama' => 'Dewi Anggraini',
+                                'nik' => '012345682',
+                                'umur' => '27',
+                                'ppks' => 'Disabilitas Fisik',
+                                'jurusan' => 'Teknik Elektro',
+                                'hasil' => 'Asesmen Kesehatan',
+                                'status' => 'health',
+                                'keterangan' => '-',
+                            ],
+
+                            [
+                                'nama' => 'Rizky Maulana',
+                                'nik' => '012345683',
+                                'umur' => '30',
+                                'ppks' => 'Disabilitas Fisik',
+                                'jurusan' => 'Teknik Mesin',
+                                'hasil' => 'Asesmen Kesehatan',
+                                'status' => 'health',
+                                'keterangan' => '-',
+                            ],
+
+                        ];
+
+                    @endphp
+
+
+                    @foreach ($students as $index => $student)
+
+                        <tr>
+
+                            {{-- NO --}}
+                            <td>
+                                {{ $index + 1 }}
+                            </td>
+
+
+                            {{-- NAMA --}}
+                            <td>
+                                {{ $student['nama'] }}
+                            </td>
+
+
+                            {{-- NIK --}}
+                            <td>
+                                {{ $student['nik'] }}
+                            </td>
+
+
+                            {{-- UMUR --}}
+                            <td>
+                                {{ $student['umur'] }}
+                            </td>
+
+
+                            {{-- PPKS --}}
+                            <td>
+                                {{ $student['ppks'] }}
+                            </td>
+
+
+                            {{-- JURUSAN --}}
+                            <td>
+                                {{ $student['jurusan'] }}
+                            </td>
+
+
+                            {{-- HASIL --}}
+                            <td>
+
+                                {{-- ==========================
+                                DITERIMA
+                                =========================== --}}
+                                @if ($student['status'] === 'accepted')
+
+                                    <a href="#" class="result-badge result-accepted">
+
+                                        <span class="material-symbols-outlined result-icon">
+                                            task_alt
+                                        </span>
+
+                                        <span>
+                                            Diterima
+                                        </span>
+
+                                        <span class="result-arrow">
+                                            ›
+                                        </span>
+
+                                    </a>
+
+
+                                    {{-- ==========================
+                                    TIDAK DITERIMA
+                                    =========================== --}}
+                                @elseif ($student['status'] === 'rejected')
+
+                                    <a href="#" class="result-badge result-rejected">
+
+                                        <span class="material-symbols-outlined result-icon">
+                                            cancel
+                                        </span>
+
+                                        <span>
+                                            Tidak Diterima
+                                        </span>
+
+                                        <span class="result-arrow">
+                                            ›
+                                        </span>
+
+                                    </a>
+
+
+                                    {{-- ==========================
+                                    ASESMEN kesehatan
+                                    =========================== --}}
+                                @elseif ($student['status'] === 'instructor')
+
+                                    <a href="#" class="result-badge result-instructor">
+
+                                        <span class="material-symbols-outlined result-icon">
+                                            assignment
+                                        </span>
+
+                                        <div class="result-content">
+
+                                            <span class="result-title result-instructor">
+                                                Asesmen kesehatan
+                                            </span>
+
+                                            <span class="result-status pending">
+
+                                                <span class="status-dot pending"></span>
+
+                                                Pending
+
+                                            </span>
+
+                                        </div>
+
+                                        <span class="result-arrow">
+                                            ›
+                                        </span>
+
+                                    </a>
+
+
+                                    {{-- ==========================
+                                    ASESMEN KESEHATAN
+                                    =========================== --}}
+                                @elseif ($student['status'] === 'health')
+
+                                    <a href="#" class="result-badge result-health">
+
+                                        <span class="material-symbols-outlined result-icon">
+                                            medical_services
+                                        </span>
+
+                                        <div class="result-content">
+
+                                            <span class="result-title result-health">
+                                                Asesmen Kesehatan
+                                            </span>
+
+                                            <span class="result-status pending">
+
+                                                <span class="status-dot pending"></span>
+
+                                                Pending
+
+                                            </span>
+
+                                        </div>
+
+                                        <span class="result-arrow">
+                                            ›
+                                        </span>
+
+                                    </a>
+
+                                @endif
+
+                            </td>
+
+
+                            {{-- KETERANGAN --}}
+                            <td>
+                                {{ $student['keterangan'] }}
+                            </td>
+
+                        </tr>
+
+                    @endforeach
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+    {{-- =====================================================
+    CHART JS
+    ====================================================== --}}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 
     <script>
 
         document.addEventListener('DOMContentLoaded', function () {
 
 
-            /* ==========================================================
-               LINE CHART
-            =========================================================== */
+            /* =====================================================
+               COLOR SYSTEM
+            ===================================================== */
 
-            const responseCanvas =
-                document.getElementById('responseChart');
+            const rootStyles =
+                getComputedStyle(
+                    document.documentElement
+                );
 
-            if (responseCanvas) {
 
-                new Chart(responseCanvas, {
+            const colors = {
 
-                    type: 'line',
+                blue:
+                    rootStyles
+                        .getPropertyValue('--blue')
+                        .trim(),
 
-                    data: {
+                blueLight:
+                    rootStyles
+                        .getPropertyValue('--blue-light')
+                        .trim(),
 
-                        labels: [
-                            'Senin',
-                            'Selasa',
-                            'Rabu',
-                            'Kamis',
-                            'Jumat',
-                            'Sabtu',
-                            'Minggu'
-                        ],
+                purple:
+                    rootStyles
+                        .getPropertyValue('--purple')
+                        .trim(),
 
-                        datasets: [{
+                purpleLight:
+                    rootStyles
+                        .getPropertyValue('--purple-light')
+                        .trim(),
 
-                            data: [
-                                2,
-                                6,
-                                7,
-                                11,
-                                3,
-                                13,
-                                15
+                green:
+                    rootStyles
+                        .getPropertyValue('--green')
+                        .trim(),
+
+                greenLight:
+                    rootStyles
+                        .getPropertyValue('--green-light')
+                        .trim(),
+
+                orange:
+                    rootStyles
+                        .getPropertyValue('--orange')
+                        .trim(),
+
+                orangeLight:
+                    rootStyles
+                        .getPropertyValue('--orange-light')
+                        .trim(),
+
+                red:
+                    rootStyles
+                        .getPropertyValue('--red')
+                        .trim(),
+
+                redLight:
+                    rootStyles
+                        .getPropertyValue('--red-light')
+                        .trim(),
+
+                border:
+                    rootStyles
+                        .getPropertyValue('--border')
+                        .trim(),
+
+                text:
+                    rootStyles
+                        .getPropertyValue('--text-secondary')
+                        .trim(),
+
+                muted:
+                    rootStyles
+                        .getPropertyValue('--muted')
+                        .trim()
+
+            };
+
+
+            /* =====================================================
+               DEFAULT CHART
+            ===================================================== */
+
+            Chart.defaults.font.family = 'Poppins';
+
+            Chart.defaults.font.size = 11;
+
+            Chart.defaults.color = colors.text;
+
+
+            /* =====================================================
+               1. REGISTRATION TREND
+            ===================================================== */
+
+            const trendCanvas =
+                document.getElementById(
+                    'registrationTrend'
+                );
+
+
+            if (trendCanvas) {
+
+                const yearlyData = {
+
+                    2025: [
+                        35, 48, 62, 75,
+                        92, 110, 98, 125,
+                        138, 120, 105, 88
+                    ],
+
+                    2024: [
+                        28, 35, 45, 58,
+                        72, 85, 90, 102,
+                        110, 95, 82, 70
+                    ],
+
+                    2023: [
+                        20, 30, 38, 42,
+                        55, 65, 72, 80,
+                        88, 75, 68, 60
+                    ]
+
+                };
+
+
+                const trendChart =
+                    new Chart(
+                        trendCanvas,
+                        {
+
+                            type: 'line',
+
+                            data: {
+
+                                labels: [
+
+                                    'Jan',
+                                    'Feb',
+                                    'Mar',
+                                    'Apr',
+                                    'Mei',
+                                    'Jun',
+                                    'Jul',
+                                    'Agu',
+                                    'Sep',
+                                    'Okt',
+                                    'Nov',
+                                    'Des'
+
+                                ],
+
+                                datasets: [{
+
+                                    label:
+                                        'Pendaftar',
+
+                                    data:
+                                        yearlyData[2025],
+
+                                    borderColor:
+                                        colors.blue,
+
+                                    backgroundColor:
+                                        'rgba(32, 93, 145, .08)',
+
+                                    borderWidth: 2.5,
+
+                                    pointRadius: 3.5,
+
+                                    pointHoverRadius: 6,
+
+                                    pointBackgroundColor:
+                                        colors.blue,
+
+                                    pointBorderColor:
+                                        colors.blue,
+
+                                    fill: true,
+
+                                    tension: .35
+
+                                }]
+
+                            },
+
+                            options: {
+
+                                responsive: true,
+
+                                maintainAspectRatio: false,
+
+                                interaction: {
+
+                                    intersect: false,
+
+                                    mode: 'index'
+
+                                },
+
+                                plugins: {
+
+                                    legend: {
+
+                                        display: false
+
+                                    },
+
+                                    tooltip: {
+
+                                        callbacks: {
+
+                                            label:
+                                                function (context) {
+
+                                                    return ' ' +
+                                                        context.parsed.y +
+                                                        ' pendaftar';
+
+                                                }
+
+                                        }
+
+                                    }
+
+                                },
+
+                                scales: {
+
+                                    y: {
+
+                                        beginAtZero: true,
+
+                                        grid: {
+
+                                            color:
+                                                colors.border
+
+                                        },
+
+                                        ticks: {
+
+                                            precision: 0
+
+                                        }
+
+                                    },
+
+                                    x: {
+
+                                        grid: {
+
+                                            display: false
+
+                                        }
+
+                                    }
+
+                                }
+
+                            }
+
+                        }
+                    );
+
+
+                const yearFilter =
+                    document.getElementById(
+                        'yearFilter'
+                    );
+
+
+                if (yearFilter) {
+
+                    yearFilter.addEventListener(
+                        'change',
+                        function () {
+
+                            const selectedYear =
+                                this.value;
+
+                            trendChart
+                                .data
+                                .datasets[0]
+                                .data =
+                                yearlyData[
+                                selectedYear
+                                ];
+
+                            trendChart.update();
+
+                        }
+                    );
+
+                }
+
+            }
+
+
+            /* =====================================================
+               2. REGION
+            ===================================================== */
+
+            const regionCanvas =
+                document.getElementById(
+                    'regionChart'
+                );
+
+
+            if (regionCanvas) {
+
+                new Chart(
+                    regionCanvas,
+                    {
+
+                        type: 'bar',
+
+                        data: {
+
+                            labels: [
+
+                                'Jawa Barat',
+                                'Jawa Timur',
+                                'Jawa Tengah',
+                                'DKI Jakarta',
+                                'Banten',
+
                             ],
 
-                            borderColor: '#205d91',
+                            datasets: [{
 
-                            borderWidth: 2.5,
+                                label:
+                                    'Pendaftar',
 
-                            pointRadius: 0,
+                                data: [
 
-                            tension: .42,
+                                    120,
+                                    108,
+                                    96,
+                                    85,
+                                    74,
+                                    63,
+                                    55,
+                                    48,
+                                    42,
+                                    36
 
-                            fill: false
+                                ],
 
-                        }]
+                                backgroundColor:
+                                    colors.blue,
 
-                    },
+                                borderRadius: 5,
 
-                    options: {
+                                barThickness: 14
 
-                        responsive: true,
-
-                        maintainAspectRatio: false,
-
-                        plugins: {
-
-                            legend: {
-                                display: false
-                            }
+                            }]
 
                         },
 
-                        scales: {
+                        options: {
 
-                            y: {
+                            indexAxis: 'y',
 
-                                beginAtZero: true,
+                            responsive: true,
 
-                                max: 20,
+                            maintainAspectRatio: false,
 
-                                ticks: {
-                                    stepSize: 5,
-                                    font: {
-                                        size: 7
-                                    },
-                                    color: '#999'
-                                },
+                            plugins: {
 
-                                grid: {
-                                    color: '#d9d9d9'
+                                legend: {
+
+                                    display: false
+
                                 }
 
                             },
 
-                            x: {
+                            scales: {
 
-                                ticks: {
-                                    font: {
-                                        size: 7
+                                x: {
+
+                                    beginAtZero: true,
+
+                                    grid: {
+
+                                        color:
+                                            colors.border
+
                                     },
-                                    color: '#222'
+
+                                    ticks: {
+
+                                        precision: 0
+
+                                    }
+
                                 },
 
-                                grid: {
-                                    display: false
+                                y: {
+
+                                    grid: {
+
+                                        display: false
+
+                                    }
+
                                 }
 
                             }
@@ -933,79 +982,397 @@
                         }
 
                     }
-
-                });
+                );
 
             }
 
 
-            /* ==========================================================
-               PIE CHART
-            =========================================================== */
+            /* =====================================================
+               3. STATUS / TAHAPAN
+               POLAR AREA
+            ===================================================== */
+
+            const statusCanvas =
+                document.getElementById(
+                    'statusChart'
+                );
+
+
+            if (statusCanvas) {
+
+                new Chart(
+                    statusCanvas,
+                    {
+
+                        type: 'polarArea',
+
+                        data: {
+
+                            labels: [
+
+                                'Belum Diolah',
+                                'Asesmen kesehatan',
+                                'Asesmen Kesehatan',
+                                'Kesehatan Lanjutan',
+                                'Case Conference',
+                                'Pending',
+                                'Ditolak'
+
+                            ],
+
+                            datasets: [{
+
+                                data: [
+
+                                    70,
+                                    85,
+                                    55,
+                                    35,
+                                    25,
+                                    45,
+                                    20
+
+                                ],
+
+                                backgroundColor: [
+
+                                    colors.blueLight,
+                                    colors.orange,
+                                    colors.purple,
+                                    colors.purpleLight,
+                                    colors.green,
+                                    colors.orangeLight,
+                                    colors.red
+
+                                ],
+
+                                borderColor:
+                                    '#ffffff',
+
+                                borderWidth: 3
+
+                            }]
+
+                        },
+
+                        options: {
+
+                            responsive: true,
+
+                            maintainAspectRatio: false,
+
+                            plugins: {
+
+                                legend: {
+
+                                    position:
+                                        'bottom',
+
+                                    labels: {
+
+                                        boxWidth: 10,
+
+                                        boxHeight: 10,
+
+                                        padding: 10,
+
+                                        usePointStyle:
+                                            true,
+
+                                        pointStyle:
+                                            'circle',
+
+                                        font: {
+
+                                            size: 10
+
+                                        }
+
+                                    }
+
+                                },
+
+                                tooltip: {
+
+                                    callbacks: {
+
+                                        label:
+                                            function (context) {
+
+                                                return (
+                                                    context.label +
+                                                    ': ' +
+                                                    context.raw +
+                                                    ' Peserta'
+                                                );
+
+                                            }
+
+                                    }
+
+                                }
+
+                            },
+
+                            scales: {
+
+                                r: {
+
+                                    beginAtZero: true,
+
+                                    ticks: {
+
+                                        display: false
+
+                                    },
+
+                                    grid: {
+
+                                        color:
+                                            colors.border
+
+                                    },
+
+                                    angleLines: {
+
+                                        color:
+                                            colors.border
+
+                                    }
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+                );
+
+            }
+
+
+            /* =====================================================
+               4. JURUSAN
+               VERTICAL BAR
+            ===================================================== */
+
+            const majorCanvas =
+                document.getElementById(
+                    'majorChart'
+                );
+
+
+            if (majorCanvas) {
+
+                new Chart(
+                    majorCanvas,
+                    {
+
+                        type: 'bar',
+
+                        data: {
+
+                            labels: [
+
+                                'Komputer',
+                                'Desain Grafis',
+                                'Penjahitan',
+                                'CC',
+                                'Elektro',
+                                'Logam',
+                                'Mesin'
+
+                            ],
+
+                            datasets: [{
+
+                                label:
+                                    'Peminat',
+
+                                data: [
+
+                                    50,
+                                    120,
+                                    85,
+                                    65,
+                                    75,
+                                    55,
+                                    70
+
+                                ],
+
+                                backgroundColor:
+                                    colors.blue,
+
+                                borderRadius: 6,
+
+                                barThickness: 32
+
+                            }]
+
+                        },
+
+                        options: {
+
+                            responsive: true,
+
+                            maintainAspectRatio: false,
+
+                            plugins: {
+
+                                legend: {
+
+                                    display: false
+
+                                },
+
+                                tooltip: {
+
+                                    callbacks: {
+
+                                        label:
+                                            function (context) {
+
+                                                return (
+                                                    context.raw +
+                                                    ' peminat'
+                                                );
+
+                                            }
+
+                                    }
+
+                                }
+
+                            },
+
+                            scales: {
+
+                                y: {
+
+                                    beginAtZero: true,
+
+                                    grid: {
+
+                                        color:
+                                            colors.border
+
+                                    },
+
+                                    ticks: {
+
+                                        precision: 0
+
+                                    }
+
+                                },
+
+                                x: {
+
+                                    grid: {
+
+                                        display: false
+
+                                    }
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+                );
+
+            }
+
+
+            /* =====================================================
+               5. DISABILITY
+               DOUGHNUT
+            ===================================================== */
 
             const disabilityCanvas =
-                document.getElementById('disabilityChart');
+                document.getElementById(
+                    'disabilityChart'
+                );
+
 
             if (disabilityCanvas) {
 
-                new Chart(disabilityCanvas, {
+                new Chart(
+                    disabilityCanvas,
+                    {
 
-                    type: 'pie',
+                        type: 'doughnut',
 
-                    data: {
+                        data: {
 
-                        labels: [
-                            'Disabilitas Fisik',
-                            'Disabilitas Fisik',
-                            'Disabilitas Fisik'
-                        ],
+                            labels: [
 
-                        datasets: [{
+                                'Disabilitas Fisik',
+                                'Disabilitas Sensorik',
+                                'Disabilitas Mental',
+                                'Disabilitas Intelektual'
 
-                            data: [
-                                60,
-                                30,
-                                10
                             ],
 
-                            backgroundColor: [
-                                '#22c55e',
-                                '#f59e0b',
-                                '#ef4444'
-                            ],
+                            datasets: [{
 
-                            borderWidth: 0
+                                data: [
 
-                        }]
+                                    60,
+                                    20,
+                                    12,
+                                    8
 
-                    },
+                                ],
 
-                    options: {
+                                backgroundColor: [
 
-                        responsive: true,
+                                    colors.blue,
+                                    colors.blueLight,
+                                    colors.orange,
+                                    colors.purple
 
-                        maintainAspectRatio: false,
+                                ],
 
-                        layout: {
-                            padding: 0
+                                borderWidth: 0
+
+                            }]
+
                         },
 
-                        plugins: {
+                        options: {
 
-                            legend: {
+                            cutout: '65%',
 
-                                position: 'right',
+                            responsive: true,
 
-                                labels: {
+                            maintainAspectRatio: false,
 
-                                    boxWidth: 6,
+                            plugins: {
 
-                                    boxHeight: 6,
+                                legend: {
 
-                                    padding: 5,
+                                    position:
+                                        'bottom',
 
-                                    font: {
-                                        size: 7
+                                    labels: {
+
+                                        boxWidth: 10,
+
+                                        boxHeight: 10,
+
+                                        padding: 10,
+
+                                        font: {
+
+                                            size: 10
+
+                                        }
+
                                     }
 
                                 }
@@ -1015,203 +1382,7 @@
                         }
 
                     }
-
-                });
-
-            }
-
-
-            /* ==========================================================
-               BAR CHART
-            =========================================================== */
-
-            const barCanvas =
-                document.getElementById('ppksBar');
-
-            if (barCanvas) {
-
-                new Chart(barCanvas, {
-
-                    type: 'bar',
-
-                    data: {
-
-                        labels: [
-                            'DKI Jakarta',
-                            'Jawa Barat',
-                            'Kalimantan Timur',
-                            'Sumatra Barat',
-                            'Sulawesi Barat'
-                        ],
-
-                        datasets: [{
-
-                            data: [
-                                42,
-                                40,
-                                12,
-                                78,
-                                50
-                            ],
-
-                            backgroundColor: '#205d91',
-
-                            borderRadius: 0,
-
-                            barThickness: 9
-
-                        }]
-
-                    },
-
-                    options: {
-
-                        indexAxis: 'y',
-
-                        responsive: true,
-
-                        maintainAspectRatio: false,
-
-                        plugins: {
-
-                            legend: {
-                                display: false
-                            }
-
-                        },
-
-                        scales: {
-
-                            x: {
-
-                                beginAtZero: true,
-
-                                max: 90,
-
-                                ticks: {
-
-                                    stepSize: 10,
-
-                                    font: {
-                                        size: 7
-                                    },
-
-                                    color: '#999'
-
-                                },
-
-                                grid: {
-                                    color: '#d9d9d9'
-                                }
-
-                            },
-
-                            y: {
-
-                                ticks: {
-
-                                    font: {
-                                        size: 7
-                                    },
-
-                                    color: '#222'
-
-                                },
-
-                                grid: {
-                                    display: false
-                                }
-
-                            }
-
-                        }
-
-                    }
-
-                });
-
-            }
-
-
-            /* ==========================================================
-               DONUT
-            =========================================================== */
-
-            const donutCanvas =
-                document.getElementById('ppksDonut');
-
-            if (donutCanvas) {
-
-                new Chart(donutCanvas, {
-
-                    type: 'doughnut',
-
-                    data: {
-
-                        labels: [
-                            'Disabilitas Fisik',
-                            'Disabilitas Fisik',
-                            'Disabilitas Fisik',
-                            'Disabilitas Fisik'
-                        ],
-
-                        datasets: [{
-
-                            data: [
-                                60,
-                                30,
-                                7,
-                                3
-                            ],
-
-                            backgroundColor: [
-                                '#22c55e',
-                                '#f59e0b',
-                                '#38bdf8',
-                                '#ef4444'
-                            ],
-
-                            borderWidth: 0
-
-                        }]
-
-                    },
-
-                    options: {
-
-                        cutout: '60%',
-
-                        responsive: true,
-
-                        maintainAspectRatio: false,
-
-                        plugins: {
-
-                            legend: {
-
-                                position: 'right',
-
-                                labels: {
-
-                                    boxWidth: 6,
-
-                                    boxHeight: 6,
-
-                                    padding: 5,
-
-                                    font: {
-                                        size: 7
-                                    }
-
-                                }
-
-                            }
-
-                        }
-
-                    }
-
-                });
+                );
 
             }
 

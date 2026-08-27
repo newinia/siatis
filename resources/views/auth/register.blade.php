@@ -192,9 +192,7 @@
 
         <!-- KIRI -->
         <div class="register-left">
-            <img
-                src="{{ asset('images/login-bg.jpeg') }}"
-                alt="Background STIS">
+            <img src="{{ asset('images/login-bg.jpeg') }}" alt="Background STIS">
         </div>
 
         <!-- KANAN -->
@@ -203,10 +201,7 @@
             <div class="register-card">
 
                 <!-- LOGO -->
-                <img
-                    src="{{ asset('images/logo.png') }}"
-                    alt="Logo STIS"
-                    class="register-logo">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo STIS" class="register-logo">
 
                 <!-- JUDUL -->
                 <h1 class="register-title">
@@ -218,10 +213,7 @@
                 </p>
 
                 <!-- FORM -->
-                <form
-                    method="POST"
-                    action="{{ route('register') }}"
-                    class="register-form">
+                <form method="POST" action="{{ route('register') }}" class="register-form">
 
                     @csrf
 
@@ -232,20 +224,10 @@
                             Nama
                         </label>
 
-                        <x-text-input
-                            id="name"
-                            name="name"
-                            type="text"
-                            :value="old('name')"
-                            required
-                            autofocus
-                            autocomplete="name"
-                            placeholder="Masukkan nama"
-                            class="register-input" />
+                        <x-text-input id="name" name="name" type="text" :value="old('name')" required autofocus
+                            autocomplete="name" placeholder="Masukkan nama" class="register-input" />
 
-                        <x-input-error
-                            :messages="$errors->get('name')"
-                            class="mt-1" />
+                        <x-input-error :messages="$errors->get('name')" class="mt-1" />
 
                     </div>
 
@@ -256,19 +238,10 @@
                             Email
                         </label>
 
-                        <x-text-input
-                            id="email"
-                            name="email"
-                            type="email"
-                            :value="old('email')"
-                            required
-                            autocomplete="username"
-                            placeholder="Masukkan email"
-                            class="register-input" />
+                        <x-text-input id="email" name="email" type="email" :value="old('email')" required
+                            autocomplete="username" placeholder="Masukkan email" class="register-input" />
 
-                        <x-input-error
-                            :messages="$errors->get('email')"
-                            class="mt-1" />
+                        <x-input-error :messages="$errors->get('email')" class="mt-1" />
 
                     </div>
 
@@ -279,36 +252,23 @@
                             Role
                         </label>
 
-                        <select
-                            id="role"
-                            name="role"
-                            required
-                            class="register-select">
+                        <select id="role" name="role" required class="register-select">
 
-                            <option
-                                value=""
-                                disabled
-                                {{ old('role') ? '' : 'selected' }}>
+                            <option value="" disabled {{ old('role') ? '' : 'selected' }}>
                                 Pilih role
                             </option>
 
-                            <option
-                                value="instruktur"
-                                {{ old('role') == 'instruktur' ? 'selected' : '' }}>
-                                Instruktur
+                            <option value="kesehatan" {{ old('role') == 'kesehatan' ? 'selected' : '' }}>
+                                kesehatan
                             </option>
 
-                            <option
-                                value="medis"
-                                {{ old('role') == 'medis' ? 'selected' : '' }}>
+                            <option value="medis" {{ old('role') == 'medis' ? 'selected' : '' }}>
                                 Medis
                             </option>
 
                         </select>
 
-                        <x-input-error
-                            :messages="$errors->get('role')"
-                            class="mt-1" />
+                        <x-input-error :messages="$errors->get('role')" class="mt-1" />
 
                     </div>
 
@@ -319,18 +279,10 @@
                             Password
                         </label>
 
-                        <x-text-input
-                            id="password"
-                            name="password"
-                            type="password"
-                            required
-                            autocomplete="new-password"
-                            placeholder="Masukkan password"
-                            class="register-input" />
+                        <x-text-input id="password" name="password" type="password" required autocomplete="new-password"
+                            placeholder="Masukkan password" class="register-input" />
 
-                        <x-input-error
-                            :messages="$errors->get('password')"
-                            class="mt-1" />
+                        <x-input-error :messages="$errors->get('password')" class="mt-1" />
 
                     </div>
 
@@ -341,25 +293,15 @@
                             Konfirmasi Password
                         </label>
 
-                        <x-text-input
-                            id="password_confirmation"
-                            name="password_confirmation"
-                            type="password"
-                            required
-                            autocomplete="new-password"
-                            placeholder="Masukkan ulang password"
-                            class="register-input" />
+                        <x-text-input id="password_confirmation" name="password_confirmation" type="password" required
+                            autocomplete="new-password" placeholder="Masukkan ulang password" class="register-input" />
 
-                        <x-input-error
-                            :messages="$errors->get('password_confirmation')"
-                            class="mt-1" />
+                        <x-input-error :messages="$errors->get('password_confirmation')" class="mt-1" />
 
                     </div>
 
                     <!-- BUTTON -->
-                    <button
-                        type="submit"
-                        class="register-button">
+                    <button type="submit" class="register-button">
                         Daftar
                     </button>
 

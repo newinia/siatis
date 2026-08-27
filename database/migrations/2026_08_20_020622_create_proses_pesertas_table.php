@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -21,13 +20,13 @@ return new class extends Migration
 
             // Tahap proses peserta saat ini
             $table->enum('tahap', [
-                'instruktur',
+                'kesehatan',
                 'kesehatan_awal',
                 'case_conference',
                 'kesehatan_lanjutan',
                 'aktif',
                 'tidak_lolos'
-            ])->default('instruktur');
+            ])->default('kesehatan');
 
             // Hasil pada tahap saat ini
             $table->enum('status', [
