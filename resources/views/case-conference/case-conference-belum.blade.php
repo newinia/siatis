@@ -131,6 +131,7 @@
 
                     @php
 
+
                         $students = [
 
                             [
@@ -139,9 +140,9 @@
                                 'umur' => '18',
                                 'ppks' => 'Disabilitas Fisik',
                                 'jurusan' => 'Contact Center',
-                                'hasil' => 'Asesmen Kesehatan',
-                                'status' => 'accepted',
-                                'keterangan' => '-',
+                                'hasil' => 'Asesmen Kesehatan Awal',
+                                'status' => 'health',
+                                'keterangan' => 'Lolos',
                             ],
 
                             [
@@ -150,9 +151,9 @@
                                 'umur' => '20',
                                 'ppks' => 'Disabilitas Fisik',
                                 'jurusan' => 'Komputer',
-                                'hasil' => 'Asesmen Kesehatan',
-                                'status' => 'rejected',
-                                'keterangan' => 'Tidak memenuhi syarat',
+                                'hasil' => 'Asesmen Kesehatan Awal',
+                                'status' => 'health',
+                                'keterangan' => 'Lolos',
                             ],
 
                             [
@@ -161,9 +162,9 @@
                                 'umur' => '19',
                                 'ppks' => 'Disabilitas Fisik',
                                 'jurusan' => 'Desain Grafis',
-                                'hasil' => 'Asesmen kesehatan',
-                                'status' => 'rejected',
-                                'keterangan' => '-',
+                                'hasil' => 'Asesmen Kesehatan Awal',
+                                'status' => 'health',
+                                'keterangan' => 'Lolos',
                             ],
 
                             [
@@ -172,9 +173,9 @@
                                 'umur' => '23',
                                 'ppks' => 'Disabilitas Fisik',
                                 'jurusan' => 'Menjahit',
-                                'hasil' => 'Asesmen Kesehatan',
+                                'hasil' => 'Asesmen Kesehatan Awal',
                                 'status' => 'health',
-                                'keterangan' => '-',
+                                'keterangan' => 'Lolos',
                             ],
 
                             [
@@ -183,9 +184,9 @@
                                 'umur' => '27',
                                 'ppks' => 'Disabilitas Fisik',
                                 'jurusan' => 'Teknik Elektro',
-                                'hasil' => 'Asesmen Kesehatan',
+                                'hasil' => 'Asesmen Kesehatan Awal',
                                 'status' => 'health',
-                                'keterangan' => '-',
+                                'keterangan' => 'Lolos',
                             ],
 
                             [
@@ -194,9 +195,9 @@
                                 'umur' => '30',
                                 'ppks' => 'Disabilitas Fisik',
                                 'jurusan' => 'Teknik Mesin',
-                                'hasil' => 'Asesmen Kesehatan',
+                                'hasil' => 'Asesmen Kesehatan Awal',
                                 'status' => 'health',
-                                'keterangan' => '-',
+                                'keterangan' => 'Lolos',
                             ],
 
                         ];

@@ -33,29 +33,47 @@
         sidebarOpen: true,
         mobileOpen: false,
 
+        dataOpen: {{ request()->routeIs(
+            'data',
+            'data-detail',
+            'data-import',
+            'data-pemeriksaan',
+            'data-tervalidasi'
+        ) ? 'true' : 'false' }},
+
         instructorOpen: {{ request()->routeIs(
-    'asesmen-instruktur',
-    'asesmen-instruktur-detail',
-    'instruktur-lolos',
-    'instruktur-tidak-lolos',
-    'instruktur-pending'
-) ? 'true' : 'false' }},
+            'asesmen-instruktur',
+            'asesmen-instruktur-detail',
+            'instruktur-belum-asesmen',
+            'instruktur-lolos',
+            'instruktur-tidak-lolos',
+            'instruktur-pending'
+        ) ? 'true' : 'false' }},
 
         healthInitialOpen: {{ request()->routeIs(
-    'asesmen-kesehatan-awal',
-    'asesmen-kesehatan-awal-detail',
-    'kesehatan-awal-lolos',
-    'kesehatan-awal-tidak-lolos',
-    'kesehatan-awal-pending'
-) ? 'true' : 'false' }},
+            'asesmen-kesehatan-awal',
+            'asesmen-kesehatan-awal-detail',
+            'kesehatan-awal-belum-asesmen',
+            'kesehatan-awal-lolos',
+            'kesehatan-awal-tidak-lolos',
+            'kesehatan-awal-pending'
+        ) ? 'true' : 'false' }},
+
+        caseConferenceOpen: {{ request()->routeIs(
+            'case-conference',
+            'case-conference-detail',
+            'case-conference-belum',
+            'case-conference-sudah'
+        ) ? 'true' : 'false' }},
 
         healthAdvancedOpen: {{ request()->routeIs(
-    'asesmen-kesehatan-lanjutan',
-    'asesmen-kesehatan-lanjutan-detail',
-    'kesehatan-lanjutan-lolos',
-    'kesehatan-lanjutan-tidak-lolos',
-    'kesehatan-lanjutan-pending'
-) ? 'true' : 'false' }}
+            'asesmen-kesehatan-lanjutan',
+            'asesmen-kesehatan-lanjutan-detail',
+            'kesehatan-lanjutan-belum-asesmen',
+            'kesehatan-lanjutan-lolos',
+            'kesehatan-lanjutan-tidak-lolos',
+            'kesehatan-lanjutan-pending'
+        ) ? 'true' : 'false' }}
     }"
 >
 
@@ -110,54 +128,92 @@
 
 
             {{-- =================================================
-            CASE CONFERENCE
-            ================================================== --}}
-
-            <a
-                href="{{ route('case-conference') }}"
-                class="nav-item {{
-    request()->routeIs(
-        'case-conference',
-        'case-conference-detail'
-    ) ? 'active' : ''
-                }}"
-            >
-
-                <span class="material-symbols-outlined nav-icon">
-                    groups
-                </span>
-
-                <span class="nav-text">
-                    Case Conference
-                </span>
-
-            </a>
-
-
-
-            {{-- =================================================
             DATA
             ================================================== --}}
 
-            <a
-                href="{{ route('data') }}"
-                class="nav-item {{
-    request()->routeIs(
-        'data',
-        'data-detail'
-    ) ? 'active' : ''
-                }}"
-            >
+            <div class="nav-group">
 
-                <span class="material-symbols-outlined nav-icon">
-                    description
-                </span>
+                <button
+                    type="button"
+                    class="nav-item nav-parent {{
+                        request()->routeIs(
+                            'data',
+                            'data-detail',
+                            'data-import',
+                            'data-pemeriksaan',
+                            'data-tervalidasi'
+                        ) ? 'active' : ''
+                    }}"
+                    :class="{ 'menu-open': dataOpen }"
+                    @click="dataOpen = !dataOpen"
+                >
 
-                <span class="nav-text">
-                    Data
-                </span>
+                    <span class="nav-left">
 
-            </a>
+                        <span class="material-symbols-outlined nav-icon">
+                            database
+                        </span>
+
+                        <span class="nav-text">
+                            Data
+                        </span>
+
+                    </span>
+
+                    <span
+                        class="material-symbols-outlined nav-arrow"
+                        :class="{ 'rotate': dataOpen }"
+                    >
+                        expand_more
+                    </span>
+
+                </button>
+
+
+                <div
+                    x-show="dataOpen"
+                    x-transition
+                    class="nav-submenu"
+                >
+
+                    <a
+                        href="{{ route('data-import') }}"
+                        class="nav-submenu-item {{
+                            request()->routeIs('data-import')
+                                ? 'active'
+                                : ''
+                        }}"
+                    >
+                        Import Data
+                    </a>
+
+
+                    <a
+                        href="{{ route('data-pemeriksaan') }}"
+                        class="nav-submenu-item {{
+                            request()->routeIs('data-pemeriksaan')
+                                ? 'active'
+                                : ''
+                        }}"
+                    >
+                        Perlu Pemeriksaan
+                    </a>
+
+
+                    <a
+                        href="{{ route('data-tervalidasi') }}"
+                        class="nav-submenu-item {{
+                            request()->routeIs('data-tervalidasi')
+                                ? 'active'
+                                : ''
+                        }}"
+                    >
+                        Data Tervalidasi
+                    </a>
+
+                </div>
+
+            </div>
 
 
 
@@ -170,13 +226,14 @@
                 <button
                     type="button"
                     class="nav-item nav-parent {{
-    request()->routeIs(
-        'asesmen-instruktur',
-        'asesmen-instruktur-detail',
-        'instruktur-lolos',
-        'instruktur-tidak-lolos',
-        'instruktur-pending'
-    ) ? 'active' : ''
+                        request()->routeIs(
+                            'asesmen-instruktur',
+                            'asesmen-instruktur-detail',
+                            'instruktur-belum-asesmen',
+                            'instruktur-lolos',
+                            'instruktur-tidak-lolos',
+                            'instruktur-pending'
+                        ) ? 'active' : ''
                     }}"
                     :class="{ 'menu-open': instructorOpen }"
                     @click="instructorOpen = !instructorOpen"
@@ -211,11 +268,23 @@
                 >
 
                     <a
+                        href="{{ route('instruktur-belum-asesmen') }}"
+                        class="nav-submenu-item {{
+                            request()->routeIs('instruktur-belum-asesmen')
+                                ? 'active'
+                                : ''
+                        }}"
+                    >
+                        Belum Asesmen
+                    </a>
+
+
+                    <a
                         href="{{ route('instruktur-lolos') }}"
                         class="nav-submenu-item {{
-    request()->routeIs('instruktur-lolos')
-    ? 'active'
-    : ''
+                            request()->routeIs('instruktur-lolos')
+                                ? 'active'
+                                : ''
                         }}"
                     >
                         Data Lolos
@@ -223,26 +292,26 @@
 
 
                     <a
-                        href="{{ route('instruktur-pending') }}"
+                        href="{{ route('instruktur-tidak-lolos') }}"
                         class="nav-submenu-item {{
-    request()->routeIs('instruktur-pending')
-    ? 'active'
-    : ''
+                            request()->routeIs('instruktur-tidak-lolos')
+                                ? 'active'
+                                : ''
                         }}"
                     >
-                        Data Pending
+                        Data Tidak Lolos
                     </a>
 
 
                     <a
-                        href="{{ route('instruktur-tidak-lolos') }}"
+                        href="{{ route('instruktur-pending') }}"
                         class="nav-submenu-item {{
-    request()->routeIs('instruktur-tidak-lolos')
-    ? 'active'
-    : ''
+                            request()->routeIs('instruktur-pending')
+                                ? 'active'
+                                : ''
                         }}"
                     >
-                        Data Tidak Lolos
+                        Data Pending
                     </a>
 
                 </div>
@@ -260,13 +329,14 @@
                 <button
                     type="button"
                     class="nav-item nav-parent {{
-    request()->routeIs(
-        'asesmen-kesehatan-awal',
-        'asesmen-kesehatan-awal-detail',
-        'kesehatan-awal-lolos',
-        'kesehatan-awal-tidak-lolos',
-        'kesehatan-awal-pending'
-    ) ? 'active' : ''
+                        request()->routeIs(
+                            'asesmen-kesehatan-awal',
+                            'asesmen-kesehatan-awal-detail',
+                            'kesehatan-awal-belum-asesmen',
+                            'kesehatan-awal-lolos',
+                            'kesehatan-awal-tidak-lolos',
+                            'kesehatan-awal-pending'
+                        ) ? 'active' : ''
                     }}"
                     :class="{ 'menu-open': healthInitialOpen }"
                     @click="healthInitialOpen = !healthInitialOpen"
@@ -301,11 +371,23 @@
                 >
 
                     <a
+                        href="{{ route('kesehatan-awal-belum-asesmen') }}"
+                        class="nav-submenu-item {{
+                            request()->routeIs('kesehatan-awal-belum-asesmen')
+                                ? 'active'
+                                : ''
+                        }}"
+                    >
+                        Belum Asesmen
+                    </a>
+
+
+                    <a
                         href="{{ route('kesehatan-awal-lolos') }}"
                         class="nav-submenu-item {{
-    request()->routeIs('kesehatan-awal-lolos')
-    ? 'active'
-    : ''
+                            request()->routeIs('kesehatan-awal-lolos')
+                                ? 'active'
+                                : ''
                         }}"
                     >
                         Data Lolos
@@ -313,26 +395,103 @@
 
 
                     <a
+                        href="{{ route('kesehatan-awal-tidak-lolos') }}"
+                        class="nav-submenu-item {{
+                            request()->routeIs('kesehatan-awal-tidak-lolos')
+                                ? 'active'
+                                : ''
+                        }}"
+                    >
+                        Data Tidak Lolos
+                    </a>
+
+
+                    <a
                         href="{{ route('kesehatan-awal-pending') }}"
                         class="nav-submenu-item {{
-    request()->routeIs('kesehatan-awal-pending')
-    ? 'active'
-    : ''
+                            request()->routeIs('kesehatan-awal-pending')
+                                ? 'active'
+                                : ''
                         }}"
                     >
                         Data Pending
                     </a>
 
+                </div>
+
+            </div>
+
+
+
+            {{-- =================================================
+            CASE CONFERENCE
+            ================================================== --}}
+
+            <div class="nav-group">
+
+                <button
+                    type="button"
+                    class="nav-item nav-parent {{
+                        request()->routeIs(
+                            'case-conference',
+                            'case-conference-detail',
+                            'case-conference-belum',
+                            'case-conference-sudah'
+                        ) ? 'active' : ''
+                    }}"
+                    :class="{ 'menu-open': caseConferenceOpen }"
+                    @click="caseConferenceOpen = !caseConferenceOpen"
+                >
+
+                    <span class="nav-left">
+
+                        <span class="material-symbols-outlined nav-icon">
+                            groups
+                        </span>
+
+                        <span class="nav-text">
+                            Case Conference
+                        </span>
+
+                    </span>
+
+                    <span
+                        class="material-symbols-outlined nav-arrow"
+                        :class="{ 'rotate': caseConferenceOpen }"
+                    >
+                        expand_more
+                    </span>
+
+                </button>
+
+
+                <div
+                    x-show="caseConferenceOpen"
+                    x-transition
+                    class="nav-submenu"
+                >
 
                     <a
-                        href="{{ route('kesehatan-awal-tidak-lolos') }}"
+                        href="{{ route('case-conference-belum') }}"
                         class="nav-submenu-item {{
-    request()->routeIs('kesehatan-awal-tidak-lolos')
-    ? 'active'
-    : ''
+                            request()->routeIs('case-conference-belum')
+                                ? 'active'
+                                : ''
                         }}"
                     >
-                        Data Tidak Lolos
+                        Belum
+                    </a>
+
+
+                    <a
+                        href="{{ route('case-conference-sudah') }}"
+                        class="nav-submenu-item {{
+                            request()->routeIs('case-conference-sudah')
+                                ? 'active'
+                                : ''
+                        }}"
+                    >
+                        Sudah
                     </a>
 
                 </div>
@@ -350,13 +509,14 @@
                 <button
                     type="button"
                     class="nav-item nav-parent {{
-    request()->routeIs(
-        'asesmen-kesehatan-lanjutan',
-        'asesmen-kesehatan-lanjutan-detail',
-        'kesehatan-lanjutan-lolos',
-        'kesehatan-lanjutan-tidak-lolos',
-        'kesehatan-lanjutan-pending'
-    ) ? 'active' : ''
+                        request()->routeIs(
+                            'asesmen-kesehatan-lanjutan',
+                            'asesmen-kesehatan-lanjutan-detail',
+                            'kesehatan-lanjutan-belum-asesmen',
+                            'kesehatan-lanjutan-lolos',
+                            'kesehatan-lanjutan-tidak-lolos',
+                            'kesehatan-lanjutan-pending'
+                        ) ? 'active' : ''
                     }}"
                     :class="{ 'menu-open': healthAdvancedOpen }"
                     @click="healthAdvancedOpen = !healthAdvancedOpen"
@@ -391,11 +551,23 @@
                 >
 
                     <a
+                        href="{{ route('kesehatan-lanjutan-belum-asesmen') }}"
+                        class="nav-submenu-item {{
+                            request()->routeIs('kesehatan-lanjutan-belum-asesmen')
+                                ? 'active'
+                                : ''
+                        }}"
+                    >
+                        Belum Asesmen
+                    </a>
+
+
+                    <a
                         href="{{ route('kesehatan-lanjutan-lolos') }}"
                         class="nav-submenu-item {{
-    request()->routeIs('kesehatan-lanjutan-lolos')
-    ? 'active'
-    : ''
+                            request()->routeIs('kesehatan-lanjutan-lolos')
+                                ? 'active'
+                                : ''
                         }}"
                     >
                         Data Lolos
@@ -403,26 +575,26 @@
 
 
                     <a
-                        href="{{ route('kesehatan-lanjutan-pending') }}"
+                        href="{{ route('kesehatan-lanjutan-tidak-lolos') }}"
                         class="nav-submenu-item {{
-    request()->routeIs('kesehatan-lanjutan-pending')
-    ? 'active'
-    : ''
+                            request()->routeIs('kesehatan-lanjutan-tidak-lolos')
+                                ? 'active'
+                                : ''
                         }}"
                     >
-                        Data Pending
+                        Data Tidak Lolos
                     </a>
 
 
                     <a
-                        href="{{ route('kesehatan-lanjutan-tidak-lolos') }}"
+                        href="{{ route('kesehatan-lanjutan-pending') }}"
                         class="nav-submenu-item {{
-    request()->routeIs('kesehatan-lanjutan-tidak-lolos')
-    ? 'active'
-    : ''
+                            request()->routeIs('kesehatan-lanjutan-pending')
+                                ? 'active'
+                                : ''
                         }}"
                     >
-                        Data Tidak Lolos
+                        Data Pending
                     </a>
 
                 </div>
@@ -438,9 +610,9 @@
             <a
                 href="{{ route('pemanggilan-peserta') }}"
                 class="nav-item {{
-    request()->routeIs('pemanggilan-peserta')
-    ? 'active'
-    : ''
+                    request()->routeIs('pemanggilan-peserta')
+                        ? 'active'
+                        : ''
                 }}"
             >
 
@@ -463,9 +635,9 @@
             <a
                 href="{{ route('peserta-aktif') }}"
                 class="nav-item {{
-    request()->routeIs('peserta-aktif')
-    ? 'active'
-    : ''
+                    request()->routeIs('peserta-aktif')
+                        ? 'active'
+                        : ''
                 }}"
             >
 
@@ -617,13 +789,16 @@
         <nav class="mobile-nav-menu">
 
 
-            {{-- DASHBOARD --}}
+            {{-- =================================================
+            DASHBOARD
+            ================================================== --}}
+
             <a
                 href="{{ route('dashboard') }}"
                 class="mobile-nav-item {{
-    request()->routeIs('dashboard')
-    ? 'active'
-    : ''
+                    request()->routeIs('dashboard')
+                        ? 'active'
+                        : ''
                 }}"
             >
 
@@ -639,49 +814,93 @@
 
 
 
-            {{-- CASE CONFERENCE --}}
-            <a
-                href="{{ route('case-conference') }}"
-                class="mobile-nav-item {{
-    request()->routeIs(
-        'case-conference',
-        'case-conference-detail'
-    ) ? 'active' : ''
-                }}"
-            >
+            {{-- =================================================
+            DATA
+            ================================================== --}}
 
-                <span class="material-symbols-outlined">
-                    groups
-                </span>
+            <div class="mobile-nav-group">
 
-                <span>
-                    Case Conference
-                </span>
+                <button
+                    type="button"
+                    class="mobile-nav-parent {{
+                        request()->routeIs(
+                            'data',
+                            'data-detail',
+                            'data-import',
+                            'data-pemeriksaan',
+                            'data-tervalidasi'
+                        ) ? 'active' : ''
+                    }}"
+                    :class="{ 'menu-open': dataOpen }"
+                    @click="dataOpen = !dataOpen"
+                >
 
-            </a>
+                    <span class="mobile-nav-left">
+
+                        <span class="material-symbols-outlined">
+                            database
+                        </span>
+
+                        <span>
+                            Data
+                        </span>
+
+                    </span>
+
+                    <span
+                        class="material-symbols-outlined mobile-nav-arrow"
+                        :class="{ 'rotate': dataOpen }"
+                    >
+                        expand_more
+                    </span>
+
+                </button>
 
 
+                <div
+                    x-show="dataOpen"
+                    x-transition
+                    class="mobile-submenu"
+                >
 
-            {{-- DATA --}}
-            <a
-                href="{{ route('data') }}"
-                class="mobile-nav-item {{
-    request()->routeIs(
-        'data',
-        'data-detail'
-    ) ? 'active' : ''
-                }}"
-            >
+                    <a
+                        href="{{ route('data-import') }}"
+                        class="mobile-submenu-item {{
+                            request()->routeIs('data-import')
+                                ? 'active'
+                                : ''
+                        }}"
+                    >
+                        Import Data
+                    </a>
 
-                <span class="material-symbols-outlined">
-                    description
-                </span>
 
-                <span>
-                    Data
-                </span>
+                    <a
+                        href="{{ route('data-pemeriksaan') }}"
+                        class="mobile-submenu-item {{
+                            request()->routeIs('data-pemeriksaan')
+                                ? 'active'
+                                : ''
+                        }}"
+                    >
+                        Perlu Pemeriksaan
+                    </a>
 
-            </a>
+
+                    <a
+                        href="{{ route('data-tervalidasi') }}"
+                        class="mobile-submenu-item {{
+                            request()->routeIs('data-tervalidasi')
+                                ? 'active'
+                                : ''
+                        }}"
+                    >
+                        Data Tervalidasi
+                    </a>
+
+                </div>
+
+            </div>
 
 
 
@@ -694,13 +913,14 @@
                 <button
                     type="button"
                     class="mobile-nav-parent {{
-    request()->routeIs(
-        'asesmen-instruktur',
-        'asesmen-instruktur-detail',
-        'instruktur-lolos',
-        'instruktur-tidak-lolos',
-        'instruktur-pending'
-    ) ? 'active' : ''
+                        request()->routeIs(
+                            'asesmen-instruktur',
+                            'asesmen-instruktur-detail',
+                            'instruktur-belum-asesmen',
+                            'instruktur-lolos',
+                            'instruktur-tidak-lolos',
+                            'instruktur-pending'
+                        ) ? 'active' : ''
                     }}"
                     :class="{ 'menu-open': instructorOpen }"
                     @click="instructorOpen = !instructorOpen"
@@ -735,36 +955,50 @@
                 >
 
                     <a
+                        href="{{ route('instruktur-belum-asesmen') }}"
+                        class="mobile-submenu-item {{
+                            request()->routeIs('instruktur-belum-asesmen')
+                                ? 'active'
+                                : ''
+                        }}"
+                    >
+                        Belum Asesmen
+                    </a>
+
+
+                    <a
                         href="{{ route('instruktur-lolos') }}"
                         class="mobile-submenu-item {{
-    request()->routeIs('instruktur-lolos')
-    ? 'active'
-    : ''
+                            request()->routeIs('instruktur-lolos')
+                                ? 'active'
+                                : ''
                         }}"
                     >
                         Data Lolos
                     </a>
 
-                    <a
-                        href="{{ route('instruktur-pending') }}"
-                        class="mobile-submenu-item {{
-    request()->routeIs('instruktur-pending')
-    ? 'active'
-    : ''
-                        }}"
-                    >
-                        Data Pending
-                    </a>
 
                     <a
                         href="{{ route('instruktur-tidak-lolos') }}"
                         class="mobile-submenu-item {{
-    request()->routeIs('instruktur-tidak-lolos')
-    ? 'active'
-    : ''
+                            request()->routeIs('instruktur-tidak-lolos')
+                                ? 'active'
+                                : ''
                         }}"
                     >
                         Data Tidak Lolos
+                    </a>
+
+
+                    <a
+                        href="{{ route('instruktur-pending') }}"
+                        class="mobile-submenu-item {{
+                            request()->routeIs('instruktur-pending')
+                                ? 'active'
+                                : ''
+                        }}"
+                    >
+                        Data Pending
                     </a>
 
                 </div>
@@ -782,13 +1016,14 @@
                 <button
                     type="button"
                     class="mobile-nav-parent {{
-    request()->routeIs(
-        'asesmen-kesehatan-awal',
-        'asesmen-kesehatan-awal-detail',
-        'kesehatan-awal-lolos',
-        'kesehatan-awal-tidak-lolos',
-        'kesehatan-awal-pending'
-    ) ? 'active' : ''
+                        request()->routeIs(
+                            'asesmen-kesehatan-awal',
+                            'asesmen-kesehatan-awal-detail',
+                            'kesehatan-awal-belum-asesmen',
+                            'kesehatan-awal-lolos',
+                            'kesehatan-awal-tidak-lolos',
+                            'kesehatan-awal-pending'
+                        ) ? 'active' : ''
                     }}"
                     :class="{ 'menu-open': healthInitialOpen }"
                     @click="healthInitialOpen = !healthInitialOpen"
@@ -823,36 +1058,127 @@
                 >
 
                     <a
+                        href="{{ route('kesehatan-awal-belum-asesmen') }}"
+                        class="mobile-submenu-item {{
+                            request()->routeIs('kesehatan-awal-belum-asesmen')
+                                ? 'active'
+                                : ''
+                        }}"
+                    >
+                        Belum Asesmen
+                    </a>
+
+
+                    <a
                         href="{{ route('kesehatan-awal-lolos') }}"
                         class="mobile-submenu-item {{
-    request()->routeIs('kesehatan-awal-lolos')
-    ? 'active'
-    : ''
+                            request()->routeIs('kesehatan-awal-lolos')
+                                ? 'active'
+                                : ''
                         }}"
                     >
                         Data Lolos
                     </a>
 
+
+                    <a
+                        href="{{ route('kesehatan-awal-tidak-lolos') }}"
+                        class="mobile-submenu-item {{
+                            request()->routeIs('kesehatan-awal-tidak-lolos')
+                                ? 'active'
+                                : ''
+                        }}"
+                    >
+                        Data Tidak Lolos
+                    </a>
+
+
                     <a
                         href="{{ route('kesehatan-awal-pending') }}"
                         class="mobile-submenu-item {{
-    request()->routeIs('kesehatan-awal-pending')
-    ? 'active'
-    : ''
+                            request()->routeIs('kesehatan-awal-pending')
+                                ? 'active'
+                                : ''
                         }}"
                     >
                         Data Pending
                     </a>
 
+                </div>
+
+            </div>
+
+
+
+            {{-- =================================================
+            CASE CONFERENCE
+            ================================================== --}}
+
+            <div class="mobile-nav-group">
+
+                <button
+                    type="button"
+                    class="mobile-nav-parent {{
+                        request()->routeIs(
+                            'case-conference',
+                            'case-conference-detail',
+                            'case-conference-belum',
+                            'case-conference-sudah'
+                        ) ? 'active' : ''
+                    }}"
+                    :class="{ 'menu-open': caseConferenceOpen }"
+                    @click="caseConferenceOpen = !caseConferenceOpen"
+                >
+
+                    <span class="mobile-nav-left">
+
+                        <span class="material-symbols-outlined">
+                            groups
+                        </span>
+
+                        <span>
+                            Case Conference
+                        </span>
+
+                    </span>
+
+                    <span
+                        class="material-symbols-outlined mobile-nav-arrow"
+                        :class="{ 'rotate': caseConferenceOpen }"
+                    >
+                        expand_more
+                    </span>
+
+                </button>
+
+
+                <div
+                    x-show="caseConferenceOpen"
+                    x-transition
+                    class="mobile-submenu"
+                >
+
                     <a
-                        href="{{ route('kesehatan-awal-tidak-lolos') }}"
+                        href="{{ route('case-conference-belum') }}"
                         class="mobile-submenu-item {{
-    request()->routeIs('kesehatan-awal-tidak-lolos')
-    ? 'active'
-    : ''
+                            request()->routeIs('case-conference-belum')
+                                ? 'active'
+                                : ''
                         }}"
                     >
-                        Data Tidak Lolos
+                        Belum
+                    </a>
+
+
+                    <a
+                        href="{{ route('case-conference-sudah') }}"
+                        class="mobile-submenu-item {{
+                            request()->routeIs('case-conference-sudah')
+                                ? 'active'
+                                : ''
+                        }}"
+                    >
+                        Sudah
                     </a>
 
                 </div>
@@ -870,13 +1196,14 @@
                 <button
                     type="button"
                     class="mobile-nav-parent {{
-    request()->routeIs(
-        'asesmen-kesehatan-lanjutan',
-        'asesmen-kesehatan-lanjutan-detail',
-        'kesehatan-lanjutan-lolos',
-        'kesehatan-lanjutan-tidak-lolos',
-        'kesehatan-lanjutan-pending'
-    ) ? 'active' : ''
+                        request()->routeIs(
+                            'asesmen-kesehatan-lanjutan',
+                            'asesmen-kesehatan-lanjutan-detail',
+                            'kesehatan-lanjutan-belum-asesmen',
+                            'kesehatan-lanjutan-lolos',
+                            'kesehatan-lanjutan-tidak-lolos',
+                            'kesehatan-lanjutan-pending'
+                        ) ? 'active' : ''
                     }}"
                     :class="{ 'menu-open': healthAdvancedOpen }"
                     @click="healthAdvancedOpen = !healthAdvancedOpen"
@@ -911,36 +1238,50 @@
                 >
 
                     <a
+                        href="{{ route('kesehatan-lanjutan-belum-asesmen') }}"
+                        class="mobile-submenu-item {{
+                            request()->routeIs('kesehatan-lanjutan-belum-asesmen')
+                                ? 'active'
+                                : ''
+                        }}"
+                    >
+                        Belum Asesmen
+                    </a>
+
+
+                    <a
                         href="{{ route('kesehatan-lanjutan-lolos') }}"
                         class="mobile-submenu-item {{
-    request()->routeIs('kesehatan-lanjutan-lolos')
-    ? 'active'
-    : ''
+                            request()->routeIs('kesehatan-lanjutan-lolos')
+                                ? 'active'
+                                : ''
                         }}"
                     >
                         Data Lolos
                     </a>
 
-                    <a
-                        href="{{ route('kesehatan-lanjutan-pending') }}"
-                        class="mobile-submenu-item {{
-    request()->routeIs('kesehatan-lanjutan-pending')
-    ? 'active'
-    : ''
-                        }}"
-                    >
-                        Data Pending
-                    </a>
 
                     <a
                         href="{{ route('kesehatan-lanjutan-tidak-lolos') }}"
                         class="mobile-submenu-item {{
-    request()->routeIs('kesehatan-lanjutan-tidak-lolos')
-    ? 'active'
-    : ''
+                            request()->routeIs('kesehatan-lanjutan-tidak-lolos')
+                                ? 'active'
+                                : ''
                         }}"
                     >
                         Data Tidak Lolos
+                    </a>
+
+
+                    <a
+                        href="{{ route('kesehatan-lanjutan-pending') }}"
+                        class="mobile-submenu-item {{
+                            request()->routeIs('kesehatan-lanjutan-pending')
+                                ? 'active'
+                                : ''
+                        }}"
+                    >
+                        Data Pending
                     </a>
 
                 </div>
@@ -949,13 +1290,16 @@
 
 
 
-            {{-- PEMANGGILAN PESERTA --}}
+            {{-- =================================================
+            PEMANGGILAN PESERTA
+            ================================================== --}}
+
             <a
                 href="{{ route('pemanggilan-peserta') }}"
                 class="mobile-nav-item {{
-    request()->routeIs('pemanggilan-peserta')
-    ? 'active'
-    : ''
+                    request()->routeIs('pemanggilan-peserta')
+                        ? 'active'
+                        : ''
                 }}"
             >
 
@@ -971,13 +1315,16 @@
 
 
 
-            {{-- PESERTA AKTIF --}}
+            {{-- =================================================
+            PESERTA AKTIF
+            ================================================== --}}
+
             <a
                 href="{{ route('peserta-aktif') }}"
                 class="mobile-nav-item {{
-    request()->routeIs('peserta-aktif')
-    ? 'active'
-    : ''
+                    request()->routeIs('peserta-aktif')
+                        ? 'active'
+                        : ''
                 }}"
             >
 
@@ -995,7 +1342,10 @@
 
 
 
-        {{-- MOBILE LOGOUT --}}
+        {{-- =====================================================
+        MOBILE LOGOUT
+        ====================================================== --}}
+
         <div class="mobile-logout">
 
             <form

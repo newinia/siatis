@@ -444,7 +444,7 @@ a {
     margin-left: calc(var(--sidebar-width) + 30px);
 
     padding-top: 88px;
-    padding-right: 18px;
+    padding-right: 10px;
     padding-bottom: 18px;
 
     transition: margin-left .25s ease;
@@ -1177,6 +1177,12 @@ a {
 .case-search input::placeholder {
     color: var(--muted);
 }
+.case-search input:focus {
+    outline: none;
+    border: none;
+    box-shadow: none;
+}
+
 
 .case-filter-button {
     height: 30px;
@@ -2955,3 +2961,259 @@ a {
 .save-modal-button:hover {
     opacity: 0.9;
 }
+/* =====================================================
+        SEARCH
+        ====================================================== */
+
+        .case-search input {
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+            background: transparent;
+        }
+
+
+        .case-search input:focus {
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+
+        .case-search:focus-within {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+
+        /* =====================================================
+        SELECT FILTER
+        ====================================================== */
+
+        .select-wrapper {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+        }
+
+
+        .select-wrapper select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+
+            padding-right: 36px;
+
+            cursor: pointer;
+        }
+
+
+        .case-filter-button {
+            cursor: pointer;
+            outline: none;
+        }
+
+
+        .case-filter-button:focus {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+
+        .select-arrow {
+            position: absolute;
+            right: 12px;
+
+            font-size: 18px;
+
+            pointer-events: none;
+
+            color: #6b7280;
+        }
+
+
+        /* =====================================================
+        DATE FILTER
+        ====================================================== */
+
+        .date-filter-wrapper {
+            position: relative;
+        }
+
+
+        .date-filter {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+
+        .date-picker {
+            position: absolute;
+
+            top: calc(100% + 8px);
+
+            right: 0;
+
+            width: 330px;
+
+            padding: 18px;
+
+            background: #ffffff;
+
+            border: 1px solid #e5e7eb;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 10px 30px rgba(0, 0, 0, 0.10);
+
+            z-index: 1000;
+
+            display: none;
+        }
+
+
+        .date-picker.active {
+            display: block;
+        }
+
+
+        .date-picker-header {
+            margin-bottom: 16px;
+
+            color: #111827;
+
+            font-size: 14px;
+        }
+
+
+        .date-input-group {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 12px;
+        }
+
+
+        .date-input-group label {
+            display: block;
+
+            margin-bottom: 6px;
+
+            font-size: 12px;
+
+            color: #6b7280;
+        }
+
+
+        .date-input-group input {
+            width: 100%;
+
+            padding: 9px 10px;
+
+            border: 1px solid #d1d5db;
+
+            border-radius: 7px;
+
+            font-size: 13px;
+
+            color: #374151;
+
+            background: #ffffff;
+        }
+
+
+        .date-input-group input:focus {
+            outline: none;
+
+            border-color: #9ca3af;
+
+            box-shadow: none;
+        }
+
+
+        /* =====================================================
+        DATE ACTION
+        ====================================================== */
+
+        .date-picker-actions {
+            display: flex;
+
+            justify-content: flex-end;
+
+            gap: 8px;
+
+            margin-top: 18px;
+        }
+
+
+        .date-reset,
+        .date-apply {
+            padding: 8px 14px;
+
+            border-radius: 7px;
+
+            border: none;
+
+            cursor: pointer;
+
+            font-size: 13px;
+        }
+
+
+        .date-reset {
+            background: #f3f4f6;
+
+            color: #374151;
+        }
+
+
+        .date-apply {
+            background: #2563eb;
+
+            color: #ffffff;
+        }
+
+
+        .date-reset:hover {
+            background: #e5e7eb;
+        }
+
+
+        .date-apply:hover {
+            background: #1d4ed8;
+        }
+
+
+        /* =====================================================
+        EMPTY STATE
+        ====================================================== */
+
+        #emptyRow td {
+            font-size: 14px;
+        }
+
+
+        /* =====================================================
+        RESPONSIVE
+        ====================================================== */
+
+        @media (max-width: 768px) {
+
+            .date-picker {
+                right: auto;
+
+                left: 0;
+
+                width: 300px;
+            }
+
+
+            .date-input-group {
+                grid-template-columns: 1fr;
+            }
+
+        }

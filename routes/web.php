@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 
@@ -36,125 +36,154 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Case Conference
-    |--------------------------------------------------------------------------
-    */
-
-    Route::get('/case-conference', function () {
-        return view('case-conference');
-    })->name('case-conference');
-
-    Route::get('/case-conference-detail', function () {
-        return view('case-conference-detail');
-    })->name('case-conference-detail');
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Data
+    | DATA
     |--------------------------------------------------------------------------
     */
 
     Route::get('/data', function () {
-        return view('data');
+        return view('data.data');
     })->name('data');
 
+    // Import Data
+    Route::get('/data/import', function () {
+        return view('data.data-import');
+    })->name('data-import');
+
+    // Data yang perlu diperiksa
+    Route::get('/data/perlu-pemeriksaan', function () {
+        return view('data.data-perlu-pemeriksaan');
+    })->name('data-pemeriksaan');
+
+    // Data yang sudah tervalidasi
+    Route::get('/data/tervalidasi', function () {
+        return view('data.data-tervalidasi');
+    })->name('data-tervalidasi');
+
+    // Detail Data
     Route::get('/data-detail', function () {
-        return view('data-detail');
+        return view('data.data-detail');
     })->name('data-detail');
 
 
     /*
     |--------------------------------------------------------------------------
-    | Asesmen Instruktur
+    | ASESMEN INSTRUKTUR
     |--------------------------------------------------------------------------
     */
 
     Route::get('/asesmen-instruktur', function () {
-        return view('asesmen-instruktur');
+        return view('instruktur.asesmen-instruktur');
     })->name('asesmen-instruktur');
 
-    Route::get('/asesmen-instruktur-detail', function () {
-        return view('asesmen-instruktur-detail');
-    })->name('asesmen-instruktur-detail');
+    Route::get('/instruktur-belum-asesmen', function () {
+        return view('instruktur.instruktur-belum-asesmen');
+    })->name('instruktur-belum-asesmen');
 
     Route::get('/instruktur-lolos', function () {
-        return view('instruktur-lolos');
+        return view('instruktur.instruktur-lolos');
     })->name('instruktur-lolos');
 
-    Route::get('/instruktur-tidak-lolos', function () {
-        return view('instruktur-tidak-lolos');
-    })->name('instruktur-tidak-lolos');
-
     Route::get('/instruktur-pending', function () {
-        return view('instruktur-pending');
+        return view('instruktur.instruktur-pending');
     })->name('instruktur-pending');
 
+    Route::get('/instruktur-tidak-lolos', function () {
+        return view('instruktur.instruktur-tidak-lolos');
+    })->name('instruktur-tidak-lolos');
 
-    /*
-    |--------------------------------------------------------------------------
-    | Asesmen Kesehatan
-    |--------------------------------------------------------------------------
-    */
-
-    /*
-|--------------------------------------------------------------------------
-| Asesmen Kesehatan Lanjutan
-|--------------------------------------------------------------------------
-*/
-
-    Route::get('/asesmen-kesehatan-lanjutan', function () {
-        return view('asesmen-kesehatan-lanjutan');
-    })->name('asesmen-kesehatan-lanjutan');
-
-    Route::get('/asesmen-kesehatan-lanjutan-detail', function () {
-        return view('asesmen-kesehatan-lanjutan-detail');
-    })->name('asesmen-kesehatan-lanjutan-detail');
-
-    Route::get('/kesehatan-lanjutan-lolos', function () {
-        return view('kesehatan-lanjutan-lolos');
-    })->name('kesehatan-lanjutan-lolos');
-
-    Route::get('/kesehatan-lanjutan-tidak-lolos', function () {
-        return view('kesehatan-lanjutan-tidak-lolos');
-    })->name('kesehatan-lanjutan-tidak-lolos');
-
-    Route::get('/kesehatan-lanjutan-pending', function () {
-        return view('kesehatan-lanjutan-pending');
-    })->name('kesehatan-lanjutan-pending');
-
+    Route::get('/asesmen-instruktur-detail', function () {
+        return view('instruktur.asesmen-instruktur-detail');
+    })->name('asesmen-instruktur-detail');
 
 
     /*
     |--------------------------------------------------------------------------
-    | Asesmen Kesehatan Awal
+    | ASESMEN KESEHATAN AWAL
     |--------------------------------------------------------------------------
     */
 
     Route::get('/asesmen-kesehatan-awal', function () {
-        return view('asesmen-kesehatan-awal');
+        return view('kesehatan-awal.asesmen-kesehatan-awal');
     })->name('asesmen-kesehatan-awal');
 
-    Route::get('/asesmen-kesehatan-awal-detail', function () {
-        return view('asesmen-kesehatan-awal-detail');
-    })->name('asesmen-kesehatan-awal-detail');
+    Route::get('/kesehatan-awal-belum-asesmen', function () {
+        return view('kesehatan-awal.kesehatan-awal-belum-asesmen');
+    })->name('kesehatan-awal-belum-asesmen');
 
     Route::get('/kesehatan-awal-lolos', function () {
-        return view('kesehatan-awal-lolos');
+        return view('kesehatan-awal.kesehatan-awal-lolos');
     })->name('kesehatan-awal-lolos');
 
+    Route::get('/kesehatan-awal-pending', function () {
+        return view('kesehatan-awal.kesehatan-awal-pending');
+    })->name('kesehatan-awal-pending');
+
     Route::get('/kesehatan-awal-tidak-lolos', function () {
-        return view('kesehatan-awal-tidak-lolos');
+        return view('kesehatan-awal.kesehatan-awal-tidak-lolos');
     })->name('kesehatan-awal-tidak-lolos');
 
-    Route::get('/kesehatan-awal-pending', function () {
-        return view('kesehatan-awal-pending');
-    })->name('kesehatan-awal-pending');
+    Route::get('/asesmen-kesehatan-awal-detail', function () {
+        return view('kesehatan-awal.asesmen-kesehatan-awal-detail');
+    })->name('asesmen-kesehatan-awal-detail');
 
 
     /*
     |--------------------------------------------------------------------------
-    | Pemanggilan Peserta
+    | CASE CONFERENCE
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/case-conference/belum', function () {
+        return view('case-conference.case-conference-belum');
+    })->name('case-conference-belum');
+
+    Route::get('/case-conference/sudah', function () {
+        return view('case-conference.case-conference-sudah');
+    })->name('case-conference-sudah');
+
+    Route::get('/case-conference-detail', function () {
+        return view('case-conference.case-conference-detail');
+    })->name('case-conference-detail');
+
+    Route::get('/case-conference', function () {
+        return redirect()->route('case-conference-belum');
+    })->name('case-conference');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | ASESMEN KESEHATAN LANJUTAN
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/asesmen-kesehatan-lanjutan', function () {
+        return view('kesehatan-lanjutan.asesmen-kesehatan-lanjutan');
+    })->name('asesmen-kesehatan-lanjutan');
+
+    Route::get('/kesehatan-lanjutan-belum-asesmen', function () {
+        return view('kesehatan-lanjutan.kesehatan-lanjutan-belum-asesmen');
+    })->name('kesehatan-lanjutan-belum-asesmen');
+
+    Route::get('/kesehatan-lanjutan-lolos', function () {
+        return view('kesehatan-lanjutan.kesehatan-lanjutan-lolos');
+    })->name('kesehatan-lanjutan-lolos');
+
+    Route::get('/kesehatan-lanjutan-pending', function () {
+        return view('kesehatan-lanjutan.kesehatan-lanjutan-pending');
+    })->name('kesehatan-lanjutan-pending');
+
+    Route::get('/kesehatan-lanjutan-tidak-lolos', function () {
+        return view('kesehatan-lanjutan.kesehatan-lanjutan-tidak-lolos');
+    })->name('kesehatan-lanjutan-tidak-lolos');
+
+    Route::get('/asesmen-kesehatan-lanjutan-detail', function () {
+        return view('kesehatan-lanjutan.asesmen-kesehatan-lanjutan-detail');
+    })->name('asesmen-kesehatan-lanjutan-detail');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | PEMANGGILAN PESERTA
     |--------------------------------------------------------------------------
     */
 
@@ -165,7 +194,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Peserta Aktif
+    | PESERTA AKTIF
     |--------------------------------------------------------------------------
     */
 
@@ -176,7 +205,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Profile
+    | PROFILE
     |--------------------------------------------------------------------------
     */
 
