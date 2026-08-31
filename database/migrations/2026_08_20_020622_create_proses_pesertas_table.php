@@ -6,57 +6,52 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('proses_pesertas', function (Blueprint $table) {
             $table->id();
 
-            // Hubungan dengan peserta
-            $table->foreignId('peserta_id')
-                ->constrained('pesertas')
+            $table->foreignId('ppks_id')
+                ->constrained('ppks')
                 ->cascadeOnDelete();
 
-            // Tahap proses peserta saat ini
             $table->enum('tahap', [
                 'instruktur',
                 'kesehatan_awal',
                 'case_conference',
                 'kesehatan_lanjutan',
                 'aktif',
-                'tidak_lolos'
+                'tidak_lolos',
             ])->default('instruktur');
 
-            // Hasil pada tahap saat ini
             $table->enum('status', [
-                'belum_dinilai',
+                'sedang_diperiksa',
                 'lolos',
                 'pending',
-                'tidak_lolos'
-            ])->default('belum_dinilai');
+                'tidak_lolos',
+            ])->default('sedang_diperiksa');
 
-            // Khusus untuk pending / keterangan proses
             $table->text('alasan_pending')->nullable();
+
             $table->text('catatan')->nullable();
 
-            // Jadwal pemanggilan kembali jika pending
             $table->date('tanggal_panggil_kembali')->nullable();
 
-            // Waktu proses terakhir diperbarui
             $table->timestamp('tanggal_proses')->nullable();
 
             $table->timestamps();
 
-            // Satu peserta hanya punya satu posisi proses aktif
-            $table->unique('peserta_id');
+            /*
+             * Satu PPKS hanya satu record
+             * untuk setiap tahap.
+             */
+            $table->unique([
+                'ppks_id',
+                'tahap',
+            ]);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('proses_pesertas');

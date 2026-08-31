@@ -4,14 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ProsesPeserta extends Model
 {
     use HasFactory;
 
+    protected $table = 'proses_pesertas';
+
     protected $fillable = [
-        'peserta_id',
+        'ppks_id',
         'tahap',
         'status',
         'alasan_pending',
@@ -21,15 +22,15 @@ class ProsesPeserta extends Model
     ];
 
     protected $casts = [
-        'tanggal_panggil_kembali' => 'date',
         'tanggal_proses' => 'datetime',
+        'tanggal_panggil_kembali' => 'date',
     ];
 
     /**
-     * Peserta yang sedang menjalani proses ini.
+     * PPKS yang menjalani proses.
      */
-    public function peserta()
+    public function ppks()
     {
-        return $this->belongsTo(Peserta::class);
+        return $this->belongsTo(Ppks::class, 'ppks_id');
     }
 }

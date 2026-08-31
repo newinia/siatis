@@ -4,14 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Peserta extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        'ppks_id',
         'timestamp',
         'nama_lengkap',
         'nik',
@@ -54,19 +53,39 @@ class Peserta extends Model
         'tanggal_lahir' => 'date',
     ];
 
+
     /**
-     * Proses yang sedang dijalani peserta.
+     * PPKS asal peserta.
+     */
+    public function ppks()
+    {
+        return $this->belongsTo(
+            Ppks::class,
+            'ppks_id'
+        );
+    }
+
+
+    /**
+     * Semua track record proses.
      */
     public function proses()
     {
-        return $this->hasOne(ProsesPeserta::class);
+        return $this->hasMany(
+            ProsesPeserta::class,
+            'peserta_id'
+        );
     }
 
+
     /**
-     * Semua riwayat asesmen peserta.
+     * Semua riwayat asesmen.
      */
     public function riwayatAsesmen()
     {
-        return $this->hasMany(RiwayatAsesmen::class);
+        return $this->hasMany(
+            RiwayatAsesmen::class,
+            'peserta_id'
+        );
     }
 }
