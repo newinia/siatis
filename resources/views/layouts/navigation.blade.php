@@ -3,7 +3,7 @@
         open: false,
         sidebarOpen: true,
         ppksOpen: true,
-        instructorOpen: false,
+        instructorOpen: true,
         healthOpen: false,
         caseConferenceOpen: false
     }"
@@ -20,6 +20,7 @@
     >
 
         {{-- HEADER --}}
+
         <div class="sidebar-header">
 
             <div class="sidebar-label">
@@ -29,7 +30,6 @@
             <div class="sidebar-divider"></div>
 
         </div>
-
 
         <div class="sidebar-menu">
 
@@ -119,7 +119,6 @@
 
                 </button>
 
-
                 <div
                     x-show="ppksOpen"
                     x-transition
@@ -130,7 +129,11 @@
 
                     <a
                         href="{{ route('ppks.import') }}"
-                        class="nav-submenu-item {{ request()->routeIs('ppks.import') ? 'active' : '' }}"
+                        class="nav-submenu-item {{
+                            request()->routeIs('ppks.import')
+                                ? 'active'
+                                : ''
+                        }}"
                     >
 
                         <span class="material-symbols-outlined nav-icon">
@@ -148,7 +151,11 @@
 
                     <a
                         href="{{ route('ppks.normal') }}"
-                        class="nav-submenu-item {{ request()->routeIs('ppks.normal') ? 'active' : '' }}"
+                        class="nav-submenu-item {{
+                            request()->routeIs('ppks.normal')
+                                ? 'active'
+                                : ''
+                        }}"
                     >
 
                         <span class="material-symbols-outlined nav-icon">
@@ -190,7 +197,11 @@
 
                     <a
                         href="{{ route('ppks.perlu-diperiksa') }}"
-                        class="nav-submenu-item {{ request()->routeIs('ppks.perlu-diperiksa') ? 'active' : '' }}"
+                        class="nav-submenu-item {{
+                            request()->routeIs('ppks.perlu-diperiksa')
+                                ? 'active'
+                                : ''
+                        }}"
                     >
 
                         <span class="material-symbols-outlined nav-icon">
@@ -242,20 +253,18 @@
 
                 </button>
 
-
                 <div
                     x-show="instructorOpen"
                     x-transition
                     class="nav-submenu"
                 >
 
-                    {{-- SEMUA DATA ASESMEN INSTRUKTUR --}}
+                    {{-- BELUM ASESMEN --}}
 
                     <a
                         href="{{ route('ppks.normal.instruktur') }}"
                         class="nav-submenu-item {{
-                            request()->routeIs('ppks.normal.instruktur') &&
-                            !request()->has('status')
+                            request()->routeIs('ppks.normal.instruktur')
                                 ? 'active'
                                 : ''
                         }}"
@@ -266,19 +275,18 @@
                         </span>
 
                         <span>
-                            Data Asesmen
+                            Belum Asesmen
                         </span>
 
                     </a>
 
 
-                    {{-- DATA LOLOS --}}
+                    {{-- DATA LULUS --}}
 
                     <a
-                        href="{{ route('ppks.normal.instruktur', ['status' => 'lulus']) }}"
+                        href="{{ route('ppks.normal.asesmen-instruktur.lulus') }}"
                         class="nav-submenu-item {{
-                            request()->routeIs('ppks.normal.instruktur') &&
-                            request('status') === 'lulus'
+                            request()->routeIs('ppks.normal.asesmen-instruktur.lulus')
                                 ? 'active'
                                 : ''
                         }}"
@@ -289,7 +297,7 @@
                         </span>
 
                         <span>
-                            Data Lolos
+                            Data Lulus
                         </span>
 
                     </a>
@@ -298,10 +306,9 @@
                     {{-- DATA PENDING --}}
 
                     <a
-                        href="{{ route('ppks.normal.instruktur', ['status' => 'pending']) }}"
+                        href="{{ route('ppks.normal.asesmen-instruktur.pending') }}"
                         class="nav-submenu-item {{
-                            request()->routeIs('ppks.normal.instruktur') &&
-                            request('status') === 'pending'
+                            request()->routeIs('ppks.normal.asesmen-instruktur.pending')
                                 ? 'active'
                                 : ''
                         }}"
@@ -318,13 +325,12 @@
                     </a>
 
 
-                    {{-- DATA TIDAK LOLOS --}}
+                    {{-- DATA TIDAK LULUS --}}
 
                     <a
-                        href="{{ route('ppks.normal.instruktur', ['status' => 'tidak_lulus']) }}"
+                        href="{{ route('ppks.normal.asesmen-instruktur.tidak-lulus') }}"
                         class="nav-submenu-item {{
-                            request()->routeIs('ppks.normal.instruktur') &&
-                            request('status') === 'tidak_lulus'
+                            request()->routeIs('ppks.normal.asesmen-instruktur.tidak-lulus')
                                 ? 'active'
                                 : ''
                         }}"
@@ -335,7 +341,7 @@
                         </span>
 
                         <span>
-                            Data Tidak Lolos
+                            Data Tidak Lulus
                         </span>
 
                     </a>
@@ -379,20 +385,18 @@
 
                 </button>
 
-
                 <div
                     x-show="healthOpen"
                     x-transition
                     class="nav-submenu"
                 >
 
-                    {{-- SEMUA DATA KESEHATAN --}}
+                    {{-- BELUM ASESMEN --}}
 
                     <a
                         href="{{ route('ppks.normal.kesehatan') }}"
                         class="nav-submenu-item {{
-                            request()->routeIs('ppks.normal.kesehatan') &&
-                            !request()->has('status')
+                            request()->routeIs('ppks.normal.kesehatan')
                                 ? 'active'
                                 : ''
                         }}"
@@ -403,19 +407,18 @@
                         </span>
 
                         <span>
-                            Data Asesmen
+                            Belum Asesmen
                         </span>
 
                     </a>
 
 
-                    {{-- DATA LOLOS --}}
+                    {{-- DATA LULUS --}}
 
                     <a
-                        href="{{ route('ppks.normal.kesehatan', ['status' => 'lulus']) }}"
+                        href="{{ route('ppks.normal.asesmen-kesehatan.lulus') }}"
                         class="nav-submenu-item {{
-                            request()->routeIs('ppks.normal.kesehatan') &&
-                            request('status') === 'lulus'
+                            request()->routeIs('ppks.normal.asesmen-kesehatan.lulus')
                                 ? 'active'
                                 : ''
                         }}"
@@ -426,7 +429,7 @@
                         </span>
 
                         <span>
-                            Data Lolos
+                            Data Lulus
                         </span>
 
                     </a>
@@ -435,10 +438,9 @@
                     {{-- DATA PENDING --}}
 
                     <a
-                        href="{{ route('ppks.normal.kesehatan', ['status' => 'pending']) }}"
+                        href="{{ route('ppks.normal.asesmen-kesehatan.pending') }}"
                         class="nav-submenu-item {{
-                            request()->routeIs('ppks.normal.kesehatan') &&
-                            request('status') === 'pending'
+                            request()->routeIs('ppks.normal.asesmen-kesehatan.pending')
                                 ? 'active'
                                 : ''
                         }}"
@@ -455,13 +457,12 @@
                     </a>
 
 
-                    {{-- DATA TIDAK LOLOS --}}
+                    {{-- DATA TIDAK LULUS --}}
 
                     <a
-                        href="{{ route('ppks.normal.kesehatan', ['status' => 'tidak_lulus']) }}"
+                        href="{{ route('ppks.normal.asesmen-kesehatan.tidak-lulus') }}"
                         class="nav-submenu-item {{
-                            request()->routeIs('ppks.normal.kesehatan') &&
-                            request('status') === 'tidak_lulus'
+                            request()->routeIs('ppks.normal.asesmen-kesehatan.tidak-lulus')
                                 ? 'active'
                                 : ''
                         }}"
@@ -472,7 +473,7 @@
                         </span>
 
                         <span>
-                            Data Tidak Lolos
+                            Data Tidak Lulus
                         </span>
 
                     </a>
@@ -480,183 +481,96 @@
                 </div>
 
             </div>
+{{-- =================================================
+CASE CONFERENCE
+================================================== --}}
+
+<div class="nav-group">
+
+    <button
+        type="button"
+        class="nav-item nav-parent"
+        :class="{ 'menu-open': caseConferenceOpen }"
+        @click="caseConferenceOpen = !caseConferenceOpen"
+    >
+
+        <span class="nav-left">
+
+            <span class="material-symbols-outlined nav-icon">
+                groups
+            </span>
+
+            <span class="nav-text">
+                Case Conference
+            </span>
+
+        </span>
+
+        <span
+            class="material-symbols-outlined nav-arrow"
+            :class="{ 'rotate': caseConferenceOpen }"
+        >
+            expand_more
+        </span>
+
+    </button>
 
 
-            {{-- =================================================
-            CASE CONFERENCE
-            ================================================== --}}
+    <div
+        x-show="caseConferenceOpen"
+        x-transition
+        class="nav-submenu"
+    >
 
-            <div class="nav-group">
+        {{-- BELUM DILAKUKAN --}}
 
-                <button
-                    type="button"
-                    class="nav-item nav-parent"
-                    :class="{ 'menu-open': caseConferenceOpen }"
-                    @click="caseConferenceOpen = !caseConferenceOpen"
-                >
+        <a
+            href="{{ route('ppks.normal.case-conference.belum') }}"
+            class="nav-submenu-item {{
+                request()->routeIs('ppks.normal.case-conference.belum')
+                    ? 'active'
+                    : ''
+            }}"
+        >
 
-                    <span class="nav-left">
+            <span class="material-symbols-outlined nav-icon">
+                assignment
+            </span>
 
-                        <span class="material-symbols-outlined nav-icon">
-                            groups
-                        </span>
+            <span>
+                Belum Dilakukan
+            </span>
 
-                        <span class="nav-text">
-                            Case Conference
-                        </span>
-
-                    </span>
-
-                    <span
-                        class="material-symbols-outlined nav-arrow"
-                        :class="{ 'rotate': caseConferenceOpen }"
-                    >
-                        expand_more
-                    </span>
-
-                </button>
+        </a>
 
 
-                <div
-                    x-show="caseConferenceOpen"
-                    x-transition
-                    class="nav-submenu"
-                >
+        {{-- SUDAH DILAKUKAN --}}
 
-                    {{-- SEMUA DATA CASE CONFERENCE --}}
+        <a
+            href="{{ route('ppks.normal.case-conference.sudah') }}"
+            class="nav-submenu-item {{
+                request()->routeIs('ppks.normal.case-conference.sudah')
+                    ? 'active'
+                    : ''
+            }}"
+        >
 
-                    <a
-                        href="{{ route('ppks.normal.case-conference') }}"
-                        class="nav-submenu-item {{
-                            request()->routeIs('ppks.normal.case-conference') &&
-                            !request()->has('status')
-                                ? 'active'
-                                : ''
-                        }}"
-                    >
+            <span class="material-symbols-outlined nav-icon">
+                task_alt
+            </span>
 
-                        <span class="material-symbols-outlined nav-icon">
-                            assignment
-                        </span>
+            <span>
+                Sudah Dilakukan
+            </span>
 
-                        <span>
-                            Data Case Conference
-                        </span>
+        </a>
 
-                    </a>
+    </div>
+
+</div>
 
 
-                    {{-- DATA LOLOS --}}
 
-                    <a
-                        href="{{ route('ppks.normal.case-conference', ['status' => 'lulus']) }}"
-                        class="nav-submenu-item {{
-                            request()->routeIs('ppks.normal.case-conference') &&
-                            request('status') === 'lulus'
-                                ? 'active'
-                                : ''
-                        }}"
-                    >
-
-                        <span class="material-symbols-outlined nav-icon">
-                            check_circle
-                        </span>
-
-                        <span>
-                            Data Lolos
-                        </span>
-
-                    </a>
-
-
-                    {{-- DATA PENDING --}}
-
-                    <a
-                        href="{{ route('ppks.normal.case-conference', ['status' => 'pending']) }}"
-                        class="nav-submenu-item {{
-                            request()->routeIs('ppks.normal.case-conference') &&
-                            request('status') === 'pending'
-                                ? 'active'
-                                : ''
-                        }}"
-                    >
-
-                        <span class="material-symbols-outlined nav-icon">
-                            schedule
-                        </span>
-
-                        <span>
-                            Data Pending
-                        </span>
-
-                    </a>
-
-
-                    {{-- DATA TIDAK LOLOS --}}
-
-                    <a
-                        href="{{ route('ppks.normal.case-conference', ['status' => 'tidak_lulus']) }}"
-                        class="nav-submenu-item {{
-                            request()->routeIs('ppks.normal.case-conference') &&
-                            request('status') === 'tidak_lulus'
-                                ? 'active'
-                                : ''
-                        }}"
-                    >
-
-                        <span class="material-symbols-outlined nav-icon">
-                            cancel
-                        </span>
-
-                        <span>
-                            Data Tidak Lolos
-                        </span>
-
-                    </a>
-
-                </div>
-
-            </div>
-
-
-            {{-- =================================================
-            DATA DITERIMA
-            ================================================== --}}
-
-            <a
-                href="{{ route('ppks.diterima') }}"
-                class="nav-item {{ request()->routeIs('ppks.diterima') ? 'active' : '' }}"
-            >
-
-                <span class="material-symbols-outlined nav-icon">
-                    verified
-                </span>
-
-                <span class="nav-text">
-                    Data Diterima
-                </span>
-
-            </a>
-
-
-            {{-- =================================================
-            DATA TIDAK DITERIMA
-            ================================================== --}}
-
-            <a
-                href="{{ route('ppks.tidak-diterima') }}"
-                class="nav-item {{ request()->routeIs('ppks.tidak-diterima') ? 'active' : '' }}"
-            >
-
-                <span class="material-symbols-outlined nav-icon">
-                    block
-                </span>
-
-                <span class="nav-text">
-                    Data Tidak Diterima
-                </span>
-
-            </a>
 
 
             {{-- =================================================
@@ -790,7 +704,6 @@
 
             </div>
 
-
             <div class="navbar-avatar">
 
                 <span class="material-symbols-outlined">
@@ -843,7 +756,11 @@
 
                 <a
                     href="{{ route('dashboard') }}"
-                    class="mobile-nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}"
+                    class="mobile-nav-item {{
+                        request()->routeIs('dashboard')
+                            ? 'active'
+                            : ''
+                    }}"
                 >
 
                     <span class="material-symbols-outlined">
@@ -869,7 +786,11 @@
 
                 <a
                     href="{{ route('admin.index') }}"
-                    class="mobile-nav-item {{ request()->routeIs('admin.*') ? 'active' : '' }}"
+                    class="mobile-nav-item {{
+                        request()->routeIs('admin.*')
+                            ? 'active'
+                            : ''
+                    }}"
                 >
 
                     <span class="material-symbols-outlined">
@@ -919,16 +840,21 @@
 
                 </button>
 
-
                 <div
                     x-show="ppksOpen"
                     x-transition
                     class="mobile-submenu"
                 >
 
+                    {{-- IMPORT DATA --}}
+
                     <a
                         href="{{ route('ppks.import') }}"
-                        class="mobile-submenu-item {{ request()->routeIs('ppks.import') ? 'active' : '' }}"
+                        class="mobile-submenu-item {{
+                            request()->routeIs('ppks.import')
+                                ? 'active'
+                                : ''
+                        }}"
                     >
 
                         <span class="material-symbols-outlined">
@@ -942,9 +868,15 @@
                     </a>
 
 
+                    {{-- DATA NORMAL --}}
+
                     <a
                         href="{{ route('ppks.normal') }}"
-                        class="mobile-submenu-item {{ request()->routeIs('ppks.normal') ? 'active' : '' }}"
+                        class="mobile-submenu-item {{
+                            request()->routeIs('ppks.normal')
+                                ? 'active'
+                                : ''
+                        }}"
                     >
 
                         <span class="material-symbols-outlined">
@@ -957,6 +889,8 @@
 
                     </a>
 
+
+                    {{-- TAMBAH DATA --}}
 
                     <a
                         href="{{ route('ppks.manual') }}"
@@ -980,9 +914,15 @@
                     </a>
 
 
+                    {{-- PERLU PEMERIKSAAN --}}
+
                     <a
                         href="{{ route('ppks.perlu-diperiksa') }}"
-                        class="mobile-submenu-item {{ request()->routeIs('ppks.perlu-diperiksa') ? 'active' : '' }}"
+                        class="mobile-submenu-item {{
+                            request()->routeIs('ppks.perlu-diperiksa')
+                                ? 'active'
+                                : ''
+                        }}"
                     >
 
                         <span class="material-symbols-outlined">
@@ -1034,16 +974,21 @@
 
                 </button>
 
-
                 <div
                     x-show="instructorOpen"
                     x-transition
                     class="mobile-submenu"
                 >
 
+                    {{-- BELUM ASESMEN --}}
+
                     <a
                         href="{{ route('ppks.normal.instruktur') }}"
-                        class="mobile-submenu-item"
+                        class="mobile-submenu-item {{
+                            request()->routeIs('ppks.normal.instruktur')
+                                ? 'active'
+                                : ''
+                        }}"
                     >
 
                         <span class="material-symbols-outlined">
@@ -1051,15 +996,21 @@
                         </span>
 
                         <span>
-                            Data Asesmen
+                            Belum Asesmen
                         </span>
 
                     </a>
 
 
+                    {{-- DATA LULUS --}}
+
                     <a
-                        href="{{ route('ppks.normal.instruktur', ['status' => 'lulus']) }}"
-                        class="mobile-submenu-item"
+                        href="{{ route('ppks.normal.asesmen-instruktur.lulus') }}"
+                        class="mobile-submenu-item {{
+                            request()->routeIs('ppks.normal.asesmen-instruktur.lulus')
+                                ? 'active'
+                                : ''
+                        }}"
                     >
 
                         <span class="material-symbols-outlined">
@@ -1067,15 +1018,21 @@
                         </span>
 
                         <span>
-                            Data Lolos
+                            Data Lulus
                         </span>
 
                     </a>
 
 
+                    {{-- DATA PENDING --}}
+
                     <a
-                        href="{{ route('ppks.normal.instruktur', ['status' => 'pending']) }}"
-                        class="mobile-submenu-item"
+                        href="{{ route('ppks.normal.asesmen-instruktur.pending') }}"
+                        class="mobile-submenu-item {{
+                            request()->routeIs('ppks.normal.asesmen-instruktur.pending')
+                                ? 'active'
+                                : ''
+                        }}"
                     >
 
                         <span class="material-symbols-outlined">
@@ -1089,9 +1046,15 @@
                     </a>
 
 
+                    {{-- DATA TIDAK LULUS --}}
+
                     <a
-                        href="{{ route('ppks.normal.instruktur', ['status' => 'tidak_lulus']) }}"
-                        class="mobile-submenu-item"
+                        href="{{ route('ppks.normal.asesmen-instruktur.tidak-lulus') }}"
+                        class="mobile-submenu-item {{
+                            request()->routeIs('ppks.normal.asesmen-instruktur.tidak-lulus')
+                                ? 'active'
+                                : ''
+                        }}"
                     >
 
                         <span class="material-symbols-outlined">
@@ -1099,7 +1062,7 @@
                         </span>
 
                         <span>
-                            Data Tidak Lolos
+                            Data Tidak Lulus
                         </span>
 
                     </a>
@@ -1110,7 +1073,7 @@
 
 
             {{-- =================================================
-            ASESMEN KESEHATAN MOBILE
+            ASESMEN KESEHATAN AWAL MOBILE
             ================================================== --}}
 
             <div class="mobile-nav-group">
@@ -1143,16 +1106,21 @@
 
                 </button>
 
-
                 <div
                     x-show="healthOpen"
                     x-transition
                     class="mobile-submenu"
                 >
 
+                    {{-- BELUM ASESMEN --}}
+
                     <a
                         href="{{ route('ppks.normal.kesehatan') }}"
-                        class="mobile-submenu-item"
+                        class="mobile-submenu-item {{
+                            request()->routeIs('ppks.normal.kesehatan')
+                                ? 'active'
+                                : ''
+                        }}"
                     >
 
                         <span class="material-symbols-outlined">
@@ -1160,15 +1128,21 @@
                         </span>
 
                         <span>
-                            Data Asesmen
+                            Belum Asesmen
                         </span>
 
                     </a>
 
 
+                    {{-- DATA LULUS --}}
+
                     <a
-                        href="{{ route('ppks.normal.kesehatan', ['status' => 'lulus']) }}"
-                        class="mobile-submenu-item"
+                        href="{{ route('ppks.normal.asesmen-kesehatan.lulus') }}"
+                        class="mobile-submenu-item {{
+                            request()->routeIs('ppks.normal.asesmen-kesehatan.lulus')
+                                ? 'active'
+                                : ''
+                        }}"
                     >
 
                         <span class="material-symbols-outlined">
@@ -1176,15 +1150,21 @@
                         </span>
 
                         <span>
-                            Data Lolos
+                            Data Lulus
                         </span>
 
                     </a>
 
 
+                    {{-- DATA PENDING --}}
+
                     <a
-                        href="{{ route('ppks.normal.kesehatan', ['status' => 'pending']) }}"
-                        class="mobile-submenu-item"
+                        href="{{ route('ppks.normal.asesmen-kesehatan.pending') }}"
+                        class="mobile-submenu-item {{
+                            request()->routeIs('ppks.normal.asesmen-kesehatan.pending')
+                                ? 'active'
+                                : ''
+                        }}"
                     >
 
                         <span class="material-symbols-outlined">
@@ -1198,9 +1178,15 @@
                     </a>
 
 
+                    {{-- DATA TIDAK LULUS --}}
+
                     <a
-                        href="{{ route('ppks.normal.kesehatan', ['status' => 'tidak_lulus']) }}"
-                        class="mobile-submenu-item"
+                        href="{{ route('ppks.normal.asesmen-kesehatan.tidak-lulus') }}"
+                        class="mobile-submenu-item {{
+                            request()->routeIs('ppks.normal.asesmen-kesehatan.tidak-lulus')
+                                ? 'active'
+                                : ''
+                        }}"
                     >
 
                         <span class="material-symbols-outlined">
@@ -1208,7 +1194,7 @@
                         </span>
 
                         <span>
-                            Data Tidak Lolos
+                            Data Tidak Lulus
                         </span>
 
                     </a>
@@ -1217,114 +1203,93 @@
 
             </div>
 
+{{-- =================================================
+CASE CONFERENCE MOBILE
+================================================== --}}
 
-            {{-- =================================================
-            CASE CONFERENCE MOBILE
-            ================================================== --}}
+<div class="mobile-nav-group">
 
-            <div class="mobile-nav-group">
+    <button
+        type="button"
+        class="mobile-nav-parent"
+        :class="{ 'menu-open': caseConferenceOpen }"
+        @click="caseConferenceOpen = !caseConferenceOpen"
+    >
 
-                <button
-                    type="button"
-                    class="mobile-nav-parent"
-                    :class="{ 'menu-open': caseConferenceOpen }"
-                    @click="caseConferenceOpen = !caseConferenceOpen"
-                >
+        <span class="mobile-nav-left">
 
-                    <span class="mobile-nav-left">
+            <span class="material-symbols-outlined">
+                groups
+            </span>
 
-                        <span class="material-symbols-outlined">
-                            groups
-                        </span>
+            <span>
+                Case Conference
+            </span>
 
-                        <span>
-                            Case Conference
-                        </span>
+        </span>
 
-                    </span>
+        <span
+            class="material-symbols-outlined mobile-nav-arrow"
+            :class="{ 'rotate': caseConferenceOpen }"
+        >
+            expand_more
+        </span>
 
-                    <span
-                        class="material-symbols-outlined mobile-nav-arrow"
-                        :class="{ 'rotate': caseConferenceOpen }"
-                    >
-                        expand_more
-                    </span>
-
-                </button>
-
-
-                <div
-                    x-show="caseConferenceOpen"
-                    x-transition
-                    class="mobile-submenu"
-                >
-
-                    <a
-                        href="{{ route('ppks.normal.case-conference') }}"
-                        class="mobile-submenu-item"
-                    >
-
-                        <span class="material-symbols-outlined">
-                            assignment
-                        </span>
-
-                        <span>
-                            Data Case Conference
-                        </span>
-
-                    </a>
+    </button>
 
 
-                    <a
-                        href="{{ route('ppks.normal.case-conference', ['status' => 'lulus']) }}"
-                        class="mobile-submenu-item"
-                    >
+    <div
+        x-show="caseConferenceOpen"
+        x-transition
+        class="mobile-submenu"
+    >
 
-                        <span class="material-symbols-outlined">
-                            check_circle
-                        </span>
+        {{-- BELUM DILAKUKAN --}}
 
-                        <span>
-                            Data Lolos
-                        </span>
+        <a
+            href="{{ route('ppks.normal.case-conference.belum') }}"
+            class="mobile-submenu-item {{
+                request()->routeIs('ppks.normal.case-conference.belum')
+                    ? 'active'
+                    : ''
+            }}"
+        >
 
-                    </a>
+            <span class="material-symbols-outlined">
+                assignment
+            </span>
 
+            <span>
+                Belum Dilakukan
+            </span>
 
-                    <a
-                        href="{{ route('ppks.normal.case-conference', ['status' => 'pending']) }}"
-                        class="mobile-submenu-item"
-                    >
-
-                        <span class="material-symbols-outlined">
-                            schedule
-                        </span>
-
-                        <span>
-                            Data Pending
-                        </span>
-
-                    </a>
+        </a>
 
 
-                    <a
-                        href="{{ route('ppks.normal.case-conference', ['status' => 'tidak_lulus']) }}"
-                        class="mobile-submenu-item"
-                    >
+        {{-- SUDAH DILAKUKAN --}}
 
-                        <span class="material-symbols-outlined">
-                            cancel
-                        </span>
+        <a
+            href="{{ route('ppks.normal.case-conference.sudah') }}"
+            class="mobile-submenu-item {{
+                request()->routeIs('ppks.normal.case-conference.sudah')
+                    ? 'active'
+                    : ''
+            }}"
+        >
 
-                        <span>
-                            Data Tidak Lolos
-                        </span>
+            <span class="material-symbols-outlined">
+                task_alt
+            </span>
 
-                    </a>
+            <span>
+                Sudah Dilakukan
+            </span>
 
-                </div>
+        </a>
 
-            </div>
+    </div>
+
+</div>
 
 
             {{-- =================================================
@@ -1333,7 +1298,11 @@
 
             <a
                 href="{{ route('ppks.diterima') }}"
-                class="mobile-nav-item {{ request()->routeIs('ppks.diterima') ? 'active' : '' }}"
+                class="mobile-nav-item {{
+                    request()->routeIs('ppks.diterima')
+                        ? 'active'
+                        : ''
+                }}"
             >
 
                 <span class="material-symbols-outlined">
@@ -1347,11 +1316,17 @@
             </a>
 
 
-            {{-- DATA TIDAK DITERIMA --}}
+            {{-- =================================================
+            DATA TIDAK DITERIMA
+            ================================================== --}}
 
             <a
                 href="{{ route('ppks.tidak-diterima') }}"
-                class="mobile-nav-item {{ request()->routeIs('ppks.tidak-diterima') ? 'active' : '' }}"
+                class="mobile-nav-item {{
+                    request()->routeIs('ppks.tidak-diterima')
+                        ? 'active'
+                        : ''
+                }}"
             >
 
                 <span class="material-symbols-outlined">
@@ -1365,7 +1340,9 @@
             </a>
 
 
-            {{-- PEMANGGILAN PESERTA --}}
+            {{-- =================================================
+            PEMANGGILAN PESERTA
+            ================================================== --}}
 
             <a
                 href="#"
@@ -1383,7 +1360,9 @@
             </a>
 
 
-            {{-- PESERTA AKTIF --}}
+            {{-- =================================================
+            PESERTA AKTIF
+            ================================================== --}}
 
             <a
                 href="#"
@@ -1403,7 +1382,9 @@
         </div>
 
 
-        {{-- LOGOUT MOBILE --}}
+        {{-- =====================================================
+        LOGOUT MOBILE
+        ====================================================== --}}
 
         <div class="mobile-logout">
 

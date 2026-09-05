@@ -55,7 +55,13 @@ class Ppks extends Model
             'created_by'
         );
     }
-
+    public function riwayatPemeriksaan(): HasMany
+{
+    return $this->hasMany(
+        RiwayatPemeriksaan::class,
+        'ppks_id'
+    );
+}
     /**
      * =========================================================
      * TRACK RECORD PROSES

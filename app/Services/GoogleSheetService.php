@@ -3,30 +3,75 @@
 namespace App\Services;
 
 use Google\Client;
+use Google\Service\Drive;
 use Google\Service\Sheets;
+use Google\Service\Exception as GoogleServiceException;
 
 class GoogleSheetService
 {
     protected Sheets $sheets;
 
+    protected Drive $drive;
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | CONSTRUCTOR
+    |--------------------------------------------------------------------------
+    */
+
     public function __construct()
     {
         $client = new Client();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | GOOGLE CREDENTIALS
+        |--------------------------------------------------------------------------
+        */
 
         $client->setAuthConfig(
             config('services.google.credentials')
         );
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | GOOGLE SHEETS
+        |--------------------------------------------------------------------------
+        */
+
         $client->addScope(
             Sheets::SPREADSHEETS_READONLY
         );
 
-        $this->sheets = new Sheets($client);
+
+        /*
+        |--------------------------------------------------------------------------
+        | GOOGLE DRIVE
+        |--------------------------------------------------------------------------
+        */
+
+        $client->addScope(
+            Drive::DRIVE_READONLY
+        );
+
+
+        $this->sheets =
+            new Sheets($client);
+
+        $this->drive =
+            new Drive($client);
     }
 
-    /**
-     * Ambil informasi spreadsheet.
-     */
+
+    /*
+    |--------------------------------------------------------------------------
+    | GET SPREADSHEET
+    |--------------------------------------------------------------------------
+    */
+
     public function getSpreadsheet(
         string $spreadsheetId
     ) {
@@ -35,30 +80,38 @@ class GoogleSheetService
             ->get($spreadsheetId);
     }
 
-    /**
-     * Ambil values berdasarkan range.
-     */
+
+    /*
+    |--------------------------------------------------------------------------
+    | GET VALUES
+    |--------------------------------------------------------------------------
+    */
+
     public function getValues(
         string $spreadsheetId,
         string $range
     ): array {
 
-        $response = $this->sheets
-            ->spreadsheets_values
-            ->get(
-                $spreadsheetId,
-                $range
-            );
+        $response =
+            $this->sheets
+                ->spreadsheets_values
+                ->get(
+                    $spreadsheetId,
+                    $range
+                );
 
-        return $response->getValues() ?? [];
+        return
+            $response->getValues()
+            ?? [];
     }
 
-    /**
-     * Ambil SEMUA baris mulai dari startRow
-     * sampai baris terakhir yang memiliki data.
-     *
-     * Tidak ada lagi limit 5.000.
-     */
+
+    /*
+    |--------------------------------------------------------------------------
+    | GET ROWS
+    |--------------------------------------------------------------------------
+    */
+
     public function getRows(
         string $spreadsheetId,
         string $sheetName,
@@ -77,9 +130,13 @@ class GoogleSheetService
         );
     }
 
-    /**
-     * Mengambil satu baris tertentu dari Google Sheet.
-     */
+
+    /*
+    |--------------------------------------------------------------------------
+    | GET SINGLE ROW
+    |--------------------------------------------------------------------------
+    */
+
     public function getRow(
         string $spreadsheetId,
         string $sheetName,
@@ -93,11 +150,119 @@ class GoogleSheetService
             $rowNumber
         );
 
-        $rows = $this->getValues(
-            $spreadsheetId,
-            $range
-        );
+        $rows =
+            $this->getValues(
+                $spreadsheetId,
+                $range
+            );
 
         return $rows[0] ?? [];
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | GET GOOGLE DRIVE FILE
+    |--------------------------------------------------------------------------
+    */
+
+    public function getDriveFile(
+        string $fileId
+    ) {
+
+        return $this->drive
+            ->files
+            ->get(
+                $fileId,
+                [
+                    'fields' =>
+                        'id,name,mimeType,size',
+                ]
+            );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | GET GOOGLE DRIVE FILE STREAM
+    |--------------------------------------------------------------------------
+    |
+    | File tidak dibaca menggunakan getContents().
+    | Body dikembalikan sebagai stream supaya controller
+    | dapat mengirim file sedikit demi sedikit ke browser.
+    |
+    */
+
+    public function getDriveFileStream(
+        string $fileId
+    ) {
+
+        return $this->drive
+            ->files
+            ->get(
+                $fileId,
+                [
+                    'alt' => 'media',
+                ]
+            );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | GET GOOGLE DRIVE FILE CONTENT
+    |--------------------------------------------------------------------------
+    |
+    | Method lama tetap dipertahankan agar tidak merusak
+    | bagian lain aplikasi yang mungkin masih menggunakannya.
+    |
+    */
+
+    public function getDriveFileContent(
+        string $fileId
+    ): string {
+
+        $response =
+            $this->getDriveFileStream(
+                $fileId
+            );
+
+        $body =
+            $response->getBody();
+
+        return $body->getContents();
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | CHECK ACCESS
+    |--------------------------------------------------------------------------
+    */
+
+    public function canAccessDriveFile(
+        string $fileId
+    ): bool {
+
+        try {
+
+            $this->getDriveFile(
+                $fileId
+            );
+
+            return true;
+
+        } catch (
+            GoogleServiceException $e
+        ) {
+
+            return false;
+
+        } catch (
+            \Throwable $e
+        ) {
+
+            return false;
+        }
     }
 }
