@@ -976,10 +976,13 @@ $lulusKesehatanAwal = ProsesPeserta::query()
     */
 
     $petugas = User::query()
-        ->where('role', 'medis')
-        ->where('status', 'approved')
-        ->orderBy('name', 'asc')
-        ->get();
+    ->whereIn('role', [
+        'medis',
+        'super_admin',
+    ])
+    ->where('status', 'approved')
+    ->orderBy('name', 'asc')
+    ->get();
 
 
     /*
@@ -1210,12 +1213,14 @@ $lulusKesehatanAwal = ProsesPeserta::query()
                     ->orderByDesc('created_at');
             }
         ]);
-
         $petugas = User::query()
-            ->where('role', 'medis')
-            ->where('status', 'approved')
-            ->orderBy('name', 'asc')
-            ->get();
+        ->whereIn('role', [
+            'medis',
+            'super_admin',
+        ])
+        ->where('status', 'approved')
+        ->orderBy('name', 'asc')
+        ->get();
 
         return view(
             'asesmen-kesehatan.asesmen-kesehatan-awal-detail',
@@ -1225,6 +1230,7 @@ $lulusKesehatanAwal = ProsesPeserta::query()
                 'tanggalDaring',
                 'gelombang',
                 'tahunValue',
+                 'petugas',
                 'petugasKesehatan',
                 'hasilAsesmenKesehatan',
                 'catatanAsesmenKesehatan',

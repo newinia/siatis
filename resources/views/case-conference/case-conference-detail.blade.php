@@ -92,11 +92,14 @@
         |--------------------------------------------------------------------------
         */
 
-        $foto =
-            $data['foto']
-            ?? $data['foto_ppks']
-            ?? $data['pas_foto']
-            ?? null;
+        $data = $ppks->data ?? [];
+
+        if (!is_array($data)) {
+            $data = [];
+        }
+
+        $foto = $data['upload_foto_full_badan'] ?? null;
+
 
 
         /*
@@ -358,8 +361,9 @@
         }
 
 
+
         /* =========================================================
-           PROGRESS
+        PROGRESS TAHAPAN
         ========================================================= */
 
         .participant-progress {
@@ -367,62 +371,93 @@
             display: flex;
             align-items: flex-start;
             justify-content: center;
-            margin-bottom: 35px;
+            margin-bottom: 28px;
+            overflow-x: auto;
+            padding: 8px 0 12px;
         }
 
         .progress-step {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-width: 125px;
+            position: relative;
+            flex: 1;
+            min-width: 145px;
+            text-align: center;
         }
 
+        /* GARIS PENGHUBUNG */
+        .progress-step:not(:last-child)::after {
+            content: "";
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            width: 100%;
+            height: 3px;
+            background: #e5e7eb;
+            z-index: 0;
+        }
+
+        /* GARIS HIJAU UNTUK TAHAP SELESAI */
+        .progress-step.completed:not(:last-child)::after {
+            background: #63ae00;
+        }
+
+        /* BULATAN */
         .progress-circle {
-            width: 34px;
-            height: 34px;
+            position: relative;
+            z-index: 2;
+
+            width: 32px;
+            height: 32px;
+
+            margin: 0 auto 8px;
+
             border-radius: 50%;
-            border: 2px solid #cbd5ce;
-            background: #ffffff;
+
             display: flex;
             align-items: center;
             justify-content: center;
+
+            background: #ffffff;
+            border: 3px solid #d1d5db;
+
+            font-size: 13px;
+            font-weight: 700;
+            color: #6b7280;
+        }
+
+        /* TAHAP SELESAI */
+        .progress-step.completed .progress-circle {
+            background: #63ae00;
+            border-color: #63ae00;
             color: #ffffff;
         }
 
-        .progress-step.completed .progress-circle {
-            background: #2f6f45;
-            border-color: #2f6f45;
+        /* TAHAP AKTIF */
+        .progress-step.active .progress-circle {
+            background: #328300;
+            border-color: #328300;
+            color: #ffffff;
+            box-shadow: 0 0 0 5px rgba(50, 131, 0, 0.12);
         }
 
-        .progress-step.current .progress-circle {
-            background: #ffffff;
-            border: 7px solid #2f6f45;
-        }
-
+        /* LABEL */
         .progress-label {
-            margin-top: 9px;
-            text-align: center;
-            font-size: 13px;
-            line-height: 1.35;
-            color: #647067;
-            font-weight: 500;
-        }
-
-        .progress-step.completed .progress-label,
-        .progress-step.current .progress-label {
-            color: #1d2b21;
+            font-size: 12px;
+            line-height: 1.4;
             font-weight: 600;
+            color: #6b7280;
+            padding: 0 8px;
         }
 
-        .progress-line {
-            width: 90px;
-            height: 3px;
-            background: #d9e0db;
-            margin-top: 16px;
+        /* LABEL AKTIF */
+        .progress-step.active .progress-label {
+            color: #328300;
+            font-weight: 700;
         }
 
-        .progress-line.completed {
-            background: #2f6f45;
+        /* LABEL SELESAI */
+        .progress-step.completed .progress-label {
+            color: #63ae00;
+            font-weight: 600;
         }
 
 
@@ -855,109 +890,54 @@
         PROGRESS TAHAPAN
         ====================================================== --}}
 
-        <section class="participant-progress">
+            <section class="participant-progress">
 
-            {{-- DATA CALON PPKS --}}
+    {{-- DATA CALON PPKS --}}
+    <div class="progress-step completed">
+        <div class="progress-circle">✓</div>
+        <span class="progress-label">
+            Data Calon<br>
+            PPKS
+        </span>
+    </div>
 
-            <div class="progress-step completed">
+    {{-- ASESMEN INSTRUKTUR --}}
+    <div class="progress-step completed">
+        <div class="progress-circle">✓</div>
+        <span class="progress-label">
+            Asesmen<br>
+            Instruktur
+        </span>
+    </div>
 
-                <div class="progress-circle">
+    {{-- ASESMEN KESEHATAN AWAL --}}
+    <div class="progress-step completed">
+        <div class="progress-circle">✓</div>
+        <span class="progress-label">
+            Asesmen Kesehatan<br>
+            Awal
+        </span>
+    </div>
 
-                    <span class="material-symbols-outlined">
-                        check
-                    </span>
+    {{-- CASE CONFERENCE --}}
+    <div class="progress-step active">
+        <div class="progress-circle">4</div>
+        <span class="progress-label">
+            Case<br>
+            Conference
+        </span>
+    </div>
 
-                </div>
+    {{-- KESEHATAN LANJUTAN --}}
+    <div class="progress-step">
+        <div class="progress-circle">5</div>
+        <span class="progress-label">
+            Kesehatan<br>
+            Lanjutan
+        </span>
+    </div>
 
-                <span class="progress-label">
-                    Data Calon<br>
-                    PPKS
-                </span>
-
-            </div>
-
-
-            <div class="progress-line completed"></div>
-
-
-            {{-- ASESMEN INSTRUKTUR --}}
-
-            <div class="progress-step completed">
-
-                <div class="progress-circle">
-
-                    <span class="material-symbols-outlined">
-                        check
-                    </span>
-
-                </div>
-
-                <span class="progress-label">
-                    Asesmen<br>
-                    Instruktur
-                </span>
-
-            </div>
-
-
-            <div class="progress-line completed"></div>
-
-
-            {{-- ASESMEN KESEHATAN AWAL --}}
-
-            <div class="progress-step completed">
-
-                <div class="progress-circle">
-
-                    <span class="material-symbols-outlined">
-                        check
-                    </span>
-
-                </div>
-
-                <span class="progress-label">
-                    Asesmen Kesehatan<br>
-                    Awal
-                </span>
-
-            </div>
-
-
-            <div class="progress-line completed"></div>
-
-
-            {{-- CASE CONFERENCE --}}
-
-            <div class="progress-step current">
-
-                <div class="progress-circle"></div>
-
-                <span class="progress-label">
-                    Case<br>
-                    Conference
-                </span>
-
-            </div>
-
-
-            <div class="progress-line"></div>
-
-
-            {{-- KESEHATAN LANJUTAN --}}
-
-            <div class="progress-step">
-
-                <div class="progress-circle"></div>
-
-                <span class="progress-label">
-                    Kesehatan<br>
-                    Lanjutan
-                </span>
-
-            </div>
-
-        </section>
-
+</section>
 
         {{-- =====================================================
         FORM UTAMA
@@ -1037,52 +1017,51 @@
 
                 <div class="participant-profile-layout">
 
+                {{-- FOTO --}}
+<div class="participant-photo-wrapper">
+    <div class="participant-photo">
 
-                    {{-- FOTO --}}
+        @if (!empty($foto))
 
-                    <div class="participant-photo-wrapper">
+            <img
+                src="{{ asset('storage/' . ltrim($foto, '/')) }}"
+                alt="Foto {{ $nama }}"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+            >
 
-                        <div class="participant-photo">
+            <div
+                class="participant-photo-placeholder"
+                style="display:none;"
+            >
+                <span class="material-symbols-outlined">
+                    person
+                </span>
+                <span>Foto tidak dapat ditampilkan</span>
+            </div>
 
-                            @if ($foto)
+        @else
 
-                                <img
-                                    src="{{ $foto }}"
-                                    alt="Foto {{ $nama }}"
-                                >
+            <div class="participant-photo-placeholder">
+                <span class="material-symbols-outlined">
+                    person
+                </span>
+                <span>Foto tidak tersedia</span>
+            </div>
 
-                            @else
+        @endif
 
-                                <div class="participant-photo-placeholder">
+    </div>
 
-                                    <span class="material-symbols-outlined">
-                                        person
-                                    </span>
+    <div class="participant-import-info">
+        <span>Data masuk :</span>
 
-                                    <span>
-                                        Foto tidak tersedia
-                                    </span>
-
-                                </div>
-
-                            @endif
-
-                        </div>
+        <strong>
+            {{ $tanggalMasukFormatted }}
+        </strong>
+    </div>
+</div>
 
 
-                        <div class="participant-import-info">
-
-                            <span>
-                                Data masuk :
-                            </span>
-
-                            <strong>
-                                {{ $tanggalMasukFormatted }}
-                            </strong>
-
-                        </div>
-
-                    </div>
 
 
                     {{-- DATA PESERTA --}}

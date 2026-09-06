@@ -1593,33 +1593,37 @@
 .participant-profile-layout {
     width: 100%;
     display: grid;
-    grid-template-columns: 110px minmax(0, 1fr);
+    grid-template-columns: 160px minmax(0, 1fr);
     gap: 24px;
     align-items: start;
 }
 
 .participant-photo-wrapper {
-    width: 110px;
+    width: 180px;
     text-align: center;
 }
-
 .participant-photo {
-    width: 100px;
-    height: 130px;
+    width: 150px;
+    height: 200px;
     margin: 0 auto;
     overflow: hidden;
     border: 1px solid #d1d5db;
     border-radius: 10px;
     background: #f9fafb;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .participant-photo img {
     width: 100%;
     height: 100%;
     display: block;
-    object-fit: cover;
-}
 
+    object-fit: contain;
+    object-position: center;
+}
 .photo-placeholder {
     width: 100%;
     height: 100%;
@@ -2106,17 +2110,10 @@
         right: 62px;
     }
 }
-
-
 @media (max-width: 900px) {
-
-    .participant-detail-container {
-        padding: 0 15px;
-    }
-
     .participant-profile-layout {
-        grid-template-columns: 100px minmax(0, 1fr);
-        gap: 18px;
+        grid-template-columns: 180px minmax(0, 1fr);
+        gap: 20px;
     }
 
     .detail-address-grid,
@@ -2133,7 +2130,43 @@
     }
 }
 
+@media (max-width: 700px) {
+    .participant-profile-layout {
+        grid-template-columns: 1fr;
+    }
 
+    .participant-photo-wrapper {
+        width: 180px;
+        margin: 0 auto;
+    }
+
+    .participant-photo {
+        width: 170px;
+        height: 220px;
+    }
+
+    .participant-data-grid,
+    .detail-address-grid,
+    .detail-contact-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-field.field-full {
+        grid-column: span 1;
+    }
+
+    .document-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .detail-header {
+        align-items: flex-start;
+    }
+
+    .detail-header-text h1 {
+        font-size: 18px;
+    }
+}
 @media (max-width: 700px) {
 
     .journey-card {
