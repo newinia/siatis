@@ -88,18 +88,114 @@
 
         /*
         |--------------------------------------------------------------------------
-        | FOTO
+        | FOTO PPKS
         |--------------------------------------------------------------------------
         */
 
-        $data = $ppks->data ?? [];
+        $foto =
+            $data['upload_foto_full_badan']
+            ?? null;
 
-        if (!is_array($data)) {
-            $data = [];
+        $fotoUrl = null;
+
+        if (!empty($foto)) {
+
+            $foto = trim((string) $foto);
+
+            /*
+            |--------------------------------------------------------------------------
+            | GOOGLE DRIVE URL
+            |--------------------------------------------------------------------------
+            */
+
+            if (
+                str_contains($foto, 'drive.google.com')
+                || str_contains($foto, 'docs.google.com')
+            ) {
+
+                $fotoId = null;
+
+                /*
+                | Format:
+                | https://drive.google.com/open?id=FILE_ID
+                */
+
+                if (
+                    preg_match(
+                        '/[?&]id=([^&]+)/',
+                        $foto,
+                        $matches
+                    )
+                ) {
+                    $fotoId = $matches[1];
+                }
+
+                /*
+                | Format:
+                | https://drive.google.com/file/d/FILE_ID/view
+                */
+
+                elseif (
+                    preg_match(
+                        '~/d/([^/]+)~',
+                        $foto,
+                        $matches
+                    )
+                ) {
+                    $fotoId = $matches[1];
+                }
+
+                /*
+                | Jika berhasil mendapatkan ID Drive
+                */
+
+                if (!empty($fotoId)) {
+
+                    $fotoUrl = route(
+                        'ppks.file',
+                        [
+                            'fileId' => $fotoId
+                        ]
+                    );
+                }
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | JIKA LANGSUNG FILE ID GOOGLE DRIVE
+            |--------------------------------------------------------------------------
+            |
+            | Contoh:
+            | 1m0dpq6eMEvta2yzpOrcYMESytDmBzzW
+            |
+            */
+
+            elseif (
+                !str_contains($foto, '/')
+                && strlen($foto) > 20
+            ) {
+
+                $fotoUrl = route(
+                    'ppks.file',
+                    [
+                        'fileId' => $foto
+                    ]
+                );
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | FOTO LOCAL STORAGE
+            |--------------------------------------------------------------------------
+            */
+
+            else {
+
+                $fotoUrl = asset(
+                    'storage/' . ltrim($foto, '/')
+                );
+            }
         }
-
-        $foto = $data['upload_foto_full_badan'] ?? null;
-
 
 
         /*
@@ -108,18 +204,20 @@
         |--------------------------------------------------------------------------
         */
 
-        $prosesInstruktur = $ppks->prosesPesertas
-            ->where('tahap', 'instruktur')
-            ->sortByDesc(function ($item) {
+        $prosesInstruktur =
+            $ppks->prosesPesertas
+                ->where('tahap', 'instruktur')
+                ->sortByDesc(function ($item) {
 
-                return $item->tanggal_proses
-                    ?? $item->created_at;
+                    return $item->tanggal_proses
+                        ?? $item->created_at;
 
-            })
-            ->first();
+                })
+                ->first();
 
         $catatanInstruktur =
-            $prosesInstruktur?->catatan ?? '-';
+            $prosesInstruktur?->catatan
+            ?? '-';
 
 
         /*
@@ -128,18 +226,20 @@
         |--------------------------------------------------------------------------
         */
 
-        $prosesKesehatan = $ppks->prosesPesertas
-            ->where('tahap', 'kesehatan_awal')
-            ->sortByDesc(function ($item) {
+        $prosesKesehatan =
+            $ppks->prosesPesertas
+                ->where('tahap', 'kesehatan_awal')
+                ->sortByDesc(function ($item) {
 
-                return $item->tanggal_proses
-                    ?? $item->created_at;
+                    return $item->tanggal_proses
+                        ?? $item->created_at;
 
-            })
-            ->first();
+                })
+                ->first();
 
         $catatanKesehatan =
-            $prosesKesehatan?->catatan ?? '-';
+            $prosesKesehatan?->catatan
+            ?? '-';
 
 
         /*
@@ -148,27 +248,22 @@
         |--------------------------------------------------------------------------
         */
 
-        $prosesCaseConference = $ppks->prosesPesertas
-            ->where('tahap', 'case_conference')
-            ->sortByDesc(function ($item) {
+        $prosesCaseConference =
+            $ppks->prosesPesertas
+                ->where('tahap', 'case_conference')
+                ->sortByDesc(function ($item) {
 
-                return $item->tanggal_proses
-                    ?? $item->created_at;
+                    return $item->tanggal_proses
+                        ?? $item->created_at;
 
-            })
-            ->first();
+                })
+                ->first();
 
 
         /*
         |--------------------------------------------------------------------------
         | HASIL CASE CONFERENCE
         |--------------------------------------------------------------------------
-        |
-        | Database:
-        | lulus       -> Form: diterima
-        | tidak_lulus -> Form: tidak_diterima
-        | pending     -> Form: pending
-        |
         */
 
         $hasilCaseConference = match (
@@ -204,11 +299,6 @@
         |--------------------------------------------------------------------------
         | TANGGAL CASE CONFERENCE
         |--------------------------------------------------------------------------
-        |
-        | Prioritas:
-        | 1. Data yang disimpan di ppks.data
-        | 2. tanggal_proses dari record Case Conference
-        |
         */
 
         $tanggalCaseConference =
@@ -275,10 +365,6 @@
         |--------------------------------------------------------------------------
         | OLD VALUE
         |--------------------------------------------------------------------------
-        |
-        | Jika validasi gagal, nilai yang baru dimasukkan user
-        | tetap muncul di form.
-        |
         */
 
         $formHasilCaseConference =
@@ -325,7 +411,8 @@
         */
 
         $tanggalMasuk =
-            $ppks->imported_at ?? null;
+            $ppks->imported_at
+            ?? null;
 
         $tanggalMasukFormatted = '-';
 
@@ -350,9 +437,11 @@
 
     <style>
 
-        /* =========================================================
-           PAGE
-        ========================================================= */
+        /*
+        |--------------------------------------------------------------------------
+        | PAGE
+        |--------------------------------------------------------------------------
+        */
 
         .participant-detail-page {
             width: 100%;
@@ -361,10 +450,11 @@
         }
 
 
-
-        /* =========================================================
-        PROGRESS TAHAPAN
-        ========================================================= */
+        /*
+        |--------------------------------------------------------------------------
+        | PROGRESS
+        |--------------------------------------------------------------------------
+        */
 
         .participant-progress {
             width: 100%;
@@ -383,7 +473,6 @@
             text-align: center;
         }
 
-        /* GARIS PENGHUBUNG */
         .progress-step:not(:last-child)::after {
             content: "";
             position: absolute;
@@ -395,43 +484,33 @@
             z-index: 0;
         }
 
-        /* GARIS HIJAU UNTUK TAHAP SELESAI */
         .progress-step.completed:not(:last-child)::after {
             background: #63ae00;
         }
 
-        /* BULATAN */
         .progress-circle {
             position: relative;
             z-index: 2;
-
             width: 32px;
             height: 32px;
-
             margin: 0 auto 8px;
-
             border-radius: 50%;
-
             display: flex;
             align-items: center;
             justify-content: center;
-
             background: #ffffff;
             border: 3px solid #d1d5db;
-
             font-size: 13px;
             font-weight: 700;
             color: #6b7280;
         }
 
-        /* TAHAP SELESAI */
         .progress-step.completed .progress-circle {
             background: #63ae00;
             border-color: #63ae00;
             color: #ffffff;
         }
 
-        /* TAHAP AKTIF */
         .progress-step.active .progress-circle {
             background: #328300;
             border-color: #328300;
@@ -439,7 +518,6 @@
             box-shadow: 0 0 0 5px rgba(50, 131, 0, 0.12);
         }
 
-        /* LABEL */
         .progress-label {
             font-size: 12px;
             line-height: 1.4;
@@ -448,22 +526,22 @@
             padding: 0 8px;
         }
 
-        /* LABEL AKTIF */
         .progress-step.active .progress-label {
             color: #328300;
             font-weight: 700;
         }
 
-        /* LABEL SELESAI */
         .progress-step.completed .progress-label {
             color: #63ae00;
             font-weight: 600;
         }
 
 
-        /* =========================================================
-           CARD
-        ========================================================= */
+        /*
+        |--------------------------------------------------------------------------
+        | CARD
+        |--------------------------------------------------------------------------
+        */
 
         .participant-detail-card {
             width: 100%;
@@ -478,9 +556,11 @@
         }
 
 
-        /* =========================================================
-           BACK BUTTON
-        ========================================================= */
+        /*
+        |--------------------------------------------------------------------------
+        | BACK
+        |--------------------------------------------------------------------------
+        */
 
         .btn-back {
             display: inline-flex;
@@ -502,9 +582,11 @@
         }
 
 
-        /* =========================================================
-           SECTION
-        ========================================================= */
+        /*
+        |--------------------------------------------------------------------------
+        | SECTION
+        |--------------------------------------------------------------------------
+        */
 
         .detail-section {
             padding: 25px 0;
@@ -527,9 +609,11 @@
         }
 
 
-        /* =========================================================
-           PROFILE
-        ========================================================= */
+        /*
+        |--------------------------------------------------------------------------
+        | PROFILE
+        |--------------------------------------------------------------------------
+        */
 
         .participant-profile-layout {
             display: grid;
@@ -542,6 +626,10 @@
             flex-direction: column;
             align-items: center;
         }
+
+        /*
+        | FOTO
+        */
 
         .participant-photo {
             width: 150px;
@@ -556,12 +644,16 @@
         }
 
         .participant-photo img {
+            display: block;
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
+            object-position: center;
         }
 
         .participant-photo-placeholder {
+            width: 100%;
+            height: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -569,6 +661,7 @@
             color: #9aa69e;
             text-align: center;
             padding: 15px;
+            box-sizing: border-box;
         }
 
         .participant-photo-placeholder .material-symbols-outlined {
@@ -594,9 +687,11 @@
         }
 
 
-        /* =========================================================
-           DATA GRID
-        ========================================================= */
+        /*
+        |--------------------------------------------------------------------------
+        | DATA GRID
+        |--------------------------------------------------------------------------
+        */
 
         .participant-data-grid {
             display: grid;
@@ -650,9 +745,11 @@
         }
 
 
-        /* =========================================================
-           ASSESSMENT GRID
-        ========================================================= */
+        /*
+        |--------------------------------------------------------------------------
+        | ASSESSMENT
+        |--------------------------------------------------------------------------
+        */
 
         .assessment-grid {
             display: grid;
@@ -667,9 +764,11 @@
         }
 
 
-        /* =========================================================
-           BUTTON
-        ========================================================= */
+        /*
+        |--------------------------------------------------------------------------
+        | BUTTON
+        |--------------------------------------------------------------------------
+        */
 
         .form-action {
             display: flex;
@@ -714,9 +813,11 @@
         }
 
 
-        /* =========================================================
-           ERROR
-        ========================================================= */
+        /*
+        |--------------------------------------------------------------------------
+        | ERROR
+        |--------------------------------------------------------------------------
+        */
 
         .validation-error {
             margin-bottom: 20px;
@@ -734,9 +835,11 @@
         }
 
 
-        /* =========================================================
-           MODAL
-        ========================================================= */
+        /*
+        |--------------------------------------------------------------------------
+        | MODAL
+        |--------------------------------------------------------------------------
+        */
 
         .save-modal-overlay {
             position: fixed;
@@ -756,7 +859,7 @@
             border-radius: 18px;
             padding: 30px;
             text-align: center;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, .18);
+            box-shadow: 0 15px 50px rgba(0, 0, .18);
         }
 
         .save-modal-icon {
@@ -806,9 +909,11 @@
         }
 
 
-        /* =========================================================
-           RESPONSIVE
-        ========================================================= */
+        /*
+        |--------------------------------------------------------------------------
+        | RESPONSIVE
+        |--------------------------------------------------------------------------
+        */
 
         @media (max-width: 900px) {
 
@@ -823,10 +928,6 @@
             .participant-data-grid,
             .assessment-grid {
                 grid-template-columns: 1fr;
-            }
-
-            .progress-line {
-                width: 45px;
             }
 
             .progress-step {
@@ -859,10 +960,6 @@
                 font-size: 11px;
             }
 
-            .progress-line {
-                width: 25px;
-            }
-
             .wave-year-group {
                 grid-template-columns: 1fr;
             }
@@ -890,54 +987,55 @@
         PROGRESS TAHAPAN
         ====================================================== --}}
 
-            <section class="participant-progress">
+        <section class="participant-progress">
 
-    {{-- DATA CALON PPKS --}}
-    <div class="progress-step completed">
-        <div class="progress-circle">✓</div>
-        <span class="progress-label">
-            Data Calon<br>
-            PPKS
-        </span>
-    </div>
+            {{-- DATA CALON PPKS --}}
+            <div class="progress-step completed">
+                <div class="progress-circle">✓</div>
+                <span class="progress-label">
+                    Data Calon<br>
+                    PPKS
+                </span>
+            </div>
 
-    {{-- ASESMEN INSTRUKTUR --}}
-    <div class="progress-step completed">
-        <div class="progress-circle">✓</div>
-        <span class="progress-label">
-            Asesmen<br>
-            Instruktur
-        </span>
-    </div>
+            {{-- ASESMEN INSTRUKTUR --}}
+            <div class="progress-step completed">
+                <div class="progress-circle">✓</div>
+                <span class="progress-label">
+                    Asesmen<br>
+                    Instruktur
+                </span>
+            </div>
 
-    {{-- ASESMEN KESEHATAN AWAL --}}
-    <div class="progress-step completed">
-        <div class="progress-circle">✓</div>
-        <span class="progress-label">
-            Asesmen Kesehatan<br>
-            Awal
-        </span>
-    </div>
+            {{-- ASESMEN KESEHATAN AWAL --}}
+            <div class="progress-step completed">
+                <div class="progress-circle">✓</div>
+                <span class="progress-label">
+                    Asesmen Kesehatan<br>
+                    Awal
+                </span>
+            </div>
 
-    {{-- CASE CONFERENCE --}}
-    <div class="progress-step active">
-        <div class="progress-circle">4</div>
-        <span class="progress-label">
-            Case<br>
-            Conference
-        </span>
-    </div>
+            {{-- CASE CONFERENCE --}}
+            <div class="progress-step active">
+                <div class="progress-circle">4</div>
+                <span class="progress-label">
+                    Case<br>
+                    Conference
+                </span>
+            </div>
 
-    {{-- KESEHATAN LANJUTAN --}}
-    <div class="progress-step">
-        <div class="progress-circle">5</div>
-        <span class="progress-label">
-            Kesehatan<br>
-            Lanjutan
-        </span>
-    </div>
+            {{-- KESEHATAN LANJUTAN --}}
+            <div class="progress-step">
+                <div class="progress-circle">5</div>
+                <span class="progress-label">
+                    Kesehatan<br>
+                    Lanjutan
+                </span>
+            </div>
 
-</section>
+        </section>
+
 
         {{-- =====================================================
         FORM UTAMA
@@ -987,6 +1085,7 @@
             {{-- =================================================
             KEMBALI
             ================================================== --}}
+
             <a
                 href="{{ route(
                     'ppks.normal.asesmen-kesehatan.awal',
@@ -994,6 +1093,7 @@
                 ) }}"
                 class="btn-back"
             >
+
                 <span class="material-symbols-outlined">
                     chevron_left
                 </span>
@@ -1001,11 +1101,12 @@
                 <span class="btn-back-text">
                     Kembali
                 </span>
+
             </a>
 
 
             {{-- =================================================
-            A. DATA PPKS
+            DATA PPKS
             ================================================== --}}
 
             <div class="detail-section">
@@ -1017,51 +1118,71 @@
 
                 <div class="participant-profile-layout">
 
-                {{-- FOTO --}}
-<div class="participant-photo-wrapper">
-    <div class="participant-photo">
 
-        @if (!empty($foto))
+                    {{-- FOTO + TANGGAL MASUK --}}
 
-            <img
-                src="{{ asset('storage/' . ltrim($foto, '/')) }}"
-                alt="Foto {{ $nama }}"
-                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-            >
+                    <div class="participant-photo-wrapper">
 
-            <div
-                class="participant-photo-placeholder"
-                style="display:none;"
-            >
-                <span class="material-symbols-outlined">
-                    person
-                </span>
-                <span>Foto tidak dapat ditampilkan</span>
-            </div>
+                        <div class="participant-photo">
 
-        @else
+                            @if ($fotoUrl)
 
-            <div class="participant-photo-placeholder">
-                <span class="material-symbols-outlined">
-                    person
-                </span>
-                <span>Foto tidak tersedia</span>
-            </div>
+                                <img
+                                    src="{{ $fotoUrl }}"
+                                    alt="Foto {{ $nama }}"
+                                    onerror="
+                                        this.style.display='none';
+                                        this.nextElementSibling.style.display='flex';
+                                    "
+                                >
 
-        @endif
+                                <div
+                                    class="participant-photo-placeholder"
+                                    style="display:none;"
+                                >
 
-    </div>
+                                    <span class="material-symbols-outlined">
+                                        person
+                                    </span>
 
-    <div class="participant-import-info">
-        <span>Data masuk :</span>
+                                    <span>
+                                        Foto tidak dapat ditampilkan
+                                    </span>
 
-        <strong>
-            {{ $tanggalMasukFormatted }}
-        </strong>
-    </div>
-</div>
+                                </div>
+
+                            @else
+
+                                <div class="participant-photo-placeholder">
+
+                                    <span class="material-symbols-outlined">
+                                        person
+                                    </span>
+
+                                    <span>
+                                        Foto tidak tersedia
+                                    </span>
+
+                                </div>
+
+                            @endif
+
+                        </div>
 
 
+                        <div class="participant-import-info">
+
+                            <span>
+                                Data masuk :
+                            </span>
+
+                            <strong>
+                                {{ $tanggalMasukFormatted }}
+                            </strong>
+
+                        </div>
+
+                    </div>
 
 
                     {{-- DATA PESERTA --}}
@@ -1266,7 +1387,7 @@
                 <div class="assessment-grid">
 
 
-                    {{-- HASIL CASE CONFERENCE --}}
+                    {{-- HASIL --}}
 
                     <div class="detail-field">
 
@@ -1284,7 +1405,6 @@
                                 Pilih Hasil Case Conference
                             </option>
 
-
                             <option
                                 value="diterima"
                                 @selected(
@@ -1294,7 +1414,6 @@
                                 Diterima
                             </option>
 
-
                             <option
                                 value="tidak_diterima"
                                 @selected(
@@ -1303,7 +1422,6 @@
                             >
                                 Tidak Diterima
                             </option>
-
 
                             <option
                                 value="pending"
@@ -1336,7 +1454,6 @@
                                 Pilih Jurusan
                             </option>
 
-
                             <option
                                 value="desain_grafis"
                                 @selected(
@@ -1345,7 +1462,6 @@
                             >
                                 Desain Grafis
                             </option>
-
 
                             <option
                                 value="komputer"
@@ -1356,7 +1472,6 @@
                                 Komputer
                             </option>
 
-
                             <option
                                 value="menjahit"
                                 @selected(
@@ -1366,7 +1481,6 @@
                                 Menjahit
                             </option>
 
-
                             <option
                                 value="barista"
                                 @selected(
@@ -1375,7 +1489,6 @@
                             >
                                 Barista
                             </option>
-
 
                             <option
                                 value="kuliner"
@@ -1391,7 +1504,7 @@
                     </div>
 
 
-                    {{-- TANGGAL CASE CONFERENCE --}}
+                    {{-- TANGGAL --}}
 
                     <div class="detail-field">
 
@@ -1409,7 +1522,7 @@
                     </div>
 
 
-                    {{-- GELOMBANG & TAHUN --}}
+                    {{-- GELOMBANG + TAHUN --}}
 
                     <div class="detail-field">
 
@@ -1417,11 +1530,7 @@
                             Gelombang & Tahun Pelatihan
                         </label>
 
-
                         <div class="wave-year-group">
-
-
-                            {{-- GELOMBANG --}}
 
                             <select
                                 id="gelombang_pelatihan"
@@ -1432,7 +1541,6 @@
                                     Pilih Gelombang
                                 </option>
 
-
                                 <option
                                     value="1"
                                     @selected(
@@ -1441,7 +1549,6 @@
                                 >
                                     Gelombang 1
                                 </option>
-
 
                                 <option
                                     value="2"
@@ -1455,8 +1562,6 @@
                             </select>
 
 
-                            {{-- TAHUN --}}
-
                             <select
                                 id="tahun_pelatihan"
                                 name="tahun_pelatihan"
@@ -1465,7 +1570,6 @@
                                 <option value="">
                                     Tahun
                                 </option>
-
 
                                 <option
                                     value="2026"
@@ -1476,7 +1580,6 @@
                                     2026
                                 </option>
 
-
                                 <option
                                     value="2027"
                                     @selected(
@@ -1485,7 +1588,6 @@
                                 >
                                     2027
                                 </option>
-
 
                                 <option
                                     value="2028"
@@ -1543,7 +1645,6 @@
                     Simpan
                 </button>
 
-
                 <a
                     href="{{ route(
                         'ppks.normal.asesmen-kesehatan.lanjutan-detail',
@@ -1581,16 +1682,13 @@
 
                     </div>
 
-
                     <h3 class="save-modal-title">
                         Berhasil
                     </h3>
 
-
                     <p class="save-modal-message">
                         {{ session('success') }}
                     </p>
-
 
                     <button
                         type="button"

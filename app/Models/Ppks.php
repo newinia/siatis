@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\AsesmenInstruktur;
+use App\Models\CaseConference;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -32,6 +34,56 @@ class Ppks extends Model
 
     /**
      * =========================================================
+     * ASESMEN INSTRUKTUR
+     * =========================================================
+     */
+        public function asesmenInstruktur(): HasOne
+        {
+            return $this->hasOne(
+                AsesmenInstruktur::class,
+                'ppks_id',
+                'id'
+            );
+        }
+
+    /**
+     * =========================================================
+     * KESEHATAN AWAL
+     * =========================================================
+     */
+    public function kesehatanAwal(): HasOne
+    {
+        return $this->hasOne(KesehatanAwal::class);
+    }
+
+    /**
+     * =========================================================
+     * PROSES PESERTA / WORKFLOW
+     * =========================================================
+     */
+    public function prosesPesertas(): HasMany
+    {
+        return $this->hasMany(
+            ProsesPeserta::class,
+            'ppks_id'
+        );
+    }
+
+    /**
+     * =========================================================
+     * CASE CONFERENCE
+     * =========================================================
+     */
+    public function caseConferences(): HasMany
+    {
+        return $this->hasMany(
+            CaseConference::class,
+            'ppks_id'
+        );
+    }
+
+    /**
+     * =========================================================
      * PESERTA
      * =========================================================
      */
@@ -55,23 +107,18 @@ class Ppks extends Model
             'created_by'
         );
     }
-    public function riwayatPemeriksaan(): HasMany
-{
-    return $this->hasMany(
-        RiwayatPemeriksaan::class,
-        'ppks_id'
-    );
-}
+
     /**
      * =========================================================
-     * TRACK RECORD PROSES
+     * RIWAYAT PEMERIKSAAN
      * =========================================================
      */
-    public function prosesPesertas(): HasMany
+    public function riwayatPemeriksaan(): HasMany
     {
         return $this->hasMany(
-            ProsesPeserta::class,
+            RiwayatPemeriksaan::class,
             'ppks_id'
         );
     }
 }
+

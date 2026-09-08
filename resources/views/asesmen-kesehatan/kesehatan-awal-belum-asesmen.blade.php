@@ -523,10 +523,7 @@
                         <td>
 
 
-                            <a href="{{ route(
-                                'ppks.normal.asesmen-kesehatan.awal',
-                                $item->id
-                            ) }}"
+                            <a href="{{ route('ppks.normal.asesmen-kesehatan.awal', ['ppks' => $item->id]) }}"
                                 class="result-badge
                                 @if($status === 'passed')
                                     result-passed
@@ -538,7 +535,7 @@
                                     result-processing
                                 @else
                                     result-not-done
-                                @endif">
+                                @endif">>
 
                                 <span class="material-symbols-outlined result-icon">
 

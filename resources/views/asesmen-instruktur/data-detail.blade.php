@@ -1596,7 +1596,7 @@
     grid-template-columns: 160px minmax(0, 1fr);
     gap: 24px;
     align-items: start;
-}
+}  
 
 .participant-photo-wrapper {
     width: 180px;

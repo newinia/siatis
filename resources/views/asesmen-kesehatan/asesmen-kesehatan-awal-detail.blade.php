@@ -967,18 +967,17 @@
 
                                 </label>
 
-                                <input
-                                    type="date"
-                                    name="tanggal_daring"
-                                    class="form-control @error('tanggal_daring') has-error @enderror"
-                                    value="{{ old('tanggal_daring', $tanggalDaring ?? '') }}"
-
-                                    @if(!$canEditKesehatan)
-                                        readonly
-                                    @else
-                                        required
-                                    @endif
-                                >
+                        <input
+                            type="date"
+                            name="tanggal_daring"
+                            class="form-control @error('tanggal_daring') has-error @enderror"
+                            value="{{ old('tanggal_daring', optional($kesehatanAwal)->tanggal_daring ? \Carbon\Carbon::parse($kesehatanAwal->tanggal_daring)->format('Y-m-d') : '') }}"
+                            @if(!$canEditKesehatan)
+                                readonly
+                            @else
+                                required
+                            @endif
+                        >
 
                                 @if($isInstruktur)
 

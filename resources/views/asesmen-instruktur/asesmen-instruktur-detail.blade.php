@@ -767,80 +767,84 @@
         }
 
         /*
-        |--------------------------------------------------------------------------
-        | DATA ASESMEN
-        |--------------------------------------------------------------------------
-        */
+|--------------------------------------------------------------------------
+| DATA ASESMEN INSTRUKTUR
+|--------------------------------------------------------------------------
+|
+| Data asesmen sekarang diambil dari tabel asesmen_instrukturs
+| melalui relasi $asesmenInstruktur.
+|
+*/
 
-        $statusAsesmen = old(
-            'status_asesmen',
-            data_get($data, 'status_asesmen', '')
-        );
+    $statusAsesmen = old(
+        'status_asesmen',
+        $asesmenInstruktur?->status_asesmen ?? ''
+    );
 
-        $baznas = old(
-            'baznas',
-            data_get($data, 'baznas', '')
-        );
+    $baznas = old(
+        'baznas',
+        $asesmenInstruktur?->baznas ?? ''
+    );
 
-        $gelombang = old(
-            'gelombang',
-            data_get($data, 'gelombang', '')
-        );
+    $gelombang = old(
+        'gelombang',
+        $asesmenInstruktur?->gelombang ?? ''
+    );
 
-        $tahun = old(
-            'tahun',
-            data_get($data, 'tahun', '')
-        );
+    $tahun = old(
+        'tahun',
+        $asesmenInstruktur?->tahun ?? ''
+    );
 
-        $tanggalAsesmenDaring = old(
-            'tanggal_asesmen_daring',
-            data_get($data, 'tanggal_asesmen_daring', '')
-        );
+    $tanggalAsesmenDaring = old(
+        'tanggal_asesmen_daring',
+        $asesmenInstruktur?->tanggal_asesmen_daring?->format('Y-m-d') ?? ''
+    );
 
-        $petugasAsesmenInstruktur = old(
-            'petugas_asesmen_instruktur',
-            data_get($data, 'petugas_asesmen_instruktur', '')
-        );
+    $petugasAsesmenInstruktur = old(
+        'petugas_asesmen_instruktur',
+        $asesmenInstruktur?->petugas_asesmen_instruktur ?? ''
+    );
 
-        $hasilAsesmenInstruktur = old(
-            'hasil_asesmen_instruktur',
-            data_get($data, 'hasil_asesmen_instruktur', '')
-        );
+    $hasilAsesmenInstruktur = old(
+        'hasil_asesmen_instruktur',
+        $asesmenInstruktur?->hasil_asesmen_instruktur ?? ''
+    );
 
-        $catatanAsesmenInstruktur = old(
-            'catatan_asesmen_instruktur',
-            data_get($data, 'catatan_asesmen_instruktur', '')
-        );
+    $catatanAsesmenInstruktur = old(
+        'catatan_asesmen_instruktur',
+        $asesmenInstruktur?->catatan_asesmen_instruktur ?? ''
+    );
 
-        $asesmenLuring = old(
-            'asesmen_luring',
-            data_get($data, 'asesmen_luring', false)
-        );
+    $asesmenLuring = old(
+        'asesmen_luring',
+        $asesmenInstruktur?->asesmen_luring ?? false
+    );
 
-        $lokasiAsesmenLuring = old(
-            'lokasi_asesmen_luring',
-            data_get($data, 'lokasi_asesmen_luring', '')
-        );
+    $lokasiAsesmenLuring = old(
+        'lokasi_asesmen_luring',
+        $asesmenInstruktur?->lokasi_asesmen_luring ?? ''
+    );
 
-        $tanggalAsesmenLuring = old(
-            'tanggal_asesmen_luring',
-            data_get($data, 'tanggal_asesmen_luring', '')
-        );
+    $tanggalAsesmenLuring = old(
+        'tanggal_asesmen_luring',
+        $asesmenInstruktur?->tanggal_asesmen_luring?->format('Y-m-d') ?? ''
+    );
 
-        $petugasAsesmenLuring = old(
-            'petugas_asesmen_luring',
-            data_get($data, 'petugas_asesmen_luring', '')
-        );
+    $petugasAsesmenLuring = old(
+        'petugas_asesmen_luring',
+        $asesmenInstruktur?->petugas_asesmen_luring ?? ''
+    );
 
-        $hasilAsesmenLuring = old(
-            'hasil_asesmen_luring',
-            data_get($data, 'hasil_asesmen_luring', '')
-        );
+    $hasilAsesmenLuring = old(
+        'hasil_asesmen_luring',
+        $asesmenInstruktur?->hasil_asesmen_luring ?? ''
+    );
 
-        $catatanAsesmenLuring = old(
-            'catatan_asesmen_luring',
-            data_get($data, 'catatan_asesmen_luring', '')
-        );
+    $catatanAsesmenLuring = old(
+        'catatan_asesmen_luring',
+        $asesmenInstruktur?->catatan_asesmen_luring ?? ''
+    );
     @endphp
 
     <div class="participant-detail-page">
@@ -1034,38 +1038,37 @@
 
                                 </label>
 
+
                                 <select
                                     name="status_asesmen"
                                     class="form-control {{ !$canEdit ? 'view-only' : '' }} @error('status_asesmen') has-error @enderror"
                                     @if(!$canEdit) disabled @endif
                                     @if($canEdit) required @endif
                                 >
-
                                     <option value="">
-                                        Pilih status asesmen
+                                        Pilih tahap asesmen
                                     </option>
 
                                     <option
-                                        value="belum"
-                                        {{ $statusAsesmen == 'belum' ? 'selected' : '' }}
+                                        value="tahap_1"
+                                        {{ $statusAsesmen == 'tahap_1' ? 'selected' : '' }}
                                     >
                                         Tahap 1
                                     </option>
 
                                     <option
-                                        value="proses"
-                                        {{ $statusAsesmen == 'proses' ? 'selected' : '' }}
+                                        value="tahap_2"
+                                        {{ $statusAsesmen == 'tahap_2' ? 'selected' : '' }}
                                     >
                                         Tahap 2
                                     </option>
 
                                     <option
-                                        value="selesai"
-                                        {{ $statusAsesmen == 'selesai' ? 'selected' : '' }}
+                                        value="tahap_3"
+                                        {{ $statusAsesmen == 'tahap_3' ? 'selected' : '' }}
                                     >
                                         Tahap 3
                                     </option>
-
                                 </select>
 
                                 @error('status_asesmen')
@@ -1073,6 +1076,8 @@
                                         {{ $message }}
                                     </div>
                                 @enderror
+
+
 
                             </div>
 
@@ -1314,22 +1319,22 @@
                                     </option>
 
                                     <option
-                                        value="direkomendasikan"
-                                        {{ $hasilAsesmenInstruktur == 'direkomendasikan' ? 'selected' : '' }}
+                                        value="lulus"
+                                        {{ $hasilAsesmenInstruktur == 'lulus' ? 'selected' : '' }}
                                     >
                                         Lulus
                                     </option>
 
                                     <option
-                                        value="perlu_ditinjau"
-                                        {{ $hasilAsesmenInstruktur == 'perlu_ditinjau' ? 'selected' : '' }}
+                                        value="pending"
+                                        {{ $hasilAsesmenInstruktur == 'pending' ? 'selected' : '' }}
                                     >
                                         Pending
                                     </option>
 
                                     <option
-                                        value="tidak_direkomendasikan"
-                                        {{ $hasilAsesmenInstruktur == 'tidak_direkomendasikan' ? 'selected' : '' }}
+                                        value="tidak_lulus"
+                                        {{ $hasilAsesmenInstruktur == 'tidak_lulus' ? 'selected' : '' }}
                                     >
                                         Tidak Lulus
                                     </option>
