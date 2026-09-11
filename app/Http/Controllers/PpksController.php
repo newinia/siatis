@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use App\Models\KesehatanLanjutan;
+
 
 class PpksController extends Controller
 {
@@ -38,7 +40,7 @@ class PpksController extends Controller
         }
 
         $roles = array_map(
-            fn ($item) => strtolower(trim($item)),
+            fn($item) => strtolower(trim($item)),
             $roles
         );
 
@@ -96,73 +98,73 @@ class PpksController extends Controller
                 'Pengecekan ulang data berhasil.'
             );
     }
-/*
-|--------------------------------------------------------------------------
-| DATA NORMAL
-|--------------------------------------------------------------------------
-*/
+    /*
+    |--------------------------------------------------------------------------
+    | DATA NORMAL
+    |--------------------------------------------------------------------------
+    */
 
-public function normal(Request $request): View
-{
-    $query = Ppks::query()
-        ->where('status', 'normal')
-        ->with([
-            'prosesPesertas' => function ($query) {
-                $query
+    public function normal(Request $request): View
+    {
+        $query = Ppks::query()
+            ->where('status', 'normal')
+            ->with([
+                'prosesPesertas' => function ($query) {
+                    $query
+                        ->orderByDesc('tanggal_proses')
+                        ->orderByDesc('created_at');
+                }
+            ]);
+
+        $this->applySearch($query, $request);
+
+        $ppks = $query
+            ->orderByRaw('COALESCE(imported_at, created_at) DESC')
+            ->orderByDesc('sheet_row')
+            ->orderByDesc('created_at')
+            ->paginate(15)
+            ->withQueryString();
+
+        return view(
+            'ppks.normal',
+            compact('ppks')
+        );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | DATA NORMAL RECORD
+    |--------------------------------------------------------------------------
+    */
+
+    public function normalRecord(Request $request): View
+    {
+        return $this->manual($request);
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | DETAIL DATA NORMAL
+    |--------------------------------------------------------------------------
+    */
+
+    public function normalDetail(Ppks $ppks): View
+    {
+        $ppks->load([
+            'prosesPesertas' => function ($q) {
+                $q
                     ->orderByDesc('tanggal_proses')
                     ->orderByDesc('created_at');
             }
         ]);
 
-    $this->applySearch($query, $request);
-
-    $ppks = $query
-        ->orderByRaw('COALESCE(imported_at, created_at) DESC')
-        ->orderByDesc('sheet_row')
-        ->orderByDesc('created_at')
-        ->paginate(15)
-        ->withQueryString();
-
-    return view(
-        'ppks.normal',
-        compact('ppks')
-    );
-}
-
-
-/*
-|--------------------------------------------------------------------------
-| DATA NORMAL RECORD
-|--------------------------------------------------------------------------
-*/
-
-public function normalRecord(Request $request): View
-{
-    return $this->manual($request);
-}
-
-
-/*
-|--------------------------------------------------------------------------
-| DETAIL DATA NORMAL
-|--------------------------------------------------------------------------
-*/
-
-public function normalDetail(Ppks $ppks): View
-{
-    $ppks->load([
-        'prosesPesertas' => function ($q) {
-            $q
-                ->orderByDesc('tanggal_proses')
-                ->orderByDesc('created_at');
-        }
-    ]);
-
-    return view(
-        'ppks.normal-detail',
-        compact('ppks')
-    );
-}
+        return view(
+            'ppks.normal-detail',
+            compact('ppks')
+        );
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -513,11 +515,7 @@ public function normalDetail(Ppks $ppks): View
             default => 'pending',
         };
 
-        DB::transaction(function () use (
-            $ppks,
-            $validated,
-            $statusProses
-        ) {
+        DB::transaction(function () use ($ppks, $validated, $statusProses) {
             $data = $ppks->data ?? [];
 
             if (!is_array($data)) {
@@ -796,255 +794,68 @@ public function normalDetail(Ppks $ppks): View
     | DETAIL FORM KESEHATAN AWAL
     |--------------------------------------------------------------------------
     */
-public function asesmenKesehatanAwalDetail(
-    Ppks $ppks
-    ): View {
-
-    /*
-    |--------------------------------------------------------------------------
-    | CEK INSTRUKTUR
-    |--------------------------------------------------------------------------
-    | Peserta harus pernah lulus Asesmen Instruktur.
-    | Tidak lagi mengecek status PPKS harus "normal",
-    | karena halaman ini juga dipakai untuk melihat riwayat
-    | setelah peserta masuk Case Conference.
-    |--------------------------------------------------------------------------
-    */
-
-$lulusInstruktur = ProsesPeserta::query()
-    ->where('ppks_id', $ppks->id)
-    ->where('tahap', 'instruktur')
-    ->where('status', 'lulus')
-    ->exists();
-$lulusKesehatanAwal = ProsesPeserta::query()
-    ->where('ppks_id', $ppks->id)
-    ->where('tahap', 'kesehatan_awal')
-    ->where('status', 'lulus')
-    ->exists();
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | AMBIL ASESMEN KESEHATAN AWAL
-    |--------------------------------------------------------------------------
-    */
-
-    $kesehatanAwal = $ppks
-        ->prosesPesertas()
-        ->where('tahap', 'kesehatan_awal')
-        ->orderByDesc('tanggal_proses')
-        ->orderByDesc('created_at')
-        ->first();
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | JIKA BELUM ADA DATA KESEHATAN AWAL
-    |--------------------------------------------------------------------------
-    | Jangan langsung 403.
-    |--------------------------------------------------------------------------
-    */
-
-    if (!$kesehatanAwal) {
-        abort(
-            404,
-            'Data Asesmen Kesehatan Awal tidak ditemukan.'
-        );
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | DATA PPKS
-    |--------------------------------------------------------------------------
-    */
-
-    $data = $ppks->data ?? [];
-
-    if (!is_array($data)) {
-        $data = json_decode(
-            $data,
-            true
-        ) ?? [];
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | DATA ASESMEN DARING
-    |--------------------------------------------------------------------------
-    */
-
-    $tanggalDaring =
-        $data['tanggal_daring']
-        ??
-        $data['tanggal_asesmen_daring']
-        ??
-        null;
-
-    $gelombang =
-        $data['gelombang']
-        ??
-        null;
-
-    $tahunValue =
-        $data['tahun']
-        ??
-        null;
-
-    $petugasKesehatan =
-        $data['petugas_kesehatan']
-        ??
-        null;
-
-    $hasilAsesmenKesehatan =
-        $data['hasil_asesmen_kesehatan']
-        ??
-        null;
-
-    $catatanAsesmenKesehatan =
-        $data['catatan_asesmen_kesehatan']
-        ??
-        null;
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | DATA ASESMEN LURING
-    |--------------------------------------------------------------------------
-    */
-
-    $asesmenLuring =
-        (bool) (
-            $data['asesmen_luring']
-            ??
-            false
-        );
-
-    $lokasiAsesmenLuring =
-        $data['lokasi_asesmen_luring']
-        ??
-        null;
-
-    $tanggalAsesmenLuring =
-        $data['tanggal_asesmen_luring']
-        ??
-        null;
-
-    $petugasAsesmenLuring =
-        $data['petugas_asesmen_luring']
-        ??
-        null;
-
-    $hasilAsesmenLuring =
-        $data['hasil_asesmen_luring']
-        ??
-        null;
-
-    $catatanAsesmenLuring =
-        $data['catatan_asesmen_luring']
-        ??
-        null;
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | LOAD RIWAYAT PROSES
-    |--------------------------------------------------------------------------
-    */
-
-    $ppks->load([
-        'prosesPesertas' => function ($q) {
-            $q
-                ->whereIn(
-                    'tahap',
-                    [
-                        'instruktur',
-                        'kesehatan_awal',
-                    ]
-                )
-                ->orderByDesc('tanggal_proses')
-                ->orderByDesc('created_at');
-        }
-    ]);
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | PETUGAS MEDIS
-    |--------------------------------------------------------------------------
-    */
-
-    $petugas = User::query()
-    ->whereIn('role', [
-        'medis',
-        'super_admin',
-    ])
-    ->where('status', 'approved')
-    ->orderBy('name', 'asc')
-    ->get();
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | VIEW
-    |--------------------------------------------------------------------------
-    */
-
-    return view(
-        'asesmen-kesehatan.asesmen-kesehatan-awal-detail',
-        compact(
-            'ppks',
-            'kesehatanAwal',
-            'tanggalDaring',
-            'gelombang',
-            'tahunValue',
-            'petugasKesehatan',
-            'hasilAsesmenKesehatan',
-            'catatanAsesmenKesehatan',
-            'asesmenLuring',
-            'lokasiAsesmenLuring',
-            'tanggalAsesmenLuring',
-            'petugasAsesmenLuring',
-            'hasilAsesmenLuring',
-            'catatanAsesmenLuring',
-            'petugas',
-            'lulusKesehatanAwal'
-        )
-    );
-}
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | DETAIL KESEHATAN LANJUTAN
-    |--------------------------------------------------------------------------
-    */
-
-    public function asesmenKesehatanLanjutanDetail(
+    public function asesmenKesehatanAwalDetail(
         Ppks $ppks
     ): View {
-        $prosesKesehatan = $ppks
+
+        /*
+        |--------------------------------------------------------------------------
+        | CEK INSTRUKTUR
+        |--------------------------------------------------------------------------
+        | Peserta harus pernah lulus Asesmen Instruktur.
+        | Tidak lagi mengecek status PPKS harus "normal",
+        | karena halaman ini juga dipakai untuk melihat riwayat
+        | setelah peserta masuk Case Conference.
+        |--------------------------------------------------------------------------
+        */
+
+        $lulusInstruktur = ProsesPeserta::query()
+            ->where('ppks_id', $ppks->id)
+            ->where('tahap', 'instruktur')
+            ->where('status', 'lulus')
+            ->exists();
+        $lulusKesehatanAwal = ProsesPeserta::query()
+            ->where('ppks_id', $ppks->id)
+            ->where('tahap', 'kesehatan_awal')
+            ->where('status', 'lulus')
+            ->exists();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | AMBIL ASESMEN KESEHATAN AWAL
+        |--------------------------------------------------------------------------
+        */
+
+        $kesehatanAwal = $ppks
             ->prosesPesertas()
             ->where('tahap', 'kesehatan_awal')
             ->orderByDesc('tanggal_proses')
             ->orderByDesc('created_at')
             ->first();
 
-        if (
-            !$prosesKesehatan
-            ||
-            $prosesKesehatan->status !== 'lulus'
-        ) {
-            return redirect()
-                ->route(
-                    'ppks.normal.asesmen-kesehatan.lulus'
-                )
-                ->with(
-                    'error',
-                    'Peserta belum dinyatakan Lulus Asesmen Kesehatan Awal.'
-                );
+
+        /*
+        |--------------------------------------------------------------------------
+        | JIKA BELUM ADA DATA KESEHATAN AWAL
+        |--------------------------------------------------------------------------
+        | Jangan langsung 403.
+        |--------------------------------------------------------------------------
+        */
+
+        if (!$kesehatanAwal) {
+            abort(
+                404,
+                'Data Asesmen Kesehatan Awal tidak ditemukan.'
+            );
         }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | DATA PPKS
+        |--------------------------------------------------------------------------
+        */
 
         $data = $ppks->data ?? [];
 
@@ -1055,12 +866,148 @@ $lulusKesehatanAwal = ProsesPeserta::query()
             ) ?? [];
         }
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | DATA ASESMEN DARING
+        |--------------------------------------------------------------------------
+        */
+
+        $tanggalDaring =
+            $data['tanggal_daring']
+            ??
+            $data['tanggal_asesmen_daring']
+            ??
+            null;
+
+        $gelombang =
+            $data['gelombang']
+            ??
+            null;
+
+        $tahunValue =
+            $data['tahun']
+            ??
+            null;
+
+        $petugasKesehatan =
+            $data['petugas_kesehatan']
+            ??
+            null;
+
+        $hasilAsesmenKesehatan =
+            $data['hasil_asesmen_kesehatan']
+            ??
+            null;
+
+        $catatanAsesmenKesehatan =
+            $data['catatan_asesmen_kesehatan']
+            ??
+            null;
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | DATA ASESMEN LURING
+        |--------------------------------------------------------------------------
+        */
+
+        $asesmenLuring =
+            (bool) (
+                $data['asesmen_luring']
+                ??
+                false
+            );
+
+        $lokasiAsesmenLuring =
+            $data['lokasi_asesmen_luring']
+            ??
+            null;
+
+        $tanggalAsesmenLuring =
+            $data['tanggal_asesmen_luring']
+            ??
+            null;
+
+        $petugasAsesmenLuring =
+            $data['petugas_asesmen_luring']
+            ??
+            null;
+
+        $hasilAsesmenLuring =
+            $data['hasil_asesmen_luring']
+            ??
+            null;
+
+        $catatanAsesmenLuring =
+            $data['catatan_asesmen_luring']
+            ??
+            null;
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | LOAD RIWAYAT PROSES
+        |--------------------------------------------------------------------------
+        */
+
+        $ppks->load([
+            'prosesPesertas' => function ($q) {
+                $q
+                    ->whereIn(
+                        'tahap',
+                        [
+                            'instruktur',
+                            'kesehatan_awal',
+                        ]
+                    )
+                    ->orderByDesc('tanggal_proses')
+                    ->orderByDesc('created_at');
+            }
+        ]);
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | PETUGAS MEDIS
+        |--------------------------------------------------------------------------
+        */
+
+        $petugas = User::query()
+            ->whereIn('role', [
+                'medis',
+                'super_admin',
+            ])
+            ->where('status', 'approved')
+            ->orderBy('name', 'asc')
+            ->get();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | VIEW
+        |--------------------------------------------------------------------------
+        */
+
         return view(
-            'asesmen-kesehatan.asesmen-kesehatan-lanjutan-detail',
+            'asesmen-kesehatan.asesmen-kesehatan-awal-detail',
             compact(
                 'ppks',
-                'data',
-                'prosesKesehatan'
+                'kesehatanAwal',
+                'tanggalDaring',
+                'gelombang',
+                'tahunValue',
+                'petugasKesehatan',
+                'hasilAsesmenKesehatan',
+                'catatanAsesmenKesehatan',
+                'asesmenLuring',
+                'lokasiAsesmenLuring',
+                'tanggalAsesmenLuring',
+                'petugasAsesmenLuring',
+                'hasilAsesmenLuring',
+                'catatanAsesmenLuring',
+                'petugas',
+                'lulusKesehatanAwal'
             )
         );
     }
@@ -1214,13 +1161,13 @@ $lulusKesehatanAwal = ProsesPeserta::query()
             }
         ]);
         $petugas = User::query()
-        ->whereIn('role', [
-            'medis',
-            'super_admin',
-        ])
-        ->where('status', 'approved')
-        ->orderBy('name', 'asc')
-        ->get();
+            ->whereIn('role', [
+                'medis',
+                'super_admin',
+            ])
+            ->where('status', 'approved')
+            ->orderBy('name', 'asc')
+            ->get();
 
         return view(
             'asesmen-kesehatan.asesmen-kesehatan-awal-detail',
@@ -1230,7 +1177,7 @@ $lulusKesehatanAwal = ProsesPeserta::query()
                 'tanggalDaring',
                 'gelombang',
                 'tahunValue',
-                 'petugas',
+                'petugas',
                 'petugasKesehatan',
                 'hasilAsesmenKesehatan',
                 'catatanAsesmenKesehatan',
@@ -1361,255 +1308,255 @@ $lulusKesehatanAwal = ProsesPeserta::query()
         );
     }
 
-/*
-|--------------------------------------------------------------------------
-| SIMPAN ASESMEN KESEHATAN AWAL
-|--------------------------------------------------------------------------
-*/
-
-public function simpanAsesmenKesehatanAwal(Request $request, Ppks $ppks)
-{
     /*
     |--------------------------------------------------------------------------
-    | HAK AKSES
-    |--------------------------------------------------------------------------
-    */
-    $role = strtolower(trim((string) (auth()->user()->role ?? '')));
-
-    if (!in_array($role, ['medis', 'super_admin'], true)) {
-        abort(403, 'Anda tidak memiliki izin untuk menyimpan asesmen kesehatan awal.');
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | VALIDASI FORM
-    |--------------------------------------------------------------------------
-    |
-    | Nilai hasil dari Blade:
-    | - lulus
-    | - tidak_lulus
-    | - pending
-    |
-    */
-    $validated = $request->validate([
-        'tanggal_daring' => [
-            'required',
-            'date',
-        ],
-
-        'gelombang' => [
-            'required',
-            'integer',
-            'between:1,10',
-        ],
-
-        'tahun' => [
-            'required',
-            'integer',
-            'min:2000',
-            'max:' . (date('Y') + 1),
-        ],
-
-        'petugas_kesehatan' => [
-            'required',
-            'integer',
-            'exists:users,id',
-        ],
-
-        'hasil_asesmen_kesehatan' => [
-            'required',
-            'in:lulus,tidak_lulus,pending',
-        ],
-
-        'catatan_asesmen_kesehatan' => [
-            'nullable',
-            'string',
-        ],
-
-        'asesmen_luring' => [
-            'nullable',
-            'boolean',
-        ],
-
-        'lokasi_asesmen_luring' => [
-            'nullable',
-            'string',
-            'max:255',
-        ],
-
-        'tanggal_asesmen_luring' => [
-            'nullable',
-            'date',
-        ],
-
-        'petugas_asesmen_luring' => [
-            'nullable',
-            'integer',
-            'exists:users,id',
-        ],
-
-        'hasil_asesmen_luring' => [
-            'nullable',
-            'in:lulus,tidak_lulus,pending',
-        ],
-
-        'catatan_asesmen_luring' => [
-            'nullable',
-            'string',
-        ],
-    ]);
-
-    /*
-    |--------------------------------------------------------------------------
-    | MAPPING HASIL FORM -> STATUS DATABASE
-    |--------------------------------------------------------------------------
-    |
-    | Form:
-    |   lulus        -> DB: lolos
-    |   tidak_lulus  -> DB: tidak_lolos
-    |   pending      -> DB: pending
-    |
-    */
-    $status = match ($validated['hasil_asesmen_kesehatan']) {
-        'lulus' => 'lulus',
-        'tidak_lulus' => 'tidak_lulus',
-        'pending' => 'pending',
-    };
-
-    /*
-    |--------------------------------------------------------------------------
-    | SIMPAN KE RECORD PPKS YANG SEDANG DIBUKA
-    |--------------------------------------------------------------------------
-    |
-    | PENTING:
-    | Jangan pakai:
-    |
-    | ProsesPeserta::latest()->first()
-    |
-    | Karena itu bisa mengambil record peserta lain.
-    |
-    | Kita selalu mencari berdasarkan $ppks->id.
+    | SIMPAN ASESMEN KESEHATAN AWAL
     |--------------------------------------------------------------------------
     */
 
-    $proses = $ppks->prosesPesertas()
-        ->where('tahap', 'kesehatan_awal')
-        ->first();
+    public function simpanAsesmenKesehatanAwal(Request $request, Ppks $ppks)
+    {
+        /*
+        |--------------------------------------------------------------------------
+        | HAK AKSES
+        |--------------------------------------------------------------------------
+        */
+        $role = strtolower(trim((string) (auth()->user()->role ?? '')));
 
-    /*
-    |--------------------------------------------------------------------------
-    | BUAT RECORD JIKA BELUM ADA
-    |--------------------------------------------------------------------------
-    */
+        if (!in_array($role, ['medis', 'super_admin'], true)) {
+            abort(403, 'Anda tidak memiliki izin untuk menyimpan asesmen kesehatan awal.');
+        }
 
-    if (!$proses) {
-        $proses = $ppks->prosesPesertas()->create([
-            'tahap' => 'kesehatan_awal',
+        /*
+        |--------------------------------------------------------------------------
+        | VALIDASI FORM
+        |--------------------------------------------------------------------------
+        |
+        | Nilai hasil dari Blade:
+        | - lulus
+        | - tidak_lulus
+        | - pending
+        |
+        */
+        $validated = $request->validate([
+            'tanggal_daring' => [
+                'required',
+                'date',
+            ],
+
+            'gelombang' => [
+                'required',
+                'integer',
+                'between:1,10',
+            ],
+
+            'tahun' => [
+                'required',
+                'integer',
+                'min:2000',
+                'max:' . (date('Y') + 1),
+            ],
+
+            'petugas_kesehatan' => [
+                'required',
+                'integer',
+                'exists:users,id',
+            ],
+
+            'hasil_asesmen_kesehatan' => [
+                'required',
+                'in:lulus,tidak_lulus,pending',
+            ],
+
+            'catatan_asesmen_kesehatan' => [
+                'nullable',
+                'string',
+            ],
+
+            'asesmen_luring' => [
+                'nullable',
+                'boolean',
+            ],
+
+            'lokasi_asesmen_luring' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
+
+            'tanggal_asesmen_luring' => [
+                'nullable',
+                'date',
+            ],
+
+            'petugas_asesmen_luring' => [
+                'nullable',
+                'integer',
+                'exists:users,id',
+            ],
+
+            'hasil_asesmen_luring' => [
+                'nullable',
+                'in:lulus,tidak_lulus,pending',
+            ],
+
+            'catatan_asesmen_luring' => [
+                'nullable',
+                'string',
+            ],
         ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | MAPPING HASIL FORM -> STATUS DATABASE
+        |--------------------------------------------------------------------------
+        |
+        | Form:
+        |   lulus        -> DB: lolos
+        |   tidak_lulus  -> DB: tidak_lolos
+        |   pending      -> DB: pending
+        |
+        */
+        $status = match ($validated['hasil_asesmen_kesehatan']) {
+            'lulus' => 'lulus',
+            'tidak_lulus' => 'tidak_lulus',
+            'pending' => 'pending',
+        };
+
+        /*
+        |--------------------------------------------------------------------------
+        | SIMPAN KE RECORD PPKS YANG SEDANG DIBUKA
+        |--------------------------------------------------------------------------
+        |
+        | PENTING:
+        | Jangan pakai:
+        |
+        | ProsesPeserta::latest()->first()
+        |
+        | Karena itu bisa mengambil record peserta lain.
+        |
+        | Kita selalu mencari berdasarkan $ppks->id.
+        |--------------------------------------------------------------------------
+        */
+
+        $proses = $ppks->prosesPesertas()
+            ->where('tahap', 'kesehatan_awal')
+            ->first();
+
+        /*
+        |--------------------------------------------------------------------------
+        | BUAT RECORD JIKA BELUM ADA
+        |--------------------------------------------------------------------------
+        */
+
+        if (!$proses) {
+            $proses = $ppks->prosesPesertas()->create([
+                'tahap' => 'kesehatan_awal',
+            ]);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | SIMPAN PROSES KESEHATAN AWAL
+        |--------------------------------------------------------------------------
+        */
+
+        $proses->update([
+            'status' => $status,
+            'catatan' => $validated['catatan_asesmen_kesehatan'] ?? null,
+            'tanggal_proses' => $validated['tanggal_daring'],
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | SIMPAN DATA DETAIL ASESMEN KE DALAM DATA PPKS
+        |--------------------------------------------------------------------------
+        |
+        | Ini supaya data detail tetap melekat pada PPKS yang benar.
+        |--------------------------------------------------------------------------
+        */
+
+        $data = is_array($ppks->data)
+            ? $ppks->data
+            : [];
+
+        $data['tanggal_daring'] =
+            $validated['tanggal_daring'];
+
+        $data['gelombang'] =
+            $validated['gelombang'];
+
+        $data['tahun'] =
+            $validated['tahun'];
+
+        $data['petugas_kesehatan'] =
+            $validated['petugas_kesehatan'];
+
+        $data['hasil_asesmen_kesehatan'] =
+            $validated['hasil_asesmen_kesehatan'];
+
+        $data['catatan_asesmen_kesehatan'] =
+            $validated['catatan_asesmen_kesehatan'] ?? null;
+
+        /*
+        |--------------------------------------------------------------------------
+        | ASESMEN LURING
+        |--------------------------------------------------------------------------
+        */
+
+        $asesmenLuring = $request->boolean('asesmen_luring');
+
+        $data['asesmen_luring'] = $asesmenLuring;
+
+        if ($asesmenLuring) {
+            $data['lokasi_asesmen_luring'] =
+                $validated['lokasi_asesmen_luring'] ?? null;
+
+            $data['tanggal_asesmen_luring'] =
+                $validated['tanggal_asesmen_luring'] ?? null;
+
+            $data['petugas_asesmen_luring'] =
+                $validated['petugas_asesmen_luring'] ?? null;
+
+            $data['hasil_asesmen_luring'] =
+                $validated['hasil_asesmen_luring'] ?? null;
+
+            $data['catatan_asesmen_luring'] =
+                $validated['catatan_asesmen_luring'] ?? null;
+        } else {
+            $data['lokasi_asesmen_luring'] = null;
+            $data['tanggal_asesmen_luring'] = null;
+            $data['petugas_asesmen_luring'] = null;
+            $data['hasil_asesmen_luring'] = null;
+            $data['catatan_asesmen_luring'] = null;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | UPDATE PPKS
+        |--------------------------------------------------------------------------
+        */
+
+        $ppks->update([
+            'data' => $data,
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | REDIRECT
+        |--------------------------------------------------------------------------
+        */
+
+        return redirect()
+            ->route(
+                'ppks.normal.asesmen-kesehatan.awal',
+                $ppks->id
+            )
+            ->with(
+                'success',
+                'Asesmen kesehatan awal berhasil disimpan.'
+            );
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | SIMPAN PROSES KESEHATAN AWAL
-    |--------------------------------------------------------------------------
-    */
-
-    $proses->update([
-        'status' => $status,
-        'catatan' => $validated['catatan_asesmen_kesehatan'] ?? null,
-        'tanggal_proses' => $validated['tanggal_daring'],
-    ]);
-
-    /*
-    |--------------------------------------------------------------------------
-    | SIMPAN DATA DETAIL ASESMEN KE DALAM DATA PPKS
-    |--------------------------------------------------------------------------
-    |
-    | Ini supaya data detail tetap melekat pada PPKS yang benar.
-    |--------------------------------------------------------------------------
-    */
-
-    $data = is_array($ppks->data)
-        ? $ppks->data
-        : [];
-
-    $data['tanggal_daring'] =
-        $validated['tanggal_daring'];
-
-    $data['gelombang'] =
-        $validated['gelombang'];
-
-    $data['tahun'] =
-        $validated['tahun'];
-
-    $data['petugas_kesehatan'] =
-        $validated['petugas_kesehatan'];
-
-    $data['hasil_asesmen_kesehatan'] =
-        $validated['hasil_asesmen_kesehatan'];
-
-    $data['catatan_asesmen_kesehatan'] =
-        $validated['catatan_asesmen_kesehatan'] ?? null;
-
-    /*
-    |--------------------------------------------------------------------------
-    | ASESMEN LURING
-    |--------------------------------------------------------------------------
-    */
-
-    $asesmenLuring = $request->boolean('asesmen_luring');
-
-    $data['asesmen_luring'] = $asesmenLuring;
-
-    if ($asesmenLuring) {
-        $data['lokasi_asesmen_luring'] =
-            $validated['lokasi_asesmen_luring'] ?? null;
-
-        $data['tanggal_asesmen_luring'] =
-            $validated['tanggal_asesmen_luring'] ?? null;
-
-        $data['petugas_asesmen_luring'] =
-            $validated['petugas_asesmen_luring'] ?? null;
-
-        $data['hasil_asesmen_luring'] =
-            $validated['hasil_asesmen_luring'] ?? null;
-
-        $data['catatan_asesmen_luring'] =
-            $validated['catatan_asesmen_luring'] ?? null;
-    } else {
-        $data['lokasi_asesmen_luring'] = null;
-        $data['tanggal_asesmen_luring'] = null;
-        $data['petugas_asesmen_luring'] = null;
-        $data['hasil_asesmen_luring'] = null;
-        $data['catatan_asesmen_luring'] = null;
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | UPDATE PPKS
-    |--------------------------------------------------------------------------
-    */
-
-    $ppks->update([
-        'data' => $data,
-    ]);
-
-    /*
-    |--------------------------------------------------------------------------
-    | REDIRECT
-    |--------------------------------------------------------------------------
-    */
-
-    return redirect()
-        ->route(
-            'ppks.normal.asesmen-kesehatan.awal',
-            $ppks->id
-        )
-        ->with(
-            'success',
-            'Asesmen kesehatan awal berhasil disimpan.'
-        );
-}
 
 
 
@@ -1621,69 +1568,69 @@ public function simpanAsesmenKesehatanAwal(Request $request, Ppks $ppks)
     */
 
     public function caseConference(
-    Request $request
-): View {
-    $query = Ppks::query()
-        ->where('status', 'normal')
+        Request $request
+    ): View {
+        $query = Ppks::query()
+            ->where('status', 'normal')
 
-        ->whereHas(
-            'prosesPesertas',
-            function ($q) {
-                $q
-                    ->where('tahap', 'kesehatan_awal')
-                    ->where('status', 'lulus');
-            }
-        )
+            ->whereHas(
+                'prosesPesertas',
+                function ($q) {
+                    $q
+                        ->where('tahap', 'kesehatan_awal')
+                        ->where('status', 'lulus');
+                }
+            )
 
-        ->whereHas(
-            'prosesPesertas',
-            function ($q) {
-                $q
-                    ->where('tahap', 'case_conference')
-                    ->whereIn(
-                        'status',
-                        [
-                            'belum',
-                            'sedang_diperiksa',
-                            'pending',
-                            'lulus',
-                            'tidak_lulus',
-                        ]
-                    );
-            }
-        )
+            ->whereHas(
+                'prosesPesertas',
+                function ($q) {
+                    $q
+                        ->where('tahap', 'case_conference')
+                        ->whereIn(
+                            'status',
+                            [
+                                'belum',
+                                'sedang_diperiksa',
+                                'pending',
+                                'lulus',
+                                'tidak_lulus',
+                            ]
+                        );
+                }
+            )
 
-        ->with([
-            'prosesPesertas' => function ($q) {
-                $q
-                    ->where('tahap', 'case_conference')
-                    ->orderByDesc('tanggal_proses')
-                    ->orderByDesc('created_at');
-            }
-        ]);
+            ->with([
+                'prosesPesertas' => function ($q) {
+                    $q
+                        ->where('tahap', 'case_conference')
+                        ->orderByDesc('tanggal_proses')
+                        ->orderByDesc('created_at');
+                }
+            ]);
 
-    $this->applySearch($query, $request);
+        $this->applySearch($query, $request);
 
-    $this->applyHasilFilter(
-        $query,
-        $request,
-        'case_conference'
-    );
+        $this->applyHasilFilter(
+            $query,
+            $request,
+            'case_conference'
+        );
 
-    $ppks = $this->applyPpksSorting($query)
-        ->paginate(15)
-        ->withQueryString();
+        $ppks = $this->applyPpksSorting($query)
+            ->paginate(15)
+            ->withQueryString();
 
-    $tahap = 'case_conference';
+        $tahap = 'case_conference';
 
-    return view(
-        'ppks.normal',
-        compact(
-            'ppks',
-            'tahap'
-        )
-    );
-}
+        return view(
+            'ppks.normal',
+            compact(
+                'ppks',
+                'tahap'
+            )
+        );
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -1733,64 +1680,64 @@ public function simpanAsesmenKesehatanAwal(Request $request, Ppks $ppks)
         );
     }
 
-public function caseConferenceBelum()
-{
-    $data = Ppks::query()
-        // Wajib sudah lulus asesmen kesehatan awal
-        ->whereHas('prosesPesertas', function ($query) {
-            $query->where('tahap', 'kesehatan_awal')
-                ->where('status', 'lulus');
-        })
+    public function caseConferenceBelum()
+    {
+        $data = Ppks::query()
+            // Wajib sudah lulus asesmen kesehatan awal
+            ->whereHas('prosesPesertas', function ($query) {
+                $query->where('tahap', 'kesehatan_awal')
+                    ->where('status', 'lulus');
+            })
 
-        // Case Conference:
-        // boleh belum punya record,
-        // atau sudah ada tetapi masih belum/sedang diperiksa
-        ->where(function ($query) {
-            $query
-                ->whereDoesntHave('prosesPesertas', function ($q) {
-                    $q->where('tahap', 'case_conference');
-                })
-                ->orWhereHas('prosesPesertas', function ($q) {
-                    $q->where('tahap', 'case_conference')
-                        ->whereIn('status', [
-                            'belum',
-                            'sedang_diperiksa',
-                        ]);
-                });
-        })
+            // Case Conference:
+            // boleh belum punya record,
+            // atau sudah ada tetapi masih belum/sedang diperiksa
+            ->where(function ($query) {
+                $query
+                    ->whereDoesntHave('prosesPesertas', function ($q) {
+                        $q->where('tahap', 'case_conference');
+                    })
+                    ->orWhereHas('prosesPesertas', function ($q) {
+                        $q->where('tahap', 'case_conference')
+                            ->whereIn('status', [
+                                'belum',
+                                'sedang_diperiksa',
+                            ]);
+                    });
+            })
 
-        ->with('prosesPesertas')
-        ->latest('id')
-        ->paginate(20);
+            ->with('prosesPesertas')
+            ->latest('id')
+            ->paginate(20);
 
-    return view(
-        'case-conference.case-conference-belum',
-        compact('data')
-    );
-}
+        return view(
+            'case-conference.case-conference-belum',
+            compact('data')
+        );
+    }
 
 
-public function caseConferenceSudah()
-{
-    $data = Ppks::query()
-        ->whereHas('prosesPesertas', function ($query) {
-            $query
-                ->where('tahap', 'case_conference')
-                ->whereIn('status', [
-                    'pending',
-                    'lulus',
-                    'tidak_lulus',
-                ]);
-        })
-        ->with('prosesPesertas')
-        ->latest('id')
-        ->paginate(20);
+    public function caseConferenceSudah()
+    {
+        $data = Ppks::query()
+            ->whereHas('prosesPesertas', function ($query) {
+                $query
+                    ->where('tahap', 'case_conference')
+                    ->whereIn('status', [
+                        'pending',
+                        'lulus',
+                        'tidak_lulus',
+                    ]);
+            })
+            ->with('prosesPesertas')
+            ->latest('id')
+            ->paginate(20);
 
-    return view(
-        'case-conference.case-conference-sudah',
-        compact('data')
-    );
-}
+        return view(
+            'case-conference.case-conference-sudah',
+            compact('data')
+        );
+    }
 
 
     /*
@@ -1920,11 +1867,7 @@ public function caseConferenceSudah()
         |--------------------------------------------------------------------------
         */
 
-        DB::transaction(function () use (
-            $ppks,
-            $validated,
-            $status
-        ) {
+        DB::transaction(function () use ($ppks, $validated, $status) {
 
             /*
             |--------------------------------------------------------------------------
@@ -2213,10 +2156,7 @@ public function caseConferenceSudah()
 
         $query->whereHas(
             'prosesPesertas',
-            function ($q) use (
-                $tahap,
-                $hasil
-            ) {
+            function ($q) use ($tahap, $hasil) {
                 $q
                     ->where('tahap', $tahap)
                     ->where('status', $hasil);
@@ -2254,9 +2194,7 @@ public function caseConferenceSudah()
             '%';
 
         $query->where(
-            function ($q) use (
-                $searchLike
-            ) {
+            function ($q) use ($searchLike) {
                 $q->where(
                     'sheet_row',
                     'like',
@@ -2401,7 +2339,10 @@ public function caseConferenceSudah()
         );
     }
 
-
+    public function kesehatanLanjutan()
+{
+    return $this->hasOne(KesehatanLanjutan::class, 'ppks_id');
+}
     /*
     |--------------------------------------------------------------------------
     | FORM TAMBAH DATA MANUAL
@@ -3348,18 +3289,14 @@ public function caseConferenceSudah()
             $this->ensureRole(
                 'instruktur'
             );
-        }
-
-        elseif (
+        } elseif (
             $tahap ===
             'kesehatan_awal'
         ) {
             $this->ensureRole(
                 'medis'
             );
-        }
-
-        elseif (
+        } elseif (
             $tahap ===
             'case_conference'
         ) {
@@ -3616,8 +3553,8 @@ public function caseConferenceSudah()
 
         if (
             !isset(
-                $tahapMap[$tahap]
-            )
+            $tahapMap[$tahap]
+        )
         ) {
             return back()->with(
                 'error',
@@ -3642,18 +3579,14 @@ public function caseConferenceSudah()
             $this->ensureRole(
                 'instruktur'
             );
-        }
-
-        elseif (
+        } elseif (
             $tahapSekarang ===
             'kesehatan_awal'
         ) {
             $this->ensureRole(
                 'medis'
             );
-        }
-
-        elseif (
+        } elseif (
             $tahapSekarang ===
             'case_conference'
         ) {
@@ -3788,12 +3721,7 @@ public function caseConferenceSudah()
         |--------------------------------------------------------------------------
         */
 
-        DB::transaction(function () use (
-            $request,
-            $ppks,
-            $proses,
-            $tahapSekarang
-        ) {
+        DB::transaction(function () use ($request, $ppks, $proses, $tahapSekarang) {
 
             $waktuSelesai =
                 now()->format(
@@ -3867,18 +3795,18 @@ public function caseConferenceSudah()
             | TIDAK LULUS
             |--------------------------------------------------------------------------
             */
-/*
-|--------------------------------------------------------------------------
-| TIDAK LULUS
-|--------------------------------------------------------------------------
-*/
+            /*
+            |--------------------------------------------------------------------------
+            | TIDAK LULUS
+            |--------------------------------------------------------------------------
+            */
 
-if (
-    $request->status ===
-    'tidak_lulus'
-) {
-    return;
-}
+            if (
+                $request->status ===
+                'tidak_lulus'
+            ) {
+                return;
+            }
 
 
 
@@ -4041,18 +3969,16 @@ if (
         }
 
         if (
-    $request->status === 'lulus' &&
-    $tahapSekarang === 'case_conference'
-) {
-    return back()->with(
-        'success',
-        'Case Conference Lulus. Peserta dinyatakan DITERIMA.'
-    );
-}
-return back();
-}
-
-
+            $request->status === 'lulus' &&
+            $tahapSekarang === 'case_conference'
+        ) {
+            return back()->with(
+                'success',
+                'Case Conference Lulus. Peserta dinyatakan DITERIMA.'
+            );
+        }
+        return back();
+    }
 
     /*
     |--------------------------------------------------------------------------

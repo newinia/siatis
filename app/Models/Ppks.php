@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-
+use App\Models\PemanggilanPeserta;
+use App\Models\KesehatanLanjutan;
 class Ppks extends Model
 {
     protected $table = 'ppks';
@@ -74,4 +75,13 @@ class Ppks extends Model
             'ppks_id'
         );
     }
+    public function pemanggilanPeserta()
+{
+    return $this->hasOne(PemanggilanPeserta::class, 'ppks_id');
+}
+public function kesehatanLanjutan()
+{
+    return $this->hasOne(KesehatanLanjutan::class, 'ppks_id');
+}
+
 }

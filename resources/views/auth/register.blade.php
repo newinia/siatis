@@ -1,232 +1,79 @@
+
 <x-guest-layout>
 
-    <style>
-        .register-page {
-            height: 100vh;
-            width: 100%;
-            display: flex;
-            overflow: hidden;
-            background: #edf2ff;
-        }
-
-        .register-left {
-            width: 50%;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .register-left img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .register-right {
-            width: 50%;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .register-card {
-            width: 100%;
-            max-width: 440px;
-            background: white;
-            border-radius: 24px;
-            padding: 24px 32px;
-            box-sizing: border-box;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
-        }
-
-        .register-logo {
-            width: 80px !important;
-            height: auto !important;
-            display: block;
-            margin: 0 auto 8px auto;
-        }
-
-        .register-title {
-            font-size: 25px;
-            line-height: 1.2;
-            font-weight: 700;
-            text-align: center;
-            color: #1f2937;
-            margin: 0;
-        }
-
-        .register-subtitle {
-            font-size: 13px;
-            text-align: center;
-            color: #6b7280;
-            margin: 6px 0 18px 0;
-        }
-
-        .register-form {
-            display: flex;
-            flex-direction: column;
-            gap: 11px;
-        }
-
-        .register-field label {
-            display: block;
-            font-size: 13px;
-            font-weight: 500;
-            color: #374151;
-            margin-bottom: 5px;
-        }
-
-        .register-input {
-            width: 100% !important;
-            height: 40px !important;
-            box-sizing: border-box;
-            border: 1px solid #d1d5db;
-            border-radius: 10px;
-            padding: 0 12px;
-            font-size: 14px;
-            outline: none;
-            background: white;
-        }
-
-        .register-input:focus {
-            border-color: #2563eb;
-            box-shadow: 0 0 0 1px #2563eb;
-        }
-
-        .register-select {
-            width: 100%;
-            height: 40px;
-            box-sizing: border-box;
-            border: 1px solid #d1d5db;
-            border-radius: 10px;
-            padding: 0 12px;
-            font-size: 14px;
-            background: white;
-            outline: none;
-        }
-
-        .register-select:focus {
-            border-color: #2563eb;
-            box-shadow: 0 0 0 1px #2563eb;
-        }
-
-        .register-button {
-            width: 100%;
-            height: 40px;
-            margin-top: 2px;
-            border: none;
-            border-radius: 10px;
-            background: #1d4ed8;
-            color: white;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .register-button:hover {
-            background: #1e40af;
-        }
-
-        .register-login {
-            text-align: center;
-            font-size: 13px;
-            color: #6b7280;
-            margin-top: 14px;
-            margin-bottom: 0;
-        }
-
-        .register-login a {
-            color: #1d4ed8;
-            font-weight: 600;
-            text-decoration: none;
-        }
-
-        .register-login a:hover {
-            text-decoration: underline;
-        }
-
-        @media (max-width: 1023px) {
-            .register-left {
-                display: none;
-            }
-
-            .register-right {
-                width: 100%;
-            }
-        }
-
-        @media (max-height: 750px) and (min-width: 1024px) {
-            .register-card {
-                padding: 18px 28px;
-            }
-
-            .register-logo {
-                width: 65px !important;
-                margin-bottom: 5px;
-            }
-
-            .register-subtitle {
-                margin-bottom: 12px;
-            }
-
-            .register-form {
-                gap: 8px;
-            }
-
-            .register-input,
-            .register-select,
-            .register-button {
-                height: 36px !important;
-            }
-
-            .register-login {
-                margin-top: 10px;
-            }
-        }
-    </style>
-
+    {{-- =====================================================
+    REGISTER PAGE
+    ====================================================== --}}
     <div class="register-page">
 
-        <!-- KIRI -->
-        <div class="register-left">
+
+        {{-- =================================================
+        GAMBAR
+        ================================================== --}}
+        <div class="register-page__image">
+
             <img
                 src="{{ asset('images/login-bg.jpeg') }}"
-                alt="Background STIS">
+                alt="Background Register"
+            >
+
         </div>
 
-        <!-- KANAN -->
-        <div class="register-right">
 
-            <div class="register-card">
+        {{-- =================================================
+        CONTENT
+        ================================================== --}}
+        <div class="register-page__content">
 
-                <!-- LOGO -->
-                <img
-                    src="{{ asset('images/logo.png') }}"
-                    alt="Logo STIS"
-                    class="register-logo">
+            <div class="register-page__card">
 
-                <!-- JUDUL -->
-                <h1 class="register-title">
-                    Daftar Akun
-                </h1>
 
-                <p class="register-subtitle">
-                    Buat akun untuk mengakses Sistem Informasi STIS
-                </p>
+                {{-- =================================================
+                LOGO
+                ================================================== --}}
+                <div class="register-page__logo">
 
-                <!-- FORM -->
+                    <img
+                        src="{{ asset('images/logo.png') }}"
+                        alt="Logo STIS"
+                    >
+
+                </div>
+
+
+                {{-- =================================================
+                HEADING
+                ================================================== --}}
+                <div class="register-page__heading">
+
+                    <h1>
+                        Daftar Akun
+                    </h1>
+
+                    <p>
+                        Buat akun untuk mengakses Sistem Informasi STIS
+                    </p>
+
+                </div>
+
+
+                {{-- =================================================
+                FORM
+                ================================================== --}}
                 <form
                     method="POST"
                     action="{{ route('register') }}"
-                    class="register-form">
+                    class="register-page__form"
+                    novalidate
+                >
 
                     @csrf
 
-                    <!-- NAMA -->
-                    <div class="register-field">
+
+                    {{-- =================================================
+                    NAMA
+                    ================================================== --}}
+                    <div class="register-page__field">
 
                         <label for="name">
                             Nama
@@ -241,16 +88,32 @@
                             autofocus
                             autocomplete="name"
                             placeholder="Masukkan nama"
-                            class="register-input" />
+                            class="block w-full {{ $errors->has('name') ? 'form-input-error' : '' }}"
+                        />
 
-                        <x-input-error
-                            :messages="$errors->get('name')"
-                            class="mt-1" />
+                        @error('name')
+
+                            <div class="form-error">
+
+                                <span class="form-error__icon">
+                                    !
+                                </span>
+
+                                <span>
+                                    {{ $message }}
+                                </span>
+
+                            </div>
+
+                        @enderror
 
                     </div>
 
-                    <!-- EMAIL -->
-                    <div class="register-field">
+
+                    {{-- =================================================
+                    EMAIL
+                    ================================================== --}}
+                    <div class="register-page__field">
 
                         <label for="email">
                             Email
@@ -264,16 +127,32 @@
                             required
                             autocomplete="username"
                             placeholder="Masukkan email"
-                            class="register-input" />
+                            class="block w-full {{ $errors->has('email') ? 'form-input-error' : '' }}"
+                        />
 
-                        <x-input-error
-                            :messages="$errors->get('email')"
-                            class="mt-1" />
+                        @error('email')
+
+                            <div class="form-error">
+
+                                <span class="form-error__icon">
+                                    !
+                                </span>
+
+                                <span>
+                                    {{ $message }}
+                                </span>
+
+                            </div>
+
+                        @enderror
 
                     </div>
 
-                    <!-- ROLE -->
-                    <div class="register-field">
+
+                    {{-- =================================================
+                    ROLE
+                    ================================================== --}}
+                    <div class="register-page__field">
 
                         <label for="role">
                             Role
@@ -283,37 +162,57 @@
                             id="role"
                             name="role"
                             required
-                            class="register-select">
+                            class="register-page__select {{ $errors->has('role') ? 'form-input-error' : '' }}"
+                        >
 
                             <option
                                 value=""
                                 disabled
-                                {{ old('role') ? '' : 'selected' }}>
+                                {{ old('role') ? '' : 'selected' }}
+                            >
                                 Pilih role
                             </option>
 
                             <option
-                                value="instruktur"
-                                {{ old('role') == 'instruktur' ? 'selected' : '' }}>
-                                Instruktur
+                                value="kesehatan"
+                                {{ old('role') === 'kesehatan' ? 'selected' : '' }}
+                            >
+                                Kesehatan
                             </option>
 
                             <option
                                 value="medis"
-                                {{ old('role') == 'medis' ? 'selected' : '' }}>
+                                {{ old('role') === 'medis' ? 'selected' : '' }}
+                            >
                                 Medis
                             </option>
 
                         </select>
 
-                        <x-input-error
-                            :messages="$errors->get('role')"
-                            class="mt-1" />
+
+                        @error('role')
+
+                            <div class="form-error">
+
+                                <span class="form-error__icon">
+                                    !
+                                </span>
+
+                                <span>
+                                    {{ $message }}
+                                </span>
+
+                            </div>
+
+                        @enderror
 
                     </div>
 
-                    <!-- PASSWORD -->
-                    <div class="register-field">
+
+                    {{-- =================================================
+                    PASSWORD
+                    ================================================== --}}
+                    <div class="register-page__field">
 
                         <label for="password">
                             Password
@@ -326,16 +225,32 @@
                             required
                             autocomplete="new-password"
                             placeholder="Masukkan password"
-                            class="register-input" />
+                            class="block w-full {{ $errors->has('password') ? 'form-input-error' : '' }}"
+                        />
 
-                        <x-input-error
-                            :messages="$errors->get('password')"
-                            class="mt-1" />
+                        @error('password')
+
+                            <div class="form-error">
+
+                                <span class="form-error__icon">
+                                    !
+                                </span>
+
+                                <span>
+                                    {{ $message }}
+                                </span>
+
+                            </div>
+
+                        @enderror
 
                     </div>
 
-                    <!-- KONFIRMASI PASSWORD -->
-                    <div class="register-field">
+
+                    {{-- =================================================
+                    KONFIRMASI PASSWORD
+                    ================================================== --}}
+                    <div class="register-page__field">
 
                         <label for="password_confirmation">
                             Konfirmasi Password
@@ -348,33 +263,55 @@
                             required
                             autocomplete="new-password"
                             placeholder="Masukkan ulang password"
-                            class="register-input" />
+                            class="block w-full {{ $errors->has('password_confirmation') ? 'form-input-error' : '' }}"
+                        />
 
-                        <x-input-error
-                            :messages="$errors->get('password_confirmation')"
-                            class="mt-1" />
+                        @error('password_confirmation')
+
+                            <div class="form-error">
+
+                                <span class="form-error__icon">
+                                    !
+                                </span>
+
+                                <span>
+                                    {{ $message }}
+                                </span>
+
+                            </div>
+
+                        @enderror
 
                     </div>
 
-                    <!-- BUTTON -->
+
+                    {{-- =================================================
+                    BUTTON
+                    ================================================== --}}
                     <button
                         type="submit"
-                        class="register-button">
+                        class="register-page__button"
+                    >
                         Daftar
                     </button>
 
                 </form>
 
-                <!-- LOGIN -->
-                <p class="register-login">
 
-                    Sudah punya akun?
+                {{-- =================================================
+                LOGIN
+                ================================================== --}}
+                <div class="register-page__login">
+
+                    <span>
+                        Sudah punya akun?
+                    </span>
 
                     <a href="{{ route('login') }}">
                         Login
                     </a>
 
-                </p>
+                </div>
 
             </div>
 

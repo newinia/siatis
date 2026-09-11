@@ -1,0 +1,12 @@
+[33m6a35039[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdevelopment[m[33m)[m HEAD@{0}: reset: moving to 6a35039
+[33m2d05c81[m[33m ([m[1;31morigin/development[m[33m)[m HEAD@{1}: pull origin development: Fast-forward
+[33m6a35039[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdevelopment[m[33m)[m HEAD@{2}: reset: moving to HEAD
+[33m6a35039[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdevelopment[m[33m)[m HEAD@{3}: commit: Perbaiki tampilan dan proses data PPKS
+[33m16a64d6[m HEAD@{4}: commit: perbaiki tampilan foto profil
+[33mea8dd3a[m HEAD@{5}: commit: update data
+[33m554c057[m HEAD@{6}: commit: Perbaiki import dan pengelolaan data PPKS
+[33m36d5a3d[m HEAD@{7}: commit: Tambah fitur pemeriksaan duplikat PPKS
+[33ma7ee76b[m HEAD@{8}: commit (amend): Update dashboard dan integrasi Google Sheets
+[33m820d266[m[33m ([m[1;32mmain[m[33m)[m HEAD@{9}: checkout: moving from main to development
+[33m820d266[m[33m ([m[1;32mmain[m[33m)[m HEAD@{10}: commit: Update dashboard dan integrasi Google Sheets
+[33mf96152a[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{11}: clone: from https://github.com/newinia/siatis.git

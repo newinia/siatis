@@ -1,45 +1,110 @@
-<x-guest-layout>
-    <div class="min-h-screen flex bg-[#EDF2FF]">
 
-        <!-- Kiri -->
-        <div class="hidden lg:block w-1/2 h-screen">
+<x-guest-layout>
+
+    <div class="login-page">
+
+        {{-- =====================================================
+        GAMBAR LOGIN
+        ====================================================== --}}
+        <div class="login-page__image">
+
             <img
                 src="{{ asset('images/login-bg.jpeg') }}"
-                alt="Background"
-                class="w-full h-full object-cover">
+                alt="Background Login"
+            >
+
         </div>
 
-        <!-- Kanan -->
-        <div class="w-full lg:w-1/2 flex items-center justify-center px-6 py-10">
 
-            <div class="w-full max-w-md bg-white rounded-3xl shadow-2xl p-10">
+        {{-- =====================================================
+        CONTENT LOGIN
+        ====================================================== --}}
+        <div class="login-page__content">
 
-                <!-- Logo -->
-                <div class="flex justify-center mb-6">
+            <div class="login-page__card">
+
+                {{-- =================================================
+                LOGO
+                ================================================== --}}
+                <div class="login-page__logo">
+
                     <img
                         src="{{ asset('images/logo.png') }}"
                         alt="Logo STIS"
-                        class="w-36">
+                    >
+
                 </div>
 
-                <!-- Judul -->
-                <h1 class="text-3xl font-bold text-center text-gray-800">
-                    Login
-                </h1>
 
-                <p class="text-center text-gray-500 mt-2 mb-8">
-                    Selamat Datang di Sistem Informasi STIS
-                </p>
+                {{-- =================================================
+                HEADING
+                ================================================== --}}
+                <div class="login-page__heading">
 
-                <!-- Session -->
-                <x-auth-session-status class="mb-4" :status="session('status')" />
+                    <h1>
+                        Login
+                    </h1>
 
-                <form method="POST" action="{{ route('login') }}" class="space-y-5">
+                    <p>
+                        Selamat Datang di Sistem Informasi STIS
+                    </p>
+
+                </div>
+
+
+                {{-- =================================================
+                SESSION STATUS
+                ================================================== --}}
+                <x-auth-session-status
+                    class="mb-4"
+                    :status="session('status')"
+                />
+
+
+                {{-- =================================================
+                CEK ERROR LOGIN
+                ================================================== --}}
+                @php
+
+                    /*
+                    |--------------------------------------------------
+                    | Error credentials
+                    |--------------------------------------------------
+                    | Laravel menaruh error email/password salah
+                    | pada field email.
+                    |
+                    | Karena sistem tidak tahu mana yang salah,
+                    | email atau password, maka kedua input dibuat
+                    | merah.
+                    |
+                    */
+
+                    $credentialError =
+                        $errors->has('email') &&
+                        $errors->first('email') === 'Email atau password yang Anda masukkan salah.';
+
+                @endphp
+
+
+                {{-- =================================================
+                FORM LOGIN
+                ================================================== --}}
+                <form
+                    method="POST"
+                    action="{{ route('login') }}"
+                    class="login-page__form"
+                    novalidate
+                >
+
                     @csrf
 
-                    <!-- Email -->
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+
+                    {{-- =================================================
+                    EMAIL
+                    ================================================== --}}
+                    <div class="login-page__field">
+
+                        <label for="email">
                             Email
                         </label>
 
@@ -52,14 +117,36 @@
                             autofocus
                             autocomplete="username"
                             placeholder="Masukkan email"
-                            class="block w-full rounded-xl border-gray-300 focus:border-blue-600 focus:ring-blue-600" />
+                            class="block w-full {{ $errors->has('email') || $credentialError ? 'form-input-error' : '' }}"
+                        />
 
-                        <x-input-error :messages="$errors->get('email')" class="mt-2" />
+
+                        {{-- Error Email --}}
+                        @if ($errors->has('email'))
+
+                            <div class="form-error">
+
+                                <span class="form-error__icon">
+                                    !
+                                </span>
+
+                                <span>
+                                    {{ $errors->first('email') }}
+                                </span>
+
+                            </div>
+
+                        @endif
+
                     </div>
 
-                    <!-- Password -->
-                    <div>
-                        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+
+                    {{-- =================================================
+                    PASSWORD
+                    ================================================== --}}
+                    <div class="login-page__field">
+
+                        <label for="password">
                             Password
                         </label>
 
@@ -70,59 +157,106 @@
                             required
                             autocomplete="current-password"
                             placeholder="Masukkan password"
-                            class="block w-full rounded-xl border-gray-300 focus:border-blue-600 focus:ring-blue-600" />
+                            class="block w-full {{ $errors->has('password') || $credentialError ? 'form-input-error' : '' }}"
+                        />
 
-                        <x-input-error :messages="$errors->get('password')" class="mt-2" />
-                    </div>
 
-                    <!-- Remember -->
-                    <div class="flex items-center justify-between">
+                        {{-- Error Password --}}
+                        @if ($errors->has('password'))
 
-                        <label class="flex items-center">
-                            <input
-                                type="checkbox"
-                                name="remember"
-                                class="rounded border-gray-300 text-blue-600 shadow-sm focus:ring-blue-500">
+                            <div class="form-error">
 
-                            <span class="ml-2 text-sm text-gray-600">
-                                Ingat saya
-                            </span>
-                        </label>
+                                <span class="form-error__icon">
+                                    !
+                                </span>
 
-                        @if (Route::has('password.request'))
-                            <a href="{{ route('password.request') }}"
-                                class="text-sm text-blue-600 hover:underline">
-                                Lupa Password?
-                            </a>
+                                <span>
+                                    {{ $errors->first('password') }}
+                                </span>
+
+                            </div>
+
                         @endif
 
                     </div>
 
-                    <!-- Button -->
+
+                    {{-- =================================================
+                    PESAN CREDENTIAL ERROR
+                    ================================================== --}}
+                    @if ($credentialError)
+
+                        <div class="form-error">
+
+                            <span class="form-error__icon">
+                                !
+                            </span>
+
+                            <span>
+                                Email atau password yang Anda masukkan salah.
+                            </span>
+
+                        </div>
+
+                    @endif
+
+
+                    {{-- =================================================
+                    LUPA PASSWORD
+                    ================================================== --}}
+                    @if (Route::has('password.request'))
+
+                        <div class="login-page__forgot-wrapper">
+
+                            <a
+                                href="{{ route('password.request') }}"
+                                class="login-page__forgot"
+                            >
+                                Lupa Password?
+                            </a>
+
+                        </div>
+
+                    @endif
+
+
+                    {{-- =================================================
+                    BUTTON LOGIN
+                    ================================================== --}}
                     <button
                         type="submit"
-                        class="w-full py-3 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-semibold transition duration-300">
-
+                        class="login-page__button"
+                    >
                         Login
-
                     </button>
 
                 </form>
 
-                <p class="text-center text-sm text-gray-500 mt-8">
-                    Belum punya akun?
 
-                    <a href="{{ route('register') }}"
-                        class="text-blue-700 font-semibold hover:underline">
+                {{-- =================================================
+                REGISTER
+                ================================================== --}}
+                @if (Route::has('register'))
 
-                        Daftar
+                    <div class="login-page__register">
 
-                    </a>
-                </p>
+                        <span>
+                            Belum punya akun?
+                        </span>
+
+                        <a href="{{ route('register') }}">
+                            Daftar
+                        </a>
+
+                    </div>
+
+                @endif
 
             </div>
 
         </div>
 
     </div>
+
 </x-guest-layout>
+

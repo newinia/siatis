@@ -6,9 +6,12 @@ use App\Http\Controllers\PpksController;
 use App\Http\Controllers\PpksImportController;
 use App\Http\Controllers\PpksDuplicateController;
 use App\Http\Controllers\PpksFileController;
+use App\Http\Controllers\PpksPemanggilanController;
+use App\Http\Controllers\PpksKesehatanLanjutanController;
+use App\Http\Controllers\PpksAktifController;
 use App\Http\Controllers\SuperAdmin\UserApprovalController;
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 
 Route::middleware(['auth'])->group(function () {
@@ -118,33 +121,29 @@ Route::middleware(['auth'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    // Halaman utama
+    // Halaman utama - Belum Asesmen
     Route::get(
         '/ppks/normal/asesmen-instruktur',
         [PpksController::class, 'asesmenInstruktur']
     )->name('ppks.normal.instruktur');
 
-
-    // Data lulus
+    // Data Lulus
     Route::get(
         '/ppks/normal/asesmen-instruktur/lulus',
         [PpksController::class, 'asesmenInstrukturLulus']
     )->name('ppks.normal.asesmen-instruktur.lulus');
 
-
-    // Data pending
+    // Data Pending
     Route::get(
         '/ppks/normal/asesmen-instruktur/pending',
         [PpksController::class, 'asesmenInstrukturPending']
     )->name('ppks.normal.asesmen-instruktur.pending');
 
-
-    // Data tidak lulus
+    // Data Tidak Lulus
     Route::get(
         '/ppks/normal/asesmen-instruktur/tidak-lulus',
         [PpksController::class, 'asesmenInstrukturTidakLulus']
     )->name('ppks.normal.asesmen-instruktur.tidak-lulus');
-
 
     // Detail data instruktur
     Route::get(
@@ -152,13 +151,11 @@ Route::middleware(['auth'])->group(function () {
         [PpksController::class, 'asesmenInstrukturDataDetail']
     )->name('ppks.normal.asesmen-instruktur.data-detail');
 
-
     // Form asesmen instruktur
     Route::get(
         '/ppks/normal/asesmen-instruktur/{ppks}',
         [PpksController::class, 'asesmenInstrukturDetail']
     )->name('ppks.normal.asesmen-instruktur.detail');
-
 
     // Simpan hasil asesmen instruktur
     Route::post(
@@ -173,155 +170,195 @@ Route::middleware(['auth'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    // ================================================================
-    // HALAMAN UTAMA - BELUM ASESMEN
-    // ================================================================
-
+    // Halaman utama - Belum Asesmen
     Route::get(
         '/ppks/normal/asesmen-kesehatan',
         [PpksController::class, 'asesmenKesehatan']
     )->name('ppks.normal.kesehatan');
 
-
-    // ================================================================
-    // DATA LULUS KESEHATAN
-    // ================================================================
-
+    // Data Lulus
     Route::get(
         '/ppks/normal/asesmen-kesehatan/lulus',
         [PpksController::class, 'asesmenKesehatanLulus']
     )->name('ppks.normal.asesmen-kesehatan.lulus');
 
-
-    // ================================================================
-    // DATA PENDING KESEHATAN
-    // ================================================================
-
+    // Data Pending
     Route::get(
         '/ppks/normal/asesmen-kesehatan/pending',
         [PpksController::class, 'asesmenKesehatanPending']
     )->name('ppks.normal.asesmen-kesehatan.pending');
 
-
-    // ================================================================
-    // DATA TIDAK LULUS KESEHATAN
-    // ================================================================
-
+    // Data Tidak Lulus
     Route::get(
         '/ppks/normal/asesmen-kesehatan/tidak-lulus',
         [PpksController::class, 'asesmenKesehatanTidakLulus']
     )->name('ppks.normal.asesmen-kesehatan.tidak-lulus');
 
-
-    // ================================================================
-    // DETAIL FORM ASESMEN KESEHATAN AWAL
-    // ================================================================
-
+    // Detail Form Asesmen Kesehatan Awal
     Route::get(
         '/ppks/normal/asesmen-kesehatan/{ppks}/awal',
         [PpksController::class, 'asesmenKesehatanAwalDetail']
     )->name('ppks.normal.asesmen-kesehatan.awal');
 
-
-    // ================================================================
-    // SIMPAN ASESMEN KESEHATAN
-    // ================================================================
-
+    // Simpan Asesmen Kesehatan
     Route::post(
         '/ppks/normal/asesmen-kesehatan/{ppks}/awal',
         [PpksController::class, 'simpanAsesmenKesehatanAwal']
     )->name('ppks.normal.asesmen-kesehatan.awal.simpan');
 
-
-    // ================================================================
-    // DETAIL HASIL LULUS
-    // ================================================================
-
+    // Detail Hasil Lulus
     Route::get(
         '/ppks/normal/asesmen-kesehatan/{ppks}/lolos',
         [PpksController::class, 'asesmenKesehatanAwalLolos']
     )->name('ppks.normal.asesmen-kesehatan.lolos');
 
-
-    // ================================================================
-    // DETAIL HASIL PENDING
-    // ================================================================
-
+    // Detail Hasil Pending
     Route::get(
         '/ppks/normal/asesmen-kesehatan/{ppks}/pending',
         [PpksController::class, 'asesmenKesehatanAwalPending']
     )->name('ppks.normal.asesmen-kesehatan.pending');
 
-
-    // ================================================================
-    // DETAIL HASIL TIDAK LULUS
-    // ================================================================
-
+    // Detail Hasil Tidak Lulus
     Route::get(
         '/ppks/normal/asesmen-kesehatan/{ppks}/tidak-lolos',
         [PpksController::class, 'asesmenKesehatanAwalTidakLolos']
     )->name('ppks.normal.asesmen-kesehatan.tidak-lolos');
 
+    // Detail Kesehatan Lanjutan dari Asesmen Kesehatan Awal
     Route::get(
-    '/ppks/normal/asesmen-kesehatan/{ppks}/lanjutan',
-    [PpksController::class, 'asesmenKesehatanLanjutanDetail']
+        '/ppks/normal/asesmen-kesehatan/{ppks}/lanjutan',
+        [PpksController::class, 'asesmenKesehatanLanjutanDetail']
     )->name('ppks.normal.asesmen-kesehatan.lanjutan-detail');
 
+
     /*
-|--------------------------------------------------------------------------
-| CASE CONFERENCE
-|--------------------------------------------------------------------------
-*/
+    |--------------------------------------------------------------------------
+    | CASE CONFERENCE
+    |--------------------------------------------------------------------------
+    */
 
-// ================================================================
-// CASE CONFERENCE - BELUM DILAKUKAN
-// Lulus Asesmen Kesehatan Awal
-// tetapi belum melakukan Case Conference
-// ================================================================
+    // Belum dilakukan
+    Route::get(
+        '/ppks/normal/case-conference/belum',
+        [PpksController::class, 'caseConferenceBelum']
+    )->name('ppks.normal.case-conference.belum');
 
-Route::get(
-    '/ppks/normal/case-conference/belum',
-    [PpksController::class, 'caseConferenceBelum']
-)->name('ppks.normal.case-conference.belum');
+    // Sudah dilakukan
+    Route::get(
+        '/ppks/normal/case-conference/sudah',
+        [PpksController::class, 'caseConferenceSudah']
+    )->name('ppks.normal.case-conference.sudah');
 
+    // Halaman utama Case Conference
+    Route::get(
+        '/ppks/normal/case-conference',
+        [PpksController::class, 'caseConference']
+    )->name('ppks.normal.case-conference');
 
-// ================================================================
-// CASE CONFERENCE - SUDAH DILAKUKAN
-// Sudah melakukan Case Conference:
-// - Pending
-// - Diterima
-// - Tidak Diterima
-// ================================================================
+    // Detail Case Conference
+    Route::get(
+        '/ppks/normal/case-conference/{ppks}',
+        [PpksController::class, 'caseConferenceDetail']
+    )->name('ppks.normal.case-conference.detail');
 
-Route::get(
-    '/ppks/normal/case-conference/sudah',
-    [PpksController::class, 'caseConferenceSudah']
-)->name('ppks.normal.case-conference.sudah');
-
-Route::get(
-    '/ppks/normal/case-conference',
-    [PpksController::class, 'caseConference']
-)->name('ppks.normal.case-conference');
-
-// ================================================================
-// DETAIL CASE CONFERENCE
-// ================================================================
-
-Route::get(
-    '/ppks/normal/case-conference/{ppks}',
-    [PpksController::class, 'caseConferenceDetail']
-)->name('ppks.normal.case-conference.detail');
+    // Simpan Case Conference
+    Route::post(
+        '/ppks/normal/case-conference/{ppks}',
+        [PpksController::class, 'updateCaseConference']
+    )->name('ppks.normal.case-conference.update');
 
 
-// ================================================================
-// SIMPAN CASE CONFERENCE
-// ================================================================
+    /*
+    |--------------------------------------------------------------------------
+    | PEMANGGILAN PESERTA
+    |--------------------------------------------------------------------------
+    */
 
-Route::post(
-    '/ppks/normal/case-conference/{ppks}',
-    [PpksController::class, 'updateCaseConference']
-)->name('ppks.normal.case-conference.update');
-        /*
+    // Halaman Pemanggilan Peserta
+    Route::get(
+        '/ppks/normal/pemanggilan',
+        [PpksPemanggilanController::class, 'index']
+    )->name('ppks.normal.pemanggilan');
+
+    // Proses Pemanggilan
+    Route::post(
+        '/ppks/normal/pemanggilan/{ppks}',
+        [PpksPemanggilanController::class, 'update']
+    )->name('ppks.normal.pemanggilan.proses');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | KESEHATAN LANJUTAN
+    |--------------------------------------------------------------------------
+    */
+
+    // ================================================================
+    // BELUM ASESMEN
+    // ================================================================
+
+    Route::get(
+        '/ppks/normal/kesehatan-lanjutan',
+        [PpksKesehatanLanjutanController::class, 'index']
+    )->name('ppks.normal.kesehatan-lanjutan');
+
+
+    // ================================================================
+    // DATA LULUS
+    // ================================================================
+
+    Route::get(
+        '/ppks/normal/kesehatan-lanjutan/lulus',
+        [PpksKesehatanLanjutanController::class, 'lulus']
+    )->name('ppks.normal.kesehatan-lanjutan.lulus');
+
+
+    // ================================================================
+    // DATA PENDING
+    // ================================================================
+
+    Route::get(
+        '/ppks/normal/kesehatan-lanjutan/pending',
+        [PpksKesehatanLanjutanController::class, 'pending']
+    )->name('ppks.normal.kesehatan-lanjutan.pending');
+
+
+    // ================================================================
+    // DATA TIDAK LULUS
+    // ================================================================
+
+    Route::get(
+        '/ppks/normal/kesehatan-lanjutan/tidak-lulus',
+        [PpksKesehatanLanjutanController::class, 'tidakLulus']
+    )->name('ppks.normal.kesehatan-lanjutan.tidak-lulus');
+
+
+    // ================================================================
+    // DETAIL KESEHATAN LANJUTAN
+    // ================================================================
+
+    Route::get(
+        '/ppks/normal/kesehatan-lanjutan/{ppks}',
+        [PpksKesehatanLanjutanController::class, 'detail']
+    )->name('ppks.normal.kesehatan-lanjutan.detail');
+
+
+    // ================================================================
+    // SIMPAN KESEHATAN LANJUTAN
+    // ================================================================
+
+    Route::post(
+        '/ppks/normal/kesehatan-lanjutan/{ppks}',
+        [PpksKesehatanLanjutanController::class, 'update']
+    )->name('ppks.normal.kesehatan-lanjutan.update');
+
+    Route::get(
+        '/ppks/normal/peserta-aktif',
+        [PpksAktifController::class, 'index']
+    )->name('ppks.normal.peserta-aktif');
+
+
+    /*
     |--------------------------------------------------------------------------
     | DATA MANUAL
     |--------------------------------------------------------------------------
