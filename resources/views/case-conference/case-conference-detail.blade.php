@@ -1522,87 +1522,76 @@
                     </div>
 
 
-                    {{-- GELOMBANG + TAHUN --}}
+            {{-- GELOMBANG + TAHUN --}}
 
-                    <div class="detail-field">
+            <div class="detail-field">
 
-                        <label>
-                            Gelombang & Tahun Pelatihan
-                        </label>
+                <label>
+                    Gelombang & Tahun Pelatihan
+                </label>
 
-                        <div class="wave-year-group">
+                <div class="wave-year-group">
 
-                            <select
-                                id="gelombang_pelatihan"
-                                name="gelombang_pelatihan"
+                    {{-- GELOMBANG --}}
+                    <select
+                        id="gelombang_pelatihan"
+                        name="gelombang_pelatihan"
+                    >
+
+                        <option value="">
+                            Pilih Gelombang
+                        </option>
+
+                        @for ($i = 1; $i <= 10; $i++)
+
+                            <option
+                                value="{{ $i }}"
+                                @selected(
+                                    (string) $formGelombangPelatihan ===
+                                    (string) $i
+                                )
                             >
+                                Gelombang {{ $i }}
+                            </option>
 
-                                <option value="">
-                                    Pilih Gelombang
-                                </option>
+                        @endfor
 
-                                <option
-                                    value="1"
-                                    @selected(
-                                        (string) $formGelombangPelatihan === '1'
-                                    )
-                                >
-                                    Gelombang 1
-                                </option>
-
-                                <option
-                                    value="2"
-                                    @selected(
-                                        (string) $formGelombangPelatihan === '2'
-                                    )
-                                >
-                                    Gelombang 2
-                                </option>
-
-                            </select>
+                    </select>
 
 
-                            <select
-                                id="tahun_pelatihan"
-                                name="tahun_pelatihan"
+                    {{-- TAHUN --}}
+                    <select
+                        id="tahun_pelatihan"
+                        name="tahun_pelatihan"
+                    >
+
+                        <option value="">
+                            Pilih Tahun
+                        </option>
+
+                        @php
+                            $tahunSekarang = now()->year;
+                        @endphp
+
+                        @for (
+                            $tahun = $tahunSekarang - 5;
+                            $tahun <= $tahunSekarang + 10;
+                            $tahun++
+                        )
+
+                            <option
+                                value="{{ $tahun }}"
+                                @selected(
+                                    (string) $formTahunPelatihan ===
+                                    (string) $tahun
+                                )
                             >
+                                {{ $tahun }}
+                            </option>
 
-                                <option value="">
-                                    Tahun
-                                </option>
+                        @endfor
 
-                                <option
-                                    value="2026"
-                                    @selected(
-                                        (string) $formTahunPelatihan === '2026'
-                                    )
-                                >
-                                    2026
-                                </option>
-
-                                <option
-                                    value="2027"
-                                    @selected(
-                                        (string) $formTahunPelatihan === '2027'
-                                    )
-                                >
-                                    2027
-                                </option>
-
-                                <option
-                                    value="2028"
-                                    @selected(
-                                        (string) $formTahunPelatihan === '2028'
-                                    )
-                                >
-                                    2028
-                                </option>
-
-                            </select>
-
-                        </div>
-
-                    </div>
+                    </select>
 
                 </div>
 

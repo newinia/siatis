@@ -1682,7 +1682,6 @@ public function caseConferenceBelum()
     );
 }
 
-
 public function caseConferenceSudah()
 {
     $data = Ppks::query()
@@ -1695,8 +1694,23 @@ public function caseConferenceSudah()
                     'tidak_lulus',
                 ]);
         })
-        ->with('prosesPesertas')
-        ->latest('id')
+        ->with([
+            'prosesPesertas' => function ($query) {
+                $query
+                    ->where('tahap', 'case_conference')
+                    ->orderByDesc('tanggal_proses')
+                    ->orderByDesc('created_at');
+            }
+        ])
+        ->orderByRaw("
+            (
+                SELECT cc.tanggal_case_conference
+                FROM case_conferences cc
+                WHERE cc.ppks_id = ppks.id
+                LIMIT 1
+            ) DESC
+        ")
+        ->orderByDesc('ppks.id')
         ->paginate(20);
 
     return view(
@@ -1704,7 +1718,61 @@ public function caseConferenceSudah()
         compact('data')
     );
 }
+public function caseConferencePdf(Request $request)
+{
+    $gelombang = $request->gelombang;
+    $tahun = $request->tahun;
 
+    $data = Ppks::query()
+        ->whereHas('prosesPesertas', function ($query) {
+            $query->where('tahap', 'case_conference')
+                ->whereIn('status', [
+                    'pending',
+                    'lulus',
+                    'tidak_lulus',
+                ]);
+        })
+        ->with([
+            'prosesPesertas' => function ($query) {
+                $query->where('tahap', 'case_conference')
+                    ->orderByDesc('tanggal_proses')
+                    ->orderByDesc('created_at');
+            }
+        ])
+
+        // FILTER GELOMBANG
+        ->when($gelombang, function ($query) use ($gelombang) {
+            $query->where(
+                'data->gelombang_pelatihan',
+                $gelombang
+            );
+        })
+
+        // FILTER TAHUN
+        ->when($tahun, function ($query) use ($tahun) {
+            $query->where(
+                'data->tahun_pelatihan',
+                $tahun
+            );
+        })
+
+        ->orderByDesc('id')
+        ->get();
+
+    $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView(
+        'case-conference.case-conference-pdf',
+        compact(
+            'data',
+            'gelombang',
+            'tahun'
+        )
+    );
+
+    // A4 POTRET
+    $pdf->setPaper('a4', 'portrait');
+
+    return $pdf->stream('data-case-conference.pdf');
+}
 
     /*
     |--------------------------------------------------------------------------
@@ -1876,7 +1944,8 @@ public function caseConferenceSudah()
                 null;
 
             $proses->tanggal_proses =
-                now();
+                $validated['tanggal_case_conference']
+                ?? now();
 
             $proses->save();
         CaseConference::updateOrCreate(

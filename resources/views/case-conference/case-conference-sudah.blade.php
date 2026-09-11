@@ -1,124 +1,187 @@
 <x-app-layout>
 
     <style>
+
         .case-conference-page {
             width: 100%;
             padding: 10px 0 35px;
             color: #172018;
         }
 
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
         .case-conference-header {
+            width: 100%;
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            gap: 20px;
-            margin-bottom: 24px;
+            gap: 24px;
+            margin-bottom: 22px;
         }
 
-        .case-conference-header h1 {
+        .case-header-left {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .case-header-left h1 {
             margin: 0;
             font-size: 28px;
+            line-height: 1.2;
             font-weight: 700;
             color: #172018;
         }
 
-        .case-conference-header p {
-            margin: 6px 0 0;
+        .case-header-left p {
+            margin: 7px 0 0;
             color: #68716b;
             font-size: 14px;
+            line-height: 1.5;
         }
 
-        .date-filter-wrapper {
+        /* =====================================================
+           HEADER ACTION
+        ===================================================== */
+
+        .case-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        /* =====================================================
+           PDF BUTTON
+        ===================================================== */
+
+        .pdf-filter-wrapper {
             position: relative;
         }
 
-        .date-filter {
-            display: flex;
-            align-items: center;
-            gap: 9px;
-            border: 1px solid #d9dedb;
-            background: #fff;
-            border-radius: 8px;
-            padding: 9px 13px;
-            color: #4d5751;
-            font-size: 13px;
-            cursor: pointer;
+        .pdf-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        height: 40px;
+        min-width: 120px;
+        padding: 0 20px;
+        background: #b42318;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        transition: .15s ease;
+        white-space: nowrap;
+        cursor: pointer;
         }
 
-        .date-picker {
+        .pdf-button:hover {
+            background: #981b12;
+        }
+
+        /* =====================================================
+           PDF FILTER POPUP
+        ===================================================== */
+
+        .pdf-filter {
             display: none;
             position: absolute;
             right: 0;
             top: calc(100% + 8px);
-            width: 320px;
-            padding: 18px;
+            width: 270px;
+            padding: 17px;
             background: #fff;
             border: 1px solid #dfe4e1;
             border-radius: 10px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, .10);
-            z-index: 50;
+            z-index: 100;
+            box-sizing: border-box;
         }
 
-        .date-picker.active {
+        .pdf-filter.active {
             display: block;
         }
 
-        .date-picker-header {
-            margin-bottom: 16px;
+        .pdf-filter-title {
+            margin-bottom: 14px;
             font-size: 14px;
+            font-weight: 700;
             color: #26302a;
         }
 
-        .date-input-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
+        .pdf-filter-group {
+            margin-bottom: 12px;
         }
 
-        .date-input-group label {
+        .pdf-filter-group label {
             display: block;
             margin-bottom: 6px;
             font-size: 12px;
             color: #69736d;
         }
 
-        .date-input-group input {
+        .pdf-filter-group select {
             width: 100%;
             height: 38px;
-            padding: 0 9px;
+            padding: 0 10px;
             border: 1px solid #d9dedb;
             border-radius: 7px;
-            outline: none;
+            background: #fff;
+            color: #303932;
             font-size: 12px;
+            outline: none;
+            box-sizing: border-box;
         }
 
-        .date-picker-actions {
+        .pdf-filter-group select:focus {
+            border-color: #286c3a;
+        }
+
+        .pdf-filter-actions {
             display: flex;
             justify-content: flex-end;
             gap: 8px;
-            margin-top: 16px;
+            margin-top: 15px;
         }
 
-        .date-reset,
-        .date-apply {
+        .pdf-reset,
+        .pdf-generate {
             border: none;
             border-radius: 7px;
-            padding: 8px 14px;
+            padding: 8px 13px;
             font-size: 12px;
             cursor: pointer;
         }
 
-        .date-reset {
+        .pdf-reset {
             background: #f0f2f0;
             color: #4e5751;
         }
 
-        .date-apply {
-            background: #286c3a;
+        .pdf-reset:hover {
+            background: #e6e9e6;
+        }
+
+        .pdf-generate {
+            background: #b42318;
             color: #fff;
         }
 
+        .pdf-generate:hover {
+            background: #981b12;
+        }
+
+        /* =====================================================
+           FILTER
+        ===================================================== */
+
         .case-filter-wrapper {
+            width: 100%;
             display: flex;
             align-items: center;
             gap: 12px;
@@ -136,6 +199,7 @@
             background: #fff;
             border: 1px solid #d9dedb;
             border-radius: 8px;
+            box-sizing: border-box;
         }
 
         .case-search svg {
@@ -184,18 +248,23 @@
             pointer-events: none;
         }
 
+        /* =====================================================
+           TABLE
+        ===================================================== */
+
         .table-wrapper {
             width: 100%;
             background: #fff;
             border: 1px solid #e0e4e1;
             border-radius: 10px;
             overflow-x: auto;
+            box-sizing: border-box;
         }
 
         .table {
             width: 100%;
-            border-collapse: collapse;
             min-width: 1100px;
+            border-collapse: collapse;
         }
 
         .table thead {
@@ -228,6 +297,10 @@
             background: #fafbfa;
         }
 
+        /* =====================================================
+           HASIL
+        ===================================================== */
+
         .result-badge {
             min-width: 180px;
             display: inline-flex;
@@ -237,6 +310,7 @@
             border-radius: 8px;
             text-decoration: none;
             transition: .15s ease;
+            box-sizing: border-box;
         }
 
         .result-badge:hover {
@@ -308,6 +382,10 @@
             color: #6d776f;
         }
 
+        /* =====================================================
+           EMPTY
+        ===================================================== */
+
         .empty-state {
             text-align: center;
             padding: 55px 20px !important;
@@ -325,27 +403,39 @@
             font-size: 14px;
         }
 
+        /* =====================================================
+           PAGINATION
+        ===================================================== */
+
         .case-pagination {
             padding: 15px 18px;
             border-top: 1px solid #edf0ee;
         }
 
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
         @media (max-width: 900px) {
 
             .case-conference-header {
                 flex-direction: column;
+                gap: 15px;
             }
 
-            .date-filter-wrapper {
+            .case-header-actions {
                 width: 100%;
             }
 
-            .date-filter {
-                width: 100%;
-                justify-content: center;
+            .pdf-filter-wrapper {
+                flex: 1;
             }
 
-            .date-picker {
+            .pdf-button {
+                width: 100%;
+            }
+
+            .pdf-filter {
                 left: 0;
                 right: auto;
                 width: 100%;
@@ -355,15 +445,15 @@
                 width: 100%;
             }
 
-            .case-filter-button {
-                width: 100%;
-            }
-
             .select-wrapper {
                 width: 100%;
             }
 
+            .case-filter-button {
+                width: 100%;
+            }
         }
+
     </style>
 
 
@@ -375,7 +465,7 @@
 
         <div class="case-conference-header">
 
-            <div>
+            <div class="case-header-left">
 
                 <h1>
                     Case Conference
@@ -388,124 +478,123 @@
             </div>
 
 
-            {{-- =====================================================
-            DATE FILTER
-            ====================================================== --}}
+            {{-- =================================================
+            HEADER ACTION
+            ================================================== --}}
 
-            <div class="date-filter-wrapper">
+            <div class="case-header-actions">
 
-                <button
-                    type="button"
-                    class="date-filter"
-                    id="dateFilterButton"
-                >
+                {{-- =================================================
+                PDF
+                ================================================== --}}
 
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.8"
+                <div class="pdf-filter-wrapper">
+
+                    <button
+                        type="button"
+                        class="pdf-button"
+                        id="pdfButton"
                     >
 
-                        <rect
-                            x="3"
-                            y="4"
-                            width="18"
-                            height="18"
-                            rx="2"
-                        />
+                        <span
+                            class="material-symbols-outlined"
+                            style="font-size: 19px;"
+                        >
+                            picture_as_pdf
+                        </span>
 
-                        <path d="M16 2v4" />
-                        <path d="M8 2v4" />
-                        <path d="M3 10h18" />
+                        PDF
 
-                    </svg>
+                    </button>
 
-                    <span id="dateFilterText">
-                        Pilih Tanggal
-                    </span>
 
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="17"
-                        height="17"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
+                    {{-- PDF FILTER --}}
+
+                    <div
+                        class="pdf-filter"
+                        id="pdfFilter"
                     >
 
-                        <path d="m6 9 6 6 6-6" />
-
-                    </svg>
-
-                </button>
+                        <div class="pdf-filter-title">
+                            Cetak Data Case Conference
+                        </div>
 
 
-                <div
-                    class="date-picker"
-                    id="datePicker"
-                >
+                        {{-- GELOMBANG --}}
 
-                    <div class="date-picker-header">
-                        <strong>
-                            Pilih Rentang Tanggal
-                        </strong>
-                    </div>
+                        <div class="pdf-filter-group">
 
-
-                    <div class="date-input-group">
-
-                        <div>
-
-                            <label for="startDate">
-                                Dari
+                            <label for="pdfGelombang">
+                                Gelombang
                             </label>
 
-                            <input
-                                type="date"
-                                id="startDate"
-                            >
+                            <select id="pdfGelombang">
+
+                                <option value="">
+                                    Semua Gelombang
+                                </option>
+
+                                @for ($i = 1; $i <= 10; $i++)
+
+                                    <option value="{{ $i }}">
+                                        Gelombang {{ $i }}
+                                    </option>
+
+                                @endfor
+
+                            </select>
 
                         </div>
 
 
-                        <div>
+                        {{-- TAHUN --}}
 
-                            <label for="endDate">
-                                Sampai
+                        <div class="pdf-filter-group">
+
+                            <label for="pdfTahun">
+                                Tahun
                             </label>
 
-                            <input
-                                type="date"
-                                id="endDate"
-                            >
+                            <select id="pdfTahun">
+
+                                <option value="">
+                                    Semua Tahun
+                                </option>
+
+                                @for ($tahun = 2026; $tahun <= 2036; $tahun++)
+
+                                    <option value="{{ $tahun }}">
+                                        {{ $tahun }}
+                                    </option>
+
+                                @endfor
+
+                            </select>
 
                         </div>
 
-                    </div>
 
+                        {{-- ACTION --}}
 
-                    <div class="date-picker-actions">
+                        <div class="pdf-filter-actions">
 
-                        <button
-                            type="button"
-                            id="resetDate"
-                            class="date-reset"
-                        >
-                            Reset
-                        </button>
+                            <button
+                                type="button"
+                                class="pdf-reset"
+                                id="pdfReset"
+                            >
+                                Reset
+                            </button>
 
-                        <button
-                            type="button"
-                            id="applyDate"
-                            class="date-apply"
-                        >
-                            Terapkan
-                        </button>
+                            <button
+                                type="button"
+                                class="pdf-generate"
+                                id="pdfGenerate"
+                            >
+                                Buat PDF
+                            </button>
+
+                        </div>
 
                     </div>
 
@@ -545,7 +634,6 @@
                     <path d="m20 20-3.5-3.5" />
 
                 </svg>
-
 
                 <input
                     type="text"
@@ -600,7 +688,6 @@
 
                 </select>
 
-
                 <span class="material-symbols-outlined select-arrow">
                     keyboard_arrow_down
                 </span>
@@ -635,7 +722,6 @@
 
                 </select>
 
-
                 <span class="material-symbols-outlined select-arrow">
                     keyboard_arrow_down
                 </span>
@@ -660,6 +746,7 @@
                         <th>No</th>
                         <th>Nama</th>
                         <th>NIK</th>
+                        <th>Alamat</th>
                         <th>Umur</th>
                         <th>Jenis PPKS</th>
                         <th>Jurusan</th>
@@ -675,225 +762,203 @@
 
                     @forelse ($data as $index => $ppks)
 
-
-
                         @php
 
-    $item = is_array($ppks->data)
-        ? $ppks->data
-        : [];
+                            $item = is_array($ppks->data)
+                                ? $ppks->data
+                                : [];
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | NAMA
-    |--------------------------------------------------------------------------
-    */
+                            /* NAMA */
 
-    $nama =
-        $item['nama_lengkap'] ??
-        $item['nama'] ??
-        $item['Nama'] ??
-        $item['NAMA'] ??
-        '-';
+                            $nama =
+                                $item['nama_lengkap'] ??
+                                $item['nama'] ??
+                                $item['Nama'] ??
+                                $item['NAMA'] ??
+                                '-';
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | NIK
-    |--------------------------------------------------------------------------
-    */
+                            /* NIK */
 
-    $nik =
-        $item['nik'] ??
-        $item['NIK'] ??
-        $item['Nik'] ??
-        '-';
+                            $nik =
+                                $item['nik'] ??
+                                $item['NIK'] ??
+                                $item['Nik'] ??
+                                '-';
+                            /* ALAMAT */
 
+                            $alamat =
+                                $item['alamat'] ??
+                                $item['Alamat'] ??
+                                $item['alamat_lengkap'] ??
+                                $item['Alamat Lengkap'] ??
+                                $item['alamat_domisili'] ??
+                                $item['Alamat Domisili'] ??
+                                '-';
 
-    /*
-    |--------------------------------------------------------------------------
-    | UMUR
-    |--------------------------------------------------------------------------
-    | Hitung otomatis berdasarkan tanggal lahir.
-    */
+                            /* UMUR */
 
-    $umur = '-';
+                            $umur = '-';
 
-    if (!empty($item['tanggal_lahir'])) {
+                            if (!empty($item['tanggal_lahir'])) {
 
-        try {
+                                try {
 
-            $umur = \Carbon\Carbon::parse(
-                $item['tanggal_lahir']
-            )->age . ' tahun';
+                                    $umur =
+                                        \Carbon\Carbon::parse(
+                                            $item['tanggal_lahir']
+                                        )->age . ' tahun';
 
-        } catch (\Exception $e) {
+                                } catch (\Exception $e) {
 
-            $umur =
-                $item['usia'] ??
-                '-';
+                                    $umur =
+                                        $item['usia'] ??
+                                        '-';
 
-        }
+                                }
 
-    } elseif (!empty($item['usia'])) {
+                            } elseif (!empty($item['usia'])) {
 
-        $umur =
-            $item['usia'] . ' tahun';
+                                $umur =
+                                    $item['usia'] . ' tahun';
 
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | JENIS PPKS
-    |--------------------------------------------------------------------------
-    */
-
-    $jenisPpks =
-        $item['jenis_ppks'] ??
-        $item['Jenis PPKS'] ??
-        $item['jenis ppks'] ??
-        $item['jenis'] ??
-        $item['Jenis'] ??
-        '-';
+                            }
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | JURUSAN
-    |--------------------------------------------------------------------------
-    */
+                            /* JENIS PPKS */
 
-    $jurusan =
-        $item['jurusan_diterima'] ??
-        $item['jurusan'] ??
-        $item['Jurusan'] ??
-        $item['JURUSAN'] ??
-        $item['jurusan_yang_diminati'] ??
-        '-';
+                            $jenisPpks =
+                                $item['jenis_ppks'] ??
+                                $item['Jenis PPKS'] ??
+                                $item['jenis ppks'] ??
+                                $item['jenis'] ??
+                                $item['Jenis'] ??
+                                '-';
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | CASE CONFERENCE
-    |--------------------------------------------------------------------------
-    */
+                            /* JURUSAN */
 
-    $caseConference =
-        $ppks->prosesPesertas
-            ->where('tahap', 'case_conference')
-            ->sortByDesc('tanggal_proses')
-            ->first();
+                            $jurusan =
+                                $item['jurusan_diterima'] ??
+                                $item['jurusan'] ??
+                                $item['Jurusan'] ??
+                                $item['JURUSAN'] ??
+                                $item['jurusan_yang_diminati'] ??
+                                '-';
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | STATUS CASE CONFERENCE
-    |--------------------------------------------------------------------------
-    */
+                            /* CASE CONFERENCE */
 
-    $status =
-        $caseConference->status ?? 'pending';
+                            $caseConference =
+                                $ppks->prosesPesertas
+                                    ->where(
+                                        'tahap',
+                                        'case_conference'
+                                    )
+                                    ->sortByDesc(
+                                        function ($item) {
 
+                                            return
+                                                $item->tanggal_proses
+                                                ?? $item->created_at;
 
-    $statusLower =
-        strtolower(trim($status));
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | HASIL
-    |--------------------------------------------------------------------------
-    */
-
-    if (
-        in_array($statusLower, [
-            'diterima',
-            'lulus',
-            'accepted'
-        ])
-    ) {
-
-        $hasilText = 'Diterima';
-
-        $hasilClass = 'result-accepted';
-
-        $icon = 'task_alt';
-
-        $dotClass = 'accepted';
-
-    } elseif (
-        in_array($statusLower, [
-            'tidak_diterima',
-            'tidak_lulus',
-            'ditolak',
-            'tidak lulus',
-            'rejected'
-        ])
-    ) {
-
-        $hasilText = 'Tidak Diterima';
-
-        $hasilClass = 'result-rejected';
-
-        $icon = 'cancel';
-
-        $dotClass = 'rejected';
-
-    } else {
-
-        $hasilText = 'Pending';
-
-        $hasilClass = 'result-pending';
-
-        $icon = 'pending';
-
-        $dotClass = 'pending';
-
-    }
+                                        }
+                                    )
+                                    ->first();
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | TANGGAL CASE CONFERENCE
-    |--------------------------------------------------------------------------
-    */
+                            /* STATUS */
 
-    $tanggal =
-        $caseConference->tanggal_proses ??
-        $caseConference->created_at ??
-        null;
+                            $status =
+                                $caseConference->status
+                                ?? 'pending';
+
+                            $statusLower =
+                                strtolower(trim($status));
 
 
-    $tanggalFilter =
-        $tanggal
-            ? \Carbon\Carbon::parse($tanggal)->format('Y-m-d')
-            : '';
+                            /* HASIL */
 
-@endphp
+                            if (
+                                in_array(
+                                    $statusLower,
+                                    [
+                                        'diterima',
+                                        'lulus',
+                                        'accepted'
+                                    ]
+                                )
+                            ) {
+
+                                $hasilText =
+                                    'Diterima';
+
+                                $hasilClass =
+                                    'result-accepted';
+
+                                $icon =
+                                    'task_alt';
+
+                                $dotClass =
+                                    'accepted';
+
+                            } elseif (
+                                in_array(
+                                    $statusLower,
+                                    [
+                                        'tidak_diterima',
+                                        'tidak_lulus',
+                                        'ditolak',
+                                        'tidak lulus',
+                                        'rejected'
+                                    ]
+                                )
+                            ) {
+
+                                $hasilText =
+                                    'Tidak Diterima';
+
+                                $hasilClass =
+                                    'result-rejected';
+
+                                $icon =
+                                    'cancel';
+
+                                $dotClass =
+                                    'rejected';
+
+                            } else {
+
+                                $hasilText =
+                                    'Pending';
+
+                                $hasilClass =
+                                    'result-pending';
+
+                                $icon =
+                                    'pending';
+
+                                $dotClass =
+                                    'pending';
+
+                            }
+
+                        @endphp
+
+
                         <tr
                             class="case-row"
-
                             data-nama="{{ strtolower($nama) }}"
-
                             data-nik="{{ strtolower($nik) }}"
-
                             data-ppks="{{ strtolower($jenisPpks) }}"
-
                             data-hasil="{{ strtolower($hasilText) }}"
-
-                            data-tanggal="{{ $tanggalFilter }}"
                         >
-
-                            {{-- NO --}}
 
                             <td class="row-number">
                                 {{ $data->firstItem() + $index }}
                             </td>
 
-
-                            {{-- NAMA --}}
 
                             <td>
 
@@ -904,35 +969,29 @@
                             </td>
 
 
-                            {{-- NIK --}}
-
                             <td>
                                 {{ $nik }}
                             </td>
 
+                            <td>
+                                {{ $alamat }}
+                            </td>
 
-                            {{-- UMUR --}}
 
                             <td>
                                 {{ $umur }}
                             </td>
 
 
-                            {{-- JENIS PPKS --}}
-
                             <td>
                                 {{ $jenisPpks }}
                             </td>
 
 
-                            {{-- JURUSAN --}}
-
                             <td>
                                 {{ $jurusan }}
                             </td>
 
-
-                            {{-- HASIL --}}
 
                             <td>
 
@@ -954,7 +1013,6 @@
                                         <span class="result-title">
                                             Case Conference
                                         </span>
-
 
                                         <span class="result-status">
 
@@ -978,30 +1036,8 @@
                             </td>
 
 
-                            {{-- KETERANGAN --}}
-
                             <td>
-
-                                @if ($statusLower === 'pending')
-
-                                    Menunggu penyelesaian Case Conference
-
-                                @elseif (
-                                    in_array($statusLower, [
-                                        'diterima',
-                                        'lulus',
-                                        'accepted'
-                                    ])
-                                )
-
-                                    Peserta diterima
-
-                                @else
-
-                                    Peserta tidak diterima
-
-                                @endif
-
+                                {{ $caseConference?->catatan ?? '-' }}
                             </td>
 
                         </tr>
@@ -1012,7 +1048,7 @@
                         <tr id="emptyRow">
 
                             <td
-                                colspan="8"
+                                colspan="9"
                                 class="empty-state"
                             >
 
@@ -1031,8 +1067,6 @@
                     @endforelse
 
 
-                    {{-- EMPTY HASIL FILTER --}}
-
                     @if ($data->count())
 
                         <tr
@@ -1041,7 +1075,7 @@
                         >
 
                             <td
-                                colspan="8"
+                                colspan="9"
                                 class="empty-state"
                             >
 
@@ -1064,9 +1098,7 @@
             </table>
 
 
-            {{-- =================================================
-            PAGINATION
-            ================================================== --}}
+            {{-- PAGINATION --}}
 
             @if ($data->hasPages())
 
@@ -1089,449 +1121,392 @@
 
     <script>
 
-        document.addEventListener('DOMContentLoaded', function () {
-
-            const searchInput =
-                document.getElementById('searchInput');
-
-            const ppksFilter =
-                document.getElementById('ppksFilter');
-
-            const hasilFilter =
-                document.getElementById('hasilFilter');
-
-            const tableRows =
-                document.querySelectorAll('.case-row');
-
-            const filterEmptyRow =
-                document.getElementById('filterEmptyRow');
-
-
-            // =====================================================
-            // DATE
-            // =====================================================
-
-            const dateFilterButton =
-                document.getElementById('dateFilterButton');
-
-            const datePicker =
-                document.getElementById('datePicker');
-
-            const dateFilterText =
-                document.getElementById('dateFilterText');
-
-            const startDate =
-                document.getElementById('startDate');
-
-            const endDate =
-                document.getElementById('endDate');
-
-            const applyDate =
-                document.getElementById('applyDate');
-
-            const resetDate =
-                document.getElementById('resetDate');
-
-
-            // =====================================================
-            // FILTER TABLE
-            // =====================================================
-
-            function filterTable() {
-
-                const searchValue =
-                    searchInput
-                        ? searchInput.value.toLowerCase().trim()
-                        : '';
-
-
-                const ppksValue =
-                    ppksFilter
-                        ? ppksFilter.value.toLowerCase().trim()
-                        : '';
-
-
-                const hasilValue =
-                    hasilFilter
-                        ? hasilFilter.value.toLowerCase().trim()
-                        : '';
-
-
-                const selectedStart =
-                    startDate
-                        ? startDate.value
-                        : '';
-
-
-                const selectedEnd =
-                    endDate
-                        ? endDate.value
-                        : '';
-
-
-                let found = false;
-
-                let visibleNumber = 1;
-
-
-                tableRows.forEach(function (row) {
-
-                    const nama =
-                        row.dataset.nama || '';
-
-                    const nik =
-                        row.dataset.nik || '';
-
-                    const ppks =
-                        row.dataset.ppks || '';
-
-                    const hasil =
-                        row.dataset.hasil || '';
-
-                    const tanggal =
-                        row.dataset.tanggal || '';
-
-
-                    // =================================================
-                    // SEARCH
-                    // =================================================
-
-                    const matchSearch =
-                        searchValue === '' ||
-                        nama.includes(searchValue) ||
-                        nik.includes(searchValue);
-
-
-                    // =================================================
-                    // JENIS PPKS
-                    // =================================================
-
-                    const matchPpks =
-                        ppksValue === '' ||
-                        ppks === ppksValue;
-
-
-                    // =================================================
-                    // HASIL
-                    // =================================================
-
-                    const matchHasil =
-                        hasilValue === '' ||
-                        hasil === hasilValue;
-
-
-                    // =================================================
-                    // DATE
-                    // =================================================
-
-                    let matchDate = true;
-
-
-                    if (selectedStart) {
-
-                        matchDate =
-                            tanggal !== '' &&
-                            tanggal >= selectedStart;
-
-                    }
-
-
-                    if (
-                        selectedEnd &&
-                        matchDate
-                    ) {
-
-                        matchDate =
-                            tanggal !== '' &&
-                            tanggal <= selectedEnd;
-
-                    }
-
-
-                    // =================================================
-                    // FINAL
-                    // =================================================
-
-                    const shouldShow =
-                        matchSearch &&
-                        matchPpks &&
-                        matchHasil &&
-                        matchDate;
-
-
-                    if (shouldShow) {
-
-                        row.style.display = '';
-
-                        const numberCell =
-                            row.querySelector('.row-number');
-
-                        if (numberCell) {
-
-                            numberCell.textContent =
-                                visibleNumber;
-
-                        }
-
-                        visibleNumber++;
-
-                        found = true;
-
-                    } else {
-
-                        row.style.display = 'none';
-
-                    }
-
-                });
-
-
-                // =====================================================
-                // FILTER EMPTY
-                // =====================================================
-
-                if (filterEmptyRow) {
-
-                    if (found) {
-
-                        filterEmptyRow.style.display =
-                            'none';
-
-                    } else {
-
-                        filterEmptyRow.style.display =
-                            'table-row';
-
-                    }
-
-                }
-
-            }
-
-
-            // =====================================================
-            // SEARCH
-            // =====================================================
-
-            if (searchInput) {
-
-                searchInput.addEventListener(
-                    'input',
-                    filterTable
-                );
-
-            }
-
-
-            // =====================================================
-            // FILTER PPKS
-            // =====================================================
-
-            if (ppksFilter) {
-
-                ppksFilter.addEventListener(
-                    'change',
-                    filterTable
-                );
-
-            }
-
-
-            // =====================================================
-            // FILTER HASIL
-            // =====================================================
-
-            if (hasilFilter) {
-
-                hasilFilter.addEventListener(
-                    'change',
-                    filterTable
-                );
-
-            }
-
-
-            // =====================================================
-            // DATE OPEN
-            // =====================================================
-
-            if (dateFilterButton && datePicker) {
-
-                dateFilterButton.addEventListener(
-                    'click',
-                    function (event) {
-
-                        event.stopPropagation();
-
-                        datePicker.classList.toggle(
-                            'active'
-                        );
-
-                    }
-                );
-
-            }
-
-
-            // =====================================================
-            // DATE PICKER CLICK
-            // =====================================================
-
-            if (datePicker) {
-
-                datePicker.addEventListener(
-                    'click',
-                    function (event) {
-
-                        event.stopPropagation();
-
-                    }
-                );
-
-            }
-
-
-            // =====================================================
-            // APPLY DATE
-            // =====================================================
-
-            if (applyDate) {
-
-                applyDate.addEventListener(
-                    'click',
-                    function () {
-
-                        const start =
-                            startDate.value;
-
-                        const end =
-                            endDate.value;
-
-
-                        if (!start || !end) {
-
-                            alert(
-                                'Silakan pilih tanggal awal dan tanggal akhir.'
-                            );
-
-                            return;
-
-                        }
-
-
-                        if (start > end) {
-
-                            alert(
-                                'Tanggal awal tidak boleh lebih besar dari tanggal akhir.'
-                            );
-
-                            return;
-
-                        }
-
-
-                        dateFilterText.textContent =
-                            formatDate(start) +
-                            ' - ' +
-                            formatDate(end);
-
-
-                        datePicker.classList.remove(
-                            'active'
-                        );
-
-
-                        filterTable();
-
-                    }
-                );
-
-            }
-
-
-            // =====================================================
-            // RESET DATE
-            // =====================================================
-
-            if (resetDate) {
-
-                resetDate.addEventListener(
-                    'click',
-                    function () {
-
-                        startDate.value = '';
-
-                        endDate.value = '';
-
-                        dateFilterText.textContent =
-                            'Pilih Tanggal';
-
-
-                        datePicker.classList.remove(
-                            'active'
-                        );
-
-
-                        filterTable();
-
-                    }
-                );
-
-            }
-
-
-            // =====================================================
-            // FORMAT DATE
-            // =====================================================
-
-            function formatDate(dateString) {
-
-                const date =
-                    new Date(
-                        dateString + 'T00:00:00'
+        document.addEventListener(
+            'DOMContentLoaded',
+            function () {
+
+                const searchInput =
+                    document.getElementById(
+                        'searchInput'
+                    );
+
+                const ppksFilter =
+                    document.getElementById(
+                        'ppksFilter'
+                    );
+
+                const hasilFilter =
+                    document.getElementById(
+                        'hasilFilter'
+                    );
+
+                const tableRows =
+                    document.querySelectorAll(
+                        '.case-row'
+                    );
+
+                const filterEmptyRow =
+                    document.getElementById(
+                        'filterEmptyRow'
                     );
 
 
-                return date.toLocaleDateString(
-                    'id-ID',
-                    {
-                        day: '2-digit',
-                        month: 'short',
-                        year: 'numeric'
-                    }
-                );
+                /* =================================================
+                   PDF
+                ================================================= */
 
-            }
+                const pdfButton =
+                    document.getElementById(
+                        'pdfButton'
+                    );
+
+                const pdfFilter =
+                    document.getElementById(
+                        'pdfFilter'
+                    );
+
+                const pdfGelombang =
+                    document.getElementById(
+                        'pdfGelombang'
+                    );
+
+                const pdfTahun =
+                    document.getElementById(
+                        'pdfTahun'
+                    );
+
+                const pdfGenerate =
+                    document.getElementById(
+                        'pdfGenerate'
+                    );
+
+                const pdfReset =
+                    document.getElementById(
+                        'pdfReset'
+                    );
 
 
-            // =====================================================
-            // CLICK OUTSIDE
-            // =====================================================
+                /* BUKA PDF FILTER */
 
-            document.addEventListener(
-                'click',
-                function () {
+                if (
+                    pdfButton &&
+                    pdfFilter
+                ) {
 
-                    if (datePicker) {
+                    pdfButton.addEventListener(
+                        'click',
+                        function (event) {
 
-                        datePicker.classList.remove(
-                            'active'
-                        );
+                            event.stopPropagation();
+
+                            pdfFilter.classList.toggle(
+                                'active'
+                            );
+
+                        }
+                    );
+
+                }
+
+
+                /* KLIK DI DALAM PDF FILTER */
+
+                if (pdfFilter) {
+
+                    pdfFilter.addEventListener(
+                        'click',
+                        function (event) {
+
+                            event.stopPropagation();
+
+                        }
+                    );
+
+                }
+
+
+                /* RESET PDF */
+
+                if (pdfReset) {
+
+                    pdfReset.addEventListener(
+                        'click',
+                        function () {
+
+                            pdfGelombang.value = '';
+                            pdfTahun.value = '';
+
+                        }
+                    );
+
+                }
+
+
+                /* BUAT PDF */
+
+                if (pdfGenerate) {
+
+                    pdfGenerate.addEventListener(
+                        'click',
+                        function () {
+
+                            const gelombang =
+                                pdfGelombang.value;
+
+                            const tahun =
+                                pdfTahun.value;
+
+
+                            const url =
+                                new URL(
+                                    "{{ route('ppks.normal.case-conference.pdf') }}",
+                                    window.location.origin
+                                );
+
+
+                            if (gelombang) {
+
+                                url.searchParams.set(
+                                    'gelombang',
+                                    gelombang
+                                );
+
+                            }
+
+
+                            if (tahun) {
+
+                                url.searchParams.set(
+                                    'tahun',
+                                    tahun
+                                );
+
+                            }
+
+
+                            window.open(
+                                url.toString(),
+                                '_blank'
+                            );
+
+
+                            pdfFilter.classList.remove(
+                                'active'
+                            );
+
+                        }
+                    );
+
+                }
+
+
+                /* =================================================
+                   FILTER TABLE
+                ================================================= */
+
+                function filterTable() {
+
+                    const searchValue =
+                        searchInput
+                            ? searchInput.value
+                                .toLowerCase()
+                                .trim()
+                            : '';
+
+
+                    const ppksValue =
+                        ppksFilter
+                            ? ppksFilter.value
+                                .toLowerCase()
+                                .trim()
+                            : '';
+
+
+                    const hasilValue =
+                        hasilFilter
+                            ? hasilFilter.value
+                                .toLowerCase()
+                                .trim()
+                            : '';
+
+
+                    let found = false;
+
+                    let visibleNumber = 1;
+
+
+                    tableRows.forEach(
+                        function (row) {
+
+                            const nama =
+                                row.dataset.nama
+                                || '';
+
+                            const nik =
+                                row.dataset.nik
+                                || '';
+
+                            const ppks =
+                                row.dataset.ppks
+                                || '';
+
+                            const hasil =
+                                row.dataset.hasil
+                                || '';
+
+
+                            /* SEARCH */
+
+                            const matchSearch =
+                                searchValue === ''
+                                ||
+                                nama.includes(
+                                    searchValue
+                                )
+                                ||
+                                nik.includes(
+                                    searchValue
+                                );
+
+
+                            /* JENIS PPKS */
+
+                            const matchPpks =
+                                ppksValue === ''
+                                ||
+                                ppks === ppksValue;
+
+
+                            /* HASIL */
+
+                            const matchHasil =
+                                hasilValue === ''
+                                ||
+                                hasil === hasilValue;
+
+
+                            /* FINAL */
+
+                            const shouldShow =
+                                matchSearch
+                                &&
+                                matchPpks
+                                &&
+                                matchHasil;
+
+
+                            if (shouldShow) {
+
+                                row.style.display =
+                                    '';
+
+                                const numberCell =
+                                    row.querySelector(
+                                        '.row-number'
+                                    );
+
+                                if (numberCell) {
+
+                                    numberCell.textContent =
+                                        visibleNumber;
+
+                                }
+
+                                visibleNumber++;
+
+                                found = true;
+
+                            } else {
+
+                                row.style.display =
+                                    'none';
+
+                            }
+
+                        }
+                    );
+
+
+                    /* EMPTY FILTER */
+
+                    if (filterEmptyRow) {
+
+                        filterEmptyRow.style.display =
+                            found
+                                ? 'none'
+                                : 'table-row';
 
                     }
 
                 }
-            );
 
 
-            // =====================================================
-            // INITIAL FILTER
-            // =====================================================
+                /* SEARCH */
 
-            filterTable();
+                if (searchInput) {
 
-        });
+                    searchInput.addEventListener(
+                        'input',
+                        filterTable
+                    );
+
+                }
+
+
+                /* PPKS */
+
+                if (ppksFilter) {
+
+                    ppksFilter.addEventListener(
+                        'change',
+                        filterTable
+                    );
+
+                }
+
+
+                /* HASIL */
+
+                if (hasilFilter) {
+
+                    hasilFilter.addEventListener(
+                        'change',
+                        filterTable
+                    );
+
+                }
+
+
+                /* =================================================
+                   CLICK OUTSIDE
+                ================================================= */
+
+                document.addEventListener(
+                    'click',
+                    function () {
+
+                        if (pdfFilter) {
+
+                            pdfFilter.classList.remove(
+                                'active'
+                            );
+
+                        }
+
+                    }
+                );
+
+
+                /* =================================================
+                   INITIAL FILTER
+                ================================================= */
+
+                filterTable();
+
+            }
+        );
 
     </script>
 
 </x-app-layout>
+

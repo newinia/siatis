@@ -304,6 +304,12 @@ Route::get(
 )->name('ppks.normal.case-conference');
 
 // ================================================================
+// PDF
+// ================================================================
+
+Route::get('/ppks/normal/case-conference/pdf', [PpksController::class, 'caseConferencePdf'])
+    ->name('ppks.normal.case-conference.pdf');
+// ================================================================
 // DETAIL CASE CONFERENCE
 // ================================================================
 
@@ -321,6 +327,8 @@ Route::post(
     '/ppks/normal/case-conference/{ppks}',
     [PpksController::class, 'updateCaseConference']
 )->name('ppks.normal.case-conference.update');
+
+
         /*
     |--------------------------------------------------------------------------
     | DATA MANUAL
