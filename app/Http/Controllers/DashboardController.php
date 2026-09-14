@@ -1,0 +1,1092 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Ppks;
+use App\Models\ProsesPeserta;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
+
+class DashboardController extends Controller
+{
+    /**
+     * Dashboard utama
+     */
+    public function index(Request $request): View
+    {
+        /*
+        |--------------------------------------------------------------------------
+        | AMBIL DATA PPKS
+        |--------------------------------------------------------------------------
+        */
+
+        $ppks = Ppks::query()
+            ->select([
+                'id',
+                'data',
+                'status',
+            ])
+            ->get();
+
+        /*
+        |--------------------------------------------------------------------------
+        | AMBIL SELURUH PROSES PESERTA
+        |--------------------------------------------------------------------------
+        */
+
+        $prosesPesertas = ProsesPeserta::query()
+            ->select([
+                'id',
+                'ppks_id',
+                'tahap',
+                'status',
+                'alasan_pending',
+                'catatan',
+                'tanggal_panggil_kembali',
+                'tanggal_proses',
+                'created_at',
+            ])
+            ->orderByDesc('tanggal_proses')
+            ->orderByDesc('created_at')
+            ->get();
+
+        /*
+        |--------------------------------------------------------------------------
+        | GROUP PROSES BERDASARKAN PPKS
+        |--------------------------------------------------------------------------
+        */
+
+        $prosesByPpks = $prosesPesertas->groupBy('ppks_id');
+
+        /*
+        |--------------------------------------------------------------------------
+        | TAHUN YANG TERSEDIA DARI DATABASE
+        |--------------------------------------------------------------------------
+        */
+
+        $availableYears = collect();
+
+        foreach ($ppks as $item) {
+
+            $timestamp = data_get($item->data, 'timestamp');
+
+            if (empty($timestamp)) {
+                continue;
+            }
+
+            $date = $this->parseTimestamp($timestamp);
+
+            if (!$date) {
+                continue;
+            }
+
+            $availableYears->push(
+                (int) $date->format('Y')
+            );
+        }
+
+        $availableYears = $availableYears
+            ->unique()
+            ->sortDesc()
+            ->values()
+            ->toArray();
+
+        /*
+        |--------------------------------------------------------------------------
+        | TENTUKAN TAHUN YANG DIPILIH
+        |--------------------------------------------------------------------------
+        */
+
+        $selectedYear = $request->query('year');
+
+        if (
+            empty($selectedYear) ||
+            !in_array(
+                (int) $selectedYear,
+                $availableYears,
+                true
+            )
+        ) {
+            $selectedYear = $availableYears[0] ?? null;
+        }
+
+        $selectedYear = $selectedYear !== null
+            ? (int) $selectedYear
+            : null;
+
+        /*
+        |--------------------------------------------------------------------------
+        | TREND PENDAFTAR PER BULAN
+        |--------------------------------------------------------------------------
+        */
+
+        $monthlyRegistrations = array_fill(1, 12, 0);
+
+        if ($selectedYear !== null) {
+
+            foreach ($ppks as $item) {
+
+                $timestamp = data_get(
+                    $item->data,
+                    'timestamp'
+                );
+
+                if (empty($timestamp)) {
+                    continue;
+                }
+
+                $date = $this->parseTimestamp($timestamp);
+
+                if (!$date) {
+                    continue;
+                }
+
+                if ((int) $date->format('Y') !== $selectedYear) {
+                    continue;
+                }
+
+                $month = (int) $date->format('n');
+
+                $monthlyRegistrations[$month]++;
+            }
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | LABEL BULAN
+        |--------------------------------------------------------------------------
+        */
+
+        $monthLabels = [
+            'Jan',
+            'Feb',
+            'Mar',
+            'Apr',
+            'Mei',
+            'Jun',
+            'Jul',
+            'Agu',
+            'Sep',
+            'Okt',
+            'Nov',
+            'Des',
+        ];
+
+        $registrationValues = array_values(
+            $monthlyRegistrations
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | STATISTIK STATUS CASE CONFERENCE
+        |--------------------------------------------------------------------------
+        */
+
+        $sudahDilayani = 0;
+        $pending = 0;
+        $belumDilayani = 0;
+
+        foreach ($ppks as $item) {
+
+            $processes = $prosesByPpks
+                ->get($item->id, collect());
+
+            /*
+            |--------------------------------------------------------------------------
+            | Ambil CASE CONFERENCE TERBARU
+            |--------------------------------------------------------------------------
+            */
+
+            $caseConference = $processes
+                ->where('tahap', 'case_conference')
+                ->sortByDesc(function ($process) {
+                    return [
+                        optional($process->tanggal_proses)->timestamp ?? 0,
+                        optional($process->created_at)->timestamp ?? 0,
+                    ];
+                })
+                ->first();
+
+            if (!$caseConference) {
+
+                $belumDilayani++;
+
+                continue;
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | STATUS CASE CONFERENCE
+            |--------------------------------------------------------------------------
+            */
+
+            if (
+                in_array(
+                    $caseConference->status,
+                    ['lulus', 'tidak_lulus'],
+                    true
+                )
+            ) {
+
+                $sudahDilayani++;
+
+            } elseif (
+                $caseConference->status === 'pending'
+            ) {
+
+                $pending++;
+
+            } else {
+
+                $belumDilayani++;
+            }
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | TOTAL PENDAFTAR
+        |--------------------------------------------------------------------------
+        */
+
+        $totalPendaftar = $ppks->count();
+
+        /*
+        |--------------------------------------------------------------------------
+        | PERSENTASE STATISTIK
+        |--------------------------------------------------------------------------
+        */
+
+        $sudahDilayaniPercentage = $totalPendaftar > 0
+            ? round(($sudahDilayani / $totalPendaftar) * 100, 1)
+            : 0;
+
+        $belumDilayaniPercentage = $totalPendaftar > 0
+            ? round(($belumDilayani / $totalPendaftar) * 100, 1)
+            : 0;
+
+        $pendingPercentage = $totalPendaftar > 0
+            ? round(($pending / $totalPendaftar) * 100, 1)
+            : 0;
+
+        /*
+        |--------------------------------------------------------------------------
+        | 5 PROVINSI DENGAN PENDAFTAR TERBANYAK
+        |--------------------------------------------------------------------------
+        */
+
+        $provinceCounts = [];
+
+        foreach ($ppks as $item) {
+
+            $province = trim(
+                (string) data_get(
+                    $item->data,
+                    'provinsi',
+                    ''
+                )
+            );
+
+            if ($province === '') {
+                $province = 'Tidak Diketahui';
+            }
+
+            $provinceCounts[$province] =
+                ($provinceCounts[$province] ?? 0) + 1;
+        }
+
+        arsort($provinceCounts);
+
+        $topProvinces = array_slice(
+            $provinceCounts,
+            0,
+            5,
+            true
+        );
+
+        $provinceLabels = array_keys($topProvinces);
+        $provinceValues = array_values($topProvinces);
+
+        /*
+        |--------------------------------------------------------------------------
+        | JENIS PPKS
+        |--------------------------------------------------------------------------
+        |
+        | KATEGORI TETAP:
+        |
+        | 1. Disabilitas Fisik
+        | 2. Disabilitas Rungu Wicara
+        | 3. Disabilitas Netra
+        | 4. Disabilitas Mental
+        | 5. Disabilitas Intelektual
+        | 6. Kelompok Rentan
+        | 7. Other
+        |
+        |--------------------------------------------------------------------------
+        */
+
+        $ppksCategories = [
+            'Disabilitas Fisik',
+            'Disabilitas Rungu Wicara',
+            'Disabilitas Netra',
+            'Disabilitas Mental',
+            'Disabilitas Intelektual',
+            'Kelompok Rentan',
+            'Other',
+        ];
+
+        /*
+        |--------------------------------------------------------------------------
+        | INISIALISASI SEMUA KATEGORI
+        |--------------------------------------------------------------------------
+        */
+
+        $disabilityCounts = [];
+
+        foreach ($ppksCategories as $category) {
+            $disabilityCounts[$category] = 0;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | NORMALISASI JENIS PPKS
+        |--------------------------------------------------------------------------
+        */
+
+        foreach ($ppks as $item) {
+
+            $type = trim(
+                (string) data_get(
+                    $item->data,
+                    'jenis_ppks',
+                    ''
+                )
+            );
+
+            /*
+            |--------------------------------------------------------------------------
+            | KOSONG -> OTHER
+            |--------------------------------------------------------------------------
+            */
+
+            if ($type === '') {
+
+                $disabilityCounts['Other']++;
+
+                continue;
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | NORMALISASI TEKS
+            |--------------------------------------------------------------------------
+            */
+
+            $typeNormalized = mb_strtolower(
+                preg_replace(
+                    '/\s+/',
+                    ' ',
+                    $type
+                )
+            );
+
+            $matchedCategory = null;
+
+            /*
+            |--------------------------------------------------------------------------
+            | DISABILITAS FISIK
+            |--------------------------------------------------------------------------
+            */
+
+            if (
+                str_contains(
+                    $typeNormalized,
+                    'fisik'
+                )
+            ) {
+
+                $matchedCategory = 'Disabilitas Fisik';
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | RUNGU WICARA
+            |--------------------------------------------------------------------------
+            */
+
+            elseif (
+                str_contains(
+                    $typeNormalized,
+                    'rungu'
+                ) ||
+                str_contains(
+                    $typeNormalized,
+                    'wicara'
+                )
+            ) {
+
+                $matchedCategory = 'Disabilitas Rungu Wicara';
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | NETRA
+            |--------------------------------------------------------------------------
+            */
+
+            elseif (
+                str_contains(
+                    $typeNormalized,
+                    'netra'
+                )
+            ) {
+
+                $matchedCategory = 'Disabilitas Netra';
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | MENTAL
+            |--------------------------------------------------------------------------
+            */
+
+            elseif (
+                str_contains(
+                    $typeNormalized,
+                    'mental'
+                )
+            ) {
+
+                $matchedCategory = 'Disabilitas Mental';
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | INTELEKTUAL
+            |--------------------------------------------------------------------------
+            */
+
+            elseif (
+                str_contains(
+                    $typeNormalized,
+                    'intelektual'
+                )
+            ) {
+
+                $matchedCategory = 'Disabilitas Intelektual';
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | KELOMPOK RENTAN
+            |--------------------------------------------------------------------------
+            */
+
+            elseif (
+                str_contains(
+                    $typeNormalized,
+                    'rentan'
+                )
+            ) {
+
+                $matchedCategory = 'Kelompok Rentan';
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | JIKA TIDAK SESUAI 6 KATEGORI -> OTHER
+            |--------------------------------------------------------------------------
+            */
+
+            if ($matchedCategory === null) {
+                $matchedCategory = 'Other';
+            }
+
+            $disabilityCounts[$matchedCategory]++;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | LABEL DAN VALUE JENIS PPKS
+        |--------------------------------------------------------------------------
+        |
+        | Urutan tetap sesuai kategori yang sudah ditentukan.
+        |--------------------------------------------------------------------------
+        */
+
+        $disabilityLabels = array_keys(
+            $disabilityCounts
+        );
+
+        $disabilityValues = array_values(
+            $disabilityCounts
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | JURUSAN YANG DIMINATI
+        |--------------------------------------------------------------------------
+        |
+        | KATEGORI DISPLAY TETAP 8:
+        |
+        | 1. Komputer
+        | 2. Desain Grafis
+        | 3. Penjahitan
+        | 4. Elektro
+        | 5. Las
+        | 6. Contact Center
+        | 7. Otomotif
+        | 8. Other
+        |
+        |--------------------------------------------------------------------------
+        */
+
+        $majorCategories = [
+            'Komputer',
+            'Desain Grafis',
+            'Penjahitan',
+            'Elektro',
+            'Las',
+            'Contact Center',
+            'Otomotif',
+        ];
+
+        $majorCounts = [];
+
+        foreach ($majorCategories as $category) {
+            $majorCounts[$category] = 0;
+        }
+
+        $majorCounts['Other'] = 0;
+
+        foreach ($ppks as $item) {
+
+            $major = trim(
+                (string) data_get(
+                    $item->data,
+                    'jurusan_yang_diminati',
+                    ''
+                )
+            );
+
+            /*
+            |--------------------------------------------------------------------------
+            | KOSONG -> OTHER
+            |--------------------------------------------------------------------------
+            */
+
+            if ($major === '') {
+
+                $majorCounts['Other']++;
+
+                continue;
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | NORMALISASI
+            |--------------------------------------------------------------------------
+            */
+
+            $majorNormalized = mb_strtolower(
+                preg_replace(
+                    '/\s+/',
+                    ' ',
+                    $major
+                )
+            );
+
+            $matched = false;
+
+            /*
+            |--------------------------------------------------------------------------
+            | CEK KATEGORI
+            |--------------------------------------------------------------------------
+            */
+
+            foreach ($majorCategories as $category) {
+
+                $categoryNormalized = mb_strtolower(
+                    $category
+                );
+
+                if (
+                    str_contains(
+                        $majorNormalized,
+                        $categoryNormalized
+                    )
+                ) {
+
+                    $majorCounts[$category]++;
+
+                    $matched = true;
+
+                    break;
+                }
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | TIDAK COCOK -> OTHER
+            |--------------------------------------------------------------------------
+            */
+
+            if (!$matched) {
+
+                $majorCounts['Other']++;
+            }
+        }
+
+        $majorLabels = array_keys(
+            $majorCounts
+        );
+
+        $majorValues = array_values(
+            $majorCounts
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | TAHAPAN PESERTA
+        |--------------------------------------------------------------------------
+        */
+
+        $stageCounts = [
+            'Belum Diolah' => 0,
+            'Asesmen Instruktur' => 0,
+            'Asesmen Kesehatan Awal' => 0,
+            'Case Conference' => 0,
+            'Kesehatan Lanjutan' => 0,
+            'Pending' => 0,
+            'Tidak Lulus' => 0,
+        ];
+
+        foreach ($ppks as $item) {
+
+            $processes = $prosesByPpks
+                ->get($item->id, collect());
+
+            /*
+            |--------------------------------------------------------------------------
+            | AMBIL PROSES TERBARU SETIAP TAHAP
+            |--------------------------------------------------------------------------
+            */
+
+            $latestByStage = [];
+
+            foreach ($processes as $process) {
+
+                $stage = $process->tahap;
+
+                if (!isset($latestByStage[$stage])) {
+
+                    $latestByStage[$stage] = $process;
+
+                    continue;
+                }
+
+                $currentTimestamp =
+                    optional(
+                        $process->tanggal_proses
+                    )->timestamp ?? 0;
+
+                $latestTimestamp =
+                    optional(
+                        $latestByStage[$stage]->tanggal_proses
+                    )->timestamp ?? 0;
+
+                if ($currentTimestamp > $latestTimestamp) {
+
+                    $latestByStage[$stage] = $process;
+                }
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | PRIORITAS STATUS
+            |--------------------------------------------------------------------------
+            */
+
+            $hasPending = collect($latestByStage)
+                ->contains(function ($process) {
+                    return $process->status === 'pending';
+                });
+
+            $hasTidakLulus = collect($latestByStage)
+                ->contains(function ($process) {
+                    return $process->status === 'tidak_lulus';
+                });
+
+            if ($hasPending) {
+
+                $stageCounts['Pending']++;
+
+                continue;
+            }
+
+            if ($hasTidakLulus) {
+
+                $stageCounts['Tidak Lulus']++;
+
+                continue;
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | TENTUKAN TAHAP TERAKHIR
+            |--------------------------------------------------------------------------
+            */
+
+            $stageOrder = [
+                'kesehatan_lanjutan',
+                'case_conference',
+                'kesehatan_awal',
+                'instruktur',
+            ];
+
+            $foundStage = false;
+
+            foreach ($stageOrder as $stage) {
+
+                if (!isset($latestByStage[$stage])) {
+                    continue;
+                }
+
+                $process = $latestByStage[$stage];
+
+                if ($process->status !== 'lulus') {
+                    continue;
+                }
+
+                switch ($stage) {
+
+                    case 'kesehatan_lanjutan':
+
+                        $stageCounts[
+                            'Kesehatan Lanjutan'
+                        ]++;
+
+                        break;
+
+                    case 'case_conference':
+
+                        $stageCounts[
+                            'Case Conference'
+                        ]++;
+
+                        break;
+
+                    case 'kesehatan_awal':
+
+                        $stageCounts[
+                            'Asesmen Kesehatan Awal'
+                        ]++;
+
+                        break;
+
+                    case 'instruktur':
+
+                        $stageCounts[
+                            'Asesmen Instruktur'
+                        ]++;
+
+                        break;
+                }
+
+                $foundStage = true;
+
+                break;
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | BELUM ADA PROSES
+            |--------------------------------------------------------------------------
+            */
+
+            if (!$foundStage) {
+
+                $stageCounts['Belum Diolah']++;
+            }
+        }
+
+        $stageLabels = array_keys(
+            $stageCounts
+        );
+
+        $stageValues = array_values(
+            $stageCounts
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | REKOMENDASI PESERTA PENDING
+        |--------------------------------------------------------------------------
+        |
+        | Prioritas:
+        | 1. Usia paling dekat dengan 34 tahun
+        | 2. Disabilitas Fisik
+        | 3. Disabilitas Rungu Wicara
+        |--------------------------------------------------------------------------
+        */
+
+        $recommendations = [];
+
+        foreach ($ppks as $item) {
+
+            $processes = $prosesByPpks
+                ->get($item->id, collect());
+
+            $latestCaseConference = $processes
+                ->where('tahap', 'case_conference')
+                ->sortByDesc(function ($process) {
+                    return [
+                        optional($process->tanggal_proses)->timestamp ?? 0,
+                        optional($process->created_at)->timestamp ?? 0,
+                    ];
+                })
+                ->first();
+
+            if (
+                !$latestCaseConference ||
+                $latestCaseConference->status !== 'pending'
+            ) {
+                continue;
+            }
+
+            $age = data_get(
+                $item->data,
+                'usia'
+            );
+
+            $age = is_numeric($age)
+                ? (int) $age
+                : null;
+
+            /*
+            |--------------------------------------------------------------------------
+            | NORMALISASI JENIS PPKS UNTUK REKOMENDASI
+            |--------------------------------------------------------------------------
+            */
+
+            $type = trim(
+                (string) data_get(
+                    $item->data,
+                    'jenis_ppks',
+                    ''
+                )
+            );
+
+            $typeLower = mb_strtolower(
+                preg_replace(
+                    '/\s+/',
+                    ' ',
+                    $type
+                )
+            );
+
+            /*
+            |--------------------------------------------------------------------------
+            | PRIORITAS JENIS PPKS
+            |--------------------------------------------------------------------------
+            |
+            | 0 = Disabilitas Fisik
+            | 1 = Disabilitas Rungu Wicara
+            | 2 = Kategori lainnya
+            |--------------------------------------------------------------------------
+            */
+
+            if (
+                str_contains(
+                    $typeLower,
+                    'fisik'
+                )
+            ) {
+
+                $physicalPriority = 0;
+
+            } elseif (
+                str_contains(
+                    $typeLower,
+                    'rungu'
+                ) ||
+                str_contains(
+                    $typeLower,
+                    'wicara'
+                )
+            ) {
+
+                $physicalPriority = 1;
+
+            } else {
+
+                $physicalPriority = 2;
+            }
+
+            $ageDifference = $age !== null
+                ? abs(34 - $age)
+                : 999;
+
+            $recommendations[] = [
+                'ppks' => $item,
+                'age' => $age,
+                'age_difference' => $ageDifference,
+                'physical_priority' => $physicalPriority,
+            ];
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | SORT REKOMENDASI
+        |--------------------------------------------------------------------------
+        */
+
+        usort(
+            $recommendations,
+            function ($a, $b) {
+
+                if (
+                    $a['age_difference']
+                    !==
+                    $b['age_difference']
+                ) {
+
+                    return $a['age_difference']
+                        <=>
+                        $b['age_difference'];
+                }
+
+                return $a['physical_priority']
+                    <=>
+                    $b['physical_priority'];
+            }
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | BATASI 10 PESERTA
+        |--------------------------------------------------------------------------
+        */
+
+        $recommendations = array_slice(
+            $recommendations,
+            0,
+            10
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | KIRIM DATA KE BLADE
+        |--------------------------------------------------------------------------
+        */
+
+        return view(
+            'dashboard',
+            compact(
+                'totalPendaftar',
+
+                'sudahDilayani',
+                'sudahDilayaniPercentage',
+
+                'belumDilayani',
+                'belumDilayaniPercentage',
+
+                'pending',
+                'pendingPercentage',
+
+                'availableYears',
+                'selectedYear',
+
+                'monthLabels',
+                'registrationValues',
+
+                'provinceLabels',
+                'provinceValues',
+
+                'disabilityLabels',
+                'disabilityValues',
+
+                'stageLabels',
+                'stageValues',
+
+                'majorLabels',
+                'majorValues',
+
+                'recommendations'
+            )
+        );
+    }
+
+    /**
+     * Parse timestamp dari data Google Sheets / database.
+     */
+    private function parseTimestamp($timestamp): ?Carbon
+    {
+        if ($timestamp === null) {
+            return null;
+        }
+
+        $timestamp = trim(
+            (string) $timestamp
+        );
+
+        if ($timestamp === '') {
+            return null;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | FORMAT GOOGLE SHEETS
+        |--------------------------------------------------------------------------
+        */
+
+        $formats = [
+            'n/j/Y H:i:s',
+            'm/d/Y H:i:s',
+
+            'n/j/Y H:i',
+            'm/d/Y H:i',
+
+            'Y-m-d H:i:s',
+            'Y-m-d H:i',
+
+            'd/m/Y H:i:s',
+            'd/m/Y H:i',
+
+            'd-m-Y H:i:s',
+            'd-m-Y H:i',
+        ];
+
+        foreach ($formats as $format) {
+
+            try {
+
+                return Carbon::createFromFormat(
+                    $format,
+                    $timestamp
+                );
+
+            } catch (\Throwable $e) {
+
+                // Lanjut ke format berikutnya
+            }
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | FALLBACK
+        |--------------------------------------------------------------------------
+        */
+
+        try {
+
+            return Carbon::parse(
+                $timestamp
+            );
+
+        } catch (\Throwable $e) {
+
+            return null;
+        }
+    }
+}

@@ -1,1619 +1,1571 @@
 <x-app-layout>
 
-```
-<div class="data-normal-page">
+    <div class="main-page">
 
-    {{-- =========================================================
-    HEADER
-    ========================================================== --}}
-    <div class="data-normal-header">
+        {{-- =====================================================
+        HEADER
+        ======================================================= --}}
+        <div class="main-page-header">
 
-        <div class="header-title-wrapper">
-
-            <div class="header-icon">
-                <span class="material-symbols-outlined">
-                    verified
-                </span>
-            </div>
-
-            <div class="header-text">
+            <div>
 
                 <h1>Data Normal</h1>
 
                 <p>
-                    Data PPKS yang telah dipilih dan dinyatakan normal.
+                    Data peserta yang telah tervalidasi dan menjadi data normal yang siap diolah.
                 </p>
 
             </div>
 
-        </div>
 
-    </div>
+            {{-- =====================================================
+            DATE FILTER
+            ======================================================= --}}
+            <div class="date-filter-wrapper">
 
-
-    {{-- =========================================================
-    NOTIFIKASI
-    ========================================================== --}}
-    @if (session('success'))
-
-        <div class="success-alert">
-
-            <span class="material-symbols-outlined">
-                check_circle
-            </span>
-
-            <span>
-                {{ session('success') }}
-            </span>
-
-        </div>
-
-    @endif
-
-
-    @if (session('error'))
-
-        <div class="error-alert">
-
-            <span class="material-symbols-outlined">
-                error
-            </span>
-
-            <span>
-                {{ session('error') }}
-            </span>
-
-        </div>
-
-    @endif
-
-
-    {{-- =========================================================
-    SEARCH
-    ========================================================== --}}
-    <div class="data-normal-toolbar">
-
-        <form
-            method="GET"
-            action="{{ request()->url() }}"
-            class="data-normal-search"
-        >
-
-            <span class="material-symbols-outlined search-icon">
-                search
-            </span>
-
-            <input
-                type="text"
-                name="search"
-                value="{{ request('search') }}"
-                placeholder="Cari nama, NIK, jenis PPKS, atau no HP..."
-                autocomplete="off"
-            >
-
-            @if (request('search'))
-
-                <a
-                    href="{{ request()->url() }}"
-                    class="clear-search"
-                    title="Hapus pencarian"
+                <button
+                    type="button"
+                    class="date-filter"
+                    id="dateFilterButton"
                 >
-                    <span class="material-symbols-outlined">
-                        close
+
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                    >
+                        <rect x="3" y="4" width="18" height="18" rx="2"/>
+                        <path d="M16 2v4"/>
+                        <path d="M8 2v4"/>
+                        <path d="M3 10h18"/>
+                    </svg>
+
+                    <span id="dateFilterText">
+                        Pilih Tanggal
                     </span>
-                </a>
 
-            @endif
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="17"
+                        height="17"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+                        <path d="m6 9 6 6 6-6"/>
+                    </svg>
 
+                </button>
+
+
+                {{-- DATE PICKER --}}
+                <div
+                    class="date-picker"
+                    id="datePicker"
+                >
+
+                    <div class="date-picker-header">
+
+                        <strong>
+                            Pilih Rentang Tanggal
+                        </strong>
+
+                    </div>
+
+
+                    <div class="date-input-group">
+
+                        <div>
+
+                            <label for="startDate">
+                                Dari
+                            </label>
+
+                            <input
+                                type="date"
+                                id="startDate"
+                            >
+
+                        </div>
+
+
+                        <div>
+
+                            <label for="endDate">
+                                Sampai
+                            </label>
+
+                            <input
+                                type="date"
+                                id="endDate"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="date-picker-actions">
+
+                        <button
+                            type="button"
+                            id="resetDate"
+                            class="date-reset"
+                        >
+                            Reset
+                        </button>
+
+                        <button
+                            type="button"
+                            id="applyDate"
+                            class="date-apply"
+                        >
+                            Terapkan
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {{-- =====================================================
+        FILTER
+        ======================================================= --}}
+        <div class="filter-wrapper">
+
+            {{-- =================================================
+            FILTER GROUP
+            Search + 3 Filter
+            ================================================== --}}
+            <div class="filter-group">
+
+                {{-- SEARCH --}}
+                <div
+                    class="search"
+                    id="searchWrapper"
+                >
+
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+
+                        <circle
+                            cx="11"
+                            cy="11"
+                            r="7"
+                        />
+
+                        <path d="m20 20-3.5-3.5"/>
+
+                    </svg>
+
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Cari Nama atau NIK"
+                        autocomplete="off"
+                    >
+
+                </div>
+
+
+                {{-- FILTER PPKS --}}
+                <div class="select-wrapper">
+
+                    <select
+                        id="ppksFilter"
+                        class="filter-button"
+                    >
+
+                        <option value="">
+                            Semua Jenis PPKS
+                        </option>
+
+                        <option value="Disabilitas Fisik">
+                            Disabilitas Fisik
+                        </option>
+
+                        <option value="Disabilitas Rungu Wicara">
+                            Disabilitas Rungu Wicara
+                        </option>
+
+                        <option value="Disabilitas Netra">
+                            Disabilitas Netra
+                        </option>
+
+                        <option value="Disabilitas Mental">
+                            Disabilitas Mental
+                        </option>
+
+                        <option value="Disabilitas Intelektual">
+                            Disabilitas Intelektual
+                        </option>
+
+                        <option value="Kelompok Rentan">
+                            Kelompok Rentan
+                        </option>
+
+                        <option value="Other">
+                            Other
+                        </option>
+
+                    </select>
+
+                    <span class="material-symbols-outlined select-arrow">
+                        keyboard_arrow_down
+                    </span>
+
+                </div>
+
+
+                {{-- FILTER TAHAPAN --}}
+                <div class="select-wrapper">
+
+                    <select
+                        id="tahapanFilter"
+                        class="filter-button"
+                    >
+
+                        <option value="">
+                            Semua Jenis Tahapan
+                        </option>
+
+                        <option value="Belum Dilakukan">
+                            Belum Dilakukan
+                        </option>
+
+                        <option value="Asesmen Instruktur">
+                            Asesmen Instruktur
+                        </option>
+
+                        <option value="Asesmen Kesehatan Awal">
+                            Asesmen Kesehatan Awal
+                        </option>
+
+                        <option value="Case Conference">
+                            Case Conference
+                        </option>
+
+                        <option value="Asesmen Kesehatan Lanjutan">
+                            Asesmen Kesehatan Lanjutan
+                        </option>
+
+                        <option value="Jadi Siswa">
+                            Jadi Siswa
+                        </option>
+
+                    </select>
+
+                    <span class="material-symbols-outlined select-arrow">
+                        keyboard_arrow_down
+                    </span>
+
+                </div>
+
+
+                {{-- FILTER HASIL --}}
+                <div class="select-wrapper">
+
+                    <select
+                        id="hasilFilter"
+                        class="filter-button"
+                    >
+
+                        <option value="">
+                            Semua Hasil
+                        </option>
+
+                        <option value="Belum Dimulai">
+                            Belum Dimulai
+                        </option>
+
+                        <option value="Pending">
+                            Pending
+                        </option>
+
+                        <option value="Lulus">
+                            Lulus
+                        </option>
+
+                        <option value="Tidak Lulus">
+                            Tidak Lulus
+                        </option>
+
+                        <option value="Diterima">
+                            Diterima
+                        </option>
+
+                        <option value="Tidak Diterima">
+                            Tidak Diterima
+                        </option>
+
+                    </select>
+
+                    <span class="material-symbols-outlined select-arrow">
+                        keyboard_arrow_down
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            {{-- =================================================
+            RESET SEMUA FILTER
+            ================================================== --}}
             <button
-                type="submit"
-                class="search-button"
+                type="button"
+                id="resetAllFilters"
+                class="filter-reset"
             >
-                Cari
+
+                <span class="material-symbols-outlined">
+                    restart_alt
+                </span>
+
+                Reset
+
             </button>
 
-        </form>
-
-    </div>
+        </div>
 
 
-    {{-- =========================================================
-    TABLE
-    ========================================================== --}}
-    <div class="data-normal-table-wrapper">
+        {{-- =====================================================
+        TABLE
+        ======================================================= --}}
+        <div class="table-wrapper">
 
-        @if ($ppks->count() > 0)
+            <table class="table">
 
-            <div class="table-scroll">
+                <thead>
 
-                <table class="data-normal-table">
+                    <tr>
 
-                    {{-- =================================================
-                    TABLE HEADER
-                    ================================================== --}}
-                    <thead>
+                        <th>No</th>
+                        <th>Nama</th>
+                        <th>NIK</th>
+                        <th>Umur</th>
+                        <th>Jenis PPKS</th>
+                        <th>Jurusan</th>
+                        <th>Hasil</th>
+                        <th>Keterangan</th>
 
-                        <tr>
+                    </tr>
 
-                            <th class="no-column">
-                                No
-                            </th>
-
-                            <th>
-                                Nama
-                            </th>
-
-                            <th>
-                                NIK
-                            </th>
-
-                            <th>
-                                Jenis Kelamin
-                            </th>
-
-                            <th>
-                                Jenis PPKS
-                            </th>
-
-                            <th>
-                                No HP
-                            </th>
-
-                            <th class="tahapan-column">
-                                Tahapan
-                            </th>
-
-{{--
-<th class="action-column">
-    Aksi
-</th>
---}}
-
-                        </tr>
-
-                    </thead>
+                </thead>
 
 
-                    {{-- =================================================
-                    TABLE BODY
-                    ================================================== --}}
-                    <tbody>
+                <tbody>
 
-                        @foreach ($ppks as $index => $data)
+                    @forelse ($ppks as $index => $peserta)
 
-                            @php
+                        @php
 
-                                /*
-                                |--------------------------------------------------------------------------
-                                | DATA PPKS
-                                |--------------------------------------------------------------------------
-                                */
+                            /* =====================================================
+                            DATA PPKS
+                            ===================================================== */
 
-                                $row = is_array($data->data ?? null)
-                                    ? $data->data
-                                    : [];
+                            $data = is_array($peserta->data)
+                                ? $peserta->data
+                                : [];
 
 
-                                /*
-                                |--------------------------------------------------------------------------
-                                | NAMA
-                                |--------------------------------------------------------------------------
-                                */
+                            /* =====================================================
+                            DATA DASAR
+                            ===================================================== */
 
-                                $nama =
-                                    $row['nama_lengkap']
-                                    ?? $row['Nama Lengkap']
-                                    ?? $row[1]
+                            $nama =
+                                $data['nama_lengkap']
+                                ?? $data['nama']
+                                ?? $data['Nama Lengkap']
+                                ?? '-';
+
+                            $nik =
+                                $data['nik']
+                                ?? $data['NIK']
+                                ?? '-';
+
+                            $umur =
+                                $data['usia']
+                                ?? $data['umur']
+                                ?? '-';
+
+                            $jenisPpks =
+                                $data['jenis_ppks']
+                                ?? $data['jenis PPKS']
+                                ?? $data['Jenis PPKS']
+                                ?? '-';
+
+
+                            /* =====================================================
+                            CASE CONFERENCE
+                            ===================================================== */
+
+                            $caseConference =
+                                $caseConferences[$peserta->id]
+                                ?? null;
+
+
+                            /* =====================================================
+                            JURUSAN
+                            ===================================================== */
+
+                            $jurusan =
+                                $caseConference?->jurusan_diterima
+                                ?? '-';
+
+
+                            /* =====================================================
+                            TANGGAL KEDATANGAN
+                            ===================================================== */
+
+                            $tanggal =
+                                $peserta->pemanggilanPeserta?->tanggal_kedatangan;
+
+
+                            /* =====================================================
+                            ROUTE DETAIL
+                            ===================================================== */
+
+                            $route =
+                                route(
+                                    'ppks.normal.kesehatan-lanjutan.detail',
+                                    $peserta
+                                );
+
+
+                            /* =====================================================
+                            AMBIL SEMUA PROSES
+                            ===================================================== */
+
+                            $proses =
+                                $peserta->prosesPesertas ?? collect();
+
+
+                            /* =====================================================
+                            URUTAN TAHAPAN
+                            ===================================================== */
+
+                            $urutanTahap = [
+                                'instruktur' => 1,
+                                'kesehatan_awal' => 2,
+                                'case_conference' => 3,
+                                'kesehatan_lanjutan' => 4,
+                                'jadi_siswa' => 5,
+                            ];
+
+
+                            /* =====================================================
+                            SIAPKAN DATA SETIAP TAHAP
+                            ===================================================== */
+
+                            $tahapanData = [
+                                'instruktur' => null,
+                                'kesehatan_awal' => null,
+                                'case_conference' => null,
+                                'kesehatan_lanjutan' => null,
+                                'jadi_siswa' => null,
+                            ];
+
+
+                            /* =====================================================
+                            NORMALISASI DAN AMBIL PROSES TERBARU
+                            ===================================================== */
+
+                            foreach ($proses as $item) {
+
+                                $tahap = strtolower(
+                                    trim(
+                                        (string) ($item->tahap ?? '')
+                                    )
+                                );
+
+
+                                if (in_array($tahap, [
+                                    'instruktur',
+                                    'asesmen_instruktur',
+                                    'asesmen instruktur',
+                                ], true)) {
+
+                                    $tahapKey = 'instruktur';
+
+                                } elseif (in_array($tahap, [
+                                    'kesehatan',
+                                    'kesehatan_awal',
+                                    'kesehatan awal',
+                                    'asesmen_kesehatan_awal',
+                                    'asesmen kesehatan awal',
+                                ], true)) {
+
+                                    $tahapKey = 'kesehatan_awal';
+
+                                } elseif (in_array($tahap, [
+                                    'case_conference',
+                                    'case-conference',
+                                    'case conference',
+                                    'cc',
+                                ], true)) {
+
+                                    $tahapKey = 'case_conference';
+
+                                } elseif (in_array($tahap, [
+                                    'kesehatan_lanjutan',
+                                    'kesehatan-lanjutan',
+                                    'kesehatan lanjutan',
+                                    'asesmen_kesehatan_lanjutan',
+                                    'asesmen kesehatan lanjutan',
+                                ], true)) {
+
+                                    $tahapKey = 'kesehatan_lanjutan';
+
+                                } elseif (in_array($tahap, [
+                                    'jadi_siswa',
+                                    'jadi-siswa',
+                                    'jadi siswa',
+                                    'siswa',
+                                ], true)) {
+
+                                    $tahapKey = 'jadi_siswa';
+
+                                } else {
+
+                                    continue;
+
+                                }
+
+
+                                if (
+                                    !$tahapanData[$tahapKey] ||
+                                    (
+                                        $item->created_at &&
+                                        $tahapanData[$tahapKey]->created_at &&
+                                        $item->created_at >
+                                        $tahapanData[$tahapKey]->created_at
+                                    )
+                                ) {
+
+                                    $tahapanData[$tahapKey] =
+                                        $item;
+
+                                }
+
+                            }
+
+
+                            /* =====================================================
+                            TENTUKAN TAHAPAN TERAKHIR
+                            ===================================================== */
+
+                            $tahapTerakhir = null;
+                            $prosesTerakhir = null;
+
+
+                            foreach ($urutanTahap as $key => $urutan) {
+
+                                if ($tahapanData[$key]) {
+
+                                    $tahapTerakhir =
+                                        $key;
+
+                                    $prosesTerakhir =
+                                        $tahapanData[$key];
+
+                                }
+
+                            }
+
+
+                            /* =====================================================
+                            DEFAULT: BELUM DILAKUKAN
+                            ===================================================== */
+
+                            if (!$tahapTerakhir) {
+
+                                $tahapTerakhir =
+                                    'belum_dilakukan';
+
+                                $labelTahapan =
+                                    'Belum Dilakukan';
+
+                                $hasil =
+                                    'Belum Dimulai';
+
+                                $hasilClass =
+                                    'pending';
+
+                                $hasilDotClass =
+                                    'pending';
+
+                                $hasilIcon =
+                                    'progress_activity';
+
+                                $badgeClass =
+                                    'result-not-done';
+
+                                $keterangan =
+                                    'Peserta belum memulai proses asesmen.';
+
+                            } else {
+
+                                /* =====================================================
+                                LABEL TAHAP
+                                ===================================================== */
+
+                                $labelTahapan = match ($tahapTerakhir) {
+
+                                    'instruktur' =>
+                                        'Asesmen Instruktur',
+
+                                    'kesehatan_awal' =>
+                                        'Asesmen Kesehatan Awal',
+
+                                    'case_conference' =>
+                                        'Case Conference',
+
+                                    'kesehatan_lanjutan' =>
+                                        'Asesmen Kesehatan Lanjutan',
+
+                                    'jadi_siswa' =>
+                                        'Jadi Siswa',
+
+                                    default =>
+                                        'Belum Dilakukan',
+
+                                };
+
+
+                                /* =====================================================
+                                WARNA BADGE
+                                ===================================================== */
+
+                                $badgeClass = match ($tahapTerakhir) {
+
+                                    'instruktur' =>
+                                        'result-instructor',
+
+                                    'kesehatan_awal' =>
+                                        'result-health',
+
+                                    'case_conference' =>
+                                        'result-case-conference',
+
+                                    'kesehatan_lanjutan' =>
+                                        'result-health-advanced',
+
+                                    'jadi_siswa' =>
+                                        'result-student',
+
+                                    default =>
+                                        'result-not-done',
+
+                                };
+
+
+                                /* =====================================================
+                                ICON
+                                ===================================================== */
+
+                                $hasilIcon = match ($tahapTerakhir) {
+
+                                    'instruktur' =>
+                                        'assignment',
+
+                                    'kesehatan_awal' =>
+                                        'medical_services',
+
+                                    'case_conference' =>
+                                        'groups',
+
+                                    'kesehatan_lanjutan' =>
+                                        'medical_services',
+
+                                    'jadi_siswa' =>
+                                        'school',
+
+                                    default =>
+                                        'progress_activity',
+
+                                };
+
+
+                                /* =====================================================
+                                STATUS
+                                ===================================================== */
+
+                                $status =
+                                    strtolower(
+                                        trim(
+                                            (string) (
+                                                $prosesTerakhir->status
+                                                ?? ''
+                                            )
+                                        )
+                                    );
+
+
+                                /* =====================================================
+                                NORMALISASI STATUS
+                                ===================================================== */
+
+                                if (in_array($status, [
+                                    'pending',
+                                    'menunggu',
+                                    'belum',
+                                ], true)) {
+
+                                    $hasil =
+                                        'Pending';
+
+                                    $hasilClass =
+                                        'pending';
+
+                                    $hasilDotClass =
+                                        'pending';
+
+
+                                } elseif (in_array($status, [
+                                    'lulus',
+                                    'lolos',
+                                    'accepted',
+                                    'diterima',
+                                ], true)) {
+
+                                    if (
+                                        $tahapTerakhir ===
+                                        'case_conference'
+                                    ) {
+
+                                        $hasil =
+                                            'Diterima';
+
+                                        $hasilClass =
+                                            'diterima';
+
+                                        $hasilDotClass =
+                                            'diterima';
+
+                                    } elseif (
+                                        $tahapTerakhir ===
+                                        'jadi_siswa'
+                                    ) {
+
+                                        $hasil =
+                                            'Diterima';
+
+                                        $hasilClass =
+                                            'diterima';
+
+                                        $hasilDotClass =
+                                            'diterima';
+
+                                    } else {
+
+                                        $hasil =
+                                            'Lulus';
+
+                                        $hasilClass =
+                                            'lolos';
+
+                                        $hasilDotClass =
+                                            'lolos';
+
+                                    }
+
+
+                                } elseif (in_array($status, [
+                                    'tidak_lulus',
+                                    'tidak-lulus',
+                                    'tidak lulus',
+                                    'tidak_lolos',
+                                    'tidak-lolos',
+                                    'tidak lolos',
+                                    'rejected',
+                                    'tidak diterima',
+                                ], true)) {
+
+                                    if (
+                                        $tahapTerakhir ===
+                                        'case_conference'
+                                    ) {
+
+                                        $hasil =
+                                            'Tidak Diterima';
+
+                                        $hasilClass =
+                                            'tidak-diterima';
+
+                                        $hasilDotClass =
+                                            'tidak-diterima';
+
+                                    } else {
+
+                                        $hasil =
+                                            'Tidak Lulus';
+
+                                        $hasilClass =
+                                            'tidak-lolos';
+
+                                        $hasilDotClass =
+                                            'tidak-lolos';
+
+                                    }
+
+
+                                } else {
+
+                                    $hasil =
+                                        'Pending';
+
+                                    $hasilClass =
+                                        'pending';
+
+                                    $hasilDotClass =
+                                        'pending';
+
+                                }
+
+
+                                /* =====================================================
+                                KETERANGAN
+                                ===================================================== */
+
+                                $keterangan =
+                                    $prosesTerakhir->catatan
                                     ?? '-';
 
-
-                                /*
-                                |--------------------------------------------------------------------------
-                                | NIK
-                                |--------------------------------------------------------------------------
-                                */
-
-                                $nik =
-                                    $row['nik']
-                                    ?? $row['NIK']
-                                    ?? $row[2]
-                                    ?? '-';
+                            }
 
 
-                                /*
-                                |--------------------------------------------------------------------------
-                                | JENIS KELAMIN
-                                |--------------------------------------------------------------------------
-                                */
+                            /* =====================================================
+                            FILTER VALUE
+                            ===================================================== */
 
-                                $jenisKelamin =
-                                    $row['jenis_kelamin']
-                                    ?? $row['Jenis Kelamin']
-                                    ?? $row['jenis kelamin']
-                                    ?? $row[3]
-                                    ?? '-';
+                            $tahapanFilterValue =
+                                strtolower(
+                                    $labelTahapan
+                                );
 
+                            $hasilFilterValue =
+                                strtolower(
+                                    $hasil
+                                );
 
-                                /*
-                                |--------------------------------------------------------------------------
-                                | JENIS PPKS
-                                |--------------------------------------------------------------------------
-                                */
-
-                                $jenisPpks =
-                                    $row['jenis_ppks']
-                                    ?? $row['Jenis PPKS']
-                                    ?? $row[12]
-                                    ?? '-';
+                        @endphp
 
 
-                                /*
-                                |--------------------------------------------------------------------------
-                                | NO HP
-                                |--------------------------------------------------------------------------
-                                */
+                        <tr
+                            data-nama="{{ strtolower($nama) }}"
+                            data-nik="{{ strtolower($nik) }}"
+                            data-ppks="{{ strtolower($jenisPpks) }}"
+                            data-tahapan="{{ $tahapanFilterValue }}"
+                            data-hasil="{{ $hasilFilterValue }}"
+                            data-tanggal="{{ $tanggal ?? '' }}"
+                        >
 
-                                $noHp =
-                                    $row['no_hp_1']
-                                    ?? $row['No HP 1']
-                                    ?? $row['No Telepon']
-                                    ?? $row['No Telepon 1']
-                                    ?? $row[20]
-                                    ?? '-';
-
-/*
-|--------------------------------------------------------------------------
-| PROSES PPKS
-|--------------------------------------------------------------------------
-*/
-
-$proses = $data->prosesPesertas ?? collect();
-
-/*
-|--------------------------------------------------------------------------
-| PISAHKAN PROSES BERDASARKAN TAHAP
-|--------------------------------------------------------------------------
-*/
-
-$prosesPerTahap = [
-    'instruktur' => null,
-    'kesehatan_awal' => null,
-    'case_conference' => null,
-];
-
-foreach ($proses as $item) {
-
-    $tahap = strtolower(
-        trim((string) ($item->tahap ?? ''))
-    );
-
-    if (in_array($tahap, [
-        'instruktur',
-        'asesmen_instruktur',
-        'asesmen instruktur',
-    ], true)) {
-
-        $key = 'instruktur';
-
-    } elseif (in_array($tahap, [
-        'kesehatan',
-        'kesehatan_awal',
-        'asesmen_kesehatan_awal',
-        'asesmen kesehatan awal',
-    ], true)) {
-
-        $key = 'kesehatan_awal';
-
-    } elseif (in_array($tahap, [
-        'case_conference',
-        'case-conference',
-        'case conference',
-        'cc',
-    ], true)) {
-
-        $key = 'case_conference';
-
-    } else {
-        continue;
-    }
-
-    /*
-    | Ambil record terbaru kalau ada lebih dari satu
-    | record pada tahap yang sama.
-    */
-    if (
-        ! $prosesPerTahap[$key] ||
-        (
-            $item->created_at &&
-            $prosesPerTahap[$key]->created_at &&
-            $item->created_at > $prosesPerTahap[$key]->created_at
-        )
-    ) {
-        $prosesPerTahap[$key] = $item;
-    }
-}
-@endphp
+                            {{-- NO --}}
+                            <td class="row-number">
+                                {{ $index + 1 }}
+                            </td>
 
 
+                            {{-- NAMA --}}
+                            <td>
+                                {{ $nama }}
+                            </td>
 
 
-                            <tr>
-
-                                {{-- =====================================================
-                                NO
-                                ====================================================== --}}
-                                <td class="no-column">
-
-                                    {{ $ppks->firstItem() + $index }}
-
-                                </td>
+                            {{-- NIK --}}
+                            <td>
+                                {{ $nik }}
+                            </td>
 
 
-                                {{-- =====================================================
-                                NAMA
-                                ====================================================== --}}
-                                <td>
+                            {{-- UMUR --}}
+                            <td>
+                                {{ $umur }}
+                            </td>
 
-                                    <div class="person-name">
 
-                                        {{ $nama }}
+                            {{-- JENIS PPKS --}}
+                            <td>
+                                {{ $jenisPpks }}
+                            </td>
+
+
+                            {{-- JURUSAN --}}
+                            <td>
+                                {{ $jurusan }}
+                            </td>
+
+
+                            {{-- HASIL / TAHAPAN --}}
+                            <td>
+
+                                <a
+                                    href="{{ $route }}"
+                                    class="result-badge {{ $badgeClass }}"
+                                >
+
+                                    <span class="material-symbols-outlined result-icon">
+                                        {{ $hasilIcon }}
+                                    </span>
+
+
+                                    <div class="result-content">
+
+                                        <span class="result-title">
+                                            {{ $labelTahapan }}
+                                        </span>
+
+
+                                        <span class="result-status {{ $hasilClass }}">
+
+                                            <span class="status-dot {{ $hasilDotClass }}"></span>
+
+                                            {{ $hasil }}
+
+                                        </span>
 
                                     </div>
 
-                                </td>
 
-
-                                {{-- =====================================================
-                                NIK
-                                ====================================================== --}}
-                                <td>
-
-                                    <span class="nik-text">
-
-                                        {{ $nik }}
-
+                                    <span class="result-arrow">
+                                        ›
                                     </span>
 
-                                </td>
+                                </a>
 
+                            </td>
 
-                                {{-- =====================================================
-                                JENIS KELAMIN
-                                ====================================================== --}}
-                                <td>
 
-                                    <span class="gender-text">
+                            {{-- KETERANGAN --}}
+                            <td>
+                                {{ $keterangan }}
+                            </td>
 
-                                        {{ $jenisKelamin }}
+                        </tr>
 
-                                    </span>
 
-                                </td>
+                    @empty
 
+                        <tr>
 
-                                {{-- =====================================================
-                                JENIS PPKS
-                                ====================================================== --}}
-                                <td>
+                            <td
+                                colspan="8"
+                                style="
+                                    text-align: center;
+                                    padding: 40px;
+                                    color: #6b7280;
+                                "
+                            >
 
-                                    <span class="ppks-type">
+                                Belum ada data normal.
 
-                                        {{ $jenisPpks }}
+                            </td>
 
-                                    </span>
+                        </tr>
 
-                                </td>
+                    @endforelse
 
 
-                                {{-- =====================================================
-                                NO HP
-                                ====================================================== --}}
-                                <td>
+                    {{-- DATA TIDAK DITEMUKAN --}}
+                    <tr
+                        id="emptyRow"
+                        style="display: none;"
+                    >
 
-                                    <span class="phone-text">
+                        <td
+                            colspan="8"
+                            style="
+                                text-align: center;
+                                padding: 40px;
+                                color: #6b7280;
+                            "
+                        >
 
-                                        {{ $noHp }}
+                            Data tidak ditemukan.
 
-                                    </span>
+                        </td>
 
-                                </td>
+                    </tr>
 
+                </tbody>
 
-{{-- =====================================================
-TAHAPAN
-====================================================== --}}
-<td class="tahapan-column">
+            </table>
 
-    <div class="tahapan-wrapper">
+        </div>
 
-        @php
-            $adaTahapan = false;
-        @endphp
 
-        {{-- =================================================
-        ASESMEN INSTRUKTUR
-        ================================================== --}}
+        {{-- =====================================================
+        PAGINATION
+        ======================================================= --}}
+        @if ($ppks instanceof \Illuminate\Pagination\LengthAwarePaginator)
 
-        @if ($prosesPerTahap['instruktur'])
-
-            @php
-                $adaTahapan = true;
-                $status = strtolower(
-                    trim((string) ($prosesPerTahap['instruktur']->status ?? ''))
-                );
-
-                if ($status === 'lulus') {
-                    $statusLabel = 'Lulus';
-                    $statusClass = 'passed';
-                } elseif ($status === 'tidak_lulus') {
-                    $statusLabel = 'Tidak Lulus';
-                    $statusClass = 'failed';
-                } elseif ($status === 'pending') {
-                    $statusLabel = 'Pending';
-                    $statusClass = 'pending';
-                } elseif (in_array($status, [
-                    'sedang_diperiksa',
-                    'sedang-diperiksa',
-                    'sedang diperiksa',
-                ])) {
-                    $statusLabel = 'Sedang Pengecekan';
-                    $statusClass = 'checking';
-                } else {
-                    $statusLabel = 'Belum Dilakukan';
-                    $statusClass = 'not-assessed';
-                }
-            @endphp
-
-            <div class="tahapan-card tahapan-instructor">
-
-                <div class="tahapan-icon">
-                    <span class="material-symbols-outlined">
-                        person_search
-                    </span>
-                </div>
-
-                <div class="tahapan-content">
-
-                    <span class="tahapan-title">
-                        Asesmen Instruktur
-                    </span>
-
-                    <span class="tahapan-status {{ $statusClass }}">
-
-                        <span class="status-dot"></span>
-
-                        {{ $statusLabel }}
-
-                    </span>
-
-                </div>
-
-                @if (
-                    $prosesPerTahap['kesehatan_awal'] ||
-                    $prosesPerTahap['case_conference']
-                )
-                    <span class="tahapan-arrow">›</span>
-                @endif
-
-            </div>
-
-        @endif
-
-
-        {{-- =================================================
-        ASESMEN KESEHATAN AWAL
-        ================================================== --}}
-
-        @if ($prosesPerTahap['kesehatan_awal'])
-
-            @php
-                $adaTahapan = true;
-                $status = strtolower(
-                    trim((string) ($prosesPerTahap['kesehatan_awal']->status ?? ''))
-                );
-
-                if ($status === 'lulus') {
-                    $statusLabel = 'Lulus';
-                    $statusClass = 'passed';
-                } elseif ($status === 'tidak_lulus') {
-                    $statusLabel = 'Tidak Lulus';
-                    $statusClass = 'failed';
-                } elseif ($status === 'pending') {
-                    $statusLabel = 'Pending';
-                    $statusClass = 'pending';
-                } elseif (in_array($status, [
-                    'sedang_diperiksa',
-                    'sedang-diperiksa',
-                    'sedang diperiksa',
-                ])) {
-                    $statusLabel = 'Sedang Pengecekan';
-                    $statusClass = 'checking';
-                } else {
-                    $statusLabel = 'Belum Dilakukan';
-                    $statusClass = 'not-assessed';
-                }
-            @endphp
-
-            <div class="tahapan-card tahapan-health">
-
-                <div class="tahapan-icon">
-                    <span class="material-symbols-outlined">
-                        medical_services
-                    </span>
-                </div>
-
-                <div class="tahapan-content">
-
-                    <span class="tahapan-title">
-                        Asesmen Kesehatan Awal
-                    </span>
-
-                    <span class="tahapan-status {{ $statusClass }}">
-
-                        <span class="status-dot"></span>
-
-                        {{ $statusLabel }}
-
-                    </span>
-
-                </div>
-
-                @if ($prosesPerTahap['case_conference'])
-                    <span class="tahapan-arrow">›</span>
-                @endif
-
-            </div>
-
-        @endif
-
-
-        {{-- =================================================
-        CASE CONFERENCE
-        ================================================== --}}
-
-        @if ($prosesPerTahap['case_conference'])
-
-            @php
-                $adaTahapan = true;
-                $status = strtolower(
-                    trim((string) ($prosesPerTahap['case_conference']->status ?? ''))
-                );
-
-                if ($status === 'lulus') {
-                    $statusLabel = 'Diterima';
-                    $statusClass = 'passed';
-                } elseif ($status === 'tidak_lulus') {
-                    $statusLabel = 'Tidak Diterima';
-                    $statusClass = 'failed';
-                } elseif ($status === 'pending') {
-                    $statusLabel = 'Pending';
-                    $statusClass = 'pending';
-                } elseif (in_array($status, [
-                    'sedang_diperiksa',
-                    'sedang-diperiksa',
-                    'sedang diperiksa',
-                ])) {
-                    $statusLabel = 'Sedang Pengecekan';
-                    $statusClass = 'checking';
-                } else {
-                    $statusLabel = 'Belum Dilakukan';
-                    $statusClass = 'not-assessed';
-                }
-            @endphp
-
-            <div class="tahapan-card tahapan-cc">
-
-                <div class="tahapan-icon">
-                    <span class="material-symbols-outlined">
-                        groups
-                    </span>
-                </div>
-
-                <div class="tahapan-content">
-
-                    <span class="tahapan-title">
-                        Case Conference
-                    </span>
-
-                    <span class="tahapan-status {{ $statusClass }}">
-
-                        <span class="status-dot"></span>
-
-                        {{ $statusLabel }}
-
-                    </span>
-
-                </div>
-
-            </div>
-
-        @endif
-
-
-        {{-- =================================================
-        BELUM ADA PROSES
-        ================================================== --}}
-
-        @if (!$adaTahapan)
-
-            <div class="tahapan-card tahapan-not-started">
-
-                <div class="tahapan-icon">
-
-                    <span class="material-symbols-outlined">
-                        schedule
-                    </span>
-
-                </div>
-
-                <div class="tahapan-content">
-
-                    <span class="tahapan-title">
-                        Belum Dimulai
-                    </span>
-
-                    <span class="tahapan-status not-started">
-
-                        <span class="status-dot"></span>
-
-                        Belum Dimulai
-
-                    </span>
-
-                </div>
-
-            </div>
-
-        @endif
-
-    </div>
-
-</td>
-{{-- =====================================================
-AKSI DISEMBUNYIKAN SEMENTARA
-======================================================
-
-<td class="action-column">
-
-    <form
-        method="POST"
-        action="{{ route('ppks.kembalikan', $data) }}"
-    >
-
-        @csrf
-
-        @method('PATCH')
-
-        <button
-            type="submit"
-            class="return-data-button"
-            onclick="return confirm('Yakin ingin mengembalikan data ini ke Data Pemeriksaan?')"
-        >
-
-            <span class="material-symbols-outlined">
-                undo
-            </span>
-
-            Kembalikan
-
-        </button>
-
-    </form>
-
-</td>
-
-====================================================== --}}
-
-                            </tr>
-
-                        @endforeach
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-
-            {{-- =========================================================
-            PAGINATION
-            ========================================================== --}}
-            <div class="data-normal-pagination">
+            <div class="pagination-wrapper">
 
                 {{ $ppks->links() }}
 
             </div>
 
-
-        @else
-
-            {{-- =========================================================
-            EMPTY
-            ========================================================== --}}
-
-            <div class="empty-data-normal">
-
-                <div class="empty-icon">
-
-                    <span class="material-symbols-outlined">
-                        @if(request('search'))
-                            search_off
-                        @else
-                            inbox
-                        @endif
-                    </span>
-
-                </div>
-
-
-                @if(request('search'))
-
-                    <h3>
-                        Data tidak ditemukan
-                    </h3>
-
-                    <p>
-                        Tidak ada data PPKS yang cocok dengan
-                        pencarian "{{ request('search') }}".
-                    </p>
-
-                    <a
-                        href="{{ request()->url() }}"
-                        class="reset-search-button"
-                    >
-                        <span class="material-symbols-outlined">
-                            close
-                        </span>
-
-                        Hapus Pencarian
-                    </a>
-
-                @else
-
-                    <h3>
-                        Belum ada data normal
-                    </h3>
-
-                    <p>
-                        Data PPKS yang telah dinyatakan normal akan muncul di sini.
-                    </p>
-
-                @endif
-
-            </div>
-
         @endif
 
     </div>
 
-</div>
-
-
-{{-- =============================================================
-STYLE
-============================================================= --}}
-<style>
-
-    /* =========================================================
-    PAGE
-    ========================================================== */
-
-    .data-normal-page {
-        width: 100%;
-        max-width: 1500px;
-        margin: 0 auto;
-        padding: 28px 32px 40px;
-    }
-
-
-    /* =========================================================
-    HEADER
-    ========================================================== */
-
-    .data-normal-header {
-        display: flex;
-        align-items: center;
-        width: 100%;
-        margin-bottom: 22px;
-        padding: 20px 24px;
-        border: 1px solid #e2e8f0;
-        border-radius: 14px;
-        background: #ffffff;
-        box-shadow:
-            0 1px 2px rgba(15, 23, 42, .03);
-    }
-
-
-    .header-title-wrapper {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        min-width: 0;
-    }
-
-
-    .header-icon {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 48px;
-        height: 48px;
-        flex-shrink: 0;
-        border-radius: 12px;
-        background: #eff6ff;
-        color: #2563eb;
-    }
-
-
-    .header-icon .material-symbols-outlined {
-        font-size: 25px;
-    }
-
-
-    .header-text {
-        min-width: 0;
-    }
-
-
-    .data-normal-header h1 {
-        margin: 0;
-        color: #0f172a;
-        font-size: 24px;
-        font-weight: 700;
-        line-height: 1.25;
-    }
-
-
-    .data-normal-header p {
-        margin: 5px 0 0;
-        color: #64748b;
-        font-size: 13px;
-        line-height: 1.5;
-    }
-
-
-    /* =========================================================
-    ALERT
-    ========================================================== */
-
-    .success-alert,
-    .error-alert {
-        display: flex;
-        align-items: center;
-        gap: 9px;
-        margin-bottom: 18px;
-        padding: 12px 15px;
-        border-radius: 9px;
-        font-size: 13px;
-    }
-
 
-    .success-alert {
-        border: 1px solid #bbf7d0;
-        background: #f0fdf4;
-        color: #15803d;
-    }
-
-
-    .error-alert {
-        border: 1px solid #fecaca;
-        background: #fef2f2;
-        color: #dc2626;
-    }
-
-
-    .success-alert .material-symbols-outlined,
-    .error-alert .material-symbols-outlined {
-        font-size: 19px;
-    }
-
-
-    /* =========================================================
-    SEARCH TOOLBAR
-    ========================================================== */
-
-    .data-normal-toolbar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-        margin-bottom: 14px;
-    }
-
-
-    .data-normal-search {
-        position: relative;
-        display: flex;
-        align-items: center;
-        width: 100%;
-        max-width: 520px;
-        height: 42px;
-    }
-
-
-    .data-normal-search input {
-        width: 100%;
-        height: 42px;
-        padding: 0 82px 0 40px;
-        border: 1px solid #dbe3ec;
-        border-radius: 9px;
-        outline: none;
-        background: #ffffff;
-        color: #334155;
-        font-family: inherit;
-        font-size: 12px;
-        transition:
-            border-color .15s ease,
-            box-shadow .15s ease;
-    }
-
-
-    .data-normal-search input::placeholder {
-        color: #94a3b8;
-    }
-
-
-    .data-normal-search input:focus {
-        border-color: #60a5fa;
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, .08);
-    }
-
-
-    .search-icon {
-        position: absolute;
-        left: 13px;
-        z-index: 2;
-        color: #94a3b8;
-        font-size: 19px;
-        pointer-events: none;
-    }
-
-
-    .search-button {
-        position: absolute;
-        right: 5px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 58px;
-        height: 32px;
-        border: none;
-        border-radius: 6px;
-        background: #215b8f;
-        color: #ffffff;
-        font-family: inherit;
-        font-size: 10px;
-        font-weight: 600;
-        cursor: pointer;
-        transition:
-            background .15s ease,
-            transform .15s ease;
-    }
-
-
-    .search-button:hover {
-        background: #194b78;
-        transform: translateY(-1px);
-    }
-
-
-    .clear-search {
-        position: absolute;
-        right: 69px;
-        z-index: 3;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 25px;
-        height: 25px;
-        border-radius: 50%;
-        color: #94a3b8;
-        text-decoration: none;
-    }
-
-
-    .clear-search:hover {
-        background: #f1f5f9;
-        color: #475569;
-    }
-
-
-    .clear-search .material-symbols-outlined {
-        font-size: 16px;
-    }
-
-
-    /* =========================================================
-    TABLE WRAPPER
-    ========================================================== */
+    {{-- =====================================================
+    JAVASCRIPT
+    ======================================================= --}}
+    <script>
 
-    .data-normal-table-wrapper {
-        width: 100%;
-        overflow: hidden;
-        border: 1px solid #e2e8f0;
-        border-radius: 12px;
-        background: #ffffff;
-        box-shadow:
-            0 1px 3px rgba(15, 23, 42, .04);
-    }
+        document.addEventListener(
+            'DOMContentLoaded',
+            function () {
+
+                const searchInput =
+                    document.getElementById(
+                        'searchInput'
+                    );
 
+                const searchWrapper =
+                    document.getElementById(
+                        'searchWrapper'
+                    );
 
-    .table-scroll {
-        width: 100%;
-        overflow-x: auto;
-    }
+                const ppksFilter =
+                    document.getElementById(
+                        'ppksFilter'
+                    );
 
+                const tahapanFilter =
+                    document.getElementById(
+                        'tahapanFilter'
+                    );
 
-    .data-normal-table {
-        width: 100%;
-        min-width: 1280px;
-        border-collapse: separate;
-        border-spacing: 0;
-        font-size: 13px;
-    }
-
+                const hasilFilter =
+                    document.getElementById(
+                        'hasilFilter'
+                    );
 
-    /* =========================================================
-    TABLE HEADER
-    ========================================================== */
-
-    .data-normal-table thead {
-        background: #215b8f;
-    }
+                const resetAllFilters =
+                    document.getElementById(
+                        'resetAllFilters'
+                    );
 
 
-    .data-normal-table th {
-        height: 54px;
-        padding: 0 14px;
-        border-right: 1px dotted rgba(147, 197, 253, .65);
-        color: #ffffff;
-        font-size: 12px;
-        font-weight: 600;
-        text-align: left;
-        white-space: nowrap;
-        letter-spacing: .01em;
-    }
+                const tableRows =
+                    document.querySelectorAll(
+                        '.table tbody tr:not(#emptyRow)'
+                    );
 
 
-    .data-normal-table th:last-child {
-        border-right: none;
-    }
+                const emptyRow =
+                    document.getElementById(
+                        'emptyRow'
+                    );
 
 
-    .data-normal-table th:first-child {
-        border-top-left-radius: 11px;
-    }
-
-
-    .data-normal-table th:last-child {
-        border-top-right-radius: 11px;
-    }
-
+                // =====================================================
+                // DATE
+                // =====================================================
 
-    /* =========================================================
-    TABLE BODY
-    ========================================================== */
-
-    .data-normal-table td {
-        height: 64px;
-        padding: 9px 14px;
-        border-right: 1px dotted #bfdbfe;
-        border-bottom: 1px solid #f1f5f9;
-        color: #334155;
-        vertical-align: middle;
-    }
-
-
-    .data-normal-table td:last-child {
-        border-right: none;
-    }
-
-
-    .data-normal-table tbody tr {
-        background: #ffffff;
-        transition: background .15s ease;
-    }
+                const dateFilterButton =
+                    document.getElementById(
+                        'dateFilterButton'
+                    );
 
+                const datePicker =
+                    document.getElementById(
+                        'datePicker'
+                    );
 
-    .data-normal-table tbody tr:hover {
-        background: #f8fbff;
-    }
-
-
-    .data-normal-table tbody tr:last-child td {
-        border-bottom: none;
-    }
-
-
-    /* =========================================================
-    COLUMN
-    ========================================================== */
-
-    .no-column {
-        width: 60px;
-        min-width: 60px;
-        text-align: center !important;
-    }
-
-
-    .person-name {
-        min-width: 150px;
-        color: #0f172a;
-        font-weight: 600;
-    }
-
-
-    .nik-text,
-    .gender-text,
-    .ppks-type,
-    .phone-text {
-        color: #475569;
-        white-space: nowrap;
-    }
-
-
-    .tahapan-column {
-        width: 330px;
-        min-width: 330px;
-    }
+                const dateFilterText =
+                    document.getElementById(
+                        'dateFilterText'
+                    );
 
+                const startDate =
+                    document.getElementById(
+                        'startDate'
+                    );
 
-    .action-column {
-        width: 145px;
-        min-width: 145px;
-        text-align: center !important;
-    }
+                const endDate =
+                    document.getElementById(
+                        'endDate'
+                    );
 
+                const applyDate =
+                    document.getElementById(
+                        'applyDate'
+                    );
 
-    /* =========================================================
-    TAHAPAN
-    ========================================================== */
+                const resetDate =
+                    document.getElementById(
+                        'resetDate'
+                    );
 
-    .tahapan-wrapper {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        width: 100%;
-    }
 
+                // =====================================================
+                // UPDATE STATUS FILTER
+                // =====================================================
 
-    .tahapan-card {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        width: 100%;
-        min-height: 48px;
-        padding: 7px 10px;
-        border: 1px solid transparent;
-        border-radius: 10px;
-    }
+                function updateFilterState() {
 
+                    searchWrapper.classList.toggle(
+                        'active',
+                        searchInput.value.trim() !== ''
+                    );
 
-    .tahapan-icon {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 32px;
-        height: 32px;
-        flex-shrink: 0;
-        border-radius: 8px;
-    }
 
+                    ppksFilter.classList.toggle(
+                        'active',
+                        ppksFilter.value !== ''
+                    );
 
-    .tahapan-icon .material-symbols-outlined {
-        font-size: 21px;
-    }
 
+                    tahapanFilter.classList.toggle(
+                        'active',
+                        tahapanFilter.value !== ''
+                    );
 
-    .tahapan-content {
-        display: flex;
-        flex-direction: column;
-        flex: 1;
-        min-width: 0;
-    }
 
+                    hasilFilter.classList.toggle(
+                        'active',
+                        hasilFilter.value !== ''
+                    );
 
-    .tahapan-title {
-        overflow: hidden;
-        color: #1e293b;
-        font-size: 12px;
-        font-weight: 600;
-        line-height: 1.3;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
+                }
 
 
-    .tahapan-status {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        margin-top: 3px;
-        font-size: 10px;
-        font-weight: 500;
-    }
+                // =====================================================
+                // FILTER TABLE
+                // =====================================================
 
+                function filterTable() {
 
-    .status-dot {
-        width: 6px;
-        height: 6px;
-        flex-shrink: 0;
-        border-radius: 50%;
-    }
+                    const searchValue =
+                        searchInput.value
+                            .toLowerCase()
+                            .trim();
 
 
-    /* =========================================================
-    STATUS
-    ========================================================== */
+                    const ppksValue =
+                        ppksFilter.value
+                            .toLowerCase()
+                            .trim();
 
-    .tahapan-status.not-started {
-        color: #94a3b8;
-    }
 
+                    const tahapanValue =
+                        tahapanFilter.value
+                            .toLowerCase()
+                            .trim();
 
-    .tahapan-status.not-started .status-dot {
-        background: #cbd5e1;
-    }
 
+                    const hasilValue =
+                        hasilFilter.value
+                            .toLowerCase()
+                            .trim();
 
-    .tahapan-status.not-assessed {
-        color: #64748b;
-    }
 
+                    const selectedStart =
+                        startDate.value;
 
-    .tahapan-status.not-assessed .status-dot {
-        background: #64748b;
-    }
 
+                    const selectedEnd =
+                        endDate.value;
 
-    .tahapan-status.checking {
-        color: #2563eb;
-    }
 
+                    let visibleNumber = 1;
 
-    .tahapan-status.checking .status-dot {
-        background: #3b82f6;
-    }
+                    let found = false;
 
 
-    .tahapan-status.pending {
-        color: #d97706;
-    }
+                    tableRows.forEach(
+                        function (row) {
 
+                            const nama =
+                                row.dataset.nama || '';
 
-    .tahapan-status.pending .status-dot {
-        background: #f59e0b;
-    }
+                            const nik =
+                                row.dataset.nik || '';
 
+                            const ppks =
+                                row.dataset.ppks || '';
 
-    .tahapan-status.passed {
-        color: #16a34a;
-    }
+                            const tahapan =
+                                row.dataset.tahapan || '';
 
+                            const hasil =
+                                row.dataset.hasil || '';
 
-    .tahapan-status.passed .status-dot {
-        background: #16a34a;
-    }
+                            const tanggal =
+                                row.dataset.tanggal || '';
 
 
-    .tahapan-status.failed {
-        color: #dc2626;
-    }
+                            // =================================================
+                            // SEARCH
+                            // =================================================
 
+                            const matchSearch =
+                                nama.includes(
+                                    searchValue
+                                ) ||
+                                nik.includes(
+                                    searchValue
+                                );
 
-    .tahapan-status.failed .status-dot {
-        background: #dc2626;
-    }
 
+                            // =================================================
+                            // PPKS
+                            // =================================================
 
-    /* =========================================================
-    WARNA TAHAPAN
-    ========================================================== */
+                            const matchPpks =
+                                ppksValue === '' ||
+                                ppks.includes(
+                                    ppksValue
+                                );
 
-    .tahapan-instructor {
-        background: #fffbeb;
-        border-color: #fef3c7;
-    }
 
+                            // =================================================
+                            // TAHAPAN
+                            // =================================================
 
-    .tahapan-instructor .tahapan-icon {
-        background: #fef3c7;
-        color: #d97706;
-    }
+                            const matchTahapan =
+                                tahapanValue === '' ||
+                                tahapan === tahapanValue;
 
 
-    .tahapan-health {
-        background: #eff6ff;
-        border-color: #dbeafe;
-    }
+                            // =================================================
+                            // HASIL
+                            // =================================================
 
+                            const matchHasil =
+                                hasilValue === '' ||
+                                hasil === hasilValue;
 
-    .tahapan-health .tahapan-icon {
-        background: #dbeafe;
-        color: #2563eb;
-    }
 
+                            // =================================================
+                            // DATE
+                            // =================================================
 
-    .tahapan-cc {
-        background: #f5f3ff;
-        border-color: #ede9fe;
-    }
+                            let matchDate = true;
 
 
-    .tahapan-cc .tahapan-icon {
-        background: #ede9fe;
-        color: #7c3aed;
-    }
+                            if (selectedStart) {
 
+                                matchDate =
+                                    tanggal !== '' &&
+                                    tanggal >= selectedStart;
 
-    .tahapan-not-started {
-        background: #f8fafc;
-        border-color: #e2e8f0;
-    }
+                            }
 
 
-    .tahapan-not-started .tahapan-icon {
-        background: #e2e8f0;
-        color: #94a3b8;
-    }
+                            if (
+                                selectedEnd &&
+                                matchDate
+                            ) {
 
+                                matchDate =
+                                    tanggal !== '' &&
+                                    tanggal <= selectedEnd;
 
-    .tahapan-accepted {
-        background: #f0fdf4;
-        border-color: #dcfce7;
-    }
+                            }
 
 
-    .tahapan-accepted .tahapan-icon {
-        background: #dcfce7;
-        color: #16a34a;
-    }
+                            // =================================================
+                            // FINAL
+                            // =================================================
 
+                            const shouldShow =
+                                matchSearch &&
+                                matchPpks &&
+                                matchTahapan &&
+                                matchHasil &&
+                                matchDate;
 
-    .tahapan-rejected {
-        background: #fef2f2;
-        border-color: #fee2e2;
-    }
 
+                            if (shouldShow) {
 
-    .tahapan-rejected .tahapan-icon {
-        background: #fee2e2;
-        color: #dc2626;
-    }
+                                row.style.display = '';
 
 
-    /* =========================================================
-    ARROW
-    ========================================================== */
+                                const numberCell =
+                                    row.querySelector(
+                                        '.row-number'
+                                    );
 
-    .tahapan-arrow {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 24px;
-        height: 24px;
-        flex-shrink: 0;
-        color: #94a3b8;
-        font-size: 25px;
-        font-weight: 300;
-        line-height: 1;
-    }
 
+                                if (numberCell) {
 
+                                    numberCell.textContent =
+                                        visibleNumber;
 
+                                }
 
-    /* =========================================================
-    KEMBALIKAN
-    ========================================================== */
 
-    .return-data-button {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-        width: 100%;
-        min-height: 34px;
-        padding: 0 9px;
-        border: 1px solid #fde68a;
-        border-radius: 7px;
-        background: #fffbeb;
-        color: #b45309;
-        font-size: 10px;
-        font-weight: 600;
-        cursor: pointer;
-        transition:
-            background .15s ease,
-            border-color .15s ease,
-            transform .15s ease;
-    }
+                                visibleNumber++;
 
+                                found = true;
 
-    .return-data-button:hover {
-        background: #fef3c7;
-        border-color: #fcd34d;
-        transform: translateY(-1px);
-    }
+                            } else {
 
+                                row.style.display =
+                                    'none';
 
-    .return-data-button .material-symbols-outlined {
-        font-size: 16px;
-    }
+                            }
 
+                        }
+                    );
 
-    /* =========================================================
-    PAGINATION
-    ========================================================== */
 
-    .data-normal-pagination {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        padding: 14px 18px;
-        border-top: 1px solid #f1f5f9;
-        background: #ffffff;
-    }
+                    emptyRow.style.display =
+                        found
+                            ? 'none'
+                            : 'table-row';
 
 
-    /* =========================================================
-    EMPTY
-    ========================================================== */
+                    updateFilterState();
 
-    .empty-data-normal {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: 330px;
-        padding: 50px 20px;
-        text-align: center;
-    }
+                }
 
 
-    .empty-icon {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 64px;
-        height: 64px;
-        margin-bottom: 15px;
-        border-radius: 16px;
-        background: #f1f5f9;
-        color: #94a3b8;
-    }
+                // =====================================================
+                // EVENTS
+                // =====================================================
 
+                searchInput.addEventListener(
+                    'input',
+                    filterTable
+                );
 
-    .empty-icon .material-symbols-outlined {
-        font-size: 32px;
-    }
 
+                ppksFilter.addEventListener(
+                    'change',
+                    filterTable
+                );
 
-    .empty-data-normal h3 {
-        margin: 0;
-        color: #475569;
-        font-size: 15px;
-        font-weight: 600;
-    }
 
+                tahapanFilter.addEventListener(
+                    'change',
+                    filterTable
+                );
 
-    .empty-data-normal p {
-        max-width: 420px;
-        margin: 7px 0 0;
-        color: #94a3b8;
-        font-size: 12px;
-        line-height: 1.5;
-    }
 
+                hasilFilter.addEventListener(
+                    'change',
+                    filterTable
+                );
 
-    /* =========================================================
-    RESET SEARCH BUTTON
-    ========================================================== */
 
-    .reset-search-button {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-        margin-top: 16px;
-        padding: 8px 12px;
-        border: 1px solid #dbe3ec;
-        border-radius: 7px;
-        background: #ffffff;
-        color: #475569;
-        font-size: 11px;
-        font-weight: 600;
-        text-decoration: none;
-        transition:
-            background .15s ease,
-            border-color .15s ease;
-    }
+                // =====================================================
+                // RESET SEMUA FILTER
+                // =====================================================
 
+                resetAllFilters.addEventListener(
+                    'click',
+                    function () {
 
-    .reset-search-button:hover {
-        background: #f8fafc;
-        border-color: #cbd5e1;
-    }
+                        searchInput.value = '';
 
+                        ppksFilter.value = '';
 
-    .reset-search-button .material-symbols-outlined {
-        font-size: 16px;
-    }
+                        tahapanFilter.value = '';
 
+                        hasilFilter.value = '';
 
-    /* =========================================================
-    RESPONSIVE
-    ========================================================== */
+                        startDate.value = '';
 
-    @media (max-width: 900px) {
+                        endDate.value = '';
 
-        .data-normal-page {
-            padding: 20px 16px 30px;
-        }
 
+                        dateFilterText.textContent =
+                            'Pilih Tanggal';
 
-        .data-normal-header {
-            padding: 18px;
-        }
 
+                        datePicker.classList.remove(
+                            'active'
+                        );
 
-        .data-normal-table {
-            min-width: 1280px;
-        }
 
-    }
+                        filterTable();
 
+                    }
+                );
 
-    @media (max-width: 600px) {
 
-        .data-normal-page {
-            padding: 16px 12px 25px;
-        }
+                // =====================================================
+                // DATE PICKER
+                // =====================================================
 
+                dateFilterButton.addEventListener(
+                    'click',
+                    function (event) {
 
-        .data-normal-header {
-            margin-bottom: 16px;
-            padding: 16px;
-            border-radius: 11px;
-        }
+                        event.stopPropagation();
 
+                        datePicker.classList.toggle(
+                            'active'
+                        );
 
-        .header-title-wrapper {
-            align-items: flex-start;
-        }
+                    }
+                );
 
 
-        .header-icon {
-            width: 42px;
-            height: 42px;
-        }
+                datePicker.addEventListener(
+                    'click',
+                    function (event) {
 
+                        event.stopPropagation();
 
-        .header-icon .material-symbols-outlined {
-            font-size: 22px;
-        }
+                    }
+                );
 
 
-        .data-normal-header h1 {
-            font-size: 20px;
-        }
+                // =====================================================
+                // APPLY DATE
+                // =====================================================
 
+                applyDate.addEventListener(
+                    'click',
+                    function () {
 
-        .data-normal-header p {
-            font-size: 12px;
-        }
+                        const start =
+                            startDate.value;
 
+                        const end =
+                            endDate.value;
 
-        .data-normal-search {
-            max-width: none;
-        }
 
+                        if (!start || !end) {
 
-        .data-normal-search input {
-            font-size: 11px;
-        }
+                            alert(
+                                'Silakan pilih tanggal awal dan tanggal akhir.'
+                            );
 
-    }
+                            return;
 
-</style>
-```
+                        }
 
+
+                        if (start > end) {
+
+                            alert(
+                                'Tanggal awal tidak boleh lebih besar dari tanggal akhir.'
+                            );
+
+                            return;
+
+                        }
+
+
+                        dateFilterText.textContent =
+                            formatDate(start) +
+                            ' - ' +
+                            formatDate(end);
+
+
+                        datePicker.classList.remove(
+                            'active'
+                        );
+
+
+                        filterTable();
+
+                    }
+                );
+
+
+                // =====================================================
+                // RESET DATE
+                // =====================================================
+
+                resetDate.addEventListener(
+                    'click',
+                    function () {
+
+                        startDate.value = '';
+
+                        endDate.value = '';
+
+
+                        dateFilterText.textContent =
+                            'Pilih Tanggal';
+
+
+                        datePicker.classList.remove(
+                            'active'
+                        );
+
+
+                        filterTable();
+
+                    }
+                );
+
+
+                // =====================================================
+                // FORMAT DATE
+                // =====================================================
+
+                function formatDate(dateString) {
+
+                    const date =
+                        new Date(
+                            dateString +
+                            'T00:00:00'
+                        );
+
+
+                    return date.toLocaleDateString(
+                        'id-ID',
+                        {
+                            day: '2-digit',
+                            month: 'short',
+                            year: 'numeric'
+                        }
+                    );
+
+                }
+
+
+                // =====================================================
+                // CLICK OUTSIDE
+                // =====================================================
+
+                document.addEventListener(
+                    'click',
+                    function () {
+
+                        datePicker.classList.remove(
+                            'active'
+                        );
+
+                    }
+                );
+
+
+                // =====================================================
+                // INITIAL FILTER
+                // =====================================================
+
+                filterTable();
+
+            }
+        );
+
+    </script>
 </x-app-layout>

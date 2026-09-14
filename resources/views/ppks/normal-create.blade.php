@@ -1,13 +1,15 @@
 <x-app-layout>
 
-    <div class="manual-page">
+    <div class="main-page">
 
         {{-- =========================================================
         HEADER
         ========================================================== --}}
-        <div class="manual-header">
+        <div class="main-page-header">
+
             <div>
                 <h1>Tambah Data PPKS Manual</h1>
+
                 <p>
                     Tambahkan data PPKS yang diperoleh secara langsung
                     dan tidak melalui Google Form.
@@ -20,6 +22,7 @@
                 </span>
                 Kembali
             </a>
+
         </div>
 
 
@@ -27,6 +30,7 @@
         ERROR VALIDATION
         ========================================================== --}}
         @if ($errors->any())
+
             <div class="alert-error">
 
                 <div class="alert-icon">
@@ -46,6 +50,7 @@
                 </div>
 
             </div>
+
         @endif
 
 
@@ -53,6 +58,7 @@
         SUCCESS MESSAGE
         ========================================================== --}}
         @if (session('success'))
+
             <div class="alert-success">
 
                 <div class="alert-icon">
@@ -66,6 +72,7 @@
                 </div>
 
             </div>
+
         @endif
 
 
@@ -83,7 +90,7 @@
 
 
             {{-- =====================================================
-            ADMIN YANG MEMASUKKAN DATA
+            INFORMASI PENGINPUT
             ====================================================== --}}
             <div class="form-section">
 
@@ -165,7 +172,6 @@
 
                 <div class="form-grid">
 
-                    {{-- Nama --}}
                     <div class="form-group full">
 
                         <label>
@@ -183,7 +189,6 @@
                     </div>
 
 
-                    {{-- NIK --}}
                     <div class="form-group">
 
                         <label>
@@ -202,7 +207,6 @@
                     </div>
 
 
-                    {{-- Jenis Kelamin --}}
                     <div class="form-group">
 
                         <label>
@@ -237,7 +241,6 @@
                     </div>
 
 
-                    {{-- Tempat Lahir --}}
                     <div class="form-group">
 
                         <label>
@@ -254,7 +257,6 @@
                     </div>
 
 
-                    {{-- Tanggal Lahir --}}
                     <div class="form-group">
 
                         <label>
@@ -270,7 +272,6 @@
                     </div>
 
 
-                    {{-- Usia --}}
                     <div class="form-group">
 
                         <label>
@@ -317,7 +318,6 @@
 
                 <div class="form-grid">
 
-                    {{-- Alamat --}}
                     <div class="form-group full">
 
                         <label>
@@ -333,7 +333,6 @@
                     </div>
 
 
-                    {{-- Provinsi --}}
                     <div class="form-group">
 
                         <label>
@@ -350,7 +349,6 @@
                     </div>
 
 
-                    {{-- Kota/Kabupaten --}}
                     <div class="form-group">
 
                         <label>
@@ -367,7 +365,6 @@
                     </div>
 
 
-                    {{-- Kecamatan --}}
                     <div class="form-group">
 
                         <label>
@@ -384,7 +381,6 @@
                     </div>
 
 
-                    {{-- Kelurahan --}}
                     <div class="form-group">
 
                         <label>
@@ -489,7 +485,6 @@
 
                 <div class="form-grid">
 
-                    {{-- Jenis PPKS --}}
                     <div class="form-group full">
 
                         <label>
@@ -508,7 +503,6 @@
                     </div>
 
 
-                    {{-- Keterangan Disabilitas --}}
                     <div class="form-group full">
 
                         <label>
@@ -524,7 +518,6 @@
                     </div>
 
 
-                    {{-- Jurusan --}}
                     <div class="form-group">
 
                         <label>
@@ -541,7 +534,6 @@
                     </div>
 
 
-                    {{-- Peminatan --}}
                     <div class="form-group">
 
                         <label>
@@ -558,7 +550,6 @@
                     </div>
 
 
-                    {{-- Alumni STIS --}}
                     <div class="form-group">
 
                         <label>
@@ -618,7 +609,6 @@
 
                 <div class="form-grid">
 
-                    {{-- HP 1 --}}
                     <div class="form-group">
 
                         <label>
@@ -637,7 +627,6 @@
                     </div>
 
 
-                    {{-- HP 2 --}}
                     <div class="form-group">
 
                         <label>
@@ -654,7 +643,6 @@
                     </div>
 
 
-                    {{-- Email --}}
                     <div class="form-group full">
 
                         <label>
@@ -671,7 +659,6 @@
                     </div>
 
 
-                    {{-- Nomor KK --}}
                     <div class="form-group full">
 
                         <label>
@@ -717,7 +704,6 @@
 
                 <div class="form-grid">
 
-                    {{-- Pelatihan --}}
                     <div class="form-group full">
 
                         <label>
@@ -733,7 +719,6 @@
                     </div>
 
 
-                    {{-- Membaca Menulis --}}
                     <div class="form-group full">
 
                         <label>
@@ -749,7 +734,6 @@
                     </div>
 
 
-                    {{-- Aktivitas --}}
                     <div class="form-group full">
 
                         <label>
@@ -765,7 +749,6 @@
                     </div>
 
 
-                    {{-- Bersedia --}}
                     <div class="form-group">
 
                         <label>
@@ -797,7 +780,6 @@
                     </div>
 
 
-                    {{-- Kondisi kesehatan --}}
                     <div class="form-group">
 
                         <label>
@@ -856,7 +838,6 @@
 
                 <div class="form-grid">
 
-                    {{-- KTP --}}
                     <div class="form-group">
 
                         <label>
@@ -872,7 +853,6 @@
                     </div>
 
 
-                    {{-- KK --}}
                     <div class="form-group">
 
                         <label>
@@ -888,7 +868,6 @@
                     </div>
 
 
-                    {{-- Ijazah --}}
                     <div class="form-group">
 
                         <label>
@@ -904,7 +883,6 @@
                     </div>
 
 
-                    {{-- Foto --}}
                     <div class="form-group">
 
                         <label>
@@ -920,7 +898,6 @@
                     </div>
 
 
-                    {{-- Video --}}
                     <div class="form-group full">
 
                         <label>
@@ -940,7 +917,6 @@
                     </div>
 
 
-                    {{-- Transkrip --}}
                     <div class="form-group full">
 
                         <label>
@@ -994,122 +970,96 @@
 
 
     {{-- =============================================================
-    STYLE
+    STYLE TAMBAHAN
+    Hanya untuk elemen form yang belum punya style global
     ============================================================= --}}
     <style>
 
-        .manual-page {
-            width: 100%;
-            max-width: 1120px;
-            margin: 0 auto;
-            padding: 30px 32px 60px;
-            box-sizing: border-box;
-        }
-
-        .manual-header {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 20px;
-            margin-bottom: 25px;
-        }
-
-        .manual-header h1 {
-            margin: 0;
-            color: #111827;
-            font-size: 25px;
-            font-weight: 700;
-            line-height: 1.3;
-        }
-
-        .manual-header p {
-            margin: 7px 0 0;
-            color: #6b7280;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        .back-button {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            padding: 9px 14px;
-            border: 1px solid #dbe3ec;
-            border-radius: 8px;
-            background: #ffffff;
-            color: #374151;
-            font-size: 13px;
-            font-weight: 600;
-            text-decoration: none;
-            white-space: nowrap;
-            transition: .15s ease;
-        }
-
-        .back-button:hover {
-            background: #f8fafc;
-            border-color: #cbd5e1;
-        }
+        /* =========================================================
+           FORM
+        ========================================================= */
 
         .manual-form {
             display: flex;
             flex-direction: column;
-            gap: 18px;
+            gap: 16px;
         }
 
+
+        /* =========================================================
+           SECTION
+        ========================================================= */
+
         .form-section {
-            padding: 25px;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            background: #ffffff;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, .03);
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 22px 24px;
         }
+
+
+        /* =========================================================
+           SECTION TITLE
+        ========================================================= */
 
         .section-title {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 23px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid #eef2f7;
+            gap: 11px;
+
+            margin-bottom: 20px;
+            padding-bottom: 14px;
+
+            border-bottom: 1px solid var(--border);
         }
 
         .section-title > .material-symbols-outlined {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 40px;
-            height: 40px;
-            flex: 0 0 40px;
-            border-radius: 9px;
-            background: #eff6ff;
-            color: #2563eb;
-            font-size: 21px;
+
+            width: 36px;
+            height: 36px;
+
+            border-radius: 10px;
+
+            background: var(--blue-light);
+            color: var(--blue);
+
+            font-size: 19px;
         }
 
         .section-title h2 {
             margin: 0;
-            color: #1f2937;
-            font-size: 16px;
-            font-weight: 700;
+
+            color: var(--text);
+            font-size: 14px;
+            font-weight: 600;
         }
 
         .section-title p {
             margin: 3px 0 0;
-            color: #94a3b8;
-            font-size: 12px;
-            line-height: 1.5;
+
+            color: var(--muted);
+            font-size: 10px;
         }
+
+
+        /* =========================================================
+           FORM GRID
+        ========================================================= */
 
         .form-grid {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 18px 20px;
+            gap: 15px 18px;
         }
 
         .form-group {
             display: flex;
             flex-direction: column;
-            gap: 7px;
+            gap: 6px;
+
             min-width: 0;
         }
 
@@ -1117,186 +1067,269 @@
             grid-column: 1 / -1;
         }
 
+
+        /* =========================================================
+           LABEL
+        ========================================================= */
+
         .form-group label {
-            color: #374151;
-            font-size: 13px;
-            font-weight: 600;
+            color: var(--text-secondary);
+
+            font-size: 10px;
+            font-weight: 500;
             line-height: 1.5;
         }
 
         .form-group label span {
-            color: #dc2626;
+            color: var(--red);
         }
+
+
+        /* =========================================================
+           INPUT / SELECT / TEXTAREA
+        ========================================================= */
 
         .form-group input,
         .form-group select,
         .form-group textarea {
+
             width: 100%;
             box-sizing: border-box;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            background: #ffffff;
-            color: #1f2937;
+
+            border: 1px solid var(--border);
+            border-radius: 10px;
+
+            background: var(--white);
+            color: var(--text);
+
             font-family: inherit;
-            font-size: 13px;
+            font-size: 10px;
+
             outline: none;
-            transition: border .15s ease, box-shadow .15s ease;
+
+            transition: .15s ease;
         }
 
         .form-group input,
         .form-group select {
-            height: 42px;
-            padding: 9px 12px;
+            height: 36px;
+            padding: 0 11px;
         }
 
         .form-group textarea {
-            min-height: 90px;
-            padding: 10px 12px;
+            min-height: 82px;
+            padding: 9px 11px;
+
             resize: vertical;
             line-height: 1.5;
-        }
-
-        .form-group input[type="file"] {
-            height: auto;
-            min-height: 44px;
-            padding: 8px;
-            cursor: pointer;
-            background: #f8fafc;
         }
 
         .form-group input:focus,
         .form-group select:focus,
         .form-group textarea:focus {
-            border-color: #60a5fa;
-            box-shadow: 0 0 0 3px rgba(96, 165, 250, .12);
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px var(--blue-light);
         }
 
         .form-group input::placeholder,
         .form-group textarea::placeholder {
-            color: #9ca3af;
+            color: var(--muted);
+        }
+
+
+        /* =========================================================
+           FILE
+        ========================================================= */
+
+        .form-group input[type="file"] {
+            height: auto;
+            min-height: 38px;
+
+            padding: 7px;
+
+            background: var(--blue-light);
+
+            cursor: pointer;
         }
 
         .field-help {
-            color: #94a3b8;
-            font-size: 11px;
+            color: var(--muted);
+            font-size: 9px;
         }
+
+
+        /* =========================================================
+           UPLOAD INFO
+        ========================================================= */
 
         .upload-info {
             display: flex;
             align-items: flex-start;
-            gap: 9px;
-            margin-bottom: 20px;
-            padding: 11px 13px;
-            border: 1px solid #dbeafe;
-            border-radius: 8px;
-            background: #eff6ff;
-            color: #475569;
-            font-size: 12px;
+            gap: 8px;
+
+            margin-bottom: 17px;
+            padding: 10px 12px;
+
+            border: 1px solid var(--blue-light);
+            border-radius: 10px;
+
+            background: var(--blue-light);
+            color: var(--text-secondary);
+
+            font-size: 9px;
             line-height: 1.5;
         }
 
         .upload-info .material-symbols-outlined {
-            color: #2563eb;
-            font-size: 18px;
-            flex: 0 0 auto;
+            color: var(--blue);
+            font-size: 16px;
+            flex-shrink: 0;
         }
+
+
+        /* =========================================================
+           ALERT
+        ========================================================= */
 
         .alert-error,
         .alert-success {
             display: flex;
             align-items: flex-start;
-            gap: 12px;
-            margin-bottom: 18px;
-            padding: 14px 16px;
+            gap: 10px;
+
+            margin-bottom: 16px;
+            padding: 11px 13px;
+
             border-radius: 10px;
+
+            font-size: 10px;
+            line-height: 1.5;
         }
 
         .alert-error {
-            border: 1px solid #fecaca;
-            background: #fef2f2;
-            color: #991b1b;
+            border: 1px solid var(--light-red);
+            background: var(--light-red);
+            color: var(--red);
         }
 
         .alert-success {
-            border: 1px solid #bbf7d0;
-            background: #f0fdf4;
-            color: #166534;
+            border: 1px solid var(--light-green);
+            background: var(--light-green);
+            color: var(--green);
         }
 
-        .alert-error .alert-icon .material-symbols-outlined {
-            color: #dc2626;
-            font-size: 21px;
-        }
-
-        .alert-success .alert-icon .material-symbols-outlined {
-            color: #16a34a;
-            font-size: 21px;
+        .alert-icon .material-symbols-outlined {
+            font-size: 18px;
         }
 
         .alert-error strong {
-            font-size: 13px;
+            font-size: 10px;
         }
 
         .alert-error ul {
-            margin: 6px 0 0;
-            padding-left: 18px;
-            font-size: 12px;
-            line-height: 1.6;
+            margin: 4px 0 0;
+            padding-left: 16px;
+
+            font-size: 9px;
         }
+
+
+        /* =========================================================
+           BUTTON
+        ========================================================= */
+
+        .back-button,
+        .cancel-button,
+        .save-button {
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+
+            height: 34px;
+            padding: 0 13px;
+
+            border-radius: 11px;
+
+            font-family: inherit;
+            font-size: 10px;
+            font-weight: 500;
+
+            text-decoration: none;
+            white-space: nowrap;
+
+            cursor: pointer;
+
+            transition: .15s ease;
+        }
+
+        .back-button {
+            border: 1px solid var(--border);
+            background: var(--white);
+            color: var(--text-secondary);
+        }
+
+        .back-button:hover {
+            background: var(--blue-light);
+            color: var(--blue);
+            border-color: var(--blue);
+        }
+
+        .cancel-button {
+            border: 1px solid var(--border);
+            background: var(--white);
+            color: var(--text-secondary);
+        }
+
+        .cancel-button:hover {
+            background: var(--blue-light);
+            color: var(--blue);
+        }
+
+        .save-button {
+            border: 1px solid var(--blue);
+            background: var(--blue);
+            color: var(--white);
+        }
+
+        .save-button:hover {
+            opacity: .9;
+        }
+
+        .back-button .material-symbols-outlined,
+        .save-button .material-symbols-outlined {
+            font-size: 16px;
+        }
+
+
+        /* =========================================================
+           FOOTER
+        ========================================================= */
 
         .form-footer {
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            gap: 10px;
-            padding-top: 5px;
+            gap: 8px;
+
+            padding-top: 2px;
         }
 
-        .cancel-button,
-        .save-button {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 7px;
-            min-height: 42px;
-            padding: 9px 18px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            box-sizing: border-box;
-        }
 
-        .cancel-button {
-            border: 1px solid #d1d5db;
-            background: #ffffff;
-            color: #4b5563;
-        }
+        /* =========================================================
+           RESPONSIVE
+        ========================================================= */
 
-        .cancel-button:hover {
-            background: #f8fafc;
-        }
+        @media (max-width: 768px) {
 
-        .save-button {
-            border: 1px solid #1d4ed8;
-            background: #2563eb;
-            color: #ffffff;
-        }
+            .main-page {
+                padding-left: 18px;
+                padding-right: 18px;
+            }
 
-        .save-button:hover {
-            background: #1d4ed8;
-        }
-
-        .save-button .material-symbols-outlined,
-        .back-button .material-symbols-outlined {
-            font-size: 17px;
-        }
-
-        @media (max-width: 700px) {
-
-            .manual-page {
-                padding: 22px 18px 35px;
+            .main-page-header {
+                align-items: flex-start;
             }
 
             .manual-header {
@@ -1311,8 +1344,34 @@
                 grid-column: auto;
             }
 
+            .form-section {
+                padding: 18px;
+            }
+
             .form-footer {
-                flex-direction: column-reverse;
+                justify-content: stretch;
+            }
+
+            .cancel-button,
+            .save-button {
+                flex: 1;
+            }
+
+        }
+
+
+        @media (max-width: 520px) {
+
+            .main-page-header {
+                flex-direction: column;
+            }
+
+            .back-button {
+                align-self: flex-start;
+            }
+
+            .form-footer {
+                flex-direction: column;
                 align-items: stretch;
             }
 

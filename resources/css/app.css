@@ -6,7 +6,6 @@
 /* =========================================================
    VARIABLES
 ========================================================= */
-
 :root {
     /* =========================
        BLUE
@@ -38,6 +37,9 @@
     --red: #dc2626;
     --red-light: #fef2f2;
 
+    --cyan: #0891b2;
+    --cyan-light: #ecfeff;
+
     /* =========================
        NEUTRAL
     ========================= */
@@ -55,7 +57,7 @@
     ========================= */
     --sidebar-width: 260px;
     --gap: 20px;
-    --radius: 20px;
+    --radius: 13px;
 }
 
 
@@ -1105,7 +1107,7 @@ a {
 
     background: var(--white);
     border: 1px solid var(--border);
-    border-radius: 20px;
+    border-radius: var(--radius);
 
     overflow: hidden;
     z-index: 1000;
@@ -1162,12 +1164,12 @@ a {
     padding: 0 12px;
 
     border: 0;
-    border-radius: 20px;
+    border-radius: var(--radius);
 
     background: transparent;
     color: var(--text);
 
-    font: 500 14px "Poppins", sans-serif;
+    font: 500 12px "Poppins", sans-serif;
 
     cursor: pointer;
     transition: .2s;
@@ -1357,7 +1359,7 @@ a {
 
     background: var(--white);
     border: 1px solid var(--border);
-    border-radius: 20px;
+    border-radius:var(--radius);
 
     z-index: 900;
 
@@ -1443,15 +1445,11 @@ a {
 
 .main-content {
     min-height: 100vh;
-
     margin-left: calc(var(--sidebar-width) + 30px);
-
     padding-top: 88px;
     padding-right: 10px;
     padding-bottom: 18px;
-
     transition: margin-left .25s ease;
-
     min-width: 0;
 }
 
@@ -2087,7 +2085,7 @@ a {
 
     font-family: "Poppins", sans-serif;
 
-    border-radius: 20px;
+    border-radius: var(--radius);
 }
 
 
@@ -2145,8 +2143,6 @@ a {
 .date-filter:hover {
     color: var(--blue);
 }
-
-
 /* =========================================================
    FILTER
 ========================================================= */
@@ -2154,14 +2150,36 @@ a {
 .filter-wrapper {
     display: flex;
     align-items: center;
-    gap: 8px;
+    width: 100%;
+
+    gap: 16px;
 
     margin-bottom: 14px;
 }
 
+
+/* =========================================================
+   FILTER GROUP
+   Search + 3 filter berada dalam satu kelompok
+========================================================= */
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    flex: 1;
+    min-width: 0;
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
 .search {
     width: 220px;
-    height: 30px;
+    height: 35px;
 
     display: flex;
     align-items: center;
@@ -2174,6 +2192,15 @@ a {
     border-radius: 16px;
 
     color: var(--muted);
+
+    transition: 0.15s ease;
+
+    flex-shrink: 0;
+}
+
+.search.active {
+    background: var(--blue-light);
+    color: var(--blue);
 }
 
 .search input {
@@ -2193,15 +2220,14 @@ a {
 .search input::placeholder {
     color: var(--muted);
 }
-.search input:focus {
-    outline: none;
-    border: none;
-    box-shadow: none;
-}
 
+
+/* =========================================================
+   FILTER BUTTON
+========================================================= */
 
 .filter-button {
-    height: 30px;
+    height: 35px;
     min-width: 110px;
 
     padding: 0 11px;
@@ -2222,11 +2248,174 @@ a {
 
     font-family: inherit;
     font-size: 9px;
+
+    transition: 0.15s ease;
 }
 
 .filter-button:hover {
     background: var(--blue-light);
 }
+
+.filter-button.active {
+    background: var(--blue-light);
+    border-color: var(--blue);
+    color: var(--blue);
+    font-weight: 500;
+}
+
+
+/* =========================================================
+   SELECT WRAPPER
+========================================================= */
+
+.select-wrapper {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.select-wrapper .filter-button {
+    appearance: none;
+    -webkit-appearance: none;
+
+    padding-right: 28px;
+}
+
+.select-arrow {
+    position: absolute;
+
+    right: 9px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    font-size: 16px;
+    color: var(--muted);
+
+    pointer-events: none;
+}
+
+.filter-button.active + .select-arrow {
+    color: var(--blue);
+}
+
+
+/* =========================================================
+   RESET FILTER
+========================================================= */
+
+.filter-reset {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+
+    padding: 5px 4px;
+
+    margin-left: auto;
+
+    background: transparent;
+    border: none;
+
+    color: var(--muted);
+
+    cursor: pointer;
+
+    font-family: inherit;
+    font-size: 9px;
+    font-weight: 400;
+
+    white-space: nowrap;
+
+    transition: 0.15s ease;
+
+    flex-shrink: 0;
+}
+
+.filter-reset .material-symbols-outlined {
+    font-size: 14px;
+}
+
+.filter-reset:hover {
+    color: var(--red);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1100px) {
+
+    .filter-wrapper {
+        align-items: stretch;
+    }
+
+    .filter-group {
+        flex-wrap: wrap;
+    }
+
+    .filter-reset {
+        align-self: center;
+    }
+
+}
+
+
+@media (max-width: 900px) {
+
+    .filter-wrapper {
+        align-items: flex-start;
+    }
+
+    .filter-group {
+        flex-wrap: wrap;
+    }
+
+    .filter-reset {
+        margin-top: 8px;
+    }
+
+}
+
+
+@media (max-width: 768px) {
+
+    .filter-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-group {
+        width: 100%;
+
+        flex-direction: column;
+        align-items: stretch;
+
+        gap: 8px;
+    }
+
+    .search {
+        width: 100%;
+    }
+
+    .select-wrapper {
+        width: 100%;
+    }
+
+    .select-wrapper .filter-button {
+        width: 100%;
+    }
+
+    .filter-reset {
+        width: 100%;
+
+        justify-content: center;
+
+        margin-left: 0;
+        margin-top: 0;
+    }
+
+}
+
 
 
 /* =========================================================
@@ -2306,6 +2495,7 @@ a {
     text-align: center;
 }
 
+
 /* =========================================================
    RESULT BADGE
 ========================================================= */
@@ -2332,18 +2522,25 @@ a {
     transform: translateX(2px);
 }
 
+
+/* =========================================================
+   RESULT ICON
+========================================================= */
+
 .result-icon {
     display: flex;
     align-items: center;
     justify-content: center;
 
     flex-shrink: 0;
+
+    font-size: 17px;
 }
 
-.result-badge > span {
-    font-size: 9px;
-    font-weight: 400;
-}
+
+/* =========================================================
+   RESULT ARROW
+========================================================= */
 
 .result-arrow {
     margin-left: auto;
@@ -2356,70 +2553,94 @@ a {
 
 
 /* =========================================================
-   ACCEPTED
+   RESULT CONTENT
 ========================================================= */
 
-.result-accepted {
-    background: var(--green-light);
-    color: var(--green);
+.result-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    min-width: 0;
+}
+
+
+.result-title {
+    font-size: 9px;
+    line-height: 1.1;
+    font-weight: 500;
 }
 
 
 /* =========================================================
-   REJECTED
+   WARNA BADGE BERDASARKAN TAHAPAN
 ========================================================= */
 
-.result-rejected {
-    background: var(--red-light);
-    color: var(--red);
-}
 
-
-/* =========================================================
-   HEALTH
-========================================================= */
-
-.result-health {
-    background: var(--purple-light);
-    color: var(--purple);
-}
-
-/* =========================================================
-   ASESMEN kesehatan
-========================================================= */
-
-.result-instructor {
-    background: var(--orange-light);
-    color: var(--orange);
-}
-/* =========================================================
-   BELUM DIMULAI
-========================================================= */
+/* ---------------------------------------------------------
+   BELUM DILAKUKAN
+--------------------------------------------------------- */
 
 .result-not-done {
     background: var(--gray);
     color: var(--text);
 }
 
-.result-content {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-.result-title {
-    font-size: 9px;
-    line-height: 1.1;
-}
 
-.result-health {
-    color: var(--purple);
-}
+/* ---------------------------------------------------------
+   ASESMEN INSTRUKTUR
+--------------------------------------------------------- */
 
 .result-instructor {
+    background: var(--orange-light);
     color: var(--orange);
 }
 
 
+/* ---------------------------------------------------------
+   ASESMEN KESEHATAN AWAL
+--------------------------------------------------------- */
+
+.result-health {
+    background: var(--purple-light);
+    color: var(--purple);
+}
+
+
+/* ---------------------------------------------------------
+   CASE CONFERENCE
+--------------------------------------------------------- */
+
+.result-case-conference {
+    background: var(--cyan-light);
+    color: var(--cyan);
+}
+
+
+/* ---------------------------------------------------------
+   ASESMEN KESEHATAN LANJUTAN
+--------------------------------------------------------- */
+
+.result-health-advanced {
+    background: var(--orange-light);
+    color: var(--orange);
+}
+
+
+/* ---------------------------------------------------------
+   JADI SISWA
+--------------------------------------------------------- */
+
+.result-student {
+    background: var(--green-light);
+    color: var(--green);
+}
+
+
+/* =========================================================
+   RESULT STATUS
+   Warna kecil di bawah nama tahapan
+========================================================= */
 
 .result-status {
     display: flex;
@@ -2428,41 +2649,131 @@ a {
 
     font-size: 7px;
     line-height: 1;
+
+    font-weight: 400;
 }
+
+
+/* =========================================================
+   STATUS — PENDING
+========================================================= */
 
 .result-status.pending {
     color: var(--muted);
 }
 
+
+/* =========================================================
+   STATUS — LOLOS
+========================================================= */
+
 .result-status.lolos {
     color: var(--green);
 }
+
+
+/* =========================================================
+   STATUS — TIDAK LOLOS
+========================================================= */
 
 .result-status.tidak-lolos {
     color: var(--red);
 }
 
 
+/* =========================================================
+   STATUS — DITERIMA
+========================================================= */
+
+.result-status.diterima {
+    color: var(--green);
+}
+
+
+/* =========================================================
+   STATUS — TIDAK DITERIMA
+========================================================= */
+
+.result-status.tidak-diterima {
+    color: var(--red);
+}
+
+
+/* =========================================================
+   STATUS — BELUM DIMULAI
+========================================================= */
+
+.result-status.belum-dimulai {
+    color: var(--muted);
+}
+
+
+/* =========================================================
+   STATUS DOT
+========================================================= */
+
 .status-dot {
     width: 4px;
     height: 4px;
+
     flex-shrink: 0;
+
     border-radius: 50%;
 }
 
-.status-dot.lolos {
-    background: var(--green);
-}
 
-.status-dot.tidak-lolos {
-    background: var(--red);
-}
+/* =========================================================
+   DOT — PENDING
+========================================================= */
 
 .status-dot.pending {
     background: var(--muted);
 }
 
 
+/* =========================================================
+   DOT — LOLOS
+========================================================= */
+
+.status-dot.lolos {
+    background: var(--green);
+}
+
+
+/* =========================================================
+   DOT — TIDAK LOLOS
+========================================================= */
+
+.status-dot.tidak-lolos {
+    background: var(--red);
+}
+
+
+/* =========================================================
+   DOT — DITERIMA
+========================================================= */
+
+.status-dot.diterima {
+    background: var(--green);
+}
+
+
+/* =========================================================
+   DOT — TIDAK DITERIMA
+========================================================= */
+
+.status-dot.tidak-diterima {
+    background: var(--red);
+}
+
+
+/* =========================================================
+   DOT — BELUM DIMULAI
+========================================================= */
+
+.status-dot.belum-dimulai {
+    background: var(--muted);
+}
 
 
 /* =========================================================
@@ -4353,4 +4664,546 @@ a {
 }
 .download-pdf-button {
     margin-left: auto;
+}
+/* =========================================================
+   GLOBAL POPUP
+   Digunakan untuk seluruh konfirmasi, informasi,
+   berhasil, gagal, dan peringatan di SIATIS.
+========================================================= */
+
+.global-popup {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(15, 23, 42, 0.35);
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition:
+        opacity 0.2s ease,
+        visibility 0.2s ease;
+}
+
+.global-popup.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+
+/* =========================================================
+   POPUP BOX
+========================================================= */
+
+.global-popup-box {
+    width: 100%;
+    max-width: 420px;
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+
+    padding: 28px;
+
+    text-align: center;
+
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+
+    transform: translateY(10px) scale(0.98);
+
+    transition: transform 0.2s ease;
+}
+
+.global-popup.show .global-popup-box {
+    transform: translateY(0) scale(1);
+}
+
+
+/* =========================================================
+   ICON
+========================================================= */
+
+.global-popup-icon {
+    width: 58px;
+    height: 58px;
+
+    margin: 0 auto 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+}
+
+.global-popup-icon .material-symbols-outlined {
+    font-size: 30px;
+}
+
+
+/* =========================================================
+   TYPE
+========================================================= */
+
+/* SUCCESS */
+
+.global-popup.success .global-popup-icon {
+    background: var(--green-light);
+    color: var(--green);
+}
+
+
+/* ERROR */
+
+.global-popup.error .global-popup-icon {
+    background: var(--red-light);
+    color: var(--red);
+}
+
+
+/* WARNING */
+
+.global-popup.warning .global-popup-icon {
+    background: var(--orange-light);
+    color: var(--orange);
+}
+
+
+/* INFO */
+
+.global-popup.info .global-popup-icon {
+    background: var(--blue-light);
+    color: var(--blue);
+}
+
+
+/* CONFIRM */
+
+.global-popup.confirm .global-popup-icon {
+    background: var(--orange-light);
+    color: var(--orange);
+}
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.global-popup-title {
+    margin: 0;
+
+    color: var(--text);
+
+    font-size: 18px;
+    font-weight: 700;
+
+    line-height: 1.4;
+}
+
+.global-popup-message {
+    margin: 8px auto 0;
+
+    max-width: 340px;
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   ACTION
+========================================================= */
+
+.global-popup-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+
+    margin-top: 24px;
+}
+
+.global-popup-btn {
+    min-width: 100px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 9px 16px;
+
+    border: 0;
+    border-radius: 9px;
+
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.15s ease,
+        transform 0.15s ease;
+}
+
+.global-popup-btn:hover {
+    transform: translateY(-1px);
+}
+
+
+/* BATAL */
+
+.global-popup-btn.cancel {
+    background: var(--gray);
+    color: var(--text-secondary);
+}
+
+.global-popup-btn.cancel:hover {
+    background: var(--border);
+}
+
+
+/* PRIMARY */
+
+.global-popup-btn.primary {
+    background: var(--blue);
+    color: var(--white);
+}
+
+.global-popup-btn.primary:hover {
+    filter: brightness(0.95);
+}
+
+
+/* SUCCESS */
+
+.global-popup-btn.success {
+    background: var(--green);
+    color: var(--white);
+}
+
+
+/* DANGER */
+
+.global-popup-btn.danger {
+    background: var(--red);
+    color: var(--white);
+}
+
+
+/* WARNING */
+
+.global-popup-btn.warning {
+    background: var(--orange);
+    color: var(--white);
+}
+
+
+/* =========================================================
+   CLOSE BUTTON
+========================================================= */
+
+.global-popup-close {
+    position: absolute;
+
+    top: 14px;
+    right: 14px;
+
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 0;
+    border-radius: 8px;
+
+    background: transparent;
+    color: var(--muted);
+
+    cursor: pointer;
+
+    transition:
+        background 0.15s ease,
+        color 0.15s ease;
+}
+
+.global-popup-close:hover {
+    background: var(--gray);
+    color: var(--text);
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.global-popup-btn.loading {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.global-popup-spinner {
+    width: 15px;
+    height: 15px;
+
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+
+    border-radius: 50%;
+
+    animation: globalPopupSpin 0.7s linear infinite;
+}
+
+@keyframes globalPopupSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .global-popup {
+        padding: 16px;
+    }
+
+    .global-popup-box {
+        max-width: 100%;
+        padding: 24px 20px;
+    }
+
+    .global-popup-title {
+        font-size: 17px;
+    }
+
+    .global-popup-message {
+        font-size: 12px;
+    }
+
+    .global-popup-actions {
+        flex-direction: column-reverse;
+    }
+
+    .global-popup-btn {
+        width: 100%;
+    }
+
+}
+/* =====================================================
+   PILIHAN IMPORT
+===================================================== */
+
+.import-choice-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.import-choice {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    min-width: 0;
+    padding: 16px 18px;
+
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+
+    background: var(--white);
+}
+
+.import-choice-icon {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+}
+
+.import-choice-icon.blue {
+    background: var(--blue-light);
+    color: var(--blue);
+}
+
+.import-choice-icon.orange {
+    background: var(--orange-light);
+    color: var(--orange);
+}
+
+.import-choice-icon .material-symbols-outlined {
+    font-size: 21px;
+}
+
+
+/* =====================================================
+   KONTEN PILIHAN
+===================================================== */
+
+.import-choice-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.import-choice-content h3 {
+    margin: 0 0 4px;
+
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.import-choice-content p {
+    margin: 0;
+
+    font-size: 10px;
+    line-height: 1.45;
+    color: var(--text-secondary);
+}
+
+
+/* =====================================================
+   BUTTON
+===================================================== */
+
+.import-choice form {
+    flex-shrink: 0;
+}
+
+.import-choice-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    min-width: 135px;
+    height: 36px;
+    padding: 0 13px;
+
+    border: 0;
+    border-radius: 8px;
+
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+
+    cursor: pointer;
+    white-space: nowrap;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        filter .2s ease;
+}
+
+.import-choice-btn .material-symbols-outlined {
+    font-size: 16px;
+}
+
+.import-choice-btn-primary {
+    background: var(--blue);
+    color: var(--white);
+    box-shadow: 0 3px 8px rgba(32, 93, 145, .12);
+}
+
+.import-choice-btn-primary:hover {
+    filter: brightness(.92);
+    transform: translateY(-1px);
+    box-shadow: 0 5px 12px rgba(32, 93, 145, .18);
+}
+
+.import-choice-btn-warning {
+    background: var(--orange);
+    color: var(--white);
+    box-shadow: 0 3px 8px rgba(245, 158, 11, .12);
+}
+
+.import-choice-btn-warning:hover {
+    filter: brightness(.92);
+    transform: translateY(-1px);
+    box-shadow: 0 5px 12px rgba(245, 158, 11, .18);
+}
+
+.import-choice-btn:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 1050px) {
+
+    .import-choice {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .import-choice form {
+        width: 100%;
+    }
+
+    .import-choice-btn {
+        width: 100%;
+    }
+
+}
+
+@media (max-width: 800px) {
+
+    .import-choice-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .import-choice {
+        align-items: center;
+        flex-direction: row;
+    }
+
+    .import-choice form {
+        width: auto;
+    }
+
+    .import-choice-btn {
+        width: auto;
+    }
+
+}
+
+@media (max-width: 550px) {
+
+    .import-choice {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .import-choice form {
+        width: 100%;
+    }
+
+    .import-choice-btn {
+        width: 100%;
+    }
+
 }

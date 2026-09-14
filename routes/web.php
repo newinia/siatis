@@ -9,6 +9,7 @@ use App\Http\Controllers\PpksFileController;
 use App\Http\Controllers\PpksPemanggilanController;
 use App\Http\Controllers\PpksKesehatanLanjutanController;
 use App\Http\Controllers\PpksAktifController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SuperAdmin\UserApprovalController;
 
 require __DIR__ . '/auth.php';
@@ -22,9 +23,10 @@ Route::middleware(['auth'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [
+        DashboardController::class,
+        'index'
+    ])->middleware(['auth'])->name('dashboard');
 
 
     /*

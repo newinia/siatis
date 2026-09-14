@@ -1,625 +1,11 @@
-```blade
 <x-app-layout>
-
-    <style>
-        /* =========================================================
-           DATA TIDAK LULUS INSTRUKTUR
-        ========================================================= */
-
-        .case-conference-page {
-            width: 100%;
-            padding: 10px 0 30px;
-            color: #111827;
-        }
-
-        /* =========================================================
-           HEADER
-        ========================================================= */
-
-        .case-conference-header {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 20px;
-            margin-bottom: 22px;
-        }
-
-        .case-conference-header h1 {
-            margin: 0;
-            font-size: 25px;
-            line-height: 1.3;
-            font-weight: 700;
-            color: #111827;
-        }
-
-        .case-conference-header p {
-            margin: 7px 0 0;
-            font-size: 14px;
-            color: #6b7280;
-            line-height: 1.5;
-        }
-
-        /* =========================================================
-           DATE FILTER
-        ========================================================= */
-
-        .date-filter-wrapper {
-            position: relative;
-            flex-shrink: 0;
-        }
-
-        .date-filter {
-            min-width: 175px;
-            height: 42px;
-            padding: 0 13px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 9px;
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
-            background: #ffffff;
-            color: #374151;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all .2s ease;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, .04);
-        }
-
-        .date-filter:hover {
-            border-color: #97D94D;
-            color: #328300;
-        }
-
-        .date-filter svg {
-            flex-shrink: 0;
-        }
-
-        .date-picker {
-            position: absolute;
-            z-index: 100;
-            top: calc(100% + 8px);
-            right: 0;
-            width: 310px;
-            padding: 16px;
-            display: none;
-            background: #ffffff;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            box-shadow: 0 12px 35px rgba(0, 0, 0, .12);
-        }
-
-        .date-picker.active {
-            display: block;
-        }
-
-        .date-picker-header {
-            padding-bottom: 13px;
-            border-bottom: 1px solid #f0f0f0;
-            font-size: 14px;
-            color: #111827;
-        }
-
-        .date-input-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .date-input-group label {
-            display: block;
-            margin-bottom: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            color: #6b7280;
-        }
-
-        .date-input-group input {
-            width: 100%;
-            height: 38px;
-            padding: 0 9px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            background: #ffffff;
-            color: #374151;
-            font-size: 12px;
-            outline: none;
-            transition: border-color .2s ease;
-        }
-
-        .date-input-group input:focus {
-            border-color: #63AE00;
-            box-shadow: 0 0 0 3px rgba(151, 217, 77, .15);
-        }
-
-        .date-picker-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 8px;
-            margin-top: 16px;
-        }
-
-        .date-reset,
-        .date-apply {
-            height: 36px;
-            padding: 0 14px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all .2s ease;
-        }
-
-        .date-reset {
-            border: 1px solid #e5e7eb;
-            background: #f9fafb;
-            color: #6b7280;
-        }
-
-        .date-reset:hover {
-            background: #f3f4f6;
-        }
-
-        .date-apply {
-            border: 1px solid #63AE00;
-            background: #63AE00;
-            color: #ffffff;
-        }
-
-        .date-apply:hover {
-            background: #328300;
-            border-color: #328300;
-        }
-
-        /* =========================================================
-           NAVIGASI
-        ========================================================= */
-
-        .result-navigation {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin: 0 0 20px;
-        }
-
-        .result-navigation a {
-            min-height: 40px;
-            padding: 9px 17px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 10px;
-            text-decoration: none;
-            background: #f3f4f6;
-            color: #374151;
-            font-size: 13px;
-            font-weight: 600;
-            transition: all .2s ease;
-        }
-
-        .result-navigation a:hover {
-            background: #e5e7eb;
-            color: #111827;
-        }
-
-        .result-navigation a.active {
-            background: #97D94D;
-            color: #ffffff;
-            box-shadow: 0 4px 10px rgba(99, 174, 0, .18);
-        }
-
-        .result-navigation a.active:hover {
-            background: #63AE00;
-        }
-
-        /* =========================================================
-           FILTER
-        ========================================================= */
-
-        .case-filter-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
-        .case-search {
-            width: 100%;
-            max-width: 390px;
-            height: 42px;
-            padding: 0 13px;
-            display: flex;
-            align-items: center;
-            gap: 9px;
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
-            background: #ffffff;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, .03);
-            transition: all .2s ease;
-        }
-
-        .case-search:focus-within {
-            border-color: #63AE00;
-            box-shadow: 0 0 0 3px rgba(151, 217, 77, .13);
-        }
-
-        .case-search svg {
-            flex-shrink: 0;
-            color: #9ca3af;
-        }
-
-        .case-search input {
-            width: 100%;
-            height: 100%;
-            border: 0;
-            outline: 0;
-            background: transparent;
-            color: #111827;
-            font-size: 13px;
-        }
-
-        .case-search input::placeholder {
-            color: #9ca3af;
-        }
-
-        .select-wrapper {
-            position: relative;
-            width: 230px;
-            flex-shrink: 0;
-        }
-
-        .case-filter-button {
-            width: 100%;
-            height: 42px;
-            padding: 0 38px 0 13px;
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
-            background: #ffffff;
-            color: #374151;
-            font-size: 13px;
-            outline: none;
-            cursor: pointer;
-            appearance: none;
-            -webkit-appearance: none;
-            transition: all .2s ease;
-        }
-
-        .case-filter-button:focus {
-            border-color: #63AE00;
-            box-shadow: 0 0 0 3px rgba(151, 217, 77, .13);
-        }
-
-        .select-arrow {
-            position: absolute;
-            top: 50%;
-            right: 11px;
-            transform: translateY(-50%);
-            pointer-events: none;
-            color: #6b7280;
-            font-size: 19px;
-        }
-
-        /* =========================================================
-           TABLE
-        ========================================================= */
-
-        .table-wrapper {
-            width: 100%;
-            overflow-x: auto;
-            background: #ffffff;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, .03);
-        }
-
-        .table {
-            width: 100%;
-            min-width: 1150px;
-            border-collapse: separate;
-            border-spacing: 0;
-        }
-
-        .table thead th {
-            padding: 14px 12px;
-            background: #f9fafb;
-            border-bottom: 1px solid #e5e7eb;
-            color: #6b7280;
-            font-size: 11px;
-            font-weight: 700;
-            text-align: left;
-            text-transform: uppercase;
-            letter-spacing: .025em;
-            white-space: nowrap;
-        }
-
-        .table thead th:first-child {
-            border-top-left-radius: 12px;
-        }
-
-        .table thead th:last-child {
-            border-top-right-radius: 12px;
-        }
-
-        .table tbody td {
-            padding: 15px 12px;
-            border-bottom: 1px solid #f1f5f9;
-            color: #374151;
-            font-size: 13px;
-            vertical-align: middle;
-        }
-
-        .table tbody tr:last-child td {
-            border-bottom: 0;
-        }
-
-        .table tbody tr {
-            transition: background .15s ease;
-        }
-
-        .table tbody tr:hover {
-            background: #fbfdf9;
-        }
-
-        .row-number {
-            width: 55px;
-            color: #6b7280 !important;
-            font-weight: 600;
-        }
-
-        /* =========================================================
-           RESULT
-        ========================================================= */
-
-        .result-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .result-instructor {
-            color: #374151;
-        }
-
-        .result-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 34px;
-            height: 34px;
-            border-radius: 9px;
-            background: #f1f8e9;
-            color: #63AE00;
-            font-size: 19px;
-            flex-shrink: 0;
-        }
-
-        .result-content {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .result-title {
-            font-size: 12px;
-            font-weight: 600;
-            color: #374151;
-            white-space: nowrap;
-        }
-
-        .result-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .result-status.tidak-lulus {
-            color: #dc2626;
-        }
-
-        .status-dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-
-        .status-dot.tidak-lulus {
-            background: #dc2626;
-        }
-
-        /* =========================================================
-           DETAIL BUTTON
-        ========================================================= */
-
-        .detail-button {
-            min-width: 92px;
-            padding: 7px 10px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            border: 1px solid #dcebcf;
-            border-radius: 8px;
-            background: #f7fbf3;
-            color: #4d8d0b;
-            font-size: 12px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all .2s ease;
-        }
-
-        .detail-button:hover {
-            background: #97D94D;
-            border-color: #97D94D;
-            color: #ffffff;
-        }
-
-        .detail-button .result-icon {
-            width: auto;
-            height: auto;
-            padding: 0;
-            background: transparent;
-            color: inherit;
-            font-size: 17px;
-        }
-
-        .result-arrow {
-            font-size: 18px;
-            line-height: 1;
-        }
-
-        /* =========================================================
-           EMPTY STATE
-        ========================================================= */
-
-        .empty-state {
-            padding: 55px 25px !important;
-            text-align: center !important;
-            color: #9ca3af !important;
-        }
-
-        .empty-state-icon {
-            width: 48px;
-            height: 48px;
-            margin: 0 auto 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 12px;
-            background: #f3f4f6;
-            color: #9ca3af;
-        }
-
-        .empty-state-icon .material-symbols-outlined {
-            font-size: 25px;
-        }
-
-        .empty-state-title {
-            margin: 0;
-            color: #6b7280;
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .empty-state-text {
-            margin: 5px 0 0;
-            color: #9ca3af;
-            font-size: 12px;
-        }
-
-        /* =========================================================
-           FILTER EMPTY
-        ========================================================= */
-
-        .filter-empty-row {
-            display: none;
-        }
-
-        .filter-empty-row td {
-            padding: 45px 20px !important;
-            text-align: center !important;
-            color: #9ca3af !important;
-        }
-
-        /* =========================================================
-           PAGINATION
-        ========================================================= */
-
-        .pagination-wrapper {
-            margin-top: 18px;
-        }
-
-        .pagination-wrapper nav {
-            display: flex;
-            justify-content: center;
-        }
-
-        /* =========================================================
-           RESPONSIVE
-        ========================================================= */
-
-        @media (max-width: 900px) {
-
-            .case-conference-header {
-                flex-direction: column;
-            }
-
-            .date-filter-wrapper {
-                width: 100%;
-            }
-
-            .date-filter {
-                width: 100%;
-            }
-
-            .date-picker {
-                left: 0;
-                right: auto;
-                width: 100%;
-                max-width: 310px;
-            }
-
-            .case-filter-wrapper {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .case-search {
-                max-width: none;
-            }
-
-            .select-wrapper {
-                width: 100%;
-            }
-        }
-
-        @media (max-width: 600px) {
-
-            .case-conference-page {
-                padding-top: 5px;
-            }
-
-            .case-conference-header h1 {
-                font-size: 21px;
-            }
-
-            .case-conference-header p {
-                font-size: 12px;
-            }
-
-            .result-navigation {
-                gap: 6px;
-            }
-
-            .result-navigation a {
-                flex: 1;
-                padding: 8px 10px;
-                font-size: 12px;
-            }
-
-            .date-input-group {
-                grid-template-columns: 1fr;
-            }
-
-            .date-picker {
-                max-width: 100%;
-            }
-        }
-    </style>
-
-    <div class="case-conference-page">
+    <div class="main-page">
 
         {{-- =====================================================
-             HEADER
+        HEADER
         ====================================================== --}}
 
-        <div class="case-conference-header">
+        <div class="main-page-header">
 
             <div>
 
@@ -638,29 +24,11 @@
 
             <div class="date-filter-wrapper">
 
-                <button
-                    type="button"
-                    class="date-filter"
-                    id="dateFilterButton"
-                    aria-expanded="false"
-                >
+                <button type="button" class="date-filter" id="dateFilterButton" aria-expanded="false">
 
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.8"
-                    >
-                        <rect
-                            x="3"
-                            y="4"
-                            width="18"
-                            height="18"
-                            rx="2"
-                        ></rect>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="1.8">
+                        <rect x="3" y="4" width="18" height="18" rx="2"></rect>
 
                         <path d="M16 2v4"></path>
                         <path d="M8 2v4"></path>
@@ -671,24 +39,14 @@
                         Pilih Tanggal
                     </span>
 
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="17"
-                        height="17"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                    >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
                         <path d="m6 9 6 6 6-6"></path>
                     </svg>
 
                 </button>
 
-                <div
-                    class="date-picker"
-                    id="datePicker"
-                >
+                <div class="date-picker" id="datePicker">
 
                     <div class="date-picker-header">
                         <strong>
@@ -704,10 +62,7 @@
                                 Dari
                             </label>
 
-                            <input
-                                type="date"
-                                id="startDate"
-                            >
+                            <input type="date" id="startDate">
 
                         </div>
 
@@ -717,10 +72,7 @@
                                 Sampai
                             </label>
 
-                            <input
-                                type="date"
-                                id="endDate"
-                            >
+                            <input type="date" id="endDate">
 
                         </div>
 
@@ -728,19 +80,11 @@
 
                     <div class="date-picker-actions">
 
-                        <button
-                            type="button"
-                            id="resetDate"
-                            class="date-reset"
-                        >
+                        <button type="button" id="resetDate" class="date-reset">
                             Reset
                         </button>
 
-                        <button
-                            type="button"
-                            id="applyDate"
-                            class="date-apply"
-                        >
+                        <button type="button" id="applyDate" class="date-apply">
                             Terapkan
                         </button>
 
@@ -753,7 +97,7 @@
         </div>
 
         {{-- =====================================================
-             NAVIGASI
+        NAVIGASI
         ====================================================== --}}
 
         <div class="result-navigation">
@@ -770,57 +114,35 @@
                 Pending
             </a>
 
-            <a
-                href="{{ route('ppks.normal.asesmen-instruktur.tidak-lulus') }}"
-                class="active"
-            >
+            <a href="{{ route('ppks.normal.asesmen-instruktur.tidak-lulus') }}" class="active">
                 Tidak Lulus
             </a>
 
         </div>
 
         {{-- =====================================================
-             FILTER
+        FILTER
         ====================================================== --}}
 
-        <div class="case-filter-wrapper">
+        <div class="filter-wrapper">
 
-            <div class="case-search">
+            <div class="search">
 
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                >
-                    <circle
-                        cx="11"
-                        cy="11"
-                        r="7"
-                    ></circle>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="7"></circle>
 
                     <path d="m20 20-3.5-3.5"></path>
 
                 </svg>
 
-                <input
-                    type="text"
-                    id="searchInput"
-                    placeholder="Cari Nama atau NIK"
-                    autocomplete="off"
-                >
+                <input type="text" id="searchInput" placeholder="Cari Nama atau NIK" autocomplete="off">
 
             </div>
 
             <div class="select-wrapper">
 
-                <select
-                    id="ppksFilter"
-                    class="case-filter-button"
-                >
+                <select id="ppksFilter" class="case-filter-button">
 
                     <option value="">
                         Semua Jenis PPKS
@@ -865,7 +187,7 @@
         </div>
 
         {{-- =====================================================
-             TABLE
+        TABLE
         ====================================================== --}}
 
         <div class="table-wrapper">
@@ -927,22 +249,19 @@
                                 && trim((string) $data[1]) !== ''
                             ) {
                                 $nama = $data[1];
-                            }
-                            elseif (
+                            } elseif (
                                 array_key_exists('B', $data)
                                 && $data['B'] !== null
                                 && trim((string) $data['B']) !== ''
                             ) {
                                 $nama = $data['B'];
-                            }
-                            elseif (
+                            } elseif (
                                 array_key_exists('nama_lengkap', $data)
                                 && $data['nama_lengkap'] !== null
                                 && trim((string) $data['nama_lengkap']) !== ''
                             ) {
                                 $nama = $data['nama_lengkap'];
-                            }
-                            elseif (
+                            } elseif (
                                 array_key_exists('nama', $data)
                                 && $data['nama'] !== null
                                 && trim((string) $data['nama']) !== ''
@@ -969,22 +288,19 @@
                                 && trim((string) $data[2]) !== ''
                             ) {
                                 $nik = $data[2];
-                            }
-                            elseif (
+                            } elseif (
                                 array_key_exists('C', $data)
                                 && $data['C'] !== null
                                 && trim((string) $data['C']) !== ''
                             ) {
                                 $nik = $data['C'];
-                            }
-                            elseif (
+                            } elseif (
                                 array_key_exists('nik', $data)
                                 && $data['nik'] !== null
                                 && trim((string) $data['nik']) !== ''
                             ) {
                                 $nik = $data['nik'];
-                            }
-                            elseif ($item->nik) {
+                            } elseif ($item->nik) {
                                 $nik = $item->nik;
                             }
 
@@ -1007,22 +323,19 @@
                                 && trim((string) $data[6]) !== ''
                             ) {
                                 $umur = $data[6];
-                            }
-                            elseif (
+                            } elseif (
                                 array_key_exists('G', $data)
                                 && $data['G'] !== null
                                 && trim((string) $data['G']) !== ''
                             ) {
                                 $umur = $data['G'];
-                            }
-                            elseif (
+                            } elseif (
                                 array_key_exists('umur', $data)
                                 && $data['umur'] !== null
                                 && trim((string) $data['umur']) !== ''
                             ) {
                                 $umur = $data['umur'];
-                            }
-                            elseif (
+                            } elseif (
                                 array_key_exists('usia', $data)
                                 && $data['usia'] !== null
                                 && trim((string) $data['usia']) !== ''
@@ -1051,15 +364,13 @@
                                 && trim((string) $data[12]) !== ''
                             ) {
                                 $jenisPpks = $data[12];
-                            }
-                            elseif (
+                            } elseif (
                                 array_key_exists('M', $data)
                                 && $data['M'] !== null
                                 && trim((string) $data['M']) !== ''
                             ) {
                                 $jenisPpks = $data['M'];
-                            }
-                            elseif (
+                            } elseif (
                                 array_key_exists('jenis_ppks', $data)
                                 && $data['jenis_ppks'] !== null
                                 && trim((string) $data['jenis_ppks']) !== ''
@@ -1086,29 +397,25 @@
                                 && trim((string) $data[14]) !== ''
                             ) {
                                 $jurusan = $data[14];
-                            }
-                            elseif (
+                            } elseif (
                                 array_key_exists('O', $data)
                                 && $data['O'] !== null
                                 && trim((string) $data['O']) !== ''
                             ) {
                                 $jurusan = $data['O'];
-                            }
-                            elseif (
+                            } elseif (
                                 array_key_exists('jurusan_yang_diminati', $data)
                                 && $data['jurusan_yang_diminati'] !== null
                                 && trim((string) $data['jurusan_yang_diminati']) !== ''
                             ) {
                                 $jurusan = $data['jurusan_yang_diminati'];
-                            }
-                            elseif (
+                            } elseif (
                                 array_key_exists('jurusan', $data)
                                 && $data['jurusan'] !== null
                                 && trim((string) $data['jurusan']) !== ''
                             ) {
                                 $jurusan = $data['jurusan'];
-                            }
-                            elseif (
+                            } elseif (
                                 array_key_exists('jurusan_pelatihan', $data)
                                 && $data['jurusan_pelatihan'] !== null
                                 && trim((string) $data['jurusan_pelatihan']) !== ''
@@ -1164,12 +471,9 @@
                         @endphp
 
 
-                        <tr
-                            data-nama="{{ strtolower((string) $nama) }}"
-                            data-nik="{{ strtolower((string) $nik) }}"
+                        <tr data-nama="{{ strtolower((string) $nama) }}" data-nik="{{ strtolower((string) $nik) }}"
                             data-ppks="{{ strtolower((string) $jenisPpks) }}"
-                            data-tanggal="{{ $tanggal ? \Carbon\Carbon::parse($tanggal)->format('Y-m-d') : '' }}"
-                        >
+                            data-tanggal="{{ $tanggal ? \Carbon\Carbon::parse($tanggal)->format('Y-m-d') : '' }}">
 
                             {{-- NOMOR --}}
 
@@ -1182,12 +486,10 @@
 
                             <td>
 
-                                <strong
-                                    style="
-                                        font-weight:600;
-                                        color:#1f2937;
-                                    "
-                                >
+                                <strong style="
+                                            font-weight:600;
+                                            color:#1f2937;
+                                        ">
                                     {{ $nama }}
                                 </strong>
 
@@ -1264,10 +566,8 @@
 
                             <td>
 
-                                <a
-                                    href="{{ route('ppks.normal.asesmen-instruktur.data-detail', $item->id) }}"
-                                    class="detail-button"
-                                >
+                                <a href="{{ route('ppks.normal.asesmen-instruktur.data-detail', $item->id) }}"
+                                    class="detail-button">
 
                                     <span class="material-symbols-outlined result-icon">
                                         visibility
@@ -1291,10 +591,7 @@
 
                         <tr>
 
-                            <td
-                                colspan="9"
-                                class="empty-state"
-                            >
+                            <td colspan="9" class="empty-state">
 
                                 <div class="empty-state-icon">
 
@@ -1324,10 +621,7 @@
 
                     @if ($ppks->count() > 0)
 
-                        <tr
-                            id="filterEmptyRow"
-                            class="filter-empty-row"
-                        >
+                        <tr id="filterEmptyRow" class="filter-empty-row">
 
                             <td colspan="9">
 
@@ -1362,7 +656,7 @@
 
 
         {{-- =====================================================
-             PAGINATION
+        PAGINATION
         ====================================================== --}}
 
         @if ($ppks->hasPages())
@@ -1377,7 +671,7 @@
 
 
     {{-- =========================================================
-         JAVASCRIPT
+    JAVASCRIPT
     ========================================================== --}}
 
     <script>

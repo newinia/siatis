@@ -1,19 +1,22 @@
 <x-app-layout>
 
-    <div class="case-conference-page">
+    <div class="main-page">
 
         {{-- =====================================================
         HEADER
         ======================================================= --}}
-        <div class="case-conference-header">
+        <div class="main-page-header">
 
             <div>
+
                 <h1>Data Kesehatan Lanjutan</h1>
 
                 <p>
                     Data peserta yang telah datang dan siap mengikuti asesmen kesehatan lanjutan.
                 </p>
+
             </div>
+
 
             {{-- =====================================================
             DATE FILTER
@@ -35,10 +38,10 @@
                         stroke="currentColor"
                         stroke-width="1.8"
                     >
-                        <rect x="3" y="4" width="18" height="18" rx="2" />
-                        <path d="M16 2v4" />
-                        <path d="M8 2v4" />
-                        <path d="M3 10h18" />
+                        <rect x="3" y="4" width="18" height="18" rx="2"/>
+                        <path d="M16 2v4"/>
+                        <path d="M8 2v4"/>
+                        <path d="M3 10h18"/>
                     </svg>
 
                     <span id="dateFilterText">
@@ -54,7 +57,7 @@
                         stroke="currentColor"
                         stroke-width="2"
                     >
-                        <path d="m6 9 6 6 6-6" />
+                        <path d="m6 9 6 6 6-6"/>
                     </svg>
 
                 </button>
@@ -67,10 +70,13 @@
                 >
 
                     <div class="date-picker-header">
+
                         <strong>
                             Pilih Rentang Tanggal
                         </strong>
+
                     </div>
+
 
                     <div class="date-input-group">
 
@@ -86,6 +92,7 @@
                             >
 
                         </div>
+
 
                         <div>
 
@@ -133,10 +140,11 @@
         {{-- =====================================================
         FILTER
         ======================================================= --}}
-        <div class="case-filter-wrapper">
+        <div class="filter-wrapper">
+
 
             {{-- SEARCH --}}
-            <div class="case-search">
+            <div class="search">
 
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -147,11 +155,8 @@
                     stroke="currentColor"
                     stroke-width="2"
                 >
-
-                    <circle cx="11" cy="11" r="7" />
-
-                    <path d="m20 20-3.5-3.5" />
-
+                    <circle cx="11" cy="11" r="7"/>
+                    <path d="m20 20-3.5-3.5"/>
                 </svg>
 
                 <input
@@ -169,7 +174,7 @@
 
                 <select
                     id="ppksFilter"
-                    class="case-filter-button"
+                    class="filter-button"
                 >
 
                     <option value="">
@@ -218,19 +223,27 @@
 
                 <select
                     id="tahapanFilter"
-                    class="case-filter-button"
+                    class="filter-button"
                 >
 
                     <option value="">
                         Semua Jenis Tahapan
                     </option>
 
-                    <option value="Asesmen Kesehatan Lanjutan">
-                        Asesmen Kesehatan Lanjutan
+                    <option value="Asesmen Instruktur">
+                        Asesmen Instruktur
+                    </option>
+
+                    <option value="Asesmen Kesehatan Awal">
+                        Asesmen Kesehatan Awal
                     </option>
 
                     <option value="Case Conference">
                         Case Conference
+                    </option>
+
+                    <option value="Asesmen Kesehatan Lanjutan">
+                        Asesmen Kesehatan Lanjutan
                     </option>
 
                 </select>
@@ -247,7 +260,7 @@
 
                 <select
                     id="hasilFilter"
-                    class="case-filter-button"
+                    class="filter-button"
                 >
 
                     <option value="">
@@ -260,6 +273,26 @@
 
                     <option value="Belum Asesmen">
                         Belum Asesmen
+                    </option>
+
+                    <option value="Lulus">
+                        Lulus
+                    </option>
+
+                    <option value="Tidak Lulus">
+                        Tidak Lulus
+                    </option>
+
+                    <option value="Pending">
+                        Pending
+                    </option>
+
+                    <option value="Diterima">
+                        Diterima
+                    </option>
+
+                    <option value="Tidak Diterima">
+                        Tidak Diterima
                     </option>
 
                 </select>
@@ -331,6 +364,7 @@
                             $nama =
                                 $data['nama_lengkap']
                                 ?? $data['nama']
+                                ?? $data['Nama Lengkap']
                                 ?? '-';
 
 
@@ -367,6 +401,7 @@
                             $jenisPpks =
                                 $data['jenis_ppks']
                                 ?? $data['jenis PPKS']
+                                ?? $data['Jenis PPKS']
                                 ?? '-';
 
 
@@ -417,32 +452,254 @@
 
                             /*
                             |--------------------------------------------------------------------------
-                            | TAHAPAN
+                            | AMBIL PROSES PESERTA
                             |--------------------------------------------------------------------------
                             */
 
-                            $tahapan =
-                                'Asesmen Kesehatan Lanjutan';
+                            $proses =
+                                $peserta->prosesPesertas ?? collect();
 
 
                             /*
                             |--------------------------------------------------------------------------
-                            | HASIL
+                            | CARI TAHAPAN TERAKHIR
                             |--------------------------------------------------------------------------
+                            |
+                            | Urutan prioritas:
+                            |
+                            | 1. Asesmen Kesehatan Lanjutan
+                            | 2. Case Conference
+                            | 3. Asesmen Kesehatan Awal
+                            | 4. Asesmen Instruktur
+                            |
+                            | Jadi yang ditampilkan hanya tahapan terakhir.
+                            |
                             */
 
-                            $hasil =
-                                'Belum Asesmen';
+                            $prosesTerakhir = null;
+                            $tahapTerakhir = null;
+
+
+                            foreach ($proses as $item) {
+
+                                $tahap =
+                                    strtolower(
+                                        trim(
+                                            (string) ($item->tahap ?? '')
+                                        )
+                                    );
+
+
+                                if (in_array($tahap, [
+                                    'kesehatan_lanjutan',
+                                    'kesehatan lanjutan',
+                                    'asesmen_kesehatan_lanjutan',
+                                    'asesmen kesehatan lanjutan',
+                                ], true)) {
+
+                                    $tahapKey = 'kesehatan_lanjutan';
+
+                                } elseif (in_array($tahap, [
+                                    'case_conference',
+                                    'case-conference',
+                                    'case conference',
+                                    'cc',
+                                ], true)) {
+
+                                    $tahapKey = 'case_conference';
+
+                                } elseif (in_array($tahap, [
+                                    'kesehatan',
+                                    'kesehatan_awal',
+                                    'asesmen_kesehatan_awal',
+                                    'asesmen kesehatan awal',
+                                ], true)) {
+
+                                    $tahapKey = 'kesehatan_awal';
+
+                                } elseif (in_array($tahap, [
+                                    'instruktur',
+                                    'asesmen_instruktur',
+                                    'asesmen instruktur',
+                                ], true)) {
+
+                                    $tahapKey = 'instruktur';
+
+                                } else {
+
+                                    continue;
+
+                                }
+
+
+                                /*
+                                | Tentukan tahapan berdasarkan urutan.
+                                */
+
+                                $urutan = [
+                                    'instruktur' => 1,
+                                    'kesehatan_awal' => 2,
+                                    'case_conference' => 3,
+                                    'kesehatan_lanjutan' => 4,
+                                ];
+
+
+                                /*
+                                | Kalau tahap ini lebih tinggi dari
+                                | tahap sebelumnya, jadikan tahap terakhir.
+                                */
+
+                                if (
+                                    !$tahapTerakhir ||
+                                    $urutan[$tahapKey] >
+                                    $urutan[$tahapTerakhir]
+                                ) {
+
+                                    $tahapTerakhir = $tahapKey;
+
+                                    $prosesTerakhir = $item;
+
+                                }
+
+                            }
 
 
                             /*
                             |--------------------------------------------------------------------------
-                            | KETERANGAN
+                            | DEFAULT TAHAPAN
                             |--------------------------------------------------------------------------
                             */
 
-                            $keterangan =
-                                'Peserta belum mengikuti asesmen kesehatan lanjutan';
+                            if (!$tahapTerakhir) {
+
+                                $tahapTerakhir =
+                                    'kesehatan_lanjutan';
+
+                            }
+
+
+                            /*
+                            |--------------------------------------------------------------------------
+                            | TENTUKAN LABEL TAHAPAN
+                            |--------------------------------------------------------------------------
+                            */
+
+                            $labelTahapan = match ($tahapTerakhir) {
+
+                                'instruktur' =>
+                                    'Asesmen Instruktur',
+
+                                'kesehatan_awal' =>
+                                    'Asesmen Kesehatan Awal',
+
+                                'case_conference' =>
+                                    'Case Conference',
+
+                                'kesehatan_lanjutan' =>
+                                    'Asesmen Kesehatan Lanjutan',
+
+                                default =>
+                                    'Asesmen Kesehatan Lanjutan',
+
+                            };
+
+
+                            /*
+                            |--------------------------------------------------------------------------
+                            | HASIL & KETERANGAN
+                            |--------------------------------------------------------------------------
+                            */
+
+                            if (!$prosesTerakhir) {
+
+                                $hasil = 'Belum Dimulai';
+
+                                $keterangan =
+                                    'Peserta belum memulai proses asesmen.';
+
+                                $hasilClass = 'pending';
+                                $hasilIcon = 'schedule';
+
+                            } else {
+
+                                $status =
+                                    strtolower(
+                                        trim(
+                                            (string) ($prosesTerakhir->status ?? '')
+                                        )
+                                    );
+
+
+                                if ($status === 'lulus') {
+
+                                    $hasil = 'Lulus';
+                                    $keterangan =
+                                        $prosesTerakhir->catatan
+                                        ?? 'Peserta dinyatakan lulus pada tahap ini.';
+
+                                    $hasilClass = 'accepted';
+                                    $hasilIcon = 'check_circle';
+
+                                } elseif ($status === 'tidak_lulus') {
+
+                                    $hasil = 'Tidak Lulus';
+                                    $keterangan =
+                                        $prosesTerakhir->catatan
+                                        ?? 'Peserta dinyatakan tidak lulus pada tahap ini.';
+
+                                    $hasilClass = 'rejected';
+                                    $hasilIcon = 'cancel';
+
+                                } elseif ($status === 'pending') {
+
+                                    $hasil = 'Pending';
+                                    $keterangan =
+                                        $prosesTerakhir->catatan
+                                        ?? 'Proses asesmen masih menunggu.';
+
+                                    $hasilClass = 'pending';
+                                    $hasilIcon = 'schedule';
+
+                                } elseif (in_array($status, [
+                                    'sedang_diperiksa',
+                                    'sedang-diperiksa',
+                                    'sedang diperiksa',
+                                ], true)) {
+
+                                    $hasil = 'Sedang Pengecekan';
+                                    $keterangan =
+                                        $prosesTerakhir->catatan
+                                        ?? 'Peserta sedang dalam proses pemeriksaan.';
+
+                                    $hasilClass = 'instructor';
+                                    $hasilIcon = 'progress_activity';
+
+                                } else {
+
+                                    $hasil = 'Belum Asesmen';
+                                    $keterangan =
+                                        $prosesTerakhir->catatan
+                                        ?? 'Peserta belum mengikuti asesmen pada tahap ini.';
+
+                                    $hasilClass = 'pending';
+                                    $hasilIcon = 'progress_activity';
+
+                                }
+
+                            }
+
+
+                            /*
+                            |--------------------------------------------------------------------------
+                            | DATA ATTRIBUTE FILTER
+                            |--------------------------------------------------------------------------
+                            */
+
+                            $tahapanFilterValue =
+                                strtolower($labelTahapan);
+
+                            $hasilFilterValue =
+                                strtolower($hasil);
 
                         @endphp
 
@@ -451,8 +708,8 @@
                             data-nama="{{ strtolower($nama) }}"
                             data-nik="{{ strtolower($nik) }}"
                             data-ppks="{{ strtolower($jenisPpks) }}"
-                            data-tahapan="{{ strtolower($tahapan) }}"
-                            data-hasil="{{ strtolower($hasil) }}"
+                            data-tahapan="{{ $tahapanFilterValue }}"
+                            data-hasil="{{ $hasilFilterValue }}"
                             data-tanggal="{{ $tanggal ?? '' }}"
                         >
 
@@ -480,7 +737,7 @@
                             </td>
 
 
-                            {{-- PPKS --}}
+                            {{-- JENIS PPKS --}}
                             <td>
                                 {{ $jenisPpks }}
                             </td>
@@ -499,24 +756,24 @@
 
                                 <a
                                     href="{{ $route }}"
-                                    class="result-badge result-not-done"
+                                    class="result-badge result-{{ $hasilClass }}"
                                 >
 
                                     <span class="material-symbols-outlined result-icon">
-                                        progress_activity
+                                        {{ $hasilIcon }}
                                     </span>
 
                                     <div class="result-content">
 
                                         <span class="result-title">
-                                            Asesmen Kesehatan Lanjutan
+                                            {{ $labelTahapan }}
                                         </span>
 
-                                        <span class="result-status pending">
+                                        <span class="result-status {{ $hasilClass }}">
 
-                                            <span class="status-dot pending"></span>
+                                            <span class="status-dot {{ $hasilClass }}"></span>
 
-                                            Belum Asesmen
+                                            {{ $hasil }}
 
                                         </span>
 
@@ -576,9 +833,7 @@
                                 color: #6b7280;
                             "
                         >
-
                             Data tidak ditemukan.
-
                         </td>
 
                     </tr>
@@ -602,29 +857,20 @@
             function () {
 
                 // =====================================================
-                // ELEMENT SEARCH & FILTER
+                // ELEMENT FILTER
                 // =====================================================
 
                 const searchInput =
-                    document.getElementById(
-                        'searchInput'
-                    );
+                    document.getElementById('searchInput');
 
                 const ppksFilter =
-                    document.getElementById(
-                        'ppksFilter'
-                    );
+                    document.getElementById('ppksFilter');
 
                 const tahapanFilter =
-                    document.getElementById(
-                        'tahapanFilter'
-                    );
+                    document.getElementById('tahapanFilter');
 
                 const hasilFilter =
-                    document.getElementById(
-                        'hasilFilter'
-                    );
-
+                    document.getElementById('hasilFilter');
 
                 const tableRows =
                     document.querySelectorAll(
@@ -632,9 +878,7 @@
                     );
 
                 const emptyRow =
-                    document.getElementById(
-                        'emptyRow'
-                    );
+                    document.getElementById('emptyRow');
 
 
                 // =====================================================
@@ -642,39 +886,25 @@
                 // =====================================================
 
                 const dateFilterButton =
-                    document.getElementById(
-                        'dateFilterButton'
-                    );
+                    document.getElementById('dateFilterButton');
 
                 const datePicker =
-                    document.getElementById(
-                        'datePicker'
-                    );
+                    document.getElementById('datePicker');
 
                 const dateFilterText =
-                    document.getElementById(
-                        'dateFilterText'
-                    );
+                    document.getElementById('dateFilterText');
 
                 const startDate =
-                    document.getElementById(
-                        'startDate'
-                    );
+                    document.getElementById('startDate');
 
                 const endDate =
-                    document.getElementById(
-                        'endDate'
-                    );
+                    document.getElementById('endDate');
 
                 const applyDate =
-                    document.getElementById(
-                        'applyDate'
-                    );
+                    document.getElementById('applyDate');
 
                 const resetDate =
-                    document.getElementById(
-                        'resetDate'
-                    );
+                    document.getElementById('resetDate');
 
 
                 // =====================================================
@@ -688,28 +918,23 @@
                             .toLowerCase()
                             .trim();
 
-
                     const ppksValue =
                         ppksFilter.value
                             .toLowerCase()
                             .trim();
-
 
                     const tahapanValue =
                         tahapanFilter.value
                             .toLowerCase()
                             .trim();
 
-
                     const hasilValue =
                         hasilFilter.value
                             .toLowerCase()
                             .trim();
 
-
                     const selectedStart =
                         startDate.value;
-
 
                     const selectedEnd =
                         endDate.value;
@@ -720,140 +945,134 @@
                     let found = false;
 
 
-                    tableRows.forEach(
-                        function (row) {
+                    tableRows.forEach(function (row) {
 
-                            const nama =
-                                row.dataset.nama || '';
+                        const nama =
+                            row.dataset.nama || '';
 
-                            const nik =
-                                row.dataset.nik || '';
+                        const nik =
+                            row.dataset.nik || '';
 
-                            const ppks =
-                                row.dataset.ppks || '';
+                        const ppks =
+                            row.dataset.ppks || '';
 
-                            const tahapan =
-                                row.dataset.tahapan || '';
+                        const tahapan =
+                            row.dataset.tahapan || '';
 
-                            const hasil =
-                                row.dataset.hasil || '';
+                        const hasil =
+                            row.dataset.hasil || '';
 
-                            const tanggal =
-                                row.dataset.tanggal || '';
-
-
-                            // =================================================
-                            // SEARCH
-                            // =================================================
-
-                            const matchSearch =
-                                nama.includes(
-                                    searchValue
-                                ) ||
-                                nik.includes(
-                                    searchValue
-                                );
+                        const tanggal =
+                            row.dataset.tanggal || '';
 
 
-                            // =================================================
-                            // PPKS
-                            // =================================================
+                        // =================================================
+                        // SEARCH
+                        // =================================================
 
-                            const matchPpks =
-                                ppksValue === '' ||
-                                ppks === ppksValue;
-
-
-                            // =================================================
-                            // TAHAPAN
-                            // =================================================
-
-                            const matchTahapan =
-                                tahapanValue === '' ||
-                                tahapan === tahapanValue;
+                        const matchSearch =
+                            nama.includes(searchValue) ||
+                            nik.includes(searchValue);
 
 
-                            // =================================================
-                            // HASIL
-                            // =================================================
+                        // =================================================
+                        // PPKS
+                        // =================================================
 
-                            const matchHasil =
-                                hasilValue === '' ||
-                                hasil === hasilValue;
-
-
-                            // =================================================
-                            // DATE
-                            // =================================================
-
-                            let matchDate = true;
+                        const matchPpks =
+                            ppksValue === '' ||
+                            ppks === ppksValue;
 
 
-                            if (selectedStart) {
+                        // =================================================
+                        // TAHAPAN
+                        // =================================================
 
-                                matchDate =
-                                    tanggal !== '' &&
-                                    tanggal >= selectedStart;
-
-                            }
-
-
-                            if (
-                                selectedEnd &&
-                                matchDate
-                            ) {
-
-                                matchDate =
-                                    tanggal !== '' &&
-                                    tanggal <= selectedEnd;
-
-                            }
+                        const matchTahapan =
+                            tahapanValue === '' ||
+                            tahapan === tahapanValue;
 
 
-                            // =================================================
-                            // FINAL RESULT
-                            // =================================================
+                        // =================================================
+                        // HASIL
+                        // =================================================
 
-                            const shouldShow =
-                                matchSearch &&
-                                matchPpks &&
-                                matchTahapan &&
-                                matchHasil &&
-                                matchDate;
+                        const matchHasil =
+                            hasilValue === '' ||
+                            hasil === hasilValue;
 
 
-                            // =================================================
-                            // SHOW / HIDE
-                            // =================================================
+                        // =================================================
+                        // DATE
+                        // =================================================
 
-                            if (shouldShow) {
+                        let matchDate = true;
 
-                                row.style.display = '';
 
-                                const numberCell =
-                                    row.querySelector(
-                                        '.row-number'
-                                    );
+                        if (selectedStart) {
 
-                                if (numberCell) {
-
-                                    numberCell.textContent =
-                                        visibleNumber;
-
-                                }
-
-                                visibleNumber++;
-
-                                found = true;
-
-                            } else {
-
-                                row.style.display = 'none';
-
-                            }
+                            matchDate =
+                                tanggal !== '' &&
+                                tanggal >= selectedStart;
 
                         }
-                    );
+
+
+                        if (
+                            selectedEnd &&
+                            matchDate
+                        ) {
+
+                            matchDate =
+                                tanggal !== '' &&
+                                tanggal <= selectedEnd;
+
+                        }
+
+
+                        // =================================================
+                        // FINAL RESULT
+                        // =================================================
+
+                        const shouldShow =
+                            matchSearch &&
+                            matchPpks &&
+                            matchTahapan &&
+                            matchHasil &&
+                            matchDate;
+
+
+                        // =================================================
+                        // SHOW / HIDE
+                        // =================================================
+
+                        if (shouldShow) {
+
+                            row.style.display = '';
+
+                            const numberCell =
+                                row.querySelector(
+                                    '.row-number'
+                                );
+
+                            if (numberCell) {
+
+                                numberCell.textContent =
+                                    visibleNumber;
+
+                            }
+
+                            visibleNumber++;
+
+                            found = true;
+
+                        } else {
+
+                            row.style.display = 'none';
+
+                        }
+
+                    });
 
 
                     // =====================================================
@@ -876,7 +1095,7 @@
 
 
                 // =====================================================
-                // SEARCH EVENT
+                // SEARCH
                 // =====================================================
 
                 searchInput.addEventListener(
@@ -886,7 +1105,7 @@
 
 
                 // =====================================================
-                // FILTER EVENT
+                // FILTER
                 // =====================================================
 
                 ppksFilter.addEventListener(
@@ -906,7 +1125,7 @@
 
 
                 // =====================================================
-                // DATE PICKER OPEN / CLOSE
+                // DATE PICKER OPEN
                 // =====================================================
 
                 dateFilterButton.addEventListener(
@@ -974,21 +1193,10 @@
                         }
 
 
-                        const startFormatted =
-                            formatDate(
-                                start
-                            );
-
-                        const endFormatted =
-                            formatDate(
-                                end
-                            );
-
-
                         dateFilterText.textContent =
-                            startFormatted +
+                            formatDate(start) +
                             ' - ' +
-                            endFormatted;
+                            formatDate(end);
 
 
                         datePicker.classList.remove(
@@ -1017,11 +1225,9 @@
                         dateFilterText.textContent =
                             'Pilih Tanggal';
 
-
                         datePicker.classList.remove(
                             'active'
                         );
-
 
                         filterTable();
 
@@ -1033,14 +1239,11 @@
                 // FORMAT DATE
                 // =====================================================
 
-                function formatDate(
-                    dateString
-                ) {
+                function formatDate(dateString) {
 
                     const date =
                         new Date(
-                            dateString +
-                            'T00:00:00'
+                            dateString + 'T00:00:00'
                         );
 
 
