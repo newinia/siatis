@@ -68,6 +68,12 @@ class PpksKesehatanLanjutanController extends Controller
      * ============================================================
      * DATA LULUS
      * ============================================================
+     *
+     * Peserta yang:
+     * - status PPKS = normal
+     * - Case Conference = diterima
+     * - sudah datang
+     * - hasil Kesehatan Lanjutan = lulus
      */
     public function lulus()
     {
@@ -119,9 +125,12 @@ class PpksKesehatanLanjutanController extends Controller
      * DATA PENDING
      * ============================================================
      *
-     * Pending:
+     * Peserta yang:
+     * - status PPKS = normal
+     * - Case Conference = diterima
+     * - sudah datang
      * - sudah memiliki data Kesehatan Lanjutan
-     * - hasil_akhir masih NULL
+     * - hasil_akhir = pending
      */
     public function pending()
     {
@@ -143,7 +152,7 @@ class PpksKesehatanLanjutanController extends Controller
             ->whereIn('id', function ($query) {
                 $query->select('ppks_id')
                     ->from('kesehatan_lanjutans')
-                    ->whereNull('hasil_akhir');
+                    ->where('hasil_akhir', 'pending');
             })
 
             ->with([
@@ -172,6 +181,12 @@ class PpksKesehatanLanjutanController extends Controller
      * ============================================================
      * DATA TIDAK LULUS
      * ============================================================
+     *
+     * Peserta yang:
+     * - status PPKS = normal
+     * - Case Conference = diterima
+     * - sudah datang
+     * - hasil Kesehatan Lanjutan = tidak_lulus
      */
     public function tidakLulus()
     {
@@ -395,7 +410,7 @@ class PpksKesehatanLanjutanController extends Controller
 
             'hasil_akhir' => [
                 'required',
-                'in:lulus,tidak_lulus',
+                'in:lulus,tidak_lulus,pending',
             ],
 
         ]);
@@ -461,3 +476,4 @@ class PpksKesehatanLanjutanController extends Controller
             );
     }
 }
+

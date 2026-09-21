@@ -541,8 +541,8 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
                         class="nav-submenu-item {{ request()->routeIs('ppks.normal.case-conference.sudah') ? 'active' : '' }}"
                     >
 
-                        <span class="material-symbols-outlined nav-icon">
-                            task_alt
+                        <span>
+                           Sudah Dilakukan
                         </span>
 
                     </a>
@@ -634,10 +634,6 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
                             ) ? 'active' : ''
                         }}"
                     >
-
-                        <span class="material-symbols-outlined nav-icon">
-                            assignment
-                        </span>
 
                         <span>
                             Belum Asesmen
@@ -1062,9 +1058,6 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
                         @click="mobileOpen = false"
                     >
 
-                        <span class="material-symbols-outlined">
-                            assignment
-                        </span>
 
                         <span>
                             Belum Asesmen
@@ -1079,10 +1072,6 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
                         @click="mobileOpen = false"
                     >
 
-                        <span class="material-symbols-outlined">
-                            check_circle
-                        </span>
-
                         <span>
                             Data Lulus
                         </span>
@@ -1095,10 +1084,6 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
                         class="mobile-submenu-item {{ request()->routeIs('ppks.normal.asesmen-instruktur.pending') ? 'active' : '' }}"
                         @click="mobileOpen = false"
                     >
-
-                        <span class="material-symbols-outlined">
-                            schedule
-                        </span>
 
                         <span>
                             Data Pending
@@ -1113,9 +1098,6 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
                         @click="mobileOpen = false"
                     >
 
-                        <span class="material-symbols-outlined">
-                            cancel
-                        </span>
 
                         <span>
                             Data Tidak Lulus
@@ -1182,9 +1164,6 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
                         @click="mobileOpen = false"
                     >
 
-                        <span class="material-symbols-outlined">
-                            assignment
-                        </span>
 
                         <span>
                             Belum Asesmen
@@ -1199,9 +1178,6 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
                         @click="mobileOpen = false"
                     >
 
-                        <span class="material-symbols-outlined">
-                            check_circle
-                        </span>
 
                         <span>
                             Data Lulus
@@ -1216,10 +1192,6 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
                         @click="mobileOpen = false"
                     >
 
-                        <span class="material-symbols-outlined">
-                            schedule
-                        </span>
-
                         <span>
                             Data Pending
                         </span>
@@ -1233,9 +1205,6 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
                         @click="mobileOpen = false"
                     >
 
-                        <span class="material-symbols-outlined">
-                            cancel
-                        </span>
 
                         <span>
                             Data Tidak Lulus
@@ -1300,9 +1269,7 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
                         @click="mobileOpen = false"
                     >
 
-                        <span class="material-symbols-outlined">
-                            assignment
-                        </span>
+
 
                         <span>
                             Belum Dilakukan
@@ -1317,9 +1284,7 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
                         @click="mobileOpen = false"
                     >
 
-                        <span class="material-symbols-outlined">
-                            task_alt
-                        </span>
+
 
                         <span>
                             Sudah Dilakukan
@@ -1330,52 +1295,6 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
                 </div>
 
             </div>
-
-
-            {{-- DATA DITERIMA --}}
-
-            @if (Route::has('ppks.diterima'))
-
-                <a
-                    href="{{ route('ppks.diterima') }}"
-                    class="mobile-nav-item {{ request()->routeIs('ppks.diterima') ? 'active' : '' }}"
-                    @click="mobileOpen = false"
-                >
-
-                    <span class="material-symbols-outlined">
-                        verified
-                    </span>
-
-                    <span>
-                        Data Diterima
-                    </span>
-
-                </a>
-
-            @endif
-
-
-            {{-- DATA TIDAK DITERIMA --}}
-
-            @if (Route::has('ppks.tidak-diterima'))
-
-                <a
-                    href="{{ route('ppks.tidak-diterima') }}"
-                    class="mobile-nav-item {{ request()->routeIs('ppks.tidak-diterima') ? 'active' : '' }}"
-                    @click="mobileOpen = false"
-                >
-
-                    <span class="material-symbols-outlined">
-                        block
-                    </span>
-
-                    <span>
-                        Data Tidak Diterima
-                    </span>
-
-                </a>
-
-            @endif
 
 
             {{-- PEMANGGILAN PESERTA --}}

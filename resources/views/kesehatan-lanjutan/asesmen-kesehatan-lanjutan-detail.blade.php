@@ -1,104 +1,128 @@
+```blade
 <x-app-layout>
+
+    @php
+
+        /*
+        |--------------------------------------------------------------------------
+        | ROLE USER
+        |--------------------------------------------------------------------------
+        */
+
+        $userRole = strtolower(
+            trim((string) (auth()->user()->role ?? ''))
+        );
+
+        $isSuperAdmin = $userRole === 'super_admin';
+        $isMedis = $userRole === 'medis';
+        $isInstruktur = $userRole === 'instruktur';
+
+        $canEdit = $isMedis || $isSuperAdmin;
+        $isViewOnly = $isInstruktur;
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | DATA PPKS
+        |--------------------------------------------------------------------------
+        */
+
+        $data = is_array($ppks->data)
+            ? $ppks->data
+            : [];
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | IDENTITAS PESERTA
+        |--------------------------------------------------------------------------
+        */
+
+        $nama = $data['nama_lengkap']
+            ?? $data['nama']
+            ?? $data['Nama Lengkap']
+            ?? '-';
+
+        $nik = $data['nik']
+            ?? $data['NIK']
+            ?? '-';
+
+        $umur = $data['usia']
+            ?? $data['umur']
+            ?? '-';
+
+        $jenisPpks = $data['jenis_ppks']
+            ?? $data['jenis PPKS']
+            ?? $data['Jenis PPKS']
+            ?? '-';
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | CASE CONFERENCE
+        |--------------------------------------------------------------------------
+        */
+
+        $jurusan = $caseConference?->jurusan_diterima
+            ?? '-';
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | DATA KESEHATAN LANJUTAN
+        |--------------------------------------------------------------------------
+        */
+
+        $hasilAkhir = $kesehatanLanjutan?->hasil_akhir;
+
+        $kesehatanProgressStatus = match ($hasilAkhir) {
+
+            'lulus' => 'completed',
+
+            'tidak_lulus' => 'failed',
+
+            default => 'current',
+
+        };
+
+        $lulusKesehatanLanjutan = (
+            $hasilAkhir === 'lulus'
+        );
+
+    @endphp
+
+
     <div
         class="participant-detail-page"
-        x-data="{ showSavePopup: false }"
+        x-data="{
+            showSavePopup: false,
+            submitting: false
+        }"
     >
+
 
         {{-- =====================================================
         PROGRESS TAHAPAN
         ====================================================== --}}
-        <section class="participant-progress">
 
-            {{-- DATA CALON PPKS --}}
-            <div class="progress-step completed">
-
-                <div class="progress-circle">
-                    <span class="material-symbols-outlined">
-                        check
-                    </span>
-                </div>
-
-                <span class="progress-label">
-                    Data calon<br>PPKS
-                </span>
-
-            </div>
-
-            <div class="progress-line completed"></div>
-
-
-            {{-- ASESMEN INSTRUKTUR --}}
-            <div class="progress-step completed">
-
-                <div class="progress-circle">
-                    <span class="material-symbols-outlined">
-                        check
-                    </span>
-                </div>
-
-                <span class="progress-label">
-                    Asesmen<br>Instruktur
-                </span>
-
-            </div>
-
-            <div class="progress-line completed"></div>
-
-
-            {{-- ASESMEN KESEHATAN AWAL --}}
-            <div class="progress-step completed">
-
-                <div class="progress-circle">
-                    <span class="material-symbols-outlined">
-                        check
-                    </span>
-                </div>
-
-                <span class="progress-label">
-                    Asesmen Kesehatan<br>Awal
-                </span>
-
-            </div>
-
-            <div class="progress-line completed"></div>
-
-
-            {{-- CASE CONFERENCE --}}
-            <div class="progress-step completed">
-
-                <div class="progress-circle">
-                    <span class="material-symbols-outlined">
-                        check
-                    </span>
-                </div>
-
-                <span class="progress-label">
-                    Case<br>Conference
-                </span>
-
-            </div>
-
-            <div class="progress-line completed"></div>
-
-
-            {{-- KESEHATAN LANJUTAN --}}
-            <div class="progress-step current">
-
-                <div class="progress-circle"></div>
-
-                <span class="progress-label">
-                    Kesehatan<br>Lanjutan
-                </span>
-
-            </div>
-
-        </section>
+        <x-participant-progress
+            :active-step="5"
+            :stage-statuses="[
+                1 => 'completed',
+                2 => 'completed',
+                3 => 'completed',
+                4 => 'completed',
+                5 => $kesehatanProgressStatus
+            ]"
+            final-status="waiting"
+        />
 
 
 
         {{-- =====================================================
-        FORM
+        FORM UTAMA
         ====================================================== --}}
+
         <form
             x-ref="assessmentForm"
             class="participant-detail-card"
@@ -107,14 +131,17 @@
                 'ppks.normal.kesehatan-lanjutan.update',
                 $ppks
             ) }}"
+            @submit="submitting = true"
         >
 
             @csrf
 
 
+
             {{-- =================================================
             KEMBALI
             ================================================== --}}
+
             <a
                 href="{{ route(
                     'ppks.normal.kesehatan-lanjutan'
@@ -135,37 +162,9 @@
 
 
             {{-- =================================================
-            HEADER PESERTA
-            ================================================== --}}
-            @php
-
-                $data = is_array($ppks->data)
-                    ? $ppks->data
-                    : [];
-
-                $nama = $data['nama_lengkap']
-                    ?? $data['nama']
-                    ?? '-';
-
-                $nik = $data['nik']
-                    ?? '-';
-
-                $umur = $data['usia']
-                    ?? '-';
-
-                $jenisPpks = $data['jenis_ppks']
-                    ?? '-';
-
-                $jurusan = $caseConference->jurusan_diterima
-                    ?? '-';
-
-            @endphp
-
-
-
-            {{-- =================================================
             DATA PESERTA
             ================================================== --}}
+
             <div class="detail-section participant-info-section">
 
                 <div class="detail-section-title">
@@ -175,7 +174,9 @@
 
                 <div class="assessment-grid">
 
+
                     {{-- NAMA --}}
+
                     <div class="detail-field">
 
                         <label>
@@ -191,7 +192,9 @@
                     </div>
 
 
+
                     {{-- NIK --}}
+
                     <div class="detail-field">
 
                         <label>
@@ -207,7 +210,9 @@
                     </div>
 
 
+
                     {{-- UMUR --}}
+
                     <div class="detail-field">
 
                         <label>
@@ -223,7 +228,9 @@
                     </div>
 
 
+
                     {{-- JENIS PPKS --}}
+
                     <div class="detail-field">
 
                         <label>
@@ -239,7 +246,9 @@
                     </div>
 
 
+
                     {{-- JURUSAN --}}
+
                     <div class="detail-field">
 
                         <label>
@@ -254,6 +263,7 @@
 
                     </div>
 
+
                 </div>
 
             </div>
@@ -263,6 +273,7 @@
             {{-- =================================================
             ASESMEN KESEHATAN LANJUTAN
             ================================================== --}}
+
             <div class="detail-section">
 
                 <div class="detail-section-title">
@@ -276,6 +287,7 @@
                     {{-- =================================================
                     TANGGAL ASESMEN
                     ================================================== --}}
+
                     <div class="detail-field">
 
                         <label for="tanggal_asesmen">
@@ -290,7 +302,7 @@
                                 'tanggal_asesmen',
                                 $kesehatanLanjutan?->tanggal_asesmen?->format('Y-m-d')
                             ) }}"
-                            required
+                            {{ $canEdit ? 'required' : 'disabled' }}
                         >
 
                     </div>
@@ -300,23 +312,29 @@
                     {{-- =================================================
                     GELOMBANG & TAHUN
                     ================================================== --}}
+
                     <div class="detail-field">
 
                         <label>
                             Gelombang & Tahun
                         </label>
 
+
                         <div class="wave-year-group">
 
+
                             {{-- GELOMBANG --}}
+
                             <select
                                 id="gelombang"
                                 name="gelombang"
+                                {{ $canEdit ? '' : 'disabled' }}
                             >
 
                                 <option value="">
                                     Pilih Gelombang
                                 </option>
+
 
                                 <option
                                     value="1"
@@ -329,6 +347,7 @@
                                 >
                                     Gelombang 1
                                 </option>
+
 
                                 <option
                                     value="2"
@@ -345,15 +364,19 @@
                             </select>
 
 
+
                             {{-- TAHUN --}}
+
                             <select
                                 id="tahun"
                                 name="tahun"
+                                {{ $canEdit ? '' : 'disabled' }}
                             >
 
                                 <option value="">
                                     Tahun
                                 </option>
+
 
                                 @for ($tahun = 2026; $tahun <= 2028; $tahun++)
 
@@ -382,6 +405,7 @@
                     {{-- =================================================
                     PETUGAS KESEHATAN
                     ================================================== --}}
+
                     <div class="detail-field">
 
                         <label for="petugas_kesehatan">
@@ -391,11 +415,13 @@
                         <select
                             id="petugas_kesehatan"
                             name="petugas_kesehatan"
+                            {{ $canEdit ? '' : 'disabled' }}
                         >
 
                             <option value="">
                                 Pilih Petugas Asesmen Kesehatan
                             </option>
+
 
                             @foreach ($petugas as $user)
 
@@ -422,6 +448,7 @@
                     {{-- =================================================
                     ASESMEN KESEHATAN
                     ================================================== --}}
+
                     <div class="detail-field">
 
                         <label for="hasil_asesmen">
@@ -431,11 +458,13 @@
                         <select
                             id="hasil_asesmen"
                             name="hasil_asesmen"
+                            {{ $canEdit ? '' : 'disabled' }}
                         >
 
                             <option value="">
                                 Pilih Status
                             </option>
+
 
                             <option
                                 value="sudah"
@@ -449,6 +478,7 @@
                                 Sudah
                             </option>
 
+
                             <option
                                 value="belum"
                                 {{ old(
@@ -460,6 +490,7 @@
                             >
                                 Belum
                             </option>
+
 
                             <option
                                 value="proses"
@@ -482,6 +513,7 @@
                     {{-- =================================================
                     ASESMEN PSIKOLOGI
                     ================================================== --}}
+
                     <div class="detail-field">
 
                         <label for="status_asesmen_psikologi">
@@ -491,11 +523,13 @@
                         <select
                             id="status_asesmen_psikologi"
                             name="status_asesmen_psikologi"
+                            {{ $canEdit ? '' : 'disabled' }}
                         >
 
                             <option value="">
                                 Pilih Status
                             </option>
+
 
                             <option
                                 value="sudah"
@@ -509,6 +543,7 @@
                                 Sudah
                             </option>
 
+
                             <option
                                 value="belum"
                                 {{ old(
@@ -520,6 +555,7 @@
                             >
                                 Belum
                             </option>
+
 
                             <option
                                 value="proses"
@@ -542,6 +578,7 @@
                     {{-- =================================================
                     ASESMEN FISIOTERAPIS
                     ================================================== --}}
+
                     <div class="detail-field">
 
                         <label for="status_asesmen_fisioterapis">
@@ -551,11 +588,13 @@
                         <select
                             id="status_asesmen_fisioterapis"
                             name="status_asesmen_fisioterapis"
+                            {{ $canEdit ? '' : 'disabled' }}
                         >
 
                             <option value="">
                                 Pilih Status
                             </option>
+
 
                             <option
                                 value="sudah"
@@ -569,6 +608,7 @@
                                 Sudah
                             </option>
 
+
                             <option
                                 value="belum"
                                 {{ old(
@@ -580,6 +620,7 @@
                             >
                                 Belum
                             </option>
+
 
                             <option
                                 value="proses"
@@ -597,6 +638,7 @@
 
                     </div>
 
+
                 </div>
 
 
@@ -604,6 +646,7 @@
                 {{-- =================================================
                 CATATAN
                 ================================================== --}}
+
                 <div class="detail-field assessment-note">
 
                     <label for="catatan_asesmen">
@@ -614,6 +657,7 @@
                         id="catatan_asesmen"
                         name="catatan_asesmen"
                         placeholder="Masukkan catatan tambahan (opsional)"
+                        {{ $canEdit ? '' : 'disabled' }}
                     >{{ old(
                         'catatan_asesmen',
                         $kesehatanLanjutan?->catatan_asesmen
@@ -628,6 +672,7 @@
             {{-- =================================================
             HASIL AKHIR
             ================================================== --}}
+
             <div class="detail-section">
 
                 <div class="detail-section-title">
@@ -643,15 +688,17 @@
                             Hasil Akhir
                         </label>
 
+
                         <select
                             id="hasil_akhir"
                             name="hasil_akhir"
-                            required
+                            {{ $canEdit ? 'required' : 'disabled' }}
                         >
 
                             <option value="">
                                 Pilih Hasil
                             </option>
+
 
                             <option
                                 value="lulus"
@@ -664,6 +711,7 @@
                             >
                                 Lulus
                             </option>
+
 
                             <option
                                 value="tidak_lulus"
@@ -690,6 +738,7 @@
             {{-- =================================================
             ERROR VALIDASI
             ================================================== --}}
+
             @if ($errors->any())
 
                 <div class="form-error-message">
@@ -715,17 +764,33 @@
             {{-- =================================================
             BUTTON SIMPAN
             ================================================== --}}
-            <div class="form-action">
 
-                <button
-                    type="button"
-                    class="btn-save"
-                    @click="showSavePopup = true"
-                >
-                    Simpan
-                </button>
+            @if ($canEdit)
 
-            </div>
+                <div class="form-action">
+
+                    <button
+                        type="button"
+                        class="btn-save"
+                        :disabled="submitting"
+                        @click="showSavePopup = true"
+                    >
+                        <span
+                            x-show="!submitting"
+                        >
+                            Simpan
+                        </span>
+
+                        <span
+                            x-show="submitting"
+                        >
+                            Menyimpan...
+                        </span>
+                    </button>
+
+                </div>
+
+            @endif
 
         </form>
 
@@ -734,11 +799,13 @@
         {{-- =====================================================
         POPUP KONFIRMASI SIMPAN
         ====================================================== --}}
+
         <template x-if="showSavePopup">
 
             <div class="save-modal-overlay">
 
                 <div class="save-modal">
+
 
                     <div class="save-modal-icon">
 
@@ -762,7 +829,9 @@
 
                     <div class="save-modal-actions">
 
+
                         {{-- BATAL --}}
+
                         <button
                             type="button"
                             class="save-modal-cancel"
@@ -772,7 +841,9 @@
                         </button>
 
 
+
                         {{-- SIMPAN --}}
+
                         <button
                             type="button"
                             class="save-modal-button"
@@ -780,6 +851,7 @@
                         >
                             Simpan
                         </button>
+
 
                     </div>
 
@@ -794,11 +866,13 @@
         {{-- =====================================================
         POPUP BERHASIL
         ====================================================== --}}
+
         @if (session('success'))
 
             <div class="save-modal-overlay">
 
                 <div class="save-modal">
+
 
                     <div class="save-modal-icon">
 
@@ -836,6 +910,56 @@
 
         @endif
 
+
+
+        {{-- =====================================================
+        POPUP ERROR SESSION
+        ====================================================== --}}
+
+        @if (session('error'))
+
+            <div class="save-modal-overlay">
+
+                <div class="save-modal">
+
+
+                    <div class="save-modal-icon">
+
+                        <span class="material-symbols-outlined">
+                            error
+                        </span>
+
+                    </div>
+
+
+                    <h3 class="save-modal-title">
+                        Tidak Dapat Disimpan
+                    </h3>
+
+
+                    <p class="save-modal-message">
+                        {{ session('error') }}
+                    </p>
+
+
+                    <button
+                        type="button"
+                        class="save-modal-button"
+                        @click="window.location.href = '{{ route(
+                            'ppks.normal.kesehatan-lanjutan'
+                        ) }}'"
+                    >
+                        OK
+                    </button>
+
+                </div>
+
+            </div>
+
+        @endif
+
+
     </div>
 
 </x-app-layout>
+```

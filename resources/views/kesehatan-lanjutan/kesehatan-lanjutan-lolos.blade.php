@@ -1,106 +1,83 @@
 <x-app-layout>
 
-    <div class="case-conference-page">
+    <div class="main-page">
 
         {{-- =====================================================
         HEADER
         ====================================================== --}}
-        <div class="case-conference-header">
+        <div class="main-page-header">
 
             <div>
-                <h1>Peserta Aktif</h1>
+                <h1>Data Kesehatan Lanjutan</h1>
 
                 <p>
-                    Data peserta yang telah lulus Asesmen Kesehatan Lanjutan dan menjadi peserta aktif.
+                    Data peserta yang telah lulus asesmen kesehatan lanjutan dan menjadi peserta aktif.
                 </p>
             </div>
 
-            {{-- =====================================================
+
+            {{-- =================================================
             DATE FILTER
-            ====================================================== --}}
+            ================================================== --}}
             <div class="date-filter-wrapper">
 
-                <button type="button"
-                    class="date-filter"
-                    id="dateFilterButton">
+                <button type="button" class="date-filter" id="dateFilterButton">
 
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.8">
-
-                        <rect x="3" y="4" width="18" height="18" rx="2" />
-                        <path d="M16 2v4" />
-                        <path d="M8 2v4" />
-                        <path d="M3 10h18" />
-
-                    </svg>
+                    <span class="material-symbols-outlined">
+                        calendar_month
+                    </span>
 
                     <span id="dateFilterText">
                         Pilih Tanggal
                     </span>
 
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                        width="17"
-                        height="17"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2">
-
-                        <path d="m6 9 6 6 6-6" />
-
-                    </svg>
+                    <span class="material-symbols-outlined">
+                        keyboard_arrow_down
+                    </span>
 
                 </button>
 
 
-                {{-- DATE PICKER --}}
-                <div class="date-picker"
-                    id="datePicker">
+                <div class="date-picker" id="datePicker">
 
                     <div class="date-picker-header">
-                        <strong>
-                            Pilih Rentang Tanggal
-                        </strong>
+                        <strong>Pilih Rentang Tanggal</strong>
                     </div>
+
 
                     <div class="date-input-group">
 
                         <div>
+
                             <label for="startDate">
                                 Dari
                             </label>
 
-                            <input type="date"
-                                id="startDate">
+                            <input type="date" id="startDate">
+
                         </div>
 
+
                         <div>
+
                             <label for="endDate">
                                 Sampai
                             </label>
 
-                            <input type="date"
-                                id="endDate">
+                            <input type="date" id="endDate">
+
                         </div>
 
                     </div>
 
+
                     <div class="date-picker-actions">
 
-                        <button type="button"
-                            id="resetDate"
-                            class="date-reset">
+                        <button type="button" id="resetDate" class="date-reset">
                             Reset
                         </button>
 
-                        <button type="button"
-                            id="applyDate"
-                            class="date-apply">
+                        <button type="button" id="applyDate" class="date-apply">
                             Terapkan
                         </button>
 
@@ -113,40 +90,28 @@
         </div>
 
 
+
         {{-- =====================================================
         FILTER
         ====================================================== --}}
-        <div class="case-filter-wrapper">
+        <div class="filter-wrapper">
 
             {{-- SEARCH --}}
-            <div class="case-search">
+            <div class="search">
 
-                <svg xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2">
+                <span class="material-symbols-outlined">
+                    search
+                </span>
 
-                    <circle cx="11" cy="11" r="7" />
-                    <path d="m20 20-3.5-3.5" />
-
-                </svg>
-
-                <input type="text"
-                    id="searchInput"
-                    placeholder="Cari Nama atau NIK"
-                    autocomplete="off">
+                <input type="text" id="searchInput" placeholder="Cari Nama atau NIK" autocomplete="off">
 
             </div>
 
 
-            {{-- FILTER PPKS --}}
+            {{-- JENIS PPKS --}}
             <div class="select-wrapper">
 
-                <select id="ppksFilter"
-                    class="case-filter-button">
+                <select id="ppksFilter" class="filter-button">
 
                     <option value="">
                         Semua Jenis PPKS
@@ -189,11 +154,10 @@
             </div>
 
 
-            {{-- FILTER TAHAPAN --}}
+            {{-- TAHAPAN --}}
             <div class="select-wrapper">
 
-                <select id="tahapanFilter"
-                    class="case-filter-button">
+                <select id="tahapanFilter" class="filter-button">
 
                     <option value="">
                         Semua Jenis Tahapan
@@ -212,11 +176,10 @@
             </div>
 
 
-            {{-- FILTER HASIL --}}
+            {{-- HASIL --}}
             <div class="select-wrapper">
 
-                <select id="hasilFilter"
-                    class="case-filter-button">
+                <select id="hasilFilter" class="filter-button">
 
                     <option value="">
                         Semua Hasil
@@ -239,6 +202,7 @@
             </div>
 
         </div>
+
 
 
         {{-- =====================================================
@@ -268,112 +232,157 @@
 
                 <tbody>
 
-                    {{-- =====================================================
-                    LOOP PESERTA AKTIF
-                    ====================================================== --}}
-                    @foreach ($ppks as $index => $peserta)
+                    @forelse ($ppks as $index => $peserta)
 
                         @php
 
-                            $data = $peserta->data ?? [];
+                            /*
+                            |--------------------------------------------------------------------------
+                            | DATA PPKS
+                            |--------------------------------------------------------------------------
+                            */
+
+                            $data =
+                                is_array($peserta->data)
+                                ? $peserta->data
+                                : [];
+
 
                             /*
-                             * IDENTITAS PESERTA
-                             */
-                            $nama = $data['nama_lengkap']
+                            |--------------------------------------------------------------------------
+                            | IDENTITAS
+                            |--------------------------------------------------------------------------
+                            */
+
+                            $nama =
+                                $data['nama_lengkap']
                                 ?? $data['nama']
+                                ?? $data['Nama Lengkap']
                                 ?? '-';
 
-                            $nik = $data['nik']
+
+                            $nik =
+                                $data['nik']
+                                ?? $data['NIK']
                                 ?? '-';
 
-                            $umur = $data['usia']
+
+                            $umur =
+                                $data['usia']
                                 ?? $data['umur']
                                 ?? '-';
 
-                            $jenisPpks = $data['jenis_ppks']
-                                ?? $data['jenis ppks']
+
+                            $jenisPpks =
+                                $data['jenis_ppks']
+                                ?? $data['jenis PPKS']
+                                ?? $data['Jenis PPKS']
                                 ?? '-';
 
 
                             /*
-                             * DATA CASE CONFERENCE
-                             */
+                            |--------------------------------------------------------------------------
+                            | CASE CONFERENCE
+                            |--------------------------------------------------------------------------
+                            */
+
                             $caseConference =
                                 $caseConferences[$peserta->id]
                                 ?? null;
 
+
                             $jurusan =
-                                $caseConference->jurusan_diterima
+                                $caseConference?->jurusan_diterima
                                 ?? '-';
 
 
                             /*
-                             * DATA KESEHATAN LANJUTAN
-                             */
+                            |--------------------------------------------------------------------------
+                            | KESEHATAN LANJUTAN
+                            |--------------------------------------------------------------------------
+                            |
+                            | Halaman ini khusus menampilkan peserta
+                            | yang sudah LULUS Kesehatan Lanjutan.
+                            |
+                            */
+
                             $kesehatanLanjutan =
                                 $peserta->kesehatanLanjutan
                                 ?? null;
 
 
                             /*
-                             * PESERTA AKTIF
-                             *
-                             * Controller hanya mengirimkan
-                             * peserta dengan hasil_akhir = lulus.
-                             */
+                            |--------------------------------------------------------------------------
+                            | TAHAPAN
+                            |--------------------------------------------------------------------------
+                            */
+
                             $tahapan =
                                 'Asesmen Kesehatan Lanjutan';
+
+
+                            /*
+                            |--------------------------------------------------------------------------
+                            | HASIL
+                            |--------------------------------------------------------------------------
+                            */
 
                             $hasil =
                                 'Lulus';
 
-                            $status =
-                                'health';
+
+                            /*
+                            |--------------------------------------------------------------------------
+                            | KETERANGAN
+                            |--------------------------------------------------------------------------
+                            */
 
                             $keterangan =
-                                'Peserta Aktif';
+                                $kesehatanLanjutan?->catatan_asesmen
+                                ?? '-';
 
 
                             /*
-                             * DATE FILTER
-                             *
-                             * Gunakan tanggal asesmen kesehatan
-                             * lanjutan sebagai tanggal filter.
-                             */
+                            |--------------------------------------------------------------------------
+                            | TANGGAL ASESMEN
+                            |--------------------------------------------------------------------------
+                            |
+                            | Digunakan untuk date filter.
+                            |
+                            */
+
                             $tanggal = '';
 
                             if ($kesehatanLanjutan) {
 
                                 $tanggal =
                                     $kesehatanLanjutan->tanggal_asesmen
-                                        ? \Carbon\Carbon::parse(
-                                            $kesehatanLanjutan->tanggal_asesmen
-                                        )->format('Y-m-d')
-                                        : '';
+                                    ? \Carbon\Carbon::parse(
+                                        $kesehatanLanjutan->tanggal_asesmen
+                                    )->format('Y-m-d')
+                                    : '';
 
                             }
 
 
                             /*
-                             * DETAIL
-                             */
-                            $detailRoute = route(
-                                'ppks.normal.kesehatan-lanjutan.detail',
-                                $peserta
-                            );
+                            |--------------------------------------------------------------------------
+                            | DETAIL ROUTE
+                            |--------------------------------------------------------------------------
+                            */
+
+                            $detailRoute =
+                                route(
+                                    'ppks.normal.kesehatan-lanjutan.detail',
+                                    $peserta
+                                );
 
                         @endphp
 
 
-                        <tr
-                            data-nama="{{ strtolower($nama) }}"
-                            data-nik="{{ strtolower($nik) }}"
-                            data-ppks="{{ strtolower($jenisPpks) }}"
-                            data-tahapan="{{ strtolower($tahapan) }}"
-                            data-hasil="{{ strtolower($hasil) }}"
-                            data-tanggal="{{ $tanggal }}"
-                        >
+                        <tr data-nama="{{ strtolower($nama) }}" data-nik="{{ strtolower($nik) }}"
+                            data-ppks="{{ strtolower($jenisPpks) }}" data-tahapan="{{ strtolower($tahapan) }}"
+                            data-hasil="{{ strtolower($hasil) }}" data-tanggal="{{ $tanggal }}">
 
                             {{-- NO --}}
                             <td class="row-number">
@@ -410,28 +419,31 @@
                                 {{ $jurusan }}
                             </td>
 
-
-                            {{-- =====================================================
+                            {{-- =================================================
                             HASIL
-                            ====================================================== --}}
+                            ================================================== --}}
                             <td>
 
-                                <a href="{{ $detailRoute }}"
-                                    class="result-badge result-health">
+                                <a href="{{ $detailRoute }}" class="result-badge result-health-advanced">
 
+                                    {{-- ICON TAHAPAN --}}
                                     <span class="material-symbols-outlined result-icon">
-                                        task_alt
+                                        medical_services
                                     </span>
+
 
                                     <div class="result-content">
 
+                                        {{-- NAMA TAHAPAN --}}
                                         <span class="result-title">
-                                            Asesmen Kesehatan
+                                            Asesmen Kesehatan Lanjutan
                                         </span>
 
-                                        <span class="result-status">
 
-                                            <span class="status-dot"></span>
+                                        {{-- STATUS --}}
+                                        <span class="result-status lulus">
+
+                                            <span class="status-dot lulus"></span>
 
                                             Lulus
 
@@ -439,6 +451,8 @@
 
                                     </div>
 
+
+                                    {{-- ARROW --}}
                                     <span class="result-arrow">
                                         ›
                                     </span>
@@ -448,28 +462,42 @@
                             </td>
 
 
-                            {{-- KETERANGAN --}}
+
+                            {{-- =================================================
+                            KETERANGAN
+                            ================================================== --}}
                             <td>
-                                {{ $keterangan }}
+
+                                <span class="keterangan-lolos">
+                                    {{ $keterangan }}
+                                </span>
+
                             </td>
 
                         </tr>
 
-                    @endforeach
+                    @empty
+
+                        <tr>
+
+                            <td colspan="8" class="empty-state">
+
+                                Belum ada peserta yang lulus
+                                Kesehatan Lanjutan.
+
+                            </td>
+
+                        </tr>
+
+                    @endforelse
 
 
-                    {{-- =====================================================
-                    DATA TIDAK DITEMUKAN
-                    ====================================================== --}}
-                    <tr id="emptyRow"
-                        style="display: none;">
+                    {{-- =================================================
+                    EMPTY FILTER
+                    ================================================== --}}
+                    <tr id="emptyRow" style="display: none;">
 
-                        <td colspan="8"
-                            style="
-                                text-align: center;
-                                padding: 40px;
-                                color: #6b7280;
-                            ">
+                        <td colspan="8" class="empty-state">
 
                             Data tidak ditemukan.
 
@@ -486,25 +514,31 @@
     </div>
 
 
-    {{-- =====================================================
+
+    {{-- =========================================================
     JAVASCRIPT
-    ====================================================== --}}
+    ========================================================== --}}
     <script>
 
         document.addEventListener('DOMContentLoaded', function () {
 
-            // =====================================================
-            // ELEMENT SEARCH & FILTER
-            // =====================================================
+            /*
+            |--------------------------------------------------------------------------
+            | ELEMENT
+            |--------------------------------------------------------------------------
+            */
 
             const searchInput =
                 document.getElementById('searchInput');
 
+
             const ppksFilter =
                 document.getElementById('ppksFilter');
 
+
             const tahapanFilter =
                 document.getElementById('tahapanFilter');
+
 
             const hasilFilter =
                 document.getElementById('hasilFilter');
@@ -515,218 +549,303 @@
                     '.table tbody tr:not(#emptyRow)'
                 );
 
+
             const emptyRow =
                 document.getElementById('emptyRow');
 
 
-            // =====================================================
-            // DATE ELEMENT
-            // =====================================================
+
+            /*
+            |--------------------------------------------------------------------------
+            | DATE ELEMENT
+            |--------------------------------------------------------------------------
+            */
 
             const dateFilterButton =
-                document.getElementById('dateFilterButton');
+                document.getElementById(
+                    'dateFilterButton'
+                );
+
 
             const datePicker =
-                document.getElementById('datePicker');
+                document.getElementById(
+                    'datePicker'
+                );
+
 
             const dateFilterText =
-                document.getElementById('dateFilterText');
+                document.getElementById(
+                    'dateFilterText'
+                );
+
 
             const startDate =
-                document.getElementById('startDate');
+                document.getElementById(
+                    'startDate'
+                );
+
 
             const endDate =
-                document.getElementById('endDate');
+                document.getElementById(
+                    'endDate'
+                );
+
 
             const applyDate =
-                document.getElementById('applyDate');
+                document.getElementById(
+                    'applyDate'
+                );
+
 
             const resetDate =
-                document.getElementById('resetDate');
+                document.getElementById(
+                    'resetDate'
+                );
 
 
-            // =====================================================
-            // FILTER TABLE
-            // =====================================================
+
+            /*
+            |--------------------------------------------------------------------------
+            | FILTER TABLE
+            |--------------------------------------------------------------------------
+            */
 
             function filterTable() {
 
-                const searchValue =
+                const search =
                     searchInput.value
                         .toLowerCase()
                         .trim();
 
-                const ppksValue =
+
+                const ppks =
                     ppksFilter.value
                         .toLowerCase()
                         .trim();
 
-                const tahapanValue =
+
+                const tahapan =
                     tahapanFilter.value
                         .toLowerCase()
                         .trim();
 
-                const hasilValue =
+
+                const hasil =
                     hasilFilter.value
                         .toLowerCase()
                         .trim();
 
 
-                const selectedStart =
+                const start =
                     startDate.value;
 
-                const selectedEnd =
+
+                const end =
                     endDate.value;
 
 
-                let visibleNumber = 1;
-
-                let found = false;
+                let visibleCount = 0;
 
 
                 tableRows.forEach(function (row) {
 
                     const nama =
-                        row.dataset.nama || '';
+                        row.dataset.nama
+                        || '';
+
 
                     const nik =
-                        row.dataset.nik || '';
+                        row.dataset.nik
+                        || '';
 
-                    const ppks =
-                        row.dataset.ppks || '';
 
-                    const tahapan =
-                        row.dataset.tahapan || '';
+                    const jenisPpks =
+                        row.dataset.ppks
+                        || '';
 
-                    const hasil =
-                        row.dataset.hasil || '';
+
+                    const tahap =
+                        row.dataset.tahapan
+                        || '';
+
+
+                    const hasilData =
+                        row.dataset.hasil
+                        || '';
+
 
                     const tanggal =
-                        row.dataset.tanggal || '';
+                        row.dataset.tanggal
+                        || '';
 
 
-                    // =================================================
-                    // SEARCH
-                    // =================================================
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | SEARCH
+                    |--------------------------------------------------------------------------
+                    */
 
                     const matchSearch =
-                        nama.includes(searchValue) ||
-                        nik.includes(searchValue);
+                        !search
+                        ||
+                        nama.includes(search)
+                        ||
+                        nik.includes(search);
 
 
-                    // =================================================
-                    // PPKS
-                    // =================================================
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | PPKS
+                    |--------------------------------------------------------------------------
+                    */
 
                     const matchPpks =
-                        ppksValue === '' ||
-                        ppks === ppksValue;
+                        !ppks
+                        ||
+                        jenisPpks === ppks;
 
 
-                    // =================================================
-                    // TAHAPAN
-                    // =================================================
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | TAHAPAN
+                    |--------------------------------------------------------------------------
+                    */
 
                     const matchTahapan =
-                        tahapanValue === '' ||
-                        tahapan === tahapanValue;
+                        !tahapan
+                        ||
+                        tahap === tahapan;
 
 
-                    // =================================================
-                    // HASIL
-                    // =================================================
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | HASIL
+                    |--------------------------------------------------------------------------
+                    */
 
                     const matchHasil =
-                        hasilValue === '' ||
-                        hasil === hasilValue;
+                        !hasil
+                        ||
+                        hasilData === hasil;
 
 
-                    // =================================================
-                    // DATE
-                    // =================================================
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | TANGGAL
+                    |--------------------------------------------------------------------------
+                    */
 
                     let matchDate = true;
 
 
-                    if (selectedStart) {
+                    if (start || end) {
 
-                        matchDate =
-                            tanggal >= selectedStart;
+                        if (!tanggal) {
+
+                            matchDate = false;
+
+                        }
+
+                        else {
+
+                            if (
+                                start
+                                &&
+                                tanggal < start
+                            ) {
+
+                                matchDate = false;
+
+                            }
+
+
+                            if (
+                                end
+                                &&
+                                tanggal > end
+                            ) {
+
+                                matchDate = false;
+
+                            }
+
+                        }
 
                     }
 
 
-                    if (
-                        selectedEnd &&
-                        matchDate
-                    ) {
 
-                        matchDate =
-                            tanggal <= selectedEnd;
+                    /*
+                    |--------------------------------------------------------------------------
+                    | FINAL RESULT
+                    |--------------------------------------------------------------------------
+                    */
 
-                    }
-
-
-                    // =================================================
-                    // FINAL RESULT
-                    // =================================================
-
-                    const shouldShow =
-                        matchSearch &&
-                        matchPpks &&
-                        matchTahapan &&
-                        matchHasil &&
+                    const visible =
+                        matchSearch
+                        &&
+                        matchPpks
+                        &&
+                        matchTahapan
+                        &&
+                        matchHasil
+                        &&
                         matchDate;
 
 
-                    // =================================================
-                    // SHOW / HIDE
-                    // =================================================
 
-                    if (shouldShow) {
+                    /*
+                    |--------------------------------------------------------------------------
+                    | SHOW / HIDE
+                    |--------------------------------------------------------------------------
+                    */
 
-                        row.style.display = '';
+                    row.style.display =
+                        visible
+                            ? ''
+                            : 'none';
+
+
+                    if (visible) {
+
+                        visibleCount++;
 
                         row.querySelector(
                             '.row-number'
                         ).textContent =
-                            visibleNumber;
-
-                        visibleNumber++;
-
-                        found = true;
-
-                    } else {
-
-                        row.style.display = 'none';
+                            visibleCount;
 
                     }
 
                 });
 
 
-                // =====================================================
-                // EMPTY DATA
-                // =====================================================
 
-                if (found) {
+                /*
+                |--------------------------------------------------------------------------
+                | EMPTY ROW
+                |--------------------------------------------------------------------------
+                */
 
-                    emptyRow.style.display =
-                        'none';
-
-                } else {
-
-                    emptyRow.style.display =
-                        'table-row';
-
-                }
+                emptyRow.style.display =
+                    visibleCount === 0
+                        ? 'table-row'
+                        : 'none';
 
             }
 
 
-            // =====================================================
-            // SEARCH EVENT
-            // =====================================================
+
+            /*
+            |--------------------------------------------------------------------------
+            | SEARCH
+            |--------------------------------------------------------------------------
+            */
 
             searchInput.addEventListener(
                 'input',
@@ -734,19 +853,24 @@
             );
 
 
-            // =====================================================
-            // FILTER EVENT
-            // =====================================================
+
+            /*
+            |--------------------------------------------------------------------------
+            | FILTER
+            |--------------------------------------------------------------------------
+            */
 
             ppksFilter.addEventListener(
                 'change',
                 filterTable
             );
 
+
             tahapanFilter.addEventListener(
                 'change',
                 filterTable
             );
+
 
             hasilFilter.addEventListener(
                 'change',
@@ -754,9 +878,12 @@
             );
 
 
-            // =====================================================
-            // DATE PICKER OPEN / CLOSE
-            // =====================================================
+
+            /*
+            |--------------------------------------------------------------------------
+            | DATE PICKER
+            |--------------------------------------------------------------------------
+            */
 
             dateFilterButton.addEventListener(
                 'click',
@@ -772,10 +899,6 @@
             );
 
 
-            // =====================================================
-            // CLICK INSIDE DATE PICKER
-            // =====================================================
-
             datePicker.addEventListener(
                 'click',
                 function (event) {
@@ -786,99 +909,21 @@
             );
 
 
-            // =====================================================
-            // APPLY DATE
-            // =====================================================
 
-            applyDate.addEventListener(
-                'click',
-                function () {
-
-                    const start =
-                        startDate.value;
-
-                    const end =
-                        endDate.value;
-
-
-                    if (!start || !end) {
-
-                        alert(
-                            'Silakan pilih tanggal awal dan tanggal akhir.'
-                        );
-
-                        return;
-
-                    }
-
-
-                    if (start > end) {
-
-                        alert(
-                            'Tanggal awal tidak boleh lebih besar dari tanggal akhir.'
-                        );
-
-                        return;
-
-                    }
-
-
-                    const startFormatted =
-                        formatDate(start);
-
-                    const endFormatted =
-                        formatDate(end);
-
-
-                    dateFilterText.textContent =
-                        startFormatted +
-                        ' - ' +
-                        endFormatted;
-
-
-                    datePicker.classList.remove(
-                        'active'
-                    );
-
-
-                    filterTable();
-
-                }
-            );
-
-
-            // =====================================================
-            // RESET DATE
-            // =====================================================
-
-            resetDate.addEventListener(
-                'click',
-                function () {
-
-                    startDate.value = '';
-
-                    endDate.value = '';
-
-                    dateFilterText.textContent =
-                        'Pilih Tanggal';
-
-
-                    datePicker.classList.remove(
-                        'active'
-                    );
-
-
-                    filterTable();
-
-                }
-            );
-
-
-            // =====================================================
-            // FORMAT DATE
-            // =====================================================
+            /*
+            |--------------------------------------------------------------------------
+            | FORMAT DATE
+            |--------------------------------------------------------------------------
+            */
 
             function formatDate(dateString) {
+
+                if (!dateString) {
+
+                    return '';
+
+                }
+
 
                 const date =
                     new Date(
@@ -898,9 +943,125 @@
             }
 
 
-            // =====================================================
-            // CLICK OUTSIDE DATE PICKER
-            // =====================================================
+
+            /*
+            |--------------------------------------------------------------------------
+            | APPLY DATE
+            |--------------------------------------------------------------------------
+            */
+
+            applyDate.addEventListener(
+                'click',
+                function () {
+
+                    const start =
+                        startDate.value;
+
+
+                    const end =
+                        endDate.value;
+
+
+
+                    if (
+                        start
+                        &&
+                        end
+                        &&
+                        start > end
+                    ) {
+
+                        alert(
+                            'Tanggal mulai tidak boleh lebih besar dari tanggal akhir.'
+                        );
+
+                        return;
+
+                    }
+
+
+
+                    if (start && end) {
+
+                        dateFilterText.textContent =
+                            `${formatDate(start)} - ${formatDate(end)}`;
+
+                    }
+
+                    else if (start) {
+
+                        dateFilterText.textContent =
+                            `Mulai ${formatDate(start)}`;
+
+                    }
+
+                    else if (end) {
+
+                        dateFilterText.textContent =
+                            `Sampai ${formatDate(end)}`;
+
+                    }
+
+                    else {
+
+                        dateFilterText.textContent =
+                            'Pilih Tanggal';
+
+                    }
+
+
+
+                    datePicker.classList.remove(
+                        'active'
+                    );
+
+
+                    filterTable();
+
+                }
+            );
+
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | RESET DATE
+            |--------------------------------------------------------------------------
+            */
+
+            resetDate.addEventListener(
+                'click',
+                function () {
+
+                    startDate.value =
+                        '';
+
+
+                    endDate.value =
+                        '';
+
+
+                    dateFilterText.textContent =
+                        'Pilih Tanggal';
+
+
+                    datePicker.classList.remove(
+                        'active'
+                    );
+
+
+                    filterTable();
+
+                }
+            );
+
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | CLOSE DATE PICKER
+            |--------------------------------------------------------------------------
+            */
 
             document.addEventListener(
                 'click',
@@ -914,9 +1075,12 @@
             );
 
 
-            // =====================================================
-            // INITIAL FILTER
-            // =====================================================
+
+            /*
+            |--------------------------------------------------------------------------
+            | INITIAL FILTER
+            |--------------------------------------------------------------------------
+            */
 
             filterTable();
 

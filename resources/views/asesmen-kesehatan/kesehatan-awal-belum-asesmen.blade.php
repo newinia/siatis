@@ -1,106 +1,87 @@
 <x-app-layout>
 
-```
-<div class="case-conference-page">
-
-    {{-- =====================================================
-    HEADER
-    ====================================================== --}}
-    <div class="case-conference-header">
-
-        <div>
-            <h1>Asesmen Kesehatan Awal</h1>
-
-            <p>
-                Data PPKS yang telah lulus Asesmen Instruktur
-                dan belum menjalani Asesmen Kesehatan Awal.
-            </p>
-        </div>
+    <div class="main-page">
 
         {{-- =====================================================
-        DATE FILTER
+        HEADER
         ====================================================== --}}
-        <div class="date-filter-wrapper">
+        <div class="main-page-header">
 
-            <button type="button"
-                class="date-filter"
-                id="dateFilterButton">
+            <div>
+                <h1>Asesmen Kesehatan Awal</h1>
 
-                <svg xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.8">
+                <p>
+                    Data peserta yang telah lulus Asesmen Instruktur
+                    dan sedang mengikuti proses Asesmen Kesehatan Awal.
+                </p>
+            </div>
 
-                    <rect x="3" y="4" width="18" height="18" rx="2" />
-                    <path d="M16 2v4" />
-                    <path d="M8 2v4" />
-                    <path d="M3 10h18" />
+            {{-- =====================================================
+            DATE FILTER
+            ====================================================== --}}
+            <div class="date-filter-wrapper">
 
-                </svg>
+                <div class="date-filter">
 
-                <span id="dateFilterText">
-                    Pilih Tanggal
-                </span>
+                    <div class="date-picker">
 
-                <svg xmlns="http://www.w3.org/2000/svg"
-                    width="17"
-                    height="17"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2">
+                        <div class="date-picker-header">
+                            <span class="material-symbols-outlined">
+                                calendar_month
+                            </span>
 
-                    <path d="m6 9 6 6 6-6" />
+                            <span>Filter Tanggal</span>
+                        </div>
 
-                </svg>
+                        <div class="date-input-group">
 
-            </button>
+                            <div>
+                                <label for="startDate">
+                                    Dari
+                                </label>
 
-            {{-- DATE PICKER --}}
-            <div class="date-picker" id="datePicker">
+                                <input
+                                    type="date"
+                                    id="startDate"
+                                    class="date-picker"
+                                >
+                            </div>
 
-                <div class="date-picker-header">
-                    <strong>
-                        Pilih Rentang Tanggal
-                    </strong>
-                </div>
+                            <div>
+                                <label for="endDate">
+                                    Sampai
+                                </label>
 
-                <div class="date-input-group">
+                                <input
+                                    type="date"
+                                    id="endDate"
+                                    class="date-picker"
+                                >
+                            </div>
 
-                    <div>
-                        <label for="startDate">
-                            Dari
-                        </label>
+                        </div>
 
-                        <input type="date" id="startDate">
+                        <div class="date-picker-actions">
+
+                            <button
+                                type="button"
+                                class="date-reset"
+                                id="resetDate"
+                            >
+                                Reset
+                            </button>
+
+                            <button
+                                type="button"
+                                class="date-apply"
+                                id="applyDate"
+                            >
+                                Terapkan
+                            </button>
+
+                        </div>
+
                     </div>
-
-                    <div>
-                        <label for="endDate">
-                            Sampai
-                        </label>
-
-                        <input type="date" id="endDate">
-                    </div>
-
-                </div>
-
-                <div class="date-picker-actions">
-
-                    <button type="button"
-                        id="resetDate"
-                        class="date-reset">
-                        Reset
-                    </button>
-
-                    <button type="button"
-                        id="applyDate"
-                        class="date-apply">
-                        Terapkan
-                    </button>
 
                 </div>
 
@@ -108,892 +89,625 @@
 
         </div>
 
-    </div>
+
+        {{-- =====================================================
+        FILTER
+        ====================================================== --}}
+        <div class="filter-wrapper">
+
+            <div class="filter-group">
+
+                {{-- SEARCH --}}
+                <div
+                    class="search"
+                    id="searchWrapper"
+                >
+                    <span class="material-symbols-outlined">
+                        search
+                    </span>
+
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Cari Nama atau NIK"
+                    >
+                </div>
 
 
-    {{-- =====================================================
-    FILTER
-    ====================================================== --}}
-    <div class="case-filter-wrapper">
+                {{-- FILTER JENIS PPKS --}}
+                <div class="select-wrapper">
 
-        {{-- SEARCH --}}
-        <div class="case-search">
+                    <select
+                        id="filterPpks"
+                        class="filter-button"
+                    >
+                        <option value="">
+                            Semua Jenis PPKS
+                        </option>
 
-            <svg xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2">
+                        <option value="disabilitas fisik">
+                            Disabilitas Fisik
+                        </option>
 
-                <circle cx="11" cy="11" r="7" />
-                <path d="m20 20-3.5-3.5" />
+                        <option value="disabilitas rungu wicara">
+                            Disabilitas Rungu Wicara
+                        </option>
 
-            </svg>
+                        <option value="disabilitas netra">
+                            Disabilitas Netra
+                        </option>
 
-            <input type="text"
-                id="searchInput"
-                placeholder="Cari Nama atau NIK"
-                autocomplete="off">
+                        <option value="disabilitas mental">
+                            Disabilitas Mental
+                        </option>
 
-        </div>
+                        <option value="disabilitas intelektual">
+                            Disabilitas Intelektual
+                        </option>
 
+                        <option value="kelompok rentan">
+                            Kelompok Rentan
+                        </option>
+                    </select>
 
-        {{-- FILTER PPKS --}}
-        <div class="select-wrapper">
+                    <span class="material-symbols-outlined select-arrow">
+                        expand_more
+                    </span>
 
-            <select id="ppksFilter"
-                class="case-filter-button">
-
-                <option value="">
-                    Semua Jenis PPKS
-                </option>
-
-                <option value="Disabilitas Fisik">
-                    Disabilitas Fisik
-                </option>
-
-                <option value="Disabilitas Rungu Wicara">
-                    Disabilitas Rungu Wicara
-                </option>
-
-                <option value="Disabilitas Netra">
-                    Disabilitas Netra
-                </option>
-
-                <option value="Disabilitas Mental">
-                    Disabilitas Mental
-                </option>
-
-                <option value="Disabilitas Intelektual">
-                    Disabilitas Intelektual
-                </option>
-
-                <option value="Kelompok Rentan">
-                    Kelompok Rentan
-                </option>
-
-                <option value="Other">
-                    Other
-                </option>
-
-            </select>
-
-            <span class="material-symbols-outlined select-arrow">
-                keyboard_arrow_down
-            </span>
-
-        </div>
+                </div>
 
 
-        {{-- FILTER TAHAPAN --}}
-        <div class="select-wrapper">
+                {{-- FILTER STATUS --}}
+                <div class="select-wrapper">
 
-            <select id="tahapanFilter"
-                class="case-filter-button">
+                    <select
+                        id="filterStatus"
+                        class="filter-button"
+                    >
+                        <option value="">
+                            Semua Status
+                        </option>
 
-                <option value="">
-                    Semua Jenis Tahapan
-                </option>
+                        <option value="belum asesmen">
+                            Belum Asesmen
+                        </option>
 
-                <option value="Asesmen Kesehatan Awal">
-                    Asesmen Kesehatan Awal
-                </option>
+                        <option value="sedang diperiksa">
+                            Sedang Diperiksa
+                        </option>
 
-                <option value="Asesmen Kesehatan Lanjutan">
-                    Asesmen Kesehatan Lanjutan
-                </option>
+                        <option value="lulus">
+                            Lulus
+                        </option>
 
-                <option value="Asesmen Instruktur">
-                    Asesmen Instruktur
-                </option>
+                        <option value="pending">
+                            Pending
+                        </option>
 
-                <option value="Case Conference">
-                    Case Conference
-                </option>
+                        <option value="tidak lulus">
+                            Tidak Lulus
+                        </option>
+                    </select>
 
-            </select>
+                    <span class="material-symbols-outlined select-arrow">
+                        expand_more
+                    </span>
 
-            <span class="material-symbols-outlined select-arrow">
-                keyboard_arrow_down
-            </span>
+                </div>
+
+            </div>
 
         </div>
 
 
-        {{-- FILTER HASIL --}}
-        <div class="select-wrapper">
+        {{-- =====================================================
+        TABLE
+        ====================================================== --}}
+        <div class="table-wrapper">
 
-            <select id="hasilFilter"
-                class="case-filter-button">
+            <table class="table">
 
-                <option value="">
-                    Semua Hasil
-                </option>
+                <thead>
+                    <tr>
+                        <th width="60">No</th>
+                        <th>Nama</th>
+                        <th>NIK</th>
+                        <th>Umur</th>
+                        <th>Jenis PPKS</th>
+                        <th>Jurusan</th>
+                        <th>Hasil</th>
+                        <th>Keterangan</th>
+                    </tr>
+                </thead>
 
-                <option value="Belum Asesmen">
-                    Belum Asesmen
-                </option>
+                <tbody id="dataTable">
 
-                <option value="Lulus">
-                    Lulus
-                </option>
+                    @forelse ($ppks as $index => $item)
 
-                <option value="Pending">
-                    Pending
-                </option>
+                        @php
 
-                <option value="Tidak Lulus">
-                    Tidak Lulus
-                </option>
+                            /*
+                            |--------------------------------------------------------------------------
+                            | DATA PESERTA
+                            |--------------------------------------------------------------------------
+                            */
 
-            </select>
-
-            <span class="material-symbols-outlined select-arrow">
-                keyboard_arrow_down
-            </span>
-
-        </div>
-
-    </div>
-
-
-    {{-- =====================================================
-    TABLE
-    ====================================================== --}}
-    <div class="table-wrapper">
-
-        <table class="table">
-
-            <thead>
-
-                <tr>
-
-                    <th>No</th>
-                    <th>Nama</th>
-                    <th>NIK</th>
-                    <th>Umur</th>
-                    <th>Jenis PPKS</th>
-                    <th>Jurusan</th>
-                    <th>Hasil</th>
-                    <th>Keterangan</th>
-
-                </tr>
-
-            </thead>
+                            $data = is_array($item->data)
+                                ? $item->data
+                                : [];
 
 
-            <tbody>
+                            /*
+                            |--------------------------------------------------------------------------
+                            | HELPER GET VALUE
+                            |--------------------------------------------------------------------------
+                            */
 
-                @forelse ($ppks as $index => $item)
+                            $getValue = function ($key, $fallback = null) use ($data) {
 
-                    @php
+                                $value = $data[$key] ?? $fallback;
 
-                        /*
-                        |--------------------------------------------------------------------------
-                        | DATA PPKS
-                        |--------------------------------------------------------------------------
-                        */
+                                if (is_array($value)) {
+                                    return implode(
+                                        ', ',
+                                        array_filter($value)
+                                    );
+                                }
 
-                        $data = is_array($item->data)
-                            ? $item->data
-                            : [];
-
-
-                        /*
-                        |--------------------------------------------------------------------------
-                        | HELPER
-                        |--------------------------------------------------------------------------
-                        */
-
-                        $getValue = function ($value, $default = '-') {
-
-                            if (is_array($value)) {
-                                return implode(', ', array_filter($value));
-                            }
-
-                            if ($value === null || $value === '') {
-                                return $default;
-                            }
-
-                            return (string) $value;
-                        };
+                                return $value !== null && $value !== ''
+                                    ? $value
+                                    : '-';
+                            };
 
 
-                        /*
-                        |--------------------------------------------------------------------------
-                        | IDENTITAS
-                        |--------------------------------------------------------------------------
-                        */
+                            /*
+                            |--------------------------------------------------------------------------
+                            | IDENTITAS
+                            |--------------------------------------------------------------------------
+                            */
 
-                        $nama = $getValue(
-                            $data['nama_lengkap'] ?? $data[1] ?? '-'
-                        );
+                            $nama = $getValue(
+                                'nama_lengkap',
+                                $data[1] ?? null
+                            );
 
-                        $nik = $getValue(
-                            $data['nik'] ?? $data[2] ?? '-'
-                        );
+                            $nik = $getValue(
+                                'nik',
+                                $data[2] ?? null
+                            );
 
-                        $umur = $getValue(
-                            $data['usia'] ?? $data[6] ?? '-'
-                        );
+                            $usia = $getValue(
+                                'usia',
+                                $data[6] ?? null
+                            );
 
-                        $jenisPpks = $getValue(
-                            $data['jenis_ppks'] ?? $data[12] ?? '-'
-                        );
+                            $jenisPpks = $getValue(
+                                'jenis_ppks',
+                                $data[12] ?? null
+                            );
 
-                        $jurusan = $getValue(
-                            $data['jurusan_yang_diminati'] ?? $data[14] ?? '-'
-                        );
-
-
-                        /*
-                        |--------------------------------------------------------------------------
-                        | PROSES INSTRUKTUR
-                        |--------------------------------------------------------------------------
-                        */
-
-                        $prosesInstruktur = $item->prosesPesertas
-                            ->where('tahap', 'instruktur')
-                            ->sortByDesc(function ($proses) {
-
-                                return $proses->tanggal_proses
-                                    ?? $proses->created_at;
-
-                            })
-                            ->first();
-
-
-                        /*
-                        |--------------------------------------------------------------------------
-                        | PROSES KESEHATAN AWAL
-                        |--------------------------------------------------------------------------
-                        */
-
-                        $prosesKesehatan = $item->prosesPesertas
-                            ->where('tahap', 'kesehatan_awal')
-                            ->sortByDesc(function ($proses) {
-
-                                return $proses->tanggal_proses
-                                    ?? $proses->created_at;
-
-                            })
-                            ->first();
-
-
-                        /*
-                        |--------------------------------------------------------------------------
-                        | TANGGAL
-                        |--------------------------------------------------------------------------
-                        */
-
-                        $tanggalProses = $prosesInstruktur?->tanggal_proses
-                            ? \Carbon\Carbon::parse(
-                                $prosesInstruktur->tanggal_proses
-                            )->format('Y-m-d')
-                            : (
-                                $prosesInstruktur?->created_at
-                                ? $prosesInstruktur->created_at->format('Y-m-d')
-                                : $item->updated_at?->format('Y-m-d')
+                            $jurusan = $getValue(
+                                'jurusan_yang_diminati',
+                                $data[14] ?? null
                             );
 
 
-                        /*
-                        |--------------------------------------------------------------------------
-                        | STATUS KESEHATAN
-                        |--------------------------------------------------------------------------
-                        */
+                            /*
+                            |--------------------------------------------------------------------------
+                            | PROSES INSTRUKTUR
+                            |--------------------------------------------------------------------------
+                            */
 
-                        $statusKesehatan =
-                            $prosesKesehatan?->status ?? 'belum';
-
-
-                        /*
-                        |--------------------------------------------------------------------------
-                        | HASIL
-                        |--------------------------------------------------------------------------
-                        */
-
-                        if ($statusKesehatan === 'belum') {
-
-                            $hasil = 'Belum Asesmen';
-
-                            $keterangan =
-                                'Menunggu Asesmen Kesehatan Awal';
-
-                            $status = 'not-done';
-
-                        } elseif ($statusKesehatan === 'sedang_diperiksa') {
-
-                            $hasil = 'Belum Asesmen';
-
-                            $keterangan =
-                                'Asesmen Kesehatan Sedang Berlangsung';
-
-                            $status = 'processing';
-
-                        } elseif ($statusKesehatan === 'lulus') {
-
-                            $hasil = 'Lulus';
-
-                            $keterangan =
-                                'Lulus Asesmen Kesehatan Awal';
-
-                            $status = 'passed';
-
-                        } elseif ($statusKesehatan === 'pending') {
-
-                            $hasil = 'Pending';
-
-                            $keterangan =
-                                'Pending Asesmen Kesehatan Awal';
-
-                            $status = 'pending';
-
-                        } elseif ($statusKesehatan === 'tidak_lulus') {
-
-                            $hasil = 'Tidak Lulus';
-
-                            $keterangan =
-                                'Tidak Lulus Asesmen Kesehatan Awal';
-
-                            $status = 'rejected';
-
-                        } else {
-
-                            $hasil = 'Belum Asesmen';
-
-                            $keterangan =
-                                'Menunggu Asesmen Kesehatan Awal';
-
-                            $status = 'not-done';
-
-                        }
-
-                    @endphp
+                            $prosesInstruktur = $item->prosesPesertas
+                                ->where('tahap', 'instruktur')
+                                ->sortByDesc(
+                                    fn ($p) =>
+                                        $p->tanggal_proses
+                                        ?? $p->created_at
+                                )
+                                ->first();
 
 
-                    <tr
-                        data-nama="{{ strtolower($nama) }}"
-                        data-nik="{{ strtolower($nik) }}"
-                        data-ppks="{{ strtolower($jenisPpks) }}"
-                        data-tahapan="asesmen kesehatan awal"
-                        data-hasil="{{ strtolower($hasil) }}"
-                        data-tanggal="{{ $tanggalProses }}"
-                    >
+                            /*
+                            |--------------------------------------------------------------------------
+                            | PROSES KESEHATAN AWAL
+                            |--------------------------------------------------------------------------
+                            */
 
-                        {{-- NO --}}
-                        <td class="row-number">
-                            {{ $ppks->firstItem() + $index }}
-                        </td>
-
-
-                        {{-- NAMA --}}
-                        <td>
-                            {{ $nama }}
-                        </td>
+                            $prosesKesehatan = $item->prosesPesertas
+                                ->where('tahap', 'kesehatan_awal')
+                                ->sortByDesc(
+                                    fn ($p) =>
+                                        $p->tanggal_proses
+                                        ?? $p->created_at
+                                )
+                                ->first();
 
 
-                        {{-- NIK --}}
-                        <td>
-                            {{ $nik }}
-                        </td>
+                            /*
+                            |--------------------------------------------------------------------------
+                            | TANGGAL PROSES
+                            |--------------------------------------------------------------------------
+                            */
+
+                            $tanggalProses =
+                                $prosesInstruktur?->tanggal_proses
+                                ?? $prosesInstruktur?->created_at
+                                ?? $item->updated_at;
 
 
-                        {{-- UMUR --}}
-                        <td>
-                            {{ $umur }}
-                        </td>
+                            /*
+                            |--------------------------------------------------------------------------
+                            | STATUS KESEHATAN
+                            |--------------------------------------------------------------------------
+                            */
+
+                            $statusKesehatan =
+                                $prosesKesehatan?->status ?? 'belum';
 
 
-                        {{-- JENIS PPKS --}}
-                        <td>
-                            {{ $jenisPpks }}
-                        </td>
+                            /*
+                            |--------------------------------------------------------------------------
+                            | HASIL & KETERANGAN
+                            |--------------------------------------------------------------------------
+                            */
+
+                            switch ($statusKesehatan) {
+
+                                case 'sedang_diperiksa':
+
+                                    $hasil = 'Sedang Diperiksa';
+
+                                    $keterangan =
+                                        'Asesmen Kesehatan Awal Sedang Berlangsung';
+
+                                    $statusClass = 'pending';
+
+                                    break;
 
 
-                        {{-- JURUSAN --}}
-                        <td>
-                            {{ $jurusan }}
-                        </td>
+                                case 'lulus':
+
+                                    $hasil = 'Lulus';
+
+                                    $keterangan =
+                                        'Lulus Asesmen Kesehatan Awal';
+
+                                    $statusClass = 'lulus';
+
+                                    break;
 
 
-                        {{-- HASIL --}}
-                        <td>
+                                case 'pending':
+
+                                    $hasil = 'Pending';
+
+                                    $keterangan =
+                                        'Menunggu Keputusan Hasil Asesmen Kesehatan Awal';
+
+                                    $statusClass = 'pending';
+
+                                    break;
 
 
-                            <a href="{{ route(
-                                'ppks.normal.asesmen-kesehatan.awal',
-                                $item->id
-                            ) }}"
-                                class="result-badge
-                                @if($status === 'passed')
-                                    result-passed
-                                @elseif($status === 'rejected')
-                                    result-rejected
-                                @elseif($status === 'pending')
-                                    result-pending
-                                @elseif($status === 'processing')
-                                    result-processing
-                                @else
-                                    result-not-done
-                                @endif">
+                                case 'tidak_lulus':
 
-                                <span class="material-symbols-outlined result-icon">
+                                    $hasil = 'Tidak Lulus';
 
-                                    @if($status === 'passed')
-                                        check_circle
-                                    @elseif($status === 'rejected')
-                                        cancel
-                                    @elseif($status === 'pending')
-                                        pending
-                                    @elseif($status === 'processing')
-                                        progress_activity
-                                    @else
-                                        medical_services
-                                    @endif
+                                    $keterangan =
+                                        'Tidak Lulus Asesmen Kesehatan Awal';
 
-                                </span>
+                                    $statusClass = 'tidak-lulus';
+
+                                    break;
 
 
-                                <div class="result-content">
+                                case 'belum':
+                                default:
 
-                                    <span class="result-title">
-                                        Asesmen Kesehatan Awal
+                                    $hasil = 'Belum Dimulai';
+
+                                    $keterangan =
+                                        'Menunggu Asesmen Kesehatan Awal';
+
+                                    $statusClass = 'belum-dimulai';
+
+                                    break;
+                            }
+
+                        @endphp
+
+
+                        <tr
+                            data-nama="{{ strtolower($nama) }}"
+                            data-nik="{{ $nik }}"
+                            data-ppks="{{ strtolower($jenisPpks) }}"
+                            data-tahapan="asesmen kesehatan awal"
+                            data-hasil="{{ strtolower($hasil) }}"
+                            data-status="{{ $statusKesehatan }}"
+                            data-tanggal="{{ $tanggalProses ? \Carbon\Carbon::parse($tanggalProses)->format('Y-m-d') : '' }}"
+                        >
+
+                            {{-- =================================================
+                            NO
+                            ================================================== --}}
+                            <td class="row-number">
+                                {{ $ppks->firstItem() + $index }}
+                            </td>
+
+
+                            {{-- =================================================
+                            NAMA
+                            ================================================== --}}
+                            <td>
+                                <div class="participant-name">
+                                    {{ $nama }}
+                                </div>
+                            </td>
+
+
+                            {{-- =================================================
+                            NIK
+                            ================================================== --}}
+                            <td>
+                                {{ $nik }}
+                            </td>
+
+
+                            {{-- =================================================
+                            UMUR
+                            ================================================== --}}
+                            <td>
+                                {{ $usia }}
+                            </td>
+
+
+                            {{-- =================================================
+                            JENIS PPKS
+                            ================================================== --}}
+                            <td>
+                                {{ $jenisPpks }}
+                            </td>
+
+
+                            {{-- =================================================
+                            JURUSAN
+                            ================================================== --}}
+                            <td>
+                                {{ $jurusan }}
+                            </td>
+
+
+                            {{-- =================================================
+                            HASIL
+                            ================================================== --}}
+                            <td>
+
+                                <a
+                                    href="{{ route('ppks.normal.asesmen-kesehatan.awal', $item->id) }}"
+                                    class="result-badge {{ $statusKesehatan === 'belum' ? 'result-health' : 'result-health' }}"
+                                >
+
+                                    {{-- RESULT ICON --}}
+                                    <span class="material-symbols-outlined result-icon">
+
+                                        @if ($statusKesehatan === 'lulus')
+
+                                            check_circle
+
+                                        @elseif ($statusKesehatan === 'tidak_lulus')
+
+                                            cancel
+
+                                        @elseif ($statusKesehatan === 'pending')
+
+                                            pending
+
+                                        @elseif ($statusKesehatan === 'sedang_diperiksa')
+
+                                            progress_activity
+
+                                        @else
+
+                                            medical_information
+
+                                        @endif
+
                                     </span>
 
-                                    <span class="result-status">
 
-                                        <span class="status-dot
-                                            @if($status === 'passed')
-                                                passed
-                                            @elseif($status === 'rejected')
-                                                rejected
-                                            @elseif($status === 'pending')
-                                                pending
-                                            @elseif($status === 'processing')
-                                                processing
-                                            @else
-                                                not-done
-                                            @endif">
+                                    {{-- RESULT CONTENT --}}
+                                    <div class="result-content">
+
+                                        <span class="result-title">
+                                            Asesmen Kesehatan Awal
                                         </span>
 
-                                        {{ $hasil }}
 
+                                        <span class="result-status {{ $statusClass }}">
+
+                                            @if ($statusKesehatan === 'lulus')
+
+                                                <span class="status-dot lulus"></span>
+
+                                            @elseif ($statusKesehatan === 'tidak_lulus')
+
+                                                <span class="status-dot tidak-lulus"></span>
+
+                                            @elseif ($statusKesehatan === 'pending')
+
+                                                <span class="status-dot pending"></span>
+
+                                            @elseif ($statusKesehatan === 'sedang_diperiksa')
+
+                                                <span class="status-dot sedang-diperiksa"></span>
+
+                                            @else
+
+                                                <span class="status-dot belum-dimulai"></span>
+
+                                            @endif
+
+                                            {{ $hasil }}
+
+                                        </span>
+
+                                    </div>
+
+
+                                    {{-- RESULT ARROW --}}
+                                    <span class="result-arrow">
+                                        ›
                                     </span>
+
+                                </a>
+
+                            </td>
+
+
+                            {{-- =================================================
+                            KETERANGAN
+                            ================================================== --}}
+                            <td>
+
+                                @if ($statusKesehatan === 'lulus')
+
+                                    <span class="keterangan-lolos">
+                                        {{ $keterangan }}
+                                    </span>
+
+                                @elseif ($statusKesehatan === 'tidak_lulus')
+
+                                    <span class="keterangan-tidak-lolos">
+                                        {{ $keterangan }}
+                                    </span>
+
+                                @elseif ($statusKesehatan === 'pending')
+
+                                    <span class="keterangan-pending">
+                                        {{ $keterangan }}
+                                    </span>
+
+                                @elseif ($statusKesehatan === 'sedang_diperiksa')
+
+                                    <span class="keterangan-processing">
+                                        {{ $keterangan }}
+                                    </span>
+
+                                @else
+
+                                    <span class="keterangan-belum">
+                                        {{ $keterangan }}
+                                    </span>
+
+                                @endif
+
+                            </td>
+
+                        </tr>
+
+                    @empty
+
+                        <tr>
+
+                            <td
+                                colspan="8"
+                                style="text-align:center; padding:40px;"
+                            >
+
+                                <div class="empty-state">
+
+                                    <span class="material-symbols-outlined">
+                                        folder_open
+                                    </span>
+
+                                    <p>
+                                        Belum ada data Asesmen Kesehatan Awal.
+                                    </p>
 
                                 </div>
 
+                            </td>
 
-                                <span class="result-arrow">
-                                    ›
-                                </span>
+                        </tr>
 
-                            </a>
+                    @endforelse
 
-                        </td>
+                </tbody>
 
+            </table>
 
-                        {{-- KETERANGAN --}}
-                        <td>
-
-                            @if($status === 'passed')
-
-                                <span class="keterangan-lolos">
-                                    Lulus Asesmen Kesehatan Awal
-                                </span>
-
-                            @elseif($status === 'rejected')
-
-                                <span class="keterangan-tidak-lolos">
-                                    Tidak Lulus Asesmen Kesehatan Awal
-                                </span>
-
-                            @elseif($status === 'pending')
-
-                                <span class="keterangan-pending">
-                                    Pending Asesmen Kesehatan Awal
-                                </span>
-
-                            @elseif($status === 'processing')
-
-                                <span class="keterangan-processing">
-                                    Asesmen Sedang Berlangsung
-                                </span>
-
-                            @else
-
-                                <span class="keterangan-belum">
-                                    Menunggu Asesmen Kesehatan Awal
-                                </span>
-
-                            @endif
-
-                        </td>
-
-                    </tr>
-
-                @empty
-
-                    <tr id="emptyRow">
-
-                        <td colspan="8"
-                            style="
-                                text-align:center;
-                                padding:40px;
-                                color:#6b7280;
-                            ">
-
-                            Belum ada PPKS yang siap menjalani
-                            Asesmen Kesehatan Awal.
-
-                        </td>
-
-                    </tr>
-
-                @endforelse
+        </div>
 
 
-                <tr id="filterEmptyRow"
-                    style="display:none;">
+        {{-- =====================================================
+        PAGINATION
+        ====================================================== --}}
+        @if ($ppks->hasPages())
 
-                    <td colspan="8"
-                        style="
-                            text-align:center;
-                            padding:40px;
-                            color:#6b7280;
-                        ">
+            <div class="pagination-wrapper">
 
-                        Data tidak ditemukan.
+                {{ $ppks->links() }}
 
-                    </td>
+            </div>
 
-                </tr>
-
-            </tbody>
-
-        </table>
+        @endif
 
     </div>
 
 
     {{-- =====================================================
-    PAGINATION
+    JAVASCRIPT
     ====================================================== --}}
-    @if ($ppks->hasPages())
+    <script>
 
-        <div class="pagination-wrapper">
+        document.addEventListener('DOMContentLoaded', function () {
 
-            {{ $ppks->links() }}
+            const searchInput =
+                document.getElementById('searchInput');
 
-        </div>
+            const filterPpks =
+                document.getElementById('filterPpks');
 
-    @endif
+            const filterStatus =
+                document.getElementById('filterStatus');
 
-</div>
+            const rows =
+                document.querySelectorAll('#dataTable tr[data-nama]');
 
+            const startDate =
+                document.getElementById('startDate');
 
-{{-- =====================================================
-JAVASCRIPT
-====================================================== --}}
-<script>
+            const endDate =
+                document.getElementById('endDate');
 
-    document.addEventListener('DOMContentLoaded', function () {
+            const resetDate =
+                document.getElementById('resetDate');
 
-        const searchInput =
-            document.getElementById('searchInput');
-
-        const ppksFilter =
-            document.getElementById('ppksFilter');
-
-        const tahapanFilter =
-            document.getElementById('tahapanFilter');
-
-        const hasilFilter =
-            document.getElementById('hasilFilter');
-
-        const tableRows =
-            document.querySelectorAll(
-                '.table tbody tr[data-nama]'
-            );
-
-        const filterEmptyRow =
-            document.getElementById('filterEmptyRow');
+            const applyDate =
+                document.getElementById('applyDate');
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | DATE
-        |--------------------------------------------------------------------------
-        */
+            /* =================================================
+               FILTER DATA
+            ================================================== */
 
-        const dateFilterButton =
-            document.getElementById('dateFilterButton');
+            function filterData() {
 
-        const datePicker =
-            document.getElementById('datePicker');
-
-        const dateFilterText =
-            document.getElementById('dateFilterText');
-
-        const startDate =
-            document.getElementById('startDate');
-
-        const endDate =
-            document.getElementById('endDate');
-
-        const applyDate =
-            document.getElementById('applyDate');
-
-        const resetDate =
-            document.getElementById('resetDate');
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | FILTER TABLE
-        |--------------------------------------------------------------------------
-        */
-
-        function filterTable() {
-
-            const searchValue =
-                searchInput.value
-                    .toLowerCase()
-                    .trim();
-
-            const ppksValue =
-                ppksFilter.value
-                    .toLowerCase()
-                    .trim();
-
-            const tahapanValue =
-                tahapanFilter.value
-                    .toLowerCase()
-                    .trim();
-
-            const hasilValue =
-                hasilFilter.value
-                    .toLowerCase()
-                    .trim();
-
-            const selectedStart =
-                startDate.value;
-
-            const selectedEnd =
-                endDate.value;
-
-
-            let visibleNumber = 1;
-
-            let found = false;
-
-
-            tableRows.forEach(function (row) {
-
-                const nama =
-                    row.dataset.nama || '';
-
-                const nik =
-                    row.dataset.nik || '';
+                const search =
+                    searchInput.value
+                        .toLowerCase()
+                        .trim();
 
                 const ppks =
-                    row.dataset.ppks || '';
+                    filterPpks.value
+                        .toLowerCase()
+                        .trim();
 
-                const tahapan =
-                    row.dataset.tahapan || '';
-
-                const hasil =
-                    row.dataset.hasil || '';
-
-                const tanggal =
-                    row.dataset.tanggal || '';
-
-
-                /*
-                |------------------------------------------------------------------
-                | SEARCH
-                |------------------------------------------------------------------
-                */
-
-                const matchSearch =
-                    searchValue === '' ||
-                    nama.includes(searchValue) ||
-                    nik.includes(searchValue);
-
-
-                /*
-                |------------------------------------------------------------------
-                | PPKS
-                |------------------------------------------------------------------
-                */
-
-                const matchPpks =
-                    ppksValue === '' ||
-                    ppks.includes(ppksValue);
-
-
-                /*
-                |------------------------------------------------------------------
-                | TAHAPAN
-                |------------------------------------------------------------------
-                */
-
-                const matchTahapan =
-                    tahapanValue === '' ||
-                    tahapan === tahapanValue;
-
-
-                /*
-                |------------------------------------------------------------------
-                | HASIL
-                |------------------------------------------------------------------
-                */
-
-                const matchHasil =
-                    hasilValue === '' ||
-                    hasil === hasilValue;
-
-
-                /*
-                |------------------------------------------------------------------
-                | DATE
-                |------------------------------------------------------------------
-                */
-
-                let matchDate = true;
-
-
-                if (selectedStart) {
-
-                    matchDate =
-                        tanggal >= selectedStart;
-
-                }
-
-
-                if (
-                    selectedEnd &&
-                    matchDate
-                ) {
-
-                    matchDate =
-                        tanggal <= selectedEnd;
-
-                }
-
-
-                /*
-                |------------------------------------------------------------------
-                | FINAL
-                |------------------------------------------------------------------
-                */
-
-                const shouldShow =
-                    matchSearch &&
-                    matchPpks &&
-                    matchTahapan &&
-                    matchHasil &&
-                    matchDate;
-
-
-                if (shouldShow) {
-
-                    row.style.display = '';
-
-                    visibleNumber++;
-
-                    row.querySelector(
-                        '.row-number'
-                    ).textContent =
-                        visibleNumber - 1;
-
-                    found = true;
-
-                } else {
-
-                    row.style.display = 'none';
-
-                }
-
-            });
-
-
-            filterEmptyRow.style.display =
-                found
-                    ? 'none'
-                    : 'table-row';
-
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | EVENT
-        |--------------------------------------------------------------------------
-        */
-
-        searchInput.addEventListener(
-            'input',
-            filterTable
-        );
-
-        ppksFilter.addEventListener(
-            'change',
-            filterTable
-        );
-
-        tahapanFilter.addEventListener(
-            'change',
-            filterTable
-        );
-
-        hasilFilter.addEventListener(
-            'change',
-            filterTable
-        );
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | DATE PICKER
-        |--------------------------------------------------------------------------
-        */
-
-        dateFilterButton.addEventListener(
-            'click',
-            function (event) {
-
-                event.stopPropagation();
-
-                datePicker.classList.toggle(
-                    'active'
-                );
-
-            }
-        );
-
-
-        datePicker.addEventListener(
-            'click',
-            function (event) {
-
-                event.stopPropagation();
-
-            }
-        );
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | APPLY DATE
-        |--------------------------------------------------------------------------
-        */
-
-        applyDate.addEventListener(
-            'click',
-            function () {
+                const status =
+                    filterStatus.value
+                        .toLowerCase()
+                        .trim();
 
                 const start =
                     startDate.value;
@@ -1002,553 +716,157 @@ JAVASCRIPT
                     endDate.value;
 
 
-                if (!start || !end) {
+                rows.forEach(row => {
 
-                    alert(
-                        'Silakan pilih tanggal awal dan tanggal akhir.'
-                    );
+                    const nama =
+                        row.dataset.nama || '';
 
-                    return;
+                    const nik =
+                        row.dataset.nik || '';
 
-                }
+                    const jenisPpks =
+                        row.dataset.ppks || '';
 
+                    const hasil =
+                        row.dataset.hasil || '';
 
-                if (start > end) {
+                    const statusKesehatan =
+                        row.dataset.status || '';
 
-                    alert(
-                        'Tanggal awal tidak boleh lebih besar dari tanggal akhir.'
-                    );
-
-                    return;
-
-                }
-
-
-                dateFilterText.textContent =
-                    formatDate(start) +
-                    ' - ' +
-                    formatDate(end);
+                    const tanggal =
+                        row.dataset.tanggal || '';
 
 
-                datePicker.classList.remove(
-                    'active'
-                );
+                    const matchSearch =
+                        !search ||
+                        nama.includes(search) ||
+                        nik.includes(search);
 
 
-                filterTable();
+                    const matchPpks =
+                        !ppks ||
+                        jenisPpks.includes(ppks);
+
+
+                    let matchStatus = true;
+
+                    if (status) {
+
+                        if (status === 'belum asesmen') {
+
+                            matchStatus =
+                                statusKesehatan === 'belum';
+
+                        } else if (status === 'sedang diperiksa') {
+
+                            matchStatus =
+                                statusKesehatan === 'sedang_diperiksa';
+
+                        } else {
+
+                            matchStatus =
+                                hasil === status;
+                        }
+                    }
+
+
+                    let matchDate = true;
+
+                    if (start && tanggal) {
+
+                        matchDate =
+                            tanggal >= start;
+
+                    }
+
+                    if (end && tanggal) {
+
+                        matchDate =
+                            matchDate &&
+                            tanggal <= end;
+
+                    }
+
+
+                    row.style.display =
+                        matchSearch &&
+                        matchPpks &&
+                        matchStatus &&
+                        matchDate
+                            ? ''
+                            : 'none';
+
+                });
 
             }
-        );
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | RESET DATE
-        |--------------------------------------------------------------------------
-        */
+            /* =================================================
+               EVENT FILTER
+            ================================================== */
 
-        resetDate.addEventListener(
-            'click',
-            function () {
+            if (searchInput) {
 
-                startDate.value = '';
-
-                endDate.value = '';
-
-                dateFilterText.textContent =
-                    'Pilih Tanggal';
-
-                datePicker.classList.remove(
-                    'active'
-                );
-
-                filterTable();
-
-            }
-        );
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | FORMAT DATE
-        |--------------------------------------------------------------------------
-        */
-
-        function formatDate(dateString) {
-
-            const date =
-                new Date(
-                    dateString + 'T00:00:00'
-                );
-
-            return date.toLocaleDateString(
-                'id-ID',
-                {
-                    day: '2-digit',
-                    month: 'short',
-                    year: 'numeric'
-                }
-            );
-
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | CLICK OUTSIDE
-        |--------------------------------------------------------------------------
-        */
-
-        document.addEventListener(
-            'click',
-            function () {
-
-                datePicker.classList.remove(
-                    'active'
+                searchInput.addEventListener(
+                    'input',
+                    filterData
                 );
 
             }
-        );
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | INITIAL
-        |--------------------------------------------------------------------------
-        */
+            if (filterPpks) {
 
-        filterTable();
+                filterPpks.addEventListener(
+                    'change',
+                    filterData
+                );
 
-    });
+            }
 
-</script>
 
+            if (filterStatus) {
 
-{{-- =====================================================
-STYLE
-====================================================== --}}
-<style>
+                filterStatus.addEventListener(
+                    'change',
+                    filterData
+                );
 
-    .case-conference-page {
-        padding: 20px 0 30px;
-    }
+            }
 
 
-    .case-conference-header {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 20px;
-        margin-bottom: 24px;
-    }
+            /* =================================================
+               DATE
+            ================================================== */
 
+            if (applyDate) {
 
-    .case-conference-header h1 {
-        margin: 0;
-        font-size: 22px;
-        font-weight: 700;
-        color: #1f2937;
-    }
+                applyDate.addEventListener(
+                    'click',
+                    filterData
+                );
 
+            }
 
-    .case-conference-header p {
-        margin-top: 6px;
-        font-size: 14px;
-        color: #6b7280;
-    }
 
+            if (resetDate) {
 
-    .date-filter-wrapper {
-        position: relative;
-    }
+                resetDate.addEventListener(
+                    'click',
+                    function () {
 
+                        startDate.value = '';
+                        endDate.value = '';
 
-    .date-filter {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        min-width: 180px;
-        justify-content: space-between;
-        padding: 9px 12px;
-        border: 1px solid #d1d5db;
-        border-radius: 8px;
-        background: #fff;
-        cursor: pointer;
-        font-size: 14px;
-        color: #374151;
-    }
-
-
-    .date-picker {
-        display: none;
-        position: absolute;
-        right: 0;
-        top: calc(100% + 8px);
-        width: 300px;
-        padding: 16px;
-        background: #fff;
-        border: 1px solid #e5e7eb;
-        border-radius: 10px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, .10);
-        z-index: 50;
-    }
+                        filterData();
 
+                    }
+                );
 
-    .date-picker.active {
-        display: block;
-    }
+            }
 
+        });
 
-    .date-picker-header {
-        margin-bottom: 14px;
-        font-size: 14px;
-        color: #1f2937;
-    }
-
-
-    .date-input-group {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-    }
-
-
-    .date-input-group label {
-        display: block;
-        margin-bottom: 5px;
-        font-size: 12px;
-        color: #6b7280;
-    }
-
-
-    .date-input-group input {
-        width: 100%;
-        padding: 8px;
-        border: 1px solid #d1d5db;
-        border-radius: 7px;
-        font-size: 12px;
-    }
-
-
-    .date-picker-actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 8px;
-        margin-top: 15px;
-    }
-
-
-    .date-reset,
-    .date-apply {
-        padding: 8px 12px;
-        border-radius: 7px;
-        border: none;
-        cursor: pointer;
-        font-size: 12px;
-    }
-
-
-    .date-reset {
-        background: #f3f4f6;
-        color: #374151;
-    }
-
-
-    .date-apply {
-        background: #286693;
-        color: #fff;
-    }
-
-
-    .case-filter-wrapper {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 18px;
-        flex-wrap: wrap;
-    }
-
-
-    .case-search {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        flex: 1;
-        min-width: 220px;
-        padding: 9px 12px;
-        border: 1px solid #d1d5db;
-        border-radius: 8px;
-        background: #fff;
-    }
-
-
-    .case-search input {
-        width: 100%;
-        border: none;
-        outline: none;
-        font-size: 14px;
-    }
-
-
-    .select-wrapper {
-        position: relative;
-    }
-
-
-    .case-filter-button {
-        appearance: none;
-        min-width: 180px;
-        padding: 9px 36px 9px 12px;
-        border: 1px solid #d1d5db;
-        border-radius: 8px;
-        background: #fff;
-        font-size: 13px;
-        color: #374151;
-        cursor: pointer;
-    }
-
-
-    .select-arrow {
-        position: absolute;
-        right: 9px;
-        top: 50%;
-        transform: translateY(-50%);
-        pointer-events: none;
-        font-size: 18px;
-        color: #6b7280;
-    }
-
-
-    .table-wrapper {
-        overflow-x: auto;
-        background: #fff;
-        border: 1px solid #e5e7eb;
-        border-radius: 10px;
-    }
-
-
-    .table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-
-    .table th {
-        padding: 12px 14px;
-        background: #f9fafb;
-        border-bottom: 1px solid #e5e7eb;
-        text-align: left;
-        font-size: 12px;
-        font-weight: 700;
-        color: #374151;
-        white-space: nowrap;
-    }
-
-
-    .table td {
-        padding: 13px 14px;
-        border-bottom: 1px solid #f1f5f9;
-        font-size: 13px;
-        color: #374151;
-        vertical-align: middle;
-    }
-
-
-    .table tbody tr:last-child td {
-        border-bottom: none;
-    }
-
-
-    .row-number {
-        width: 45px;
-        text-align: center;
-        font-weight: 600;
-        color: #6b7280;
-    }
-
-
-    .result-badge {
-        display: flex;
-        align-items: center;
-        gap: 9px;
-        min-width: 210px;
-        padding: 8px 10px;
-        border-radius: 8px;
-        text-decoration: none;
-        transition: .2s ease;
-    }
-
-
-    .result-badge:hover {
-        transform: translateY(-1px);
-    }
-
-
-    .result-passed {
-        background: #ecfdf5;
-        color: #15803d;
-    }
-
-
-    .result-rejected {
-        background: #fef2f2;
-        color: #b91c1c;
-    }
-
-
-    .result-pending {
-        background: #fffbeb;
-        color: #b45309;
-    }
-
-
-    .result-processing {
-        background: #eff6ff;
-        color: #2563eb;
-    }
-
-
-    .result-not-done {
-        background: #f8fafc;
-        color: #64748b;
-    }
-
-
-    .result-icon {
-        font-size: 20px;
-    }
-
-
-    .result-content {
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-        flex: 1;
-    }
-
-
-    .result-title {
-        font-size: 12px;
-        font-weight: 700;
-    }
-
-
-    .result-status {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        font-size: 11px;
-    }
-
-
-    .status-dot {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-    }
-
-
-    .status-dot.passed {
-        background: #22c55e;
-    }
-
-
-    .status-dot.rejected {
-        background: #ef4444;
-    }
-
-
-    .status-dot.pending {
-        background: #f59e0b;
-    }
-
-
-    .status-dot.processing {
-        background: #3b82f6;
-    }
-
-
-    .status-dot.not-done {
-        background: #94a3b8;
-    }
-
-
-    .keterangan-lolos {
-        display: inline-block;
-        padding: 5px 9px;
-        border-radius: 6px;
-        background: #ecfdf5;
-        color: #15803d;
-        font-size: 11px;
-        font-weight: 600;
-    }
-
-
-    .keterangan-tidak-lolos {
-        display: inline-block;
-        padding: 5px 9px;
-        border-radius: 6px;
-        background: #fef2f2;
-        color: #b91c1c;
-        font-size: 11px;
-        font-weight: 600;
-    }
-
-
-    .keterangan-pending {
-        display: inline-block;
-        padding: 5px 9px;
-        border-radius: 6px;
-        background: #fffbeb;
-        color: #b45309;
-        font-size: 11px;
-        font-weight: 600;
-    }
-
-
-    .keterangan-processing {
-        display: inline-block;
-        padding: 5px 9px;
-        border-radius: 6px;
-        background: #eff6ff;
-        color: #2563eb;
-        font-size: 11px;
-        font-weight: 600;
-    }
-
-
-    .keterangan-belum {
-        display: inline-block;
-        padding: 5px 9px;
-        border-radius: 6px;
-        background: #f8fafc;
-        color: #64748b;
-        font-size: 11px;
-        font-weight: 600;
-    }
-
-
-    .pagination-wrapper {
-        margin-top: 18px;
-    }
-
-
-    @media (max-width: 900px) {
-
-        .case-conference-header {
-            flex-direction: column;
-        }
-
-        .date-filter-wrapper {
-            width: 100%;
-        }
-
-        .date-filter {
-            width: 100%;
-        }
-
-    }
-
-</style>
-```
+    </script>
 
 </x-app-layout>

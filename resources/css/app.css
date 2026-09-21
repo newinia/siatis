@@ -37,6 +37,13 @@
     --red: #dc2626;
     --red-light: #fef2f2;
 
+
+    /* =========================
+    YELLOW
+    ========================= */
+    --yellow: #eab308;
+    --yellow-light: #fef9c3;
+
     --cyan: #0891b2;
     --cyan-light: #ecfeff;
 
@@ -1060,7 +1067,7 @@ a {
 
     color: var(--red);
 
-    font-size: 11px;
+    font-size: 8px;
     line-height: 1.4;
 }
 
@@ -2424,16 +2431,21 @@ a {
 
 .table-wrapper {
     width: 100%;
+    max-width: 100%;
+    min-width: 0;
 
     overflow-x: auto;
+    overflow-y: hidden;
 
     border: 1px solid var(--border);
     border-radius: 10px;
+
+    box-sizing: border-box;
 }
 
 .table {
-    width: 100%;
-    min-width: 900px;
+    width: max-content;
+    min-width: 100%;
 
     border-collapse: collapse;
 
@@ -2547,6 +2559,7 @@ a {
 
     font-size: 20px;
     line-height: 1;
+    color: var(--text);
 
     font-weight: 300;
 }
@@ -2569,6 +2582,7 @@ a {
     font-size: 9px;
     line-height: 1.1;
     font-weight: 500;
+    color: var(--text);
 }
 
 
@@ -2592,8 +2606,8 @@ a {
 --------------------------------------------------------- */
 
 .result-instructor {
-    background: var(--orange-light);
-    color: var(--orange);
+    background: var(--yellow-light);
+    color: var(--text);
 }
 
 
@@ -2659,7 +2673,7 @@ a {
 ========================================================= */
 
 .result-status.pending {
-    color: var(--muted);
+    color: var(--yellow);
 }
 
 
@@ -2667,7 +2681,7 @@ a {
    STATUS — LOLOS
 ========================================================= */
 
-.result-status.lolos {
+.result-status.lulus {
     color: var(--green);
 }
 
@@ -2676,7 +2690,7 @@ a {
    STATUS — TIDAK LOLOS
 ========================================================= */
 
-.result-status.tidak-lolos {
+.result-status.tidak-lulus {
     color: var(--red);
 }
 
@@ -2727,7 +2741,7 @@ a {
 ========================================================= */
 
 .status-dot.pending {
-    background: var(--muted);
+    background: var(--yellow);
 }
 
 
@@ -2735,7 +2749,7 @@ a {
    DOT — LOLOS
 ========================================================= */
 
-.status-dot.lolos {
+.status-dot.lulus {
     background: var(--green);
 }
 
@@ -2744,7 +2758,7 @@ a {
    DOT — TIDAK LOLOS
 ========================================================= */
 
-.status-dot.tidak-lolos {
+.status-dot.tidak-lulus {
     background: var(--red);
 }
 
@@ -3132,6 +3146,13 @@ a {
     box-shadow: 0 2px 5px rgba(0, 0, 0, .08);
 }
 
+.detail-subtitle {
+            margin: 5px;
+            font-size: 12px;
+            line-height: 1.5;
+            color: #6b7280;
+        }
+
 
 /* =========================================================
    DATA PPKS
@@ -3391,69 +3412,445 @@ a {
     }
 
 }
+
 /* =========================================================
-   BERKAS DOKUMEN
+   DOCUMENT
 ========================================================= */
 
 .document-grid {
+    width: 100%;
     display: grid;
-
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-
-    gap: 22px 40px;
-
-    padding: 0 36px 8px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
 }
 
-
 .document-item {
+    width: 100%;
     min-width: 0;
 }
 
-
 .document-label {
-    margin-bottom: 8px;
-
-    color: var(--text-secondary);
-
-    font-size: 10px;
+    margin-bottom: 7px;
+    color: #374151;
+    font-size: 11px;
+    line-height: 1.4;
+    font-weight: 600;
 }
-
-
 .document-preview {
     width: 100%;
-    height: 150px;
+    min-height: 145px;
 
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 
-    gap: 6px;
+    gap: 3px;
+    padding: 15px;
 
-    background: #f9fafb;
+    box-sizing: border-box;
 
-    border: 1px dashed #9ca3af;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
 
-    color: var(--text-secondary);
+    background: #fafafa;
+    color: #6b7280;
 
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 10px;
 
-    transition: .2s ease;
+    text-align: center;
 }
 
 
-.document-preview:hover {
+/* =========================================================
+   FILE TERSEDIA / BISA DIBUKA
+========================================================= */
+
+.document-preview-button {
+    cursor: pointer;
+
+    border-color: #d6e3ee;
+    background: #f8fbfd;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+/* =========================================================
+   ICON
+========================================================= */
+
+.document-preview-button .document-icon {
+    color: var(--blue);
+    font-size: 30px;
+
+    transition:
+        transform 0.2s ease;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.document-preview-button .document-status {
+    color: var(--blue);
+    font-weight: 600;
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   PETUNJUK
+========================================================= */
+
+.document-preview-button .document-open-text {
+    color: #7b8490;
+    font-size: 9px;
+    font-weight: 500;
+}
+
+
+/* =========================================================
+   HOVER
+========================================================= */
+
+.document-preview-button:hover {
     border-color: var(--blue);
+    background: var(--blue-light);
 
-    background: rgba(32, 93, 145, .03);
+    box-shadow:
+        0 6px 18px rgba(32, 93, 145, 0.10);
+
+    transform: translateY(-2px);
 }
 
+
+.document-preview-button:hover .document-icon {
+    transform: scale(1.08);
+}
+
+
+/* =========================================================
+   FOCUS
+========================================================= */
+
+.document-preview-button:focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 2px;
+}
 
 .document-icon {
-    font-size: 28px;
-
+    margin-bottom: 6px;
+    font-size: 30px;
     color: var(--blue);
+}
+
+.document-status {
+    color: #374151;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.document-open-text {
+    margin-top: 5px;
+    color: var(--blue);
+    font-size: 9px;
+    font-weight: 600;
+}
+
+.document-unavailable {
+    cursor: default;
+    background: #f9fafb;
+    color: #9ca3af;
+}
+
+.document-unavailable .document-icon {
+    color: #9ca3af;
+}
+
+
+/* =========================================================
+   BUTTON
+========================================================= */
+
+.detail-actions {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 30px;
+}
+
+.participant-next-button {
+    min-height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 40px;
+    border: none;
+    border-radius: 9px;
+    background: var(--blue);
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 700;
+    box-shadow:
+        0 4px 10px rgba(50, 131, 0, 0.16);
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.participant-next-button:hover {
+    background:var(--blue);
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow:
+        0 7px 16px rgba(50, 131, 0, 0.20);
+}
+
+.participant-next-button .material-symbols-outlined {
+    font-size: 18px;
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.document-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    height: 100%;
+
+    padding: 20px;
+    box-sizing: border-box;
+
+    background: rgba(17, 24, 39, 0.78);
+
+    backdrop-filter: blur(5px);
+}
+
+.document-modal.show {
+    display: flex;
+}
+
+
+/* =========================================================
+   MODAL CARD
+========================================================= */
+
+.document-modal-card {
+    position: relative;
+
+    width: min(1200px, 96vw);
+    height: min(850px, 92vh);
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+
+    background: #ffffff;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 25px 70px rgba(0, 0, 0, 0.35);
+}
+
+
+/* =========================================================
+   MODAL HEADER
+========================================================= */
+
+.document-modal-header {
+    min-height: 68px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 12px 18px;
+
+    box-sizing: border-box;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    background: #ffffff;
+
+    flex-shrink: 0;
+}
+
+.document-modal-info {
+    min-width: 0;
+}
+
+.document-modal-title {
+    color: #111827;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.document-modal-name {
+    margin-top: 3px;
+    color: #6b7280;
+    font-size: 10px;
+}
+
+.document-close {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    padding: 0;
+
+    border: none;
+    border-radius: 9px;
+
+    background: #f3f4f6;
+
+    color: #4b5563;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+.document-close:hover {
+    background: #ef4444;
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   PREVIEW CONTAINER
+========================================================= */
+
+.document-preview-container {
+    position: relative;
+
+    flex: 1;
+
+    min-height: 0;
+
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    padding: 20px;
+
+    box-sizing: border-box;
+
+    background: #f3f4f6;
+}
+
+
+/* =========================================================
+   PDF / FILE FRAME
+========================================================= */
+
+.document-preview-frame {
+    width: 100%;
+    height: 100%;
+
+    display: none;
+
+    border: none;
+
+    background: #ffffff;
+}
+
+
+/* =========================================================
+   IMAGE PREVIEW
+========================================================= */
+
+.document-preview-image {
+    display: none;
+
+    /*
+     * Kotak gambar memenuhi area preview,
+     * tetapi isi gambar TIDAK akan dipotong.
+     */
+    width: 100%;
+    height: 100%;
+
+    max-width: 100%;
+    max-height: 100%;
+
+    object-fit: contain;
+    object-position: center;
+
+    padding: 15px;
+
+    box-sizing: border-box;
+
+    margin: 0;
+
+    transform: none !important;
+    zoom: 1 !important;
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.document-preview-loading {
+    position: absolute;
+
+    inset: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    color: #6b7280;
+
+    font-size: 11px;
+
+    background: #f3f4f6;
+
+    z-index: 5;
+}
+
+.document-preview-loading .material-symbols-outlined {
+    font-size: 34px;
+    color: #9ca3af;
 }
 
 
@@ -3519,7 +3916,7 @@ a {
 
     color: var(--text);
     text-decoration: none;
-
+    margin-bottom: 20px;
     cursor: pointer;
 }
 
@@ -3713,7 +4110,11 @@ a {
 
     cursor: pointer;
 }
-
+.toggle-text {
+            font-size: 12px;
+            font-weight: 600;
+            color: #4b5563;
+        }
 
 .offline-toggle input {
     display: none;
@@ -3836,9 +4237,7 @@ a {
 
 .btn-save {
     min-width: 80px;
-    height: 31px;
-
-    padding: 0 16px;
+    padding: 8px 16px;
 
     border: none;
     border-radius: 10px;
@@ -3847,7 +4246,7 @@ a {
     color: var(--white);
 
     font-family: inherit;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 600;
 
     cursor: pointer;
@@ -3870,7 +4269,33 @@ a {
 .form-action .btn:hover {
     transform: translateY(-1px);
 }
+.btn-next {
+    min-width: 80px;
 
+    padding:8px 16px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: var(--blue);
+    color: var(--white);
+
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: .2s ease;
+}
+
+
+
+
+.btn-next:hover,
+.form-action .btn:hover {
+    transform: translateY(-1px);
+}
 
 /* =========================================================
    RESPONSIVE
@@ -4065,8 +4490,22 @@ a {
 }
 
 
-.offline-toggle input {
+.offline-switch {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.offline-switch input {
     display: none;
+}
+
+.offline-switch input:checked + .toggle-slider {
+    background: var(--green);
+}
+
+.offline-switch input:checked + .toggle-slider::before {
+    transform: translateX(13px);
 }
 
 
@@ -4762,10 +5201,41 @@ a {
 
 
 /* ERROR */
-
 .global-popup.error .global-popup-icon {
     background: var(--red-light);
     color: var(--red);
+}
+.global-popup.error .global-popup-message {
+    max-width: 360px;
+    text-align: left;
+}
+
+.global-popup-error-list {
+    margin: 12px 0 0;
+    padding: 0;
+    list-style: none;
+    color: var(--text-secondary);
+    font-size: 13px;
+    line-height: 1.6;
+    text-align: left;
+}
+
+.global-popup-error-list li {
+    position: relative;
+    padding-left: 16px;
+    margin-bottom: 4px;
+}
+
+.global-popup-error-list li:last-child {
+    margin-bottom: 0;
+}
+
+.global-popup-error-list li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--red);
+    font-weight: 700;
 }
 
 
@@ -4964,6 +5434,7 @@ a {
 
     animation: globalPopupSpin 0.7s linear infinite;
 }
+
 
 @keyframes globalPopupSpin {
     to {
@@ -5207,3 +5678,180 @@ a {
     }
 
 }
+/* =====================================================
+   PEMANGGILAN PESERTA
+===================================================== */
+
+.pemanggilan-form {
+    width: 100%;
+}
+
+.pemanggilan-edit-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    width: 100%;
+}
+
+.pemanggilan-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+    flex: 1;
+}
+
+.pemanggilan-field label {
+    color: var(--text-secondary);
+    font-size: 9px;
+    font-weight: 500;
+}
+
+.pemanggilan-input {
+    width: 100%;
+    height: 30px;
+    padding: 0 9px;
+
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+
+    color: var(--text);
+    font-family: inherit;
+    font-size: 9px;
+
+    outline: none;
+    box-sizing: border-box;
+    transition: .15s ease;
+}
+
+.pemanggilan-input:hover {
+    border-color: var(--blue);
+}
+
+.pemanggilan-input:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 2px var(--blue-light);
+}
+
+.pemanggilan-input:disabled {
+    background: var(--gray);
+    border-color: var(--border);
+    color: var(--muted);
+    cursor: not-allowed;
+}
+
+
+/* =====================================================
+   STATUS PEMANGGILAN
+===================================================== */
+
+.status-edit {
+    font-weight: 500;
+    border-radius: var(--radius);
+}
+
+/* 🟠 BELUM DIPANGGIL */
+.status-edit.status-belum-dipanggil {
+    background: var(--orange-light);
+    border-color: var(--orange);
+    color: var(--orange);
+}
+
+/* 🔵 SUDAH DIPANGGIL */
+.status-edit.status-sudah-dipanggil {
+    background: var(--blue-light);
+    border-color: var(--blue);
+    color: var(--blue);
+}
+
+/* 🔴 BELUM DATANG */
+.status-edit.status-belum-datang {
+    background: var(--red-light);
+    border-color: var(--red);
+    color: var(--red);
+}
+
+/* 🟢 SUDAH DATANG */
+.status-edit.status-sudah-datang {
+    background: var(--green-light);
+    border-color: var(--green);
+    color: var(--green);
+}
+
+
+/* =====================================================
+   AKSI
+===================================================== */
+
+.pemanggilan-action {
+    display: flex;
+    align-items: flex-end;
+    flex-shrink: 0;
+}
+
+.btn-simpan-pemanggilan {
+    height: 30px;
+    padding: 0 11px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+
+    background: var(--blue);
+    border: 1px solid var(--blue);
+    border-radius: var(--radius);
+
+    color: var(--white);
+    font-family: inherit;
+    font-size: 9px;
+    font-weight: 500;
+
+    white-space: nowrap;
+    cursor: pointer;
+    transition: .15s ease;
+}
+
+.btn-simpan-pemanggilan:hover {
+    filter: brightness(.94);
+}
+
+.btn-simpan-pemanggilan .material-symbols-outlined {
+    font-size: 14px;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 1100px) {
+
+    .pemanggilan-edit-row {
+        flex-wrap: wrap;
+    }
+
+    .pemanggilan-field {
+        flex: 1 1 140px;
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .pemanggilan-edit-row {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .pemanggilan-action {
+        width: 100%;
+    }
+
+    .btn-simpan-pemanggilan {
+        width: 100%;
+    }
+
+}
+

@@ -1,9 +1,11 @@
+
 <x-app-layout>
+
     <div class="main-page">
 
         {{-- =====================================================
         HEADER
-        ====================================================== --}}
+        ======================================================= --}}
 
         <div class="main-page-header">
 
@@ -20,15 +22,36 @@
 
             </div>
 
-            {{-- DATE FILTER --}}
+
+            {{-- =================================================
+            DATE FILTER
+            ================================================== --}}
 
             <div class="date-filter-wrapper">
 
-                <button type="button" class="date-filter" id="dateFilterButton" aria-expanded="false">
+                <button
+                    type="button"
+                    class="date-filter"
+                    id="dateFilterButton"
+                    aria-expanded="false"
+                >
 
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="1.8">
-                        <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                    >
+                        <rect
+                            x="3"
+                            y="4"
+                            width="18"
+                            height="18"
+                            rx="2"
+                        ></rect>
 
                         <path d="M16 2v4"></path>
                         <path d="M8 2v4"></path>
@@ -39,20 +62,34 @@
                         Pilih Tanggal
                     </span>
 
-                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="17"
+                        height="17"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
                         <path d="m6 9 6 6 6-6"></path>
                     </svg>
 
                 </button>
 
-                <div class="date-picker" id="datePicker">
+
+                <div
+                    class="date-picker"
+                    id="datePicker"
+                >
 
                     <div class="date-picker-header">
+
                         <strong>
                             Pilih Rentang Tanggal
                         </strong>
+
                     </div>
+
 
                     <div class="date-input-group">
 
@@ -62,9 +99,13 @@
                                 Dari
                             </label>
 
-                            <input type="date" id="startDate">
+                            <input
+                                type="date"
+                                id="startDate"
+                            >
 
                         </div>
+
 
                         <div>
 
@@ -72,19 +113,31 @@
                                 Sampai
                             </label>
 
-                            <input type="date" id="endDate">
+                            <input
+                                type="date"
+                                id="endDate"
+                            >
 
                         </div>
 
                     </div>
 
+
                     <div class="date-picker-actions">
 
-                        <button type="button" id="resetDate" class="date-reset">
+                        <button
+                            type="button"
+                            id="resetDate"
+                            class="date-reset"
+                        >
                             Reset
                         </button>
 
-                        <button type="button" id="applyDate" class="date-apply">
+                        <button
+                            type="button"
+                            id="applyDate"
+                            class="date-apply"
+                        >
                             Terapkan
                         </button>
 
@@ -96,99 +149,122 @@
 
         </div>
 
-        {{-- =====================================================
-        NAVIGASI
-        ====================================================== --}}
-
-        <div class="result-navigation">
-
-            <a href="{{ route('ppks.normal.instruktur') }}">
-                Semua
-            </a>
-
-            <a href="{{ route('ppks.normal.asesmen-instruktur.lulus') }}">
-                Lulus
-            </a>
-
-            <a href="{{ route('ppks.normal.asesmen-instruktur.pending') }}">
-                Pending
-            </a>
-
-            <a href="{{ route('ppks.normal.asesmen-instruktur.tidak-lulus') }}" class="active">
-                Tidak Lulus
-            </a>
-
-        </div>
 
         {{-- =====================================================
         FILTER
-        ====================================================== --}}
+        ======================================================= --}}
 
         <div class="filter-wrapper">
 
-            <div class="search">
+            <div class="filter-group">
 
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2">
-                    <circle cx="11" cy="11" r="7"></circle>
+                {{-- SEARCH --}}
 
-                    <path d="m20 20-3.5-3.5"></path>
+                <div class="search">
 
-                </svg>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+                        <circle
+                            cx="11"
+                            cy="11"
+                            r="7"
+                        ></circle>
 
-                <input type="text" id="searchInput" placeholder="Cari Nama atau NIK" autocomplete="off">
+                        <path d="m20 20-3.5-3.5"></path>
 
-            </div>
+                    </svg>
 
-            <div class="select-wrapper">
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Cari Nama atau NIK"
+                        autocomplete="off"
+                    >
 
-                <select id="ppksFilter" class="case-filter-button">
+                </div>
 
-                    <option value="">
-                        Semua Jenis PPKS
-                    </option>
 
-                    <option value="Disabilitas Fisik">
-                        Disabilitas Fisik
-                    </option>
+                {{-- FILTER JENIS PPKS --}}
 
-                    <option value="Disabilitas Rungu Wicara">
-                        Disabilitas Rungu Wicara
-                    </option>
+                <div class="select-wrapper">
 
-                    <option value="Disabilitas Netra">
-                        Disabilitas Netra
-                    </option>
+                    <select
+                        id="ppksFilter"
+                        class="filter-button"
+                    >
 
-                    <option value="Disabilitas Mental">
-                        Disabilitas Mental
-                    </option>
+                        <option value="">
+                            Semua Jenis PPKS
+                        </option>
 
-                    <option value="Disabilitas Intelektual">
-                        Disabilitas Intelektual
-                    </option>
+                        <option value="Disabilitas Fisik">
+                            Disabilitas Fisik
+                        </option>
 
-                    <option value="Kelompok Rentan">
-                        Kelompok Rentan
-                    </option>
+                        <option value="Disabilitas Rungu Wicara">
+                            Disabilitas Rungu Wicara
+                        </option>
 
-                    <option value="Other">
-                        Other
-                    </option>
+                        <option value="Disabilitas Netra">
+                            Disabilitas Netra
+                        </option>
 
-                </select>
+                        <option value="Disabilitas Mental">
+                            Disabilitas Mental
+                        </option>
 
-                <span class="material-symbols-outlined select-arrow">
-                    keyboard_arrow_down
-                </span>
+                        <option value="Disabilitas Intelektual">
+                            Disabilitas Intelektual
+                        </option>
+
+                        <option value="Kelompok Rentan">
+                            Kelompok Rentan
+                        </option>
+
+                        <option value="Other">
+                            Other
+                        </option>
+
+                    </select>
+
+                    <span class="material-symbols-outlined select-arrow">
+                        keyboard_arrow_down
+                    </span>
+
+                </div>
+
+
+                {{-- RESET FILTER --}}
+
+                <button
+                    type="button"
+                    id="resetAllFilters"
+                    class="filter-reset"
+                >
+
+                    <span class="material-symbols-outlined">
+                        restart_alt
+                    </span>
+
+                    Reset
+
+                </button>
 
             </div>
 
         </div>
 
+
         {{-- =====================================================
         TABLE
-        ====================================================== --}}
+        ======================================================= --}}
 
         <div class="table-wrapper">
 
@@ -197,6 +273,7 @@
                 <thead>
 
                     <tr>
+
                         <th>No</th>
                         <th>Nama</th>
                         <th>NIK</th>
@@ -205,10 +282,11 @@
                         <th>Jurusan</th>
                         <th>Hasil</th>
                         <th>Keterangan</th>
-                        <th>Aksi</th>
+
                     </tr>
 
                 </thead>
+
 
                 <tbody>
 
@@ -248,25 +326,33 @@
                                 && $data[1] !== null
                                 && trim((string) $data[1]) !== ''
                             ) {
+
                                 $nama = $data[1];
+
                             } elseif (
                                 array_key_exists('B', $data)
                                 && $data['B'] !== null
                                 && trim((string) $data['B']) !== ''
                             ) {
+
                                 $nama = $data['B'];
+
                             } elseif (
                                 array_key_exists('nama_lengkap', $data)
                                 && $data['nama_lengkap'] !== null
                                 && trim((string) $data['nama_lengkap']) !== ''
                             ) {
+
                                 $nama = $data['nama_lengkap'];
+
                             } elseif (
                                 array_key_exists('nama', $data)
                                 && $data['nama'] !== null
                                 && trim((string) $data['nama']) !== ''
                             ) {
+
                                 $nama = $data['nama'];
+
                             }
 
                             $nama = $nama ?: '-';
@@ -287,21 +373,29 @@
                                 && $data[2] !== null
                                 && trim((string) $data[2]) !== ''
                             ) {
+
                                 $nik = $data[2];
+
                             } elseif (
                                 array_key_exists('C', $data)
                                 && $data['C'] !== null
                                 && trim((string) $data['C']) !== ''
                             ) {
+
                                 $nik = $data['C'];
+
                             } elseif (
                                 array_key_exists('nik', $data)
                                 && $data['nik'] !== null
                                 && trim((string) $data['nik']) !== ''
                             ) {
+
                                 $nik = $data['nik'];
+
                             } elseif ($item->nik) {
+
                                 $nik = $item->nik;
+
                             }
 
                             $nik = $nik ?: '-';
@@ -322,29 +416,36 @@
                                 && $data[6] !== null
                                 && trim((string) $data[6]) !== ''
                             ) {
+
                                 $umur = $data[6];
+
                             } elseif (
                                 array_key_exists('G', $data)
                                 && $data['G'] !== null
                                 && trim((string) $data['G']) !== ''
                             ) {
+
                                 $umur = $data['G'];
+
                             } elseif (
                                 array_key_exists('umur', $data)
                                 && $data['umur'] !== null
                                 && trim((string) $data['umur']) !== ''
                             ) {
+
                                 $umur = $data['umur'];
+
                             } elseif (
                                 array_key_exists('usia', $data)
                                 && $data['usia'] !== null
                                 && trim((string) $data['usia']) !== ''
                             ) {
+
                                 $umur = $data['usia'];
+
                             }
 
                             $umur = $umur ?: '-';
-
                             $umur = trim((string) $umur);
 
 
@@ -363,19 +464,25 @@
                                 && $data[12] !== null
                                 && trim((string) $data[12]) !== ''
                             ) {
+
                                 $jenisPpks = $data[12];
+
                             } elseif (
                                 array_key_exists('M', $data)
                                 && $data['M'] !== null
                                 && trim((string) $data['M']) !== ''
                             ) {
+
                                 $jenisPpks = $data['M'];
+
                             } elseif (
                                 array_key_exists('jenis_ppks', $data)
                                 && $data['jenis_ppks'] !== null
                                 && trim((string) $data['jenis_ppks']) !== ''
                             ) {
+
                                 $jenisPpks = $data['jenis_ppks'];
+
                             }
 
                             $jenisPpks = $jenisPpks ?: '-';
@@ -396,31 +503,44 @@
                                 && $data[14] !== null
                                 && trim((string) $data[14]) !== ''
                             ) {
+
                                 $jurusan = $data[14];
+
                             } elseif (
                                 array_key_exists('O', $data)
                                 && $data['O'] !== null
                                 && trim((string) $data['O']) !== ''
                             ) {
+
                                 $jurusan = $data['O'];
+
                             } elseif (
                                 array_key_exists('jurusan_yang_diminati', $data)
                                 && $data['jurusan_yang_diminati'] !== null
                                 && trim((string) $data['jurusan_yang_diminati']) !== ''
                             ) {
-                                $jurusan = $data['jurusan_yang_diminati'];
+
+                                $jurusan =
+                                    $data['jurusan_yang_diminati'];
+
                             } elseif (
                                 array_key_exists('jurusan', $data)
                                 && $data['jurusan'] !== null
                                 && trim((string) $data['jurusan']) !== ''
                             ) {
-                                $jurusan = $data['jurusan'];
+
+                                $jurusan =
+                                    $data['jurusan'];
+
                             } elseif (
                                 array_key_exists('jurusan_pelatihan', $data)
                                 && $data['jurusan_pelatihan'] !== null
                                 && trim((string) $data['jurusan_pelatihan']) !== ''
                             ) {
-                                $jurusan = $data['jurusan_pelatihan'];
+
+                                $jurusan =
+                                    $data['jurusan_pelatihan'];
+
                             }
 
                             $jurusan = $jurusan ?: '-';
@@ -435,7 +555,10 @@
                             $prosesInstruktur = $item->prosesPesertas
                                 ->where('tahap', 'instruktur')
                                 ->sortByDesc(function ($p) {
-                                    return $p->tanggal_proses ?? $p->created_at;
+
+                                    return $p->tanggal_proses
+                                        ?? $p->created_at;
+
                                 })
                                 ->first();
 
@@ -446,7 +569,8 @@
                             |--------------------------------------------------------------------------
                             */
 
-                            $tanggal = $prosesInstruktur?->tanggal_proses;
+                            $tanggal =
+                                $prosesInstruktur?->tanggal_proses;
 
 
                             /*
@@ -459,139 +583,178 @@
                                 $data['catatan_asesmen_instruktur']
                                 ?? null;
 
-                            if (!$keterangan && $prosesInstruktur) {
+                            if (
+                                !$keterangan &&
+                                $prosesInstruktur
+                            ) {
+
                                 $keterangan =
                                     $prosesInstruktur->catatan
                                     ?: $prosesInstruktur->alasan_pending
                                     ?: null;
+
                             }
 
-                            $keterangan = $keterangan ?: '-';
+                            $keterangan =
+                                $keterangan ?: '-';
+
+
+                            /*
+                            |--------------------------------------------------------------------------
+                            | RESULT BADGE
+                            |
+                            | Tahapan = Asesmen Instruktur
+                            | Status  = Tidak Lulus
+                            |
+                            | Route ditentukan oleh halaman,
+                            | bukan oleh component result-badge.
+                            |--------------------------------------------------------------------------
+                            */
+
+                            $route = route(
+                                'ppks.normal.asesmen-instruktur.detail',
+                                $item->id
+                            );
+
+                            $badgeClass = 'result-instructor';
+
+                            $hasilIcon = 'assignment';
+
+                            $labelTahapan = 'Asesmen Instruktur';
+
+                            $hasil = 'Tidak Lulus';
+
+                            $hasilClass = 'tidak-lulus';
+
+                            $hasilDotClass = 'tidak-lulus';
 
                         @endphp
 
 
-                        <tr data-nama="{{ strtolower((string) $nama) }}" data-nik="{{ strtolower((string) $nik) }}"
+                        <tr
+                            data-nama="{{ strtolower((string) $nama) }}"
+                            data-nik="{{ strtolower((string) $nik) }}"
                             data-ppks="{{ strtolower((string) $jenisPpks) }}"
-                            data-tanggal="{{ $tanggal ? \Carbon\Carbon::parse($tanggal)->format('Y-m-d') : '' }}">
+                            data-tanggal="{{ $tanggal ? \Carbon\Carbon::parse($tanggal)->format('Y-m-d') : '' }}"
+                        >
 
-                            {{-- NOMOR --}}
+                            {{-- =================================================
+                            NOMOR
+                            ================================================== --}}
 
                             <td class="row-number">
+
                                 {{ $ppks->firstItem() + $index }}
+
                             </td>
 
 
-                            {{-- NAMA --}}
+                            {{-- =================================================
+                            NAMA
+                            ================================================== --}}
 
                             <td>
-
-                                <strong style="
-                                            font-weight:600;
-                                            color:#1f2937;
-                                        ">
                                     {{ $nama }}
-                                </strong>
 
                             </td>
 
 
-                            {{-- NIK --}}
+                            {{-- =================================================
+                            NIK
+                            ================================================== --}}
 
                             <td>
                                 {{ $nik }}
                             </td>
 
 
-                            {{-- UMUR --}}
+                            {{-- =================================================
+                            UMUR
+                            ================================================== --}}
 
                             <td>
                                 {{ $umur }}
                             </td>
 
 
-                            {{-- JENIS PPKS --}}
+                            {{-- =================================================
+                            JENIS PPKS
+                            ================================================== --}}
 
                             <td>
                                 {{ $jenisPpks }}
                             </td>
 
 
-                            {{-- JURUSAN --}}
+                            {{-- =================================================
+                            JURUSAN
+                            ================================================== --}}
 
                             <td>
                                 {{ $jurusan }}
                             </td>
 
 
-                            {{-- HASIL --}}
+                            {{-- =================================================
+                            HASIL
+                            ================================================== --}}
 
                             <td>
 
-                                <div class="result-badge result-instructor">
-
-                                    <span class="material-symbols-outlined result-icon">
-                                        assignment
-                                    </span>
-
-                                    <div class="result-content">
-
-                                        <span class="result-title">
-                                            Asesmen Instruktur
-                                        </span>
-
-                                        <span class="result-status tidak-lulus">
-
-                                            <span class="status-dot tidak-lulus"></span>
-
-                                            Tidak Lulus
-
-                                        </span>
-
-                                    </div>
-
-                                </div>
+                                <x-result-badge
+                                    :route="$route"
+                                    :badge-class="$badgeClass"
+                                    :hasil-icon="$hasilIcon"
+                                    :label-tahapan="$labelTahapan"
+                                    :hasil-class="$hasilClass"
+                                    :hasil-dot-class="$hasilDotClass"
+                                    :hasil="$hasil"
+                                />
 
                             </td>
 
 
-                            {{-- KETERANGAN --}}
+                            {{-- =================================================
+                            KETERANGAN
+                            ================================================== --}}
 
-                            <td>
-                                {{ $keterangan }}
+                            <td class="keterangan-cell">
+
+                                @if (
+                                    $keterangan !== '-' &&
+                                    trim((string) $keterangan) !== ''
+                                )
+
+                                    <span class="keterangan-text">
+                                        {{ $keterangan }}
+                                    </span>
+
+                                @else
+
+                                    <span class="keterangan-empty">
+                                        -
+                                    </span>
+
+                                @endif
+
                             </td>
 
-
-                            {{-- AKSI --}}
-
-                            <td>
-
-                                <a href="{{ route('ppks.normal.asesmen-instruktur.data-detail', $item->id) }}"
-                                    class="detail-button">
-
-                                    <span class="material-symbols-outlined result-icon">
-                                        visibility
-                                    </span>
-
-                                    <span>
-                                        Detail
-                                    </span>
-
-                                    <span class="result-arrow">
-                                        ›
-                                    </span>
-
-                                </a>
-
-                            </td>
+                            
 
                         </tr>
 
                     @empty
 
+                        {{-- =================================================
+                        EMPTY STATE
+                        ================================================== --}}
+
                         <tr>
 
-                            <td colspan="9" class="empty-state">
+                            <td
+                                colspan="9"
+                                class="empty-state"
+                            >
 
                                 <div class="empty-state-icon">
 
@@ -617,11 +780,16 @@
                     @endforelse
 
 
-                    {{-- EMPTY FILTER --}}
+                    {{-- =================================================
+                    EMPTY HASIL FILTER
+                    ================================================== --}}
 
                     @if ($ppks->count() > 0)
 
-                        <tr id="filterEmptyRow" class="filter-empty-row">
+                        <tr
+                            id="filterEmptyRow"
+                            class="filter-empty-row"
+                        >
 
                             <td colspan="9">
 
@@ -657,12 +825,14 @@
 
         {{-- =====================================================
         PAGINATION
-        ====================================================== --}}
+        ======================================================= --}}
 
         @if ($ppks->hasPages())
 
             <div class="pagination-wrapper">
+
                 {{ $ppks->links() }}
+
             </div>
 
         @endif
@@ -780,7 +950,9 @@
                         row.dataset.tanggal || '';
 
 
-                    /* SEARCH */
+                    /* =================================================
+                       SEARCH
+                    ================================================== */
 
                     const searchMatch =
                         search === ''
@@ -790,7 +962,9 @@
                         nik.includes(search);
 
 
-                    /* JENIS PPKS */
+                    /* =================================================
+                       JENIS PPKS
+                    ================================================== */
 
                     const ppksMatch =
                         ppks === ''
@@ -798,9 +972,12 @@
                         jenis === ppks;
 
 
-                    /* TANGGAL */
+                    /* =================================================
+                       TANGGAL
+                    ================================================== */
 
                     let dateMatch = true;
+
 
                     if (start) {
 
@@ -808,10 +985,13 @@
                             !tanggal ||
                             tanggal < start
                         ) {
+
                             dateMatch = false;
+
                         }
 
                     }
+
 
                     if (end) {
 
@@ -819,13 +999,17 @@
                             !tanggal ||
                             tanggal > end
                         ) {
+
                             dateMatch = false;
+
                         }
 
                     }
 
 
-                    /* HASIL AKHIR */
+                    /* =================================================
+                       HASIL FILTER
+                    ================================================== */
 
                     const show =
                         searchMatch &&
@@ -839,10 +1023,13 @@
                             : 'none';
 
 
+                    /* =================================================
+                       NOMOR
+                    ================================================== */
+
                     if (show) {
 
                         visibleCount++;
-
 
                         const numberCell =
                             row.querySelector(
@@ -883,7 +1070,7 @@
 
                 /* =================================================
                    EMPTY FILTER
-                ================================================= */
+                ================================================== */
 
                 if (filterEmptyRow) {
 
@@ -918,6 +1105,53 @@
 
 
             /* =====================================================
+               RESET SEMUA FILTER
+            ===================================================== */
+
+            const resetAllFilters =
+                document.getElementById(
+                    'resetAllFilters'
+                );
+
+
+            if (resetAllFilters) {
+
+                resetAllFilters.addEventListener(
+                    'click',
+                    function () {
+
+                        searchInput.value = '';
+
+                        ppksFilter.value = '';
+
+                        startDate.value = '';
+
+                        endDate.value = '';
+
+                        dateText.textContent =
+                            'Pilih Tanggal';
+
+
+                        datePicker.classList.remove(
+                            'active'
+                        );
+
+
+                        dateButton.setAttribute(
+                            'aria-expanded',
+                            'false'
+                        );
+
+
+                        filterTable();
+
+                    }
+                );
+
+            }
+
+
+            /* =====================================================
                BUKA DATE PICKER
             ===================================================== */
 
@@ -926,6 +1160,7 @@
                 function (event) {
 
                     event.stopPropagation();
+
 
                     const active =
                         datePicker.classList.toggle(
@@ -951,7 +1186,9 @@
             datePicker.addEventListener(
                 'click',
                 function (event) {
+
                     event.stopPropagation();
+
                 }
             );
 
@@ -978,6 +1215,7 @@
                         );
 
                         return;
+
                     }
 
 
@@ -988,15 +1226,14 @@
                         );
 
                         return;
+
                     }
 
 
                     dateText.textContent =
                         formatDate(start)
-                        +
-                        ' - '
-                        +
-                        formatDate(end);
+                        + ' - '
+                        + formatDate(end);
 
 
                     datePicker.classList.remove(
@@ -1025,6 +1262,7 @@
                 function () {
 
                     startDate.value = '';
+
                     endDate.value = '';
 
                     dateText.textContent =
@@ -1113,4 +1351,3 @@
     </script>
 
 </x-app-layout>
-```

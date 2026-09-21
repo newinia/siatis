@@ -1862,10 +1862,10 @@ class PpksController extends Controller
 
 
         /*
-        |--------------------------------------------------------------------------
-        | SIMPAN DALAM TRANSACTION
-        |--------------------------------------------------------------------------
-        */
+|--------------------------------------------------------------------------
+| SIMPAN DALAM TRANSACTION
+|--------------------------------------------------------------------------
+*/
 
         DB::transaction(function () use ($ppks, $validated, $status) {
 
@@ -1883,17 +1883,14 @@ class PpksController extends Controller
             if (!$proses) {
                 $proses = new ProsesPeserta();
 
-                $proses->ppks_id =
-                    $ppks->id;
-
-                $proses->tahap =
-                    'case_conference';
+                $proses->ppks_id = $ppks->id;
+                $proses->tahap = 'case_conference';
             }
 
 
             /*
             |--------------------------------------------------------------------------
-            | SIMPAN HASIL CASE CONFERENCE
+            | SIMPAN HASIL CASE CONFERENCE KE PROSES PESERTA
             |--------------------------------------------------------------------------
             */
 
@@ -1909,6 +1906,73 @@ class PpksController extends Controller
                 now();
 
             $proses->save();
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | SIMPAN DETAIL CASE CONFERENCE
+            |--------------------------------------------------------------------------
+            | Ini yang sebelumnya belum ada.
+            | Data disimpan ke tabel case_conferences agar
+            | halaman Pemanggilan Peserta bisa mengambilnya.
+            |--------------------------------------------------------------------------
+            */
+
+            $existingCaseConference = DB::table('case_conferences')
+                ->where('ppks_id', $ppks->id)
+                ->first();
+
+            $caseConferenceData = [
+
+                'hasil' =>
+                    $validated['hasil_case_conference'],
+
+                'jurusan_diterima' =>
+                    $validated['jurusan_diterima']
+                    ??
+                    null,
+
+                'tanggal_case_conference' =>
+                    $validated['tanggal_case_conference']
+                    ??
+                    null,
+
+                'gelombang_pelatihan' =>
+                    $validated['gelombang_pelatihan']
+                    ??
+                    null,
+
+                'tahun_pelatihan' =>
+                    $validated['tahun_pelatihan']
+                    ??
+                    null,
+
+                'catatan' =>
+                    $validated['catatan_case_conference']
+                    ??
+                    null,
+
+                'updated_at' =>
+                    now(),
+            ];
+
+            if ($existingCaseConference) {
+
+                DB::table('case_conferences')
+                    ->where('id', $existingCaseConference->id)
+                    ->update($caseConferenceData);
+
+            } else {
+
+                $caseConferenceData['ppks_id'] =
+                    $ppks->id;
+
+                $caseConferenceData['created_at'] =
+                    now();
+
+                DB::table('case_conferences')
+                    ->insert($caseConferenceData);
+            }
 
 
             /*
@@ -1930,6 +1994,10 @@ class PpksController extends Controller
             /*
             |--------------------------------------------------------------------------
             | SIMPAN DATA CASE CONFERENCE
+            |--------------------------------------------------------------------------
+            | Bagian ini tetap dipertahankan supaya
+            | halaman/detail Case Conference yang sekarang
+            | masih bisa membaca data dari $ppks->data.
             |--------------------------------------------------------------------------
             */
 
@@ -1986,9 +2054,12 @@ class PpksController extends Controller
                     true
                 )
             ) {
+
                 $data['selesai_pemeriksaan_at'] =
                     now()->format('Y-m-d H:i:s');
+
             } else {
+
                 $data['selesai_pemeriksaan_at'] =
                     null;
             }
@@ -1999,11 +2070,13 @@ class PpksController extends Controller
             | STATUS UTAMA PPKS
             |--------------------------------------------------------------------------
             */
+
             // Status utama PPKS tetap NORMAL.
             // Hasil diterima / tidak diterima / pending
-            // disimpan di proses_pesertas.
-            $ppks->status = 'normal';
+            // disimpan di proses_pesertas dan case_conferences.
 
+            $ppks->status =
+                'normal';
 
 
             /*
@@ -2026,6 +2099,7 @@ class PpksController extends Controller
         */
 
         if ($status === 'lulus') {
+
             return redirect()
                 ->route(
                     'ppks.normal.case-conference.detail',
@@ -2041,6 +2115,7 @@ class PpksController extends Controller
         }
 
         if ($status === 'tidak_lulus') {
+
             return redirect()
                 ->route(
                     'ppks.normal.case-conference.detail',
@@ -2068,7 +2143,6 @@ class PpksController extends Controller
                 'Data Case Conference berhasil disimpan. Peserta berstatus PENDING.'
             );
     }
-
 
     /*
     |--------------------------------------------------------------------------
@@ -2340,9 +2414,9 @@ class PpksController extends Controller
     }
 
     public function kesehatanLanjutan()
-{
-    return $this->hasOne(KesehatanLanjutan::class, 'ppks_id');
-}
+    {
+        return $this->hasOne(KesehatanLanjutan::class, 'ppks_id');
+    }
     /*
     |--------------------------------------------------------------------------
     | FORM TAMBAH DATA MANUAL

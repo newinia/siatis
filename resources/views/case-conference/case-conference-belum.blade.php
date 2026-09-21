@@ -1,259 +1,11 @@
 <x-app-layout>
 
-    <style>
-        .case-conference-page {
-            width: 100%;
-            padding: 10px 0 35px;
-            color: #172018;
-        }
-
-        .case-conference-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 20px;
-            margin-bottom: 24px;
-        }
-
-        .case-conference-header h1 {
-            margin: 0;
-            font-size: 28px;
-            font-weight: 700;
-            color: #172018;
-        }
-
-        .case-conference-header p {
-            margin: 6px 0 0;
-            color: #68716b;
-            font-size: 14px;
-        }
-
-        .date-filter {
-            display: flex;
-            align-items: center;
-            gap: 9px;
-            border: 1px solid #d9dedb;
-            background: #fff;
-            border-radius: 8px;
-            padding: 9px 13px;
-            color: #4d5751;
-            font-size: 13px;
-            cursor: pointer;
-        }
-
-        .case-filter-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 18px;
-        }
-
-        .case-search {
-            display: flex;
-            align-items: center;
-            gap: 9px;
-            width: 310px;
-            height: 40px;
-            padding: 0 13px;
-            background: #fff;
-            border: 1px solid #d9dedb;
-            border-radius: 8px;
-        }
-
-        .case-search svg {
-            flex-shrink: 0;
-            color: #7a847d;
-        }
-
-        .case-search input {
-            width: 100%;
-            border: none;
-            outline: none;
-            background: transparent;
-            font-size: 13px;
-            color: #26302a;
-        }
-
-        .case-search input::placeholder {
-            color: #929a95;
-        }
-
-        .case-filter-button {
-            height: 40px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 0 14px;
-            border: 1px solid #d9dedb;
-            border-radius: 8px;
-            background: #fff;
-            color: #4d5751;
-            font-size: 13px;
-            cursor: pointer;
-        }
-
-        .table-wrapper {
-            width: 100%;
-            background: #fff;
-            border: 1px solid #e0e4e1;
-            border-radius: 10px;
-            overflow-x: auto;
-        }
-
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 1050px;
-        }
-
-        .table thead {
-            background: #f7f8f7;
-        }
-
-        .table th {
-            padding: 14px 16px;
-            text-align: left;
-            font-size: 12px;
-            font-weight: 700;
-            color: #59635c;
-            border-bottom: 1px solid #e1e5e2;
-            white-space: nowrap;
-        }
-
-        .table td {
-            padding: 15px 16px;
-            font-size: 13px;
-            color: #303932;
-            border-bottom: 1px solid #edf0ee;
-            vertical-align: middle;
-        }
-
-        .table tbody tr:last-child td {
-            border-bottom: none;
-        }
-
-        .table tbody tr:hover {
-            background: #fafbfa;
-        }
-
-        .result-badge {
-            min-width: 190px;
-            display: inline-flex;
-            align-items: center;
-            gap: 9px;
-            padding: 8px 10px;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: .15s ease;
-        }
-
-        .result-badge:hover {
-            opacity: .85;
-        }
-
-        .result-health {
-            background: #edf8f0;
-            color: #28733c;
-        }
-
-        .result-icon {
-            font-size: 20px;
-            flex-shrink: 0;
-        }
-
-        .result-content {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-            flex: 1;
-        }
-
-        .result-title {
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        .result-status {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .status-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-
-        .status-dot.lolos {
-            background: #39a354;
-        }
-
-        .result-arrow {
-            font-size: 22px;
-            line-height: 1;
-            color: #6d776f;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 55px 20px !important;
-            color: #747d77 !important;
-        }
-
-        .empty-state .material-symbols-outlined {
-            font-size: 45px;
-            margin-bottom: 10px;
-            color: #9aa39d;
-        }
-
-        .empty-state p {
-            margin: 0;
-            font-size: 14px;
-        }
-
-        .case-pagination {
-            padding: 15px 18px;
-            border-top: 1px solid #edf0ee;
-        }
-
-        @media (max-width: 900px) {
-
-            .case-conference-header {
-                flex-direction: column;
-            }
-
-            .date-filter {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .case-filter-wrapper {
-                flex-wrap: wrap;
-            }
-
-            .case-search {
-                width: 100%;
-            }
-
-            .case-filter-button {
-                flex: 1;
-                justify-content: center;
-            }
-        }
-    </style>
-
-
-    <div class="case-conference-page">
+    <div class="main-page">
 
         {{-- =====================================================
         HEADER
         ====================================================== --}}
-
-        <div class="case-conference-header">
+        <div class="main-page-header">
 
             <div>
                 <h1>Case Conference</h1>
@@ -265,49 +17,85 @@
             </div>
 
 
-            {{-- DATE FILTER --}}
+            {{-- =====================================================
+            DATE FILTER
+            ====================================================== --}}
+            <div class="date-filter-wrapper">
 
-            <button type="button" class="date-filter">
+                <div class="date-filter">
 
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                >
-                    <rect
-                        x="3"
-                        y="4"
-                        width="18"
-                        height="18"
-                        rx="2"
-                    />
+                    <div class="date-picker">
 
-                    <path d="M16 2v4" />
-                    <path d="M8 2v4" />
-                    <path d="M3 10h18" />
-                </svg>
+                        <div class="date-picker-header">
 
-                <span>
-                    Semua Tanggal
-                </span>
+                            <span class="material-symbols-outlined">
+                                calendar_month
+                            </span>
 
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="17"
-                    height="17"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                >
-                    <path d="m6 9 6 6 6-6" />
-                </svg>
+                            <span>Filter Tanggal</span>
 
-            </button>
+                        </div>
+
+
+                        <div class="date-input-group">
+
+                            <div>
+
+                                <label for="startDate">
+                                    Dari
+                                </label>
+
+                                <input
+                                    type="date"
+                                    id="startDate"
+                                    class="date-picker-input"
+                                >
+
+                            </div>
+
+
+                            <div>
+
+                                <label for="endDate">
+                                    Sampai
+                                </label>
+
+                                <input
+                                    type="date"
+                                    id="endDate"
+                                    class="date-picker-input"
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="date-picker-actions">
+
+                            <button
+                                type="button"
+                                class="date-reset"
+                                id="resetDate"
+                            >
+                                Reset
+                            </button>
+
+                            <button
+                                type="button"
+                                class="date-apply"
+                                id="applyDate"
+                            >
+                                Terapkan
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
 
         </div>
 
@@ -315,86 +103,108 @@
         {{-- =====================================================
         FILTER
         ====================================================== --}}
+        <div class="filter-wrapper">
 
-        <div class="case-filter-wrapper">
+            <div class="filter-group">
 
-            {{-- SEARCH --}}
 
-            <div class="case-search">
-
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
+                {{-- =================================================
+                SEARCH
+                ================================================== --}}
+                <div
+                    class="search"
+                    id="searchWrapper"
                 >
-                    <circle cx="11" cy="11" r="7" />
 
-                    <path d="m20 20-3.5-3.5" />
-                </svg>
+                    <span class="material-symbols-outlined">
+                        search
+                    </span>
 
-                <input
-                    type="text"
-                    placeholder="Cari Nama atau NIK"
-                    id="caseSearch"
-                >
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Cari Nama atau NIK"
+                    >
+
+                </div>
+
+
+                {{-- =================================================
+                FILTER JENIS PPKS
+                ================================================== --}}
+                <div class="select-wrapper">
+
+                    <select
+                        id="filterPpks"
+                        class="filter-button"
+                    >
+
+                        <option value="">
+                            Semua Jenis PPKS
+                        </option>
+
+                        <option value="disabilitas fisik">
+                            Disabilitas Fisik
+                        </option>
+
+                        <option value="disabilitas rungu wicara">
+                            Disabilitas Rungu Wicara
+                        </option>
+
+                        <option value="disabilitas netra">
+                            Disabilitas Netra
+                        </option>
+
+                        <option value="disabilitas mental">
+                            Disabilitas Mental
+                        </option>
+
+                        <option value="disabilitas intelektual">
+                            Disabilitas Intelektual
+                        </option>
+
+                        <option value="kelompok rentan">
+                            Kelompok Rentan
+                        </option>
+
+                    </select>
+
+
+                    <span class="material-symbols-outlined select-arrow">
+                        expand_more
+                    </span>
+
+                </div>
+
+
+                {{-- =================================================
+                FILTER HASIL
+                ================================================== --}}
+                <div class="select-wrapper">
+
+                    <select
+                        id="filterStatus"
+                        class="filter-button"
+                    >
+
+                        <option value="lolos">
+                            Lolos Kesehatan Awal
+                        </option>
+
+                        <option value="">
+                            Semua Status
+                        </option>
+
+                    </select>
+
+
+                    <span class="material-symbols-outlined select-arrow">
+                        expand_more
+                    </span>
+
+                </div>
 
             </div>
-
-
-            {{-- FILTER JENIS PPKS --}}
-
-            <button
-                type="button"
-                class="case-filter-button"
-            >
-
-                <span>
-                    Semua Jenis PPKS
-                </span>
-
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="13"
-                    height="13"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                >
-                    <path d="m6 9 6 6 6-6" />
-                </svg>
-
-            </button>
-
-
-            {{-- FILTER HASIL --}}
-
-            <button
-                type="button"
-                class="case-filter-button"
-            >
-
-                <span>
-                    Lolos Kesehatan Awal
-                </span>
-
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="13"
-                    height="13"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                >
-                    <path d="m6 9 6 6 6-6" />
-                </svg>
-
-            </button>
 
         </div>
 
@@ -402,7 +212,6 @@
         {{-- =====================================================
         TABLE
         ====================================================== --}}
-
         <div class="table-wrapper">
 
             <table class="table">
@@ -411,27 +220,57 @@
 
                     <tr>
 
-                        <th>No</th>
-                        <th>Nama</th>
-                        <th>NIK</th>
-                        <th>Umur</th>
-                        <th>Jenis PPKS</th>
-                        <th>Jurusan</th>
-                        <th>Hasil</th>
-                        <th>Keterangan</th>
+                        <th width="60">
+                            No
+                        </th>
+
+                        <th>
+                            Nama
+                        </th>
+
+                        <th>
+                            NIK
+                        </th>
+
+                        <th>
+                            Umur
+                        </th>
+
+                        <th>
+                            Jenis PPKS
+                        </th>
+
+                        <th>
+                            Jurusan
+                        </th>
+
+                        <th>
+                            Hasil
+                        </th>
+
+                        <th>
+                            Keterangan
+                        </th>
 
                     </tr>
 
                 </thead>
 
 
-                <tbody>
+                <tbody id="dataTable">
 
                     @forelse ($data as $index => $ppks)
 
                         @php
 
+                            /*
+                            |--------------------------------------------------------------------------
+                            | DATA PESERTA
+                            |--------------------------------------------------------------------------
+                            */
+
                             $item = $ppks->data ?? [];
+
 
                             /*
                             |--------------------------------------------------------------------------
@@ -439,16 +278,16 @@
                             |--------------------------------------------------------------------------
                             */
 
-                            $nama = $item['nama']
-                            ?? $item['Nama']
-                            ?? $item['NAMA']
-                            ?? $item['nama_lengkap']
-                            ?? $item['Nama Lengkap']
-                            ?? $item['NAMA LENGKAP']
-                            ?? $item['nama peserta']
-                            ?? $item['Nama Peserta']
-                            ?? '-';
-
+                            $nama =
+                                $item['nama']
+                                ?? $item['Nama']
+                                ?? $item['NAMA']
+                                ?? $item['nama_lengkap']
+                                ?? $item['Nama Lengkap']
+                                ?? $item['NAMA LENGKAP']
+                                ?? $item['nama peserta']
+                                ?? $item['Nama Peserta']
+                                ?? '-';
 
 
                             /*
@@ -458,10 +297,10 @@
                             */
 
                             $nik =
-                                $item['nik'] ??
-                                $item['NIK'] ??
-                                $item['Nik'] ??
-                                '-';
+                                $item['nik']
+                                ?? $item['NIK']
+                                ?? $item['Nik']
+                                ?? '-';
 
 
                             /*
@@ -471,10 +310,10 @@
                             */
 
                             $umur =
-                                $item['umur'] ??
-                                $item['Umur'] ??
-                                $item['UMUR'] ??
-                                '-';
+                                $item['umur']
+                                ?? $item['Umur']
+                                ?? $item['UMUR']
+                                ?? '-';
 
 
                             /*
@@ -484,12 +323,12 @@
                             */
 
                             $jenisPpks =
-                                $item['jenis_ppks'] ??
-                                $item['Jenis PPKS'] ??
-                                $item['jenis ppks'] ??
-                                $item['jenis'] ??
-                                $item['Jenis'] ??
-                                '-';
+                                $item['jenis_ppks']
+                                ?? $item['Jenis PPKS']
+                                ?? $item['jenis ppks']
+                                ?? $item['jenis']
+                                ?? $item['Jenis']
+                                ?? '-';
 
 
                             /*
@@ -499,62 +338,101 @@
                             */
 
                             $jurusan =
-                                $item['jurusan'] ??
-                                $item['Jurusan'] ??
-                                $item['JURUSAN'] ??
-                                '-';
+                                $item['jurusan']
+                                ?? $item['Jurusan']
+                                ?? $item['JURUSAN']
+                                ?? '-';
+
+
+                            /*
+                            |--------------------------------------------------------------------------
+                            | STATUS CASE CONFERENCE
+                            |--------------------------------------------------------------------------
+                            */
+
+                            $hasil = 'Belum Dimulai';
+
+                            $keterangan =
+                                'Belum dilakukan Case Conference';
 
                         @endphp
 
 
-                        <tr>
+                        <tr
+                            data-nama="{{ strtolower($nama) }}"
+                            data-nik="{{ strtolower($nik) }}"
+                            data-ppks="{{ strtolower($jenisPpks) }}"
+                            data-status="lolos"
+                        >
 
-                            {{-- NO --}}
 
-                            <td>
+                            {{-- =================================================
+                            NO
+                            ================================================== --}}
+                            <td class="row-number">
+
                                 {{ $data->firstItem() + $index }}
+
                             </td>
 
 
-                            {{-- NAMA --}}
-
+                            {{-- =================================================
+                            NAMA
+                            ================================================== --}}
                             <td>
-                                <strong>
+
+                                <div class="participant-name">
+
                                     {{ $nama }}
-                                </strong>
+
+                                </div>
+
                             </td>
 
 
-                            {{-- NIK --}}
-
+                            {{-- =================================================
+                            NIK
+                            ================================================== --}}
                             <td>
+
                                 {{ $nik }}
+
                             </td>
 
 
-                            {{-- UMUR --}}
-
+                            {{-- =================================================
+                            UMUR
+                            ================================================== --}}
                             <td>
+
                                 {{ $umur }}
+
                             </td>
 
 
-                            {{-- JENIS PPKS --}}
-
+                            {{-- =================================================
+                            JENIS PPKS
+                            ================================================== --}}
                             <td>
+
                                 {{ $jenisPpks }}
+
                             </td>
 
 
-                            {{-- JURUSAN --}}
-
+                            {{-- =================================================
+                            JURUSAN
+                            ================================================== --}}
                             <td>
+
                                 {{ $jurusan }}
+
                             </td>
 
 
-                            {{-- HASIL --}}
-
+                            {{-- =================================================
+                            HASIL
+                            ================================================== --}}
                             <td>
 
                                 <a
@@ -562,32 +440,35 @@
                                         'ppks.normal.case-conference.detail',
                                         $ppks->id
                                     ) }}"
-                                    class="result-badge result-health"
+                                    class="result-badge result-case-conference"
                                 >
 
+                                    {{-- RESULT ICON --}}
                                     <span class="material-symbols-outlined result-icon">
-                                        medical_services
+                                        groups
                                     </span>
 
 
+                                    {{-- RESULT CONTENT --}}
                                     <div class="result-content">
 
                                         <span class="result-title">
-                                            Asesmen Kesehatan
+                                            Case Conference
                                         </span>
 
 
-                                        <span class="result-status">
+                                        <span class="result-status belum-dimulai">
 
-                                            <span class="status-dot lolos"></span>
+                                            <span class="status-dot belum-dimulai"></span>
 
-                                            Lolos
+                                            {{ $hasil }}
 
                                         </span>
 
                                     </div>
 
 
+                                    {{-- RESULT ARROW --}}
                                     <span class="result-arrow">
                                         ›
                                     </span>
@@ -597,10 +478,15 @@
                             </td>
 
 
-                            {{-- KETERANGAN --}}
-
+                            {{-- =================================================
+                            KETERANGAN
+                            ================================================== --}}
                             <td>
-                                Belum dilakukan Case Conference
+
+                                <span class="keterangan-pending">
+                                    {{ $keterangan }}
+                                </span>
+
                             </td>
 
                         </tr>
@@ -612,17 +498,21 @@
 
                             <td
                                 colspan="8"
-                                class="empty-state"
+                                style="text-align:center; padding:40px;"
                             >
 
-                                <span class="material-symbols-outlined">
-                                    event_busy
-                                </span>
+                                <div class="empty-state">
 
-                                <p>
-                                    Belum ada peserta yang perlu
-                                    melakukan Case Conference.
-                                </p>
+                                    <span class="material-symbols-outlined">
+                                        event_busy
+                                    </span>
+
+                                    <p>
+                                        Belum ada peserta yang perlu
+                                        melakukan Case Conference.
+                                    </p>
+
+                                </div>
 
                             </td>
 
@@ -634,65 +524,221 @@
 
             </table>
 
-
-            {{-- =================================================
-            PAGINATION
-            ================================================== --}}
-
-            @if ($data->hasPages())
-
-                <div class="case-pagination">
-
-                    {{ $data->links() }}
-
-                </div>
-
-            @endif
-
         </div>
 
-    </div>
+
+        {{-- =====================================================
+        PAGINATION
+        ====================================================== --}}
+        @if ($data->hasPages())
+
+            <div class="pagination-wrapper">
+
+                {{ $data->links() }}
+
+            </div>
+
+        @endif
+
+    </div>  
 
 
     {{-- =====================================================
-    SEARCH FRONTEND
+    JAVASCRIPT
     ====================================================== --}}
-
     <script>
 
         document.addEventListener('DOMContentLoaded', function () {
 
             const searchInput =
-                document.getElementById('caseSearch');
+                document.getElementById('searchInput');
 
-            if (!searchInput) {
-                return;
-            }
+            const filterPpks =
+                document.getElementById('filterPpks');
 
-            searchInput.addEventListener('input', function () {
+            const filterStatus =
+                document.getElementById('filterStatus');
 
-                const keyword =
-                    this.value.toLowerCase().trim();
+            const rows =
+                document.querySelectorAll(
+                    '#dataTable tr[data-nama]'
+                );
 
-                const rows =
-                    document.querySelectorAll(
-                        '.table tbody tr'
-                    );
+
+            /* =================================================
+               FILTER DATA
+            ================================================== */
+
+            function filterData() {
+
+                const search =
+                    searchInput
+                        ? searchInput.value
+                            .toLowerCase()
+                            .trim()
+                        : '';
+
+
+                const ppks =
+                    filterPpks
+                        ? filterPpks.value
+                            .toLowerCase()
+                            .trim()
+                        : '';
+
+
+                const status =
+                    filterStatus
+                        ? filterStatus.value
+                            .toLowerCase()
+                            .trim()
+                        : '';
+
 
                 rows.forEach(function (row) {
 
-                    const text =
-                        row.textContent.toLowerCase();
+                    const nama =
+                        row.dataset.nama || '';
 
-                    if (text.includes(keyword)) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
+
+                    const nik =
+                        row.dataset.nik || '';
+
+
+                    const jenisPpks =
+                        row.dataset.ppks || '';
+
+
+                    const rowStatus =
+                        row.dataset.status || '';
+
+
+                    const matchSearch =
+                        !search ||
+                        nama.includes(search) ||
+                        nik.includes(search);
+
+
+                    const matchPpks =
+                        !ppks ||
+                        jenisPpks.includes(ppks);
+
+
+                    const matchStatus =
+                        !status ||
+                        rowStatus === status;
+
+
+                    row.style.display =
+                        matchSearch &&
+                        matchPpks &&
+                        matchStatus
+                            ? ''
+                            : 'none';
 
                 });
 
-            });
+            }
+
+
+            /* =================================================
+               SEARCH
+            ================================================== */
+
+            if (searchInput) {
+
+                searchInput.addEventListener(
+                    'input',
+                    filterData
+                );
+
+            }
+
+
+            /* =================================================
+               FILTER PPKS
+            ================================================== */
+
+            if (filterPpks) {
+
+                filterPpks.addEventListener(
+                    'change',
+                    filterData
+                );
+
+            }
+
+
+            /* =================================================
+               FILTER STATUS
+            ================================================== */
+
+            if (filterStatus) {
+
+                filterStatus.addEventListener(
+                    'change',
+                    filterData
+                );
+
+            }
+
+
+            /* =================================================
+               DATE
+               Belum mengubah data server-side.
+               Disiapkan mengikuti komponen Kode A.
+            ================================================== */
+
+            const startDate =
+                document.getElementById('startDate');
+
+            const endDate =
+                document.getElementById('endDate');
+
+            const resetDate =
+                document.getElementById('resetDate');
+
+            const applyDate =
+                document.getElementById('applyDate');
+
+
+            if (resetDate) {
+
+                resetDate.addEventListener(
+                    'click',
+                    function () {
+
+                        if (startDate) {
+                            startDate.value = '';
+                        }
+
+                        if (endDate) {
+                            endDate.value = '';
+                        }
+
+                    }
+                );
+
+            }
+
+
+            if (applyDate) {
+
+                applyDate.addEventListener(
+                    'click',
+                    function () {
+
+                        /*
+                         * Date filter UI mengikuti Kode A.
+                         * Filtering tanggal dapat dihubungkan
+                         * ke field tanggal Case Conference
+                         * ketika field tersebut tersedia.
+                         */
+
+                    }
+                );
+
+            }
 
         });
 

@@ -227,10 +227,6 @@ Route::middleware(['auth'])->group(function () {
     )->name('ppks.normal.asesmen-kesehatan.tidak-lolos');
 
     // Detail Kesehatan Lanjutan dari Asesmen Kesehatan Awal
-    Route::get(
-        '/ppks/normal/asesmen-kesehatan/{ppks}/lanjutan',
-        [PpksController::class, 'asesmenKesehatanLanjutanDetail']
-    )->name('ppks.normal.asesmen-kesehatan.lanjutan-detail');
 
 
     /*

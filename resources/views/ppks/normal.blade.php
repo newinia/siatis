@@ -606,10 +606,10 @@
                                     'Belum Dimulai';
 
                                 $hasilClass =
-                                    'pending';
+                                    'belum-dimulai';
 
                                 $hasilDotClass =
-                                    'pending';
+                                    'belum-dimulai';
 
                                 $hasilIcon =
                                     'progress_activity';
@@ -751,13 +751,13 @@
                                     ) {
 
                                         $hasil =
-                                            'Diterima';
+                                            'lulus';
 
                                         $hasilClass =
-                                            'diterima';
+                                            'lulus';
 
                                         $hasilDotClass =
-                                            'diterima';
+                                            'lulus';
 
                                     } elseif (
                                         $tahapTerakhir ===
@@ -804,13 +804,13 @@
                                     ) {
 
                                         $hasil =
-                                            'Tidak Diterima';
+                                            'tidak-lulus';
 
                                         $hasilClass =
-                                            'tidak-diterima';
+                                            'tidak-lulus';
 
                                         $hasilDotClass =
-                                            'tidak-diterima';
+                                            'tidak-lulus';
 
                                     } else {
 
@@ -818,10 +818,10 @@
                                             'Tidak Lulus';
 
                                         $hasilClass =
-                                            'tidak-lolos';
+                                            'tidak-lulus';
 
                                         $hasilDotClass =
-                                            'tidak-lolos';
+                                            'tidak-lulus';
 
                                     }
 
@@ -829,7 +829,7 @@
                                 } else {
 
                                     $hasil =
-                                        'Pending';
+                                        'pending';
 
                                     $hasilClass =
                                         'pending';
@@ -916,39 +916,19 @@
                             {{-- HASIL / TAHAPAN --}}
                             <td>
 
-                                <a
-                                    href="{{ $route }}"
-                                    class="result-badge {{ $badgeClass }}"
-                                >
+                                {{-- =================================================
+                                RESULT BADGE COMPONENT
+                                ================================================== --}}
 
-                                    <span class="material-symbols-outlined result-icon">
-                                        {{ $hasilIcon }}
-                                    </span>
-
-
-                                    <div class="result-content">
-
-                                        <span class="result-title">
-                                            {{ $labelTahapan }}
-                                        </span>
-
-
-                                        <span class="result-status {{ $hasilClass }}">
-
-                                            <span class="status-dot {{ $hasilDotClass }}"></span>
-
-                                            {{ $hasil }}
-
-                                        </span>
-
-                                    </div>
-
-
-                                    <span class="result-arrow">
-                                        ›
-                                    </span>
-
-                                </a>
+                                <x-result-badge
+                                    :route="$route"
+                                    :badge-class="$badgeClass"
+                                    :hasil-icon="$hasilIcon"
+                                    :label-tahapan="$labelTahapan"
+                                    :hasil-class="$hasilClass"
+                                    :hasil-dot-class="$hasilDotClass"
+                                    :hasil="$hasil"
+                                />
 
                             </td>
 
@@ -1568,4 +1548,5 @@
         );
 
     </script>
+
 </x-app-layout>
