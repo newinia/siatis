@@ -38,45 +38,45 @@
         |--------------------------------------------------------------------------
         */
 
-        $statusAsesmen = old(
-            'status_asesmen',
-            data_get($data, 'status_asesmen', '')
-        );
+    $statusAsesmen = old(
+        'status_asesmen',
+        $asesmenInstruktur?->status_asesmen ?? ''
+    );
 
-        $baznas = old(
-            'baznas',
-            data_get($data, 'baznas', '')
-        );
+    $baznas = old(
+        'baznas',
+        $asesmenInstruktur?->baznas ?? ''
+    );
 
-        $gelombang = old(
-            'gelombang',
-            data_get($data, 'gelombang', '')
-        );
+    $gelombang = old(
+        'gelombang',
+        $asesmenInstruktur?->gelombang ?? ''
+    );
 
-        $tahun = old(
-            'tahun',
-            data_get($data, 'tahun', '')
-        );
+    $tahun = old(
+        'tahun',
+        $asesmenInstruktur?->tahun ?? ''
+    );
 
-        $tanggalAsesmenDaring = old(
-            'tanggal_asesmen_daring',
-            data_get($data, 'tanggal_asesmen_daring', '')
-        );
+    $tanggalAsesmenDaring = old(
+        'tanggal_asesmen_daring',
+        $asesmenInstruktur?->tanggal_asesmen_daring?->format('Y-m-d') ?? ''
+    );
 
-        $petugasAsesmenInstruktur = old(
-            'petugas_asesmen_instruktur',
-            data_get($data, 'petugas_asesmen_instruktur', '')
-        );
+    $petugasAsesmenInstruktur = old(
+        'petugas_asesmen_instruktur',
+        $asesmenInstruktur?->petugas_asesmen_instruktur ?? ''
+    );
 
-        $hasilAsesmenInstruktur = old(
-            'hasil_asesmen_instruktur',
-            data_get($data, 'hasil_asesmen_instruktur', '')
-        );
+    $hasilAsesmenInstruktur = old(
+        'hasil_asesmen_instruktur',
+        $asesmenInstruktur?->hasil_asesmen_instruktur ?? ''
+    );
 
-        $catatanAsesmenInstruktur = old(
-            'catatan_asesmen_instruktur',
-            data_get($data, 'catatan_asesmen_instruktur', '')
-        );
+    $catatanAsesmenInstruktur = old(
+        'catatan_asesmen_instruktur',
+        $asesmenInstruktur?->catatan_asesmen_instruktur ?? ''
+    );
 
 
         /*
@@ -90,25 +90,25 @@
             data_get($data, 'asesmen_luring', false)
         );
 
-        $lokasiAsesmenLuring = old(
-            'lokasi_asesmen_luring',
-            data_get($data, 'lokasi_asesmen_luring', '')
-        );
+    $lokasiAsesmenLuring = old(
+        'lokasi_asesmen_luring',
+        $asesmenInstruktur?->lokasi_asesmen_luring ?? ''
+    );
 
-        $tanggalAsesmenLuring = old(
-            'tanggal_asesmen_luring',
-            data_get($data, 'tanggal_asesmen_luring', '')
-        );
+    $tanggalAsesmenLuring = old(
+        'tanggal_asesmen_luring',
+        $asesmenInstruktur?->tanggal_asesmen_luring?->format('Y-m-d') ?? ''
+    );
 
-        $petugasAsesmenLuring = old(
-            'petugas_asesmen_luring',
-            data_get($data, 'petugas_asesmen_luring', '')
-        );
+    $petugasAsesmenLuring = old(
+        'petugas_asesmen_luring',
+        $asesmenInstruktur?->petugas_asesmen_luring ?? ''
+    );
 
-        $hasilAsesmenLuring = old(
-            'hasil_asesmen_luring',
-            data_get($data, 'hasil_asesmen_luring', '')
-        );
+    $hasilAsesmenLuring = old(
+        'hasil_asesmen_luring',
+        $asesmenInstruktur?->hasil_asesmen_luring ?? ''
+    );
 
         $catatanAsesmenLuring = old(
             'catatan_asesmen_luring',

@@ -1107,6 +1107,494 @@
 
     </div>
 
+<<<<<<< HEAD
+=======
+</div>
+
+
+
+<style>
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.participant-detail-page {
+    width: 100%;
+    padding: 10px 0 40px;
+    box-sizing: border-box;
+}
+
+.participant-detail-container {
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   JOURNEY
+========================================================= */
+
+.journey-card {
+    width: 100%;
+    margin-bottom: 24px;
+    padding: 8px 0 10px;
+    box-sizing: border-box;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.journey-progress {
+    position: relative;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    align-items: start;
+    padding: 5px 0 0;
+    box-sizing: border-box;
+}
+
+.journey-progress::before {
+    content: "";
+    position: absolute;
+    left: 10%;
+    right: 10%;
+    top: 25px;
+    height: 3px;
+    background: #dfe3e7;
+    border-radius: 999px;
+    z-index: 1;
+}
+
+.journey-step {
+    position: relative;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    z-index: 2;
+}
+
+.journey-node {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 9px;
+    box-sizing: border-box;
+    border: 2px solid #d7dbe0;
+    border-radius: 50%;
+    background: #ffffff;
+    color: #a0a6ad;
+    font-size: 12px;
+    font-weight: 700;
+    z-index: 3;
+}
+
+.journey-step.active .journey-node {
+    width: 46px;
+    height: 46px;
+    margin-top: -3px;
+    margin-bottom: 6px;
+    border-color: #328300;
+    background: #328300;
+    color: #ffffff;
+    box-shadow:
+        0 0 0 5px rgba(50, 131, 0, 0.09),
+        0 6px 15px rgba(50, 131, 0, 0.20);
+}
+
+.journey-step-title {
+    min-height: 31px;
+    padding: 0 5px;
+    color: #6b7280;
+    font-size: 10.5px;
+    line-height: 1.4;
+    font-weight: 600;
+    text-align: center;
+}
+
+.journey-step.active .journey-step-title {
+    color: #328300;
+    font-weight: 700;
+}
+
+.journey-step-status {
+    display: none !important;
+}
+
+
+/* =========================================================
+   MAIN CARD
+========================================================= */
+
+.participant-detail-card {
+    width: 100%;
+    padding: 28px;
+    box-sizing: border-box;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.detail-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 30px;
+}
+
+.detail-back-button {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #374151;
+    text-decoration: none;
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+.detail-back-button:hover {
+    border-color: #63AE00;
+    background: #f7fcef;
+    color: #328300;
+}
+
+.detail-header-text h1 {
+    margin: 0;
+    color: #111827;
+    font-size: 20px;
+    line-height: 1.3;
+    font-weight: 700;
+}
+
+.detail-header-text p {
+    margin: 4px 0 0;
+    color: #6b7280;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   SECTION
+========================================================= */
+
+.detail-section {
+    margin-bottom: 28px;
+}
+
+.detail-section:last-of-type {
+    margin-bottom: 0;
+}
+
+.detail-section-title {
+    margin-bottom: 12px;
+    color: #111827;
+    font-size: 16px;
+    line-height: 1.4;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+.participant-profile-layout {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 160px minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+}  
+
+.participant-photo-wrapper {
+    width: 180px;
+    text-align: center;
+}
+.participant-photo {
+    width: 150px;
+    height: 200px;
+    margin: 0 auto;
+    overflow: hidden;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    background: #f9fafb;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.participant-photo img {
+    width: 100%;
+    height: 100%;
+    display: block;
+
+    object-fit: contain;
+    object-position: center;
+}
+.photo-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 8px;
+    box-sizing: border-box;
+    color: #9ca3af;
+    font-size: 9px;
+    text-align: center;
+}
+
+.photo-placeholder .material-symbols-outlined {
+    font-size: 34px;
+}
+
+.participant-import-info {
+    margin-top: 7px;
+    color: #6b7280;
+    font-size: 9px;
+    line-height: 1.4;
+}
+
+.participant-import-info strong {
+    color: #63AE00;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   FORM GRID
+========================================================= */
+
+.participant-data-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.detail-address-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.detail-contact-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.detail-field {
+    width: 100%;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.detail-field.field-full {
+    grid-column: span 3;
+}
+
+.detail-field label {
+    margin-bottom: 6px;
+    padding-left: 2px;
+    color: #374151;
+    font-size: 11px;
+    line-height: 1.4;
+    font-weight: 600;
+}
+
+.detail-field input {
+    width: 100%;
+    min-height: 42px;
+    padding: 9px 12px;
+    box-sizing: border-box;
+    border: 1px solid #d1d5db;
+    border-radius: 9px;
+    background: #ffffff;
+    color: #374151;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    outline: none;
+}
+
+
+/* =========================================================
+   DOCUMENT
+========================================================= */
+
+.document-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.document-item {
+    width: 100%;
+    min-width: 0;
+}
+
+.document-label {
+    margin-bottom: 7px;
+    color: #374151;
+    font-size: 11px;
+    line-height: 1.4;
+    font-weight: 600;
+}
+
+.document-preview {
+    width: 100%;
+    min-height: 145px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 15px;
+    box-sizing: border-box;
+    border: 1px dashed #c7cbd1;
+    border-radius: 10px;
+    background: #fafafa;
+    color: #6b7280;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    text-align: center;
+}
+
+.document-preview-button {
+    cursor: pointer;
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+.document-preview-button:hover {
+    border-color: #63AE00;
+    background: #f8fcf2;
+    box-shadow:
+        0 6px 18px rgba(99, 174, 0, 0.10);
+    transform: translateY(-2px);
+}
+
+.document-icon {
+    margin-bottom: 6px;
+    font-size: 30px;
+    color: #63AE00;
+}
+
+.document-status {
+    color: #374151;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.document-open-text {
+    margin-top: 5px;
+    color: #63AE00;
+    font-size: 9px;
+    font-weight: 600;
+}
+
+.document-unavailable {
+    cursor: default;
+    background: #f9fafb;
+    color: #9ca3af;
+}
+
+.document-unavailable .document-icon {
+    color: #9ca3af;
+}
+
+
+/* =========================================================
+   BUTTON
+========================================================= */
+
+.detail-actions {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 30px;
+}
+
+.participant-next-button {
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 40px;
+    border: none;
+    border-radius: 9px;
+    background: #63ae00;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 700;
+    box-shadow:
+        0 4px 10px rgba(50, 131, 0, 0.16);
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.participant-next-button:hover {
+    background: #276900;
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow:
+        0 7px 16px rgba(50, 131, 0, 0.20);
+}
+
+.participant-next-button .material-symbols-outlined {
+    font-size: 18px;
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.document-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+>>>>>>> origin/development
 
 
     <script>

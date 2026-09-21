@@ -277,7 +277,364 @@
 
                         Pengisian dan perubahan data hanya dapat dilakukan oleh role
 
+<<<<<<< HEAD
                         <strong>Medis atau Super Admin</strong>.
+=======
+                            <p class="section-description">
+
+                                @if($isInstruktur)
+
+                                    Informasi asesmen kesehatan awal calon PPKS.
+
+                                @else
+
+                                    Masukkan informasi utama pelaksanaan asesmen kesehatan awal.
+
+                                @endif
+
+                            </p>
+
+                        </div>
+
+
+                        <div class="form-grid">
+
+
+                            {{-- =================================================
+                                 TANGGAL DARING
+                            ================================================== --}}
+
+                            <div class="form-group">
+
+                                <label class="form-label">
+
+                                    Tanggal Asesmen Daring
+
+                                    @if($canEditKesehatan)
+                                        <span class="required">*</span>
+                                    @endif
+
+                                </label>
+
+                        <input
+                            type="date"
+                            name="tanggal_daring"
+                            class="form-control @error('tanggal_daring') has-error @enderror"
+                            value="{{ old('tanggal_daring', optional($kesehatanAwal)->tanggal_daring ? \Carbon\Carbon::parse($kesehatanAwal->tanggal_daring)->format('Y-m-d') : '') }}"
+                            @if(!$canEditKesehatan)
+                                readonly
+                            @else
+                                required
+                            @endif
+                        >
+
+                                @if($isInstruktur)
+
+                                    <div class="readonly-info">
+                                        Data hanya dapat diubah oleh role Medis atau Super Admin.
+                                    </div>
+
+                                @endif
+
+                                @error('tanggal_daring')
+
+                                    <div class="input-error">
+                                        {{ $message }}
+                                    </div>
+
+                                @enderror
+
+                            </div>
+
+
+                            {{-- =================================================
+                                 GELOMBANG & TAHUN
+                            ================================================== --}}
+
+                            <div class="form-group">
+
+                                <label class="form-label">
+
+                                    Gelombang & Tahun
+
+                                    @if($canEditKesehatan)
+                                        <span class="required">*</span>
+                                    @endif
+
+                                </label>
+
+
+                                <div class="inline-fields">
+
+
+                                    {{-- GELOMBANG --}}
+
+                                    <select
+                                        name="gelombang"
+                                        class="form-control @error('gelombang') has-error @enderror"
+
+                                        @if(!$canEditKesehatan)
+                                            disabled
+                                        @else
+                                            required
+                                        @endif
+                                    >
+
+                                        <option value="">
+                                            Gelombang
+                                        </option>
+
+                                        @for($i = 1; $i <= 10; $i++)
+
+                                            <option
+                                                value="{{ $i }}"
+                                                {{ (string)($gelombang ?? '') === (string)$i ? 'selected' : '' }}
+                                            >
+                                                Gelombang {{ $i }}
+                                            </option>
+
+                                        @endfor
+
+                                    </select>
+
+
+                                    {{-- TAHUN --}}
+
+                                    <select
+                                        name="tahun"
+                                        class="form-control @error('tahun') has-error @enderror"
+
+                                        @if(!$canEditKesehatan)
+                                            disabled
+                                        @else
+                                            required
+                                        @endif
+                                    >
+
+                                        <option value="">
+                                            Tahun
+                                        </option>
+
+                                        @for(
+                                            $tahun = date('Y') - 5;
+                                            $tahun <= date('Y') + 1;
+                                            $tahun++
+                                        )
+
+                                            <option
+                                                value="{{ $tahun }}"
+                                                {{ (string)($tahunValue ?? '') === (string)$tahun ? 'selected' : '' }}
+                                            >
+                                                {{ $tahun }}
+                                            </option>
+
+                                        @endfor
+
+                                    </select>
+
+                                </div>
+
+
+                                @if($isInstruktur)
+
+                                    <div class="readonly-info">
+                                        Data hanya dapat diubah oleh role Medis atau Super Admin.
+                                    </div>
+
+                                @endif
+
+                            </div>
+
+
+                            {{-- =================================================
+                                 PETUGAS
+                            ================================================== --}}
+
+                            <div class="form-group">
+
+                                <label class="form-label">
+
+                                    Petugas Asesmen Kesehatan
+
+                                    @if($canEditKesehatan)
+                                        <span class="required">*</span>
+                                    @endif
+
+                                </label>
+
+
+                                <select
+                                    name="petugas_kesehatan"
+                                    class="form-control @error('petugas_kesehatan') has-error @enderror"
+
+                                    @if(!$canEditKesehatan)
+                                        disabled
+                                    @else
+                                        required
+                                    @endif
+                                >
+
+                                    <option value="">
+                                        Pilih petugas
+                                    </option>
+
+                                    @if(isset($petugas) && count($petugas) > 0)
+
+                                        @foreach($petugas as $item)
+
+                                            <option
+                                                value="{{ $item->id }}"
+                                                {{ (string)($petugasKesehatan ?? '') === (string)$item->id ? 'selected' : '' }}
+                                            >
+                                                {{ $item->name }}
+                                            </option>
+
+                                        @endforeach
+
+                                    @endif
+
+                                </select>
+
+
+                                @if($isInstruktur)
+
+                                    <div class="readonly-info">
+                                        Data hanya dapat diubah oleh role Medis atau Super Admin.
+                                    </div>
+
+                                @endif
+
+
+                                @error('petugas_kesehatan')
+
+                                    <div class="input-error">
+                                        {{ $message }}
+                                    </div>
+
+                                @enderror
+
+                            </div>
+
+
+                            {{-- =================================================
+                                 HASIL
+                            ================================================== --}}
+
+                            <div class="form-group">
+
+                                <label class="form-label">
+
+                                    Hasil Asesmen Kesehatan
+
+                                    @if($canEditKesehatan)
+                                        <span class="required">*</span>
+                                    @endif
+
+                                </label>
+
+
+                                <select
+                                    name="hasil_asesmen_kesehatan"
+                                    class="form-control @error('hasil_asesmen_kesehatan') has-error @enderror"
+
+                                    @if(!$canEditKesehatan)
+                                        disabled
+                                    @else
+                                        required
+                                    @endif
+                                >
+
+                                    <option value="">
+                                        Pilih hasil asesmen
+                                    </option>
+
+                                    <option
+                                        value="lulus"
+                                        {{ ($hasilAsesmenKesehatan ?? '') === 'lulus' ? 'selected' : '' }}
+                                    >
+                                        Lulus
+                                    </option>
+
+                                    <option
+                                        value="tidak_lulus"
+                                        {{ ($hasilAsesmenKesehatan ?? '') === 'tidak_lulus' ? 'selected' : '' }}
+                                    >
+                                        Tidak Lulus
+                                    </option>
+
+                                    <option
+                                        value="pending"
+                                        {{ ($hasilAsesmenKesehatan ?? '') === 'pending' ? 'selected' : '' }}
+                                    >
+                                        Pending
+                                    </option>
+
+                                </select>
+
+
+                                @if($isInstruktur)
+
+                                    <div class="readonly-info">
+                                        Data hanya dapat diubah oleh role Medis atau Super Admin.
+                                    </div>
+
+                                @endif
+
+
+                                @error('hasil_asesmen_kesehatan')
+
+                                    <div class="input-error">
+                                        {{ $message }}
+                                    </div>
+
+                                @enderror
+
+                            </div>
+
+
+                            {{-- =================================================
+                                 CATATAN
+                            ================================================== --}}
+
+                            <div class="form-group full">
+
+                                <label class="form-label">
+                                    Catatan
+                                </label>
+
+
+                                <textarea
+                                    name="catatan_asesmen_kesehatan"
+                                    class="form-control @error('catatan_asesmen_kesehatan') has-error @enderror"
+                                    placeholder="Masukkan catatan atau keterangan tambahan..."
+
+                                    @if(!$canEditKesehatan)
+                                        readonly
+                                    @endif
+                                >{{ $catatanAsesmenKesehatan ?? '' }}</textarea>
+
+
+                                @if($isInstruktur)
+
+                                    <div class="readonly-info">
+                                        Data hanya dapat diubah oleh role Medis atau Super Admin.
+                                    </div>
+
+                                @endif
+
+
+                                @error('catatan_asesmen_kesehatan')
+
+                                    <div class="input-error">
+                                        {{ $message }}
+                                    </div>
+
+                                @enderror
+
+                            </div>
+
+                        </div>
+>>>>>>> origin/development
 
                     </div>
 

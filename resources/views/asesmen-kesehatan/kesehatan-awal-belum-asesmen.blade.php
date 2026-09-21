@@ -418,6 +418,7 @@
                         @endphp
 
 
+<<<<<<< HEAD
                         <tr
                             data-nama="{{ strtolower($nama) }}"
                             data-nik="{{ $nik }}"
@@ -427,6 +428,21 @@
                             data-status="{{ $statusKesehatan }}"
                             data-tanggal="{{ $tanggalProses ? \Carbon\Carbon::parse($tanggalProses)->format('Y-m-d') : '' }}"
                         >
+=======
+                            <a href="{{ route('ppks.normal.asesmen-kesehatan.awal', ['ppks' => $item->id]) }}"
+                                class="result-badge
+                                @if($status === 'passed')
+                                    result-passed
+                                @elseif($status === 'rejected')
+                                    result-rejected
+                                @elseif($status === 'pending')
+                                    result-pending
+                                @elseif($status === 'processing')
+                                    result-processing
+                                @else
+                                    result-not-done
+                                @endif">>
+>>>>>>> origin/development
 
                             {{-- =================================================
                             NO

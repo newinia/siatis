@@ -1,4 +1,3 @@
-```blade
 <x-app-layout>
 
     @php
@@ -89,7 +88,7 @@
 
         /*
         |--------------------------------------------------------------------------
-        | FOTO
+        | FOTO PPKS
         |--------------------------------------------------------------------------
         */
 
@@ -102,18 +101,20 @@
         |--------------------------------------------------------------------------
         */
 
-        $prosesInstruktur = $ppks->prosesPesertas
-            ->where('tahap', 'instruktur')
-            ->sortByDesc(function ($item) {
+        $prosesInstruktur =
+            $ppks->prosesPesertas
+                ->where('tahap', 'instruktur')
+                ->sortByDesc(function ($item) {
 
-                return $item->tanggal_proses
-                    ?? $item->created_at;
+                    return $item->tanggal_proses
+                        ?? $item->created_at;
 
-            })
-            ->first();
+                })
+                ->first();
 
         $catatanInstruktur =
-            $prosesInstruktur?->catatan ?? '-';
+            $prosesInstruktur?->catatan
+            ?? '-';
 
 
         /*
@@ -122,18 +123,20 @@
         |--------------------------------------------------------------------------
         */
 
-        $prosesKesehatan = $ppks->prosesPesertas
-            ->where('tahap', 'kesehatan_awal')
-            ->sortByDesc(function ($item) {
+        $prosesKesehatan =
+            $ppks->prosesPesertas
+                ->where('tahap', 'kesehatan_awal')
+                ->sortByDesc(function ($item) {
 
-                return $item->tanggal_proses
-                    ?? $item->created_at;
+                    return $item->tanggal_proses
+                        ?? $item->created_at;
 
-            })
-            ->first();
+                })
+                ->first();
 
         $catatanKesehatan =
-            $prosesKesehatan?->catatan ?? '-';
+            $prosesKesehatan?->catatan
+            ?? '-';
 
 
         /*
@@ -142,15 +145,16 @@
         |--------------------------------------------------------------------------
         */
 
-        $prosesCaseConference = $ppks->prosesPesertas
-            ->where('tahap', 'case_conference')
-            ->sortByDesc(function ($item) {
+        $prosesCaseConference =
+            $ppks->prosesPesertas
+                ->where('tahap', 'case_conference')
+                ->sortByDesc(function ($item) {
 
-                return $item->tanggal_proses
-                    ?? $item->created_at;
+                    return $item->tanggal_proses
+                        ?? $item->created_at;
 
-            })
-            ->first();
+                })
+                ->first();
 
 
         /*
@@ -304,7 +308,8 @@
         */
 
         $tanggalMasuk =
-            $ppks->imported_at ?? null;
+            $ppks->imported_at
+            ?? null;
 
         $tanggalMasukFormatted = '-';
 
@@ -886,11 +891,9 @@
 
                     </div>
 
-
                     <h3 class="save-modal-title">
                         Berhasil
                     </h3>
-
 
                     <p class="save-modal-message">
                         {{ session('success') }}
@@ -910,4 +913,3 @@
     </div>
 
 </x-app-layout>
-```
