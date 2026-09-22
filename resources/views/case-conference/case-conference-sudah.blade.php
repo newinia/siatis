@@ -148,20 +148,28 @@
                     class="search"
                     id="searchWrapper"
                 >
-
-                    <span class="material-symbols-outlined">
-                        search
-                    </span>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+                        <circle cx="11" cy="11" r="7" />
+                        <path d="m20 20-3.5-3.5" />
+                    </svg>
 
                     <input
                         type="text"
+                        name="search"
                         id="searchInput"
+                        value="{{ request('search') }}"
                         placeholder="Cari Nama atau NIK"
                         autocomplete="off"
                     >
-
-                </div>
-
+                </form>
 
                 {{-- =================================================
                 FILTER JENIS PPKS
@@ -170,6 +178,57 @@
 
                     <select
                         id="ppksFilter"
+                        class="filter-button"
+                    >
+
+                        <option value="">
+                            Semua Jenis PPKS
+                        </option>
+
+                        <option value="disabilitas fisik">
+                            Disabilitas Fisik
+                        </option>
+
+                        <option value="disabilitas rungu wicara">
+                            Disabilitas Rungu Wicara
+                        </option>
+
+                        <option value="disabilitas netra">
+                            Disabilitas Netra
+                        </option>
+
+                        <option value="disabilitas mental">
+                            Disabilitas Mental
+                        </option>
+
+                        <option value="disabilitas intelektual">
+                            Disabilitas Intelektual
+                        </option>
+
+                        <option value="kelompok rentan">
+                            Kelompok Rentan
+                        </option>
+
+                        <option value="other">
+                            Other
+                        </option>
+
+                    </select>
+
+                    <span class="material-symbols-outlined select-arrow">
+                        expand_more
+                    </span>
+
+                </div>
+
+
+                {{-- =================================================
+                FILTER HASIL
+                ================================================== --}}
+                <div class="select-wrapper">
+
+                    <select
+                        id="hasilFilter"
                         class="filter-button"
                     >
 
@@ -1026,13 +1085,6 @@
 
                 function filterTable() {
 
-                    const searchValue =
-                        searchInput
-                            ? searchInput.value
-                                .toLowerCase()
-                                .trim()
-                            : '';
-
 
                     const ppksValue =
                         ppksFilter
@@ -1061,9 +1113,6 @@
                     tableRows.forEach(
                         function (row) {
 
-                            const nama =
-                                row.dataset.nama
-                                || '';
 
 
                             const nik =
@@ -1080,23 +1129,6 @@
                                 row.dataset.hasil
                                 || '';
 
-
-                            /*
-                            |--------------------------------------------------------------------------
-                            | SEARCH
-                            |--------------------------------------------------------------------------
-                            */
-
-                            const matchSearch =
-                                searchValue === ''
-                                ||
-                                nama.includes(
-                                    searchValue
-                                )
-                                ||
-                                nik.includes(
-                                    searchValue
-                                );
 
 
                             /*
@@ -1130,8 +1162,6 @@
                             */
 
                             const shouldShow =
-                                matchSearch
-                                &&
                                 matchPpks
                                 &&
                                 matchHasil;
@@ -1191,20 +1221,7 @@
                 }
 
 
-                /*
-                |--------------------------------------------------------------------------
-                | SEARCH EVENT
-                |--------------------------------------------------------------------------
-                */
 
-                if (searchInput) {
-
-                    searchInput.addEventListener(
-                        'input',
-                        filterTable
-                    );
-
-                }
 
 
                 /*

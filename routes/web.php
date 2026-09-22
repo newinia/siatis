@@ -100,10 +100,6 @@ Route::middleware(['auth'])->group(function () {
         [PpksImportController::class, 'process']
     )->name('ppks.import.process');
 
-    Route::post(
-        '/ppks/import/recheck',
-        [PpksImportController::class, 'recheck']
-    )->name('ppks.import.recheck');
 
 
     /*
