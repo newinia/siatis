@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Ppks;
 use App\Models\KesehatanLanjutan;
 use App\Models\User;
+use App\Models\ProsesPeserta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -68,12 +69,6 @@ class PpksKesehatanLanjutanController extends Controller
      * ============================================================
      * DATA LULUS
      * ============================================================
-     *
-     * Peserta yang:
-     * - status PPKS = normal
-     * - Case Conference = diterima
-     * - sudah datang
-     * - hasil Kesehatan Lanjutan = lulus
      */
     public function lulus()
     {
@@ -124,13 +119,6 @@ class PpksKesehatanLanjutanController extends Controller
      * ============================================================
      * DATA PENDING
      * ============================================================
-     *
-     * Peserta yang:
-     * - status PPKS = normal
-     * - Case Conference = diterima
-     * - sudah datang
-     * - sudah memiliki data Kesehatan Lanjutan
-     * - hasil_akhir = pending
      */
     public function pending()
     {
@@ -181,12 +169,6 @@ class PpksKesehatanLanjutanController extends Controller
      * ============================================================
      * DATA TIDAK LULUS
      * ============================================================
-     *
-     * Peserta yang:
-     * - status PPKS = normal
-     * - Case Conference = diterima
-     * - sudah datang
-     * - hasil Kesehatan Lanjutan = tidak_lulus
      */
     public function tidakLulus()
     {
@@ -418,45 +400,91 @@ class PpksKesehatanLanjutanController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | SIMPAN / UPDATE
+        | SIMPAN DATA
         |--------------------------------------------------------------------------
+        |
+        | Kesehatan Lanjutan dan proses_pesertas disimpan dalam
+        | satu transaksi.
+        |
         */
 
-        KesehatanLanjutan::updateOrCreate(
+        DB::transaction(function () use ($validated, $ppks) {
 
-            [
-                'ppks_id' => $ppks->id,
-            ],
+            /*
+            |--------------------------------------------------------------------------
+            | SIMPAN / UPDATE KESEHATAN LANJUTAN
+            |--------------------------------------------------------------------------
+            */
 
-            [
-                'tanggal_asesmen' =>
-                    $validated['tanggal_asesmen'],
+            KesehatanLanjutan::updateOrCreate(
 
-                'gelombang' =>
-                    $validated['gelombang'] ?? null,
+                [
+                    'ppks_id' => $ppks->id,
+                ],
 
-                'tahun' =>
-                    $validated['tahun'] ?? null,
+                [
+                    'tanggal_asesmen' =>
+                        $validated['tanggal_asesmen'],
 
-                'petugas_kesehatan' =>
-                    $validated['petugas_kesehatan'] ?? null,
+                    'gelombang' =>
+                        $validated['gelombang'] ?? null,
 
-                'hasil_asesmen' =>
-                    $validated['hasil_asesmen'] ?? null,
+                    'tahun' =>
+                        $validated['tahun'] ?? null,
 
-                'status_asesmen_psikologi' =>
-                    $validated['status_asesmen_psikologi'] ?? null,
+                    'petugas_kesehatan' =>
+                        $validated['petugas_kesehatan'] ?? null,
 
-                'status_asesmen_fisioterapis' =>
-                    $validated['status_asesmen_fisioterapis'] ?? null,
+                    'hasil_asesmen' =>
+                        $validated['hasil_asesmen'] ?? null,
 
-                'catatan_asesmen' =>
-                    $validated['catatan_asesmen'] ?? null,
+                    'status_asesmen_psikologi' =>
+                        $validated['status_asesmen_psikologi'] ?? null,
 
-                'hasil_akhir' =>
-                    $validated['hasil_akhir'],
-            ]
-        );
+                    'status_asesmen_fisioterapis' =>
+                        $validated['status_asesmen_fisioterapis'] ?? null,
+
+                    'catatan_asesmen' =>
+                        $validated['catatan_asesmen'] ?? null,
+
+                    'hasil_akhir' =>
+                        $validated['hasil_akhir'],
+                ]
+            );
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | SINKRONKAN KE PROSES PESERTA
+            |--------------------------------------------------------------------------
+            */
+
+            ProsesPeserta::updateOrCreate(
+
+                [
+                    'ppks_id' => $ppks->id,
+                    'tahap' => 'kesehatan_lanjutan',
+                ],
+
+                [
+                    'status' =>
+                        $validated['hasil_akhir'],
+
+                    'alasan_pending' =>
+                        $validated['hasil_akhir'] === 'pending'
+                            ? ($validated['catatan_asesmen'] ?? null)
+                            : null,
+
+                    'catatan' =>
+                        $validated['catatan_asesmen'] ?? null,
+
+                    'tanggal_panggil_kembali' => null,
+
+                    'tanggal_proses' =>
+                        $validated['tanggal_asesmen'],
+                ]
+            );
+        });
 
 
         /*
@@ -476,4 +504,3 @@ class PpksKesehatanLanjutanController extends Controller
             );
     }
 }
-

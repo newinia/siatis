@@ -1,6 +1,5 @@
 <x-app-layout>
 
-```
 <div class="main-page">
 
     {{-- =====================================================
@@ -585,6 +584,5 @@ HANYA UNTUK ELEMEN YANG BELUM ADA DI CSS UTAMA
     }
 
 </style>
-```
 
 </x-app-layout>

@@ -7,13 +7,14 @@ use App\Models\ProsesPeserta;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use App\Http\Controllers\PpksRecommendationController;
 
 class DashboardController extends Controller
 {
     /**
      * Dashboard utama
      */
-    public function index(Request $request): View
+    public function index(Request $request, PpksRecommendationController $recommendationController): View
     {
         /*
         |--------------------------------------------------------------------------
@@ -69,7 +70,10 @@ class DashboardController extends Controller
 
         foreach ($ppks as $item) {
 
-            $timestamp = data_get($item->data, 'timestamp');
+            $timestamp = data_get(
+                $item->data,
+                'timestamp'
+            );
 
             if (empty($timestamp)) {
                 continue;
@@ -190,7 +194,10 @@ class DashboardController extends Controller
         foreach ($ppks as $item) {
 
             $processes = $prosesByPpks
-                ->get($item->id, collect());
+                ->get(
+                    $item->id,
+                    collect()
+                );
 
             /*
             |--------------------------------------------------------------------------
@@ -199,11 +206,19 @@ class DashboardController extends Controller
             */
 
             $caseConference = $processes
-                ->where('tahap', 'case_conference')
+                ->where(
+                    'tahap',
+                    'case_conference'
+                )
                 ->sortByDesc(function ($process) {
                     return [
-                        optional($process->tanggal_proses)->timestamp ?? 0,
-                        optional($process->created_at)->timestamp ?? 0,
+                        optional(
+                            $process->tanggal_proses
+                        )->timestamp ?? 0,
+
+                        optional(
+                            $process->created_at
+                        )->timestamp ?? 0,
                     ];
                 })
                 ->first();
@@ -224,7 +239,10 @@ class DashboardController extends Controller
             if (
                 in_array(
                     $caseConference->status,
-                    ['lulus', 'tidak_lulus'],
+                    [
+                        'lulus',
+                        'tidak_lulus',
+                    ],
                     true
                 )
             ) {
@@ -258,15 +276,24 @@ class DashboardController extends Controller
         */
 
         $sudahDilayaniPercentage = $totalPendaftar > 0
-            ? round(($sudahDilayani / $totalPendaftar) * 100, 1)
+            ? round(
+                ($sudahDilayani / $totalPendaftar) * 100,
+                1
+            )
             : 0;
 
         $belumDilayaniPercentage = $totalPendaftar > 0
-            ? round(($belumDilayani / $totalPendaftar) * 100, 1)
+            ? round(
+                ($belumDilayani / $totalPendaftar) * 100,
+                1
+            )
             : 0;
 
         $pendingPercentage = $totalPendaftar > 0
-            ? round(($pending / $totalPendaftar) * 100, 1)
+            ? round(
+                ($pending / $totalPendaftar) * 100,
+                1
+            )
             : 0;
 
         /*
@@ -304,8 +331,13 @@ class DashboardController extends Controller
             true
         );
 
-        $provinceLabels = array_keys($topProvinces);
-        $provinceValues = array_values($topProvinces);
+        $provinceLabels = array_keys(
+            $topProvinces
+        );
+
+        $provinceValues = array_values(
+            $topProvinces
+        );
 
         /*
         |--------------------------------------------------------------------------
@@ -405,7 +437,8 @@ class DashboardController extends Controller
                 )
             ) {
 
-                $matchedCategory = 'Disabilitas Fisik';
+                $matchedCategory =
+                    'Disabilitas Fisik';
             }
 
             /*
@@ -425,7 +458,8 @@ class DashboardController extends Controller
                 )
             ) {
 
-                $matchedCategory = 'Disabilitas Rungu Wicara';
+                $matchedCategory =
+                    'Disabilitas Rungu Wicara';
             }
 
             /*
@@ -441,7 +475,8 @@ class DashboardController extends Controller
                 )
             ) {
 
-                $matchedCategory = 'Disabilitas Netra';
+                $matchedCategory =
+                    'Disabilitas Netra';
             }
 
             /*
@@ -457,7 +492,8 @@ class DashboardController extends Controller
                 )
             ) {
 
-                $matchedCategory = 'Disabilitas Mental';
+                $matchedCategory =
+                    'Disabilitas Mental';
             }
 
             /*
@@ -473,7 +509,8 @@ class DashboardController extends Controller
                 )
             ) {
 
-                $matchedCategory = 'Disabilitas Intelektual';
+                $matchedCategory =
+                    'Disabilitas Intelektual';
             }
 
             /*
@@ -489,7 +526,8 @@ class DashboardController extends Controller
                 )
             ) {
 
-                $matchedCategory = 'Kelompok Rentan';
+                $matchedCategory =
+                    'Kelompok Rentan';
             }
 
             /*
@@ -542,13 +580,13 @@ class DashboardController extends Controller
         */
 
         $majorCategories = [
-            'Komputer',
             'Desain Grafis',
+            'Contact Center',
             'Penjahitan',
+            'Komputer',
+            'Otomotif',
             'Elektro',
             'Las',
-            'Contact Center',
-            'Otomotif',
         ];
 
         $majorCounts = [];
@@ -606,9 +644,8 @@ class DashboardController extends Controller
 
             foreach ($majorCategories as $category) {
 
-                $categoryNormalized = mb_strtolower(
-                    $category
-                );
+                $categoryNormalized =
+                    mb_strtolower($category);
 
                 if (
                     str_contains(
@@ -664,7 +701,10 @@ class DashboardController extends Controller
         foreach ($ppks as $item) {
 
             $processes = $prosesByPpks
-                ->get($item->id, collect());
+                ->get(
+                    $item->id,
+                    collect()
+                );
 
             /*
             |--------------------------------------------------------------------------
@@ -692,12 +732,17 @@ class DashboardController extends Controller
 
                 $latestTimestamp =
                     optional(
-                        $latestByStage[$stage]->tanggal_proses
+                        $latestByStage[$stage]
+                            ->tanggal_proses
                     )->timestamp ?? 0;
 
-                if ($currentTimestamp > $latestTimestamp) {
+                if (
+                    $currentTimestamp >
+                    $latestTimestamp
+                ) {
 
-                    $latestByStage[$stage] = $process;
+                    $latestByStage[$stage] =
+                        $process;
                 }
             }
 
@@ -707,15 +752,19 @@ class DashboardController extends Controller
             |--------------------------------------------------------------------------
             */
 
-            $hasPending = collect($latestByStage)
-                ->contains(function ($process) {
-                    return $process->status === 'pending';
-                });
+            $hasPending = collect(
+                $latestByStage
+            )->contains(function ($process) {
 
-            $hasTidakLulus = collect($latestByStage)
-                ->contains(function ($process) {
-                    return $process->status === 'tidak_lulus';
-                });
+                return $process->status === 'pending';
+            });
+
+            $hasTidakLulus = collect(
+                $latestByStage
+            )->contains(function ($process) {
+
+                return $process->status === 'tidak_lulus';
+            });
 
             if ($hasPending) {
 
@@ -752,7 +801,8 @@ class DashboardController extends Controller
                     continue;
                 }
 
-                $process = $latestByStage[$stage];
+                $process =
+                    $latestByStage[$stage];
 
                 if ($process->status !== 'lulus') {
                     continue;
@@ -820,165 +870,14 @@ class DashboardController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | REKOMENDASI PESERTA PENDING
-        |--------------------------------------------------------------------------
-        |
-        | Prioritas:
-        | 1. Usia paling dekat dengan 34 tahun
-        | 2. Disabilitas Fisik
-        | 3. Disabilitas Rungu Wicara
-        |--------------------------------------------------------------------------
-        */
-
-        $recommendations = [];
-
-        foreach ($ppks as $item) {
-
-            $processes = $prosesByPpks
-                ->get($item->id, collect());
-
-            $latestCaseConference = $processes
-                ->where('tahap', 'case_conference')
-                ->sortByDesc(function ($process) {
-                    return [
-                        optional($process->tanggal_proses)->timestamp ?? 0,
-                        optional($process->created_at)->timestamp ?? 0,
-                    ];
-                })
-                ->first();
-
-            if (
-                !$latestCaseConference ||
-                $latestCaseConference->status !== 'pending'
-            ) {
-                continue;
-            }
-
-            $age = data_get(
-                $item->data,
-                'usia'
-            );
-
-            $age = is_numeric($age)
-                ? (int) $age
-                : null;
-
-            /*
-            |--------------------------------------------------------------------------
-            | NORMALISASI JENIS PPKS UNTUK REKOMENDASI
-            |--------------------------------------------------------------------------
-            */
-
-            $type = trim(
-                (string) data_get(
-                    $item->data,
-                    'jenis_ppks',
-                    ''
-                )
-            );
-
-            $typeLower = mb_strtolower(
-                preg_replace(
-                    '/\s+/',
-                    ' ',
-                    $type
-                )
-            );
-
-            /*
-            |--------------------------------------------------------------------------
-            | PRIORITAS JENIS PPKS
-            |--------------------------------------------------------------------------
-            |
-            | 0 = Disabilitas Fisik
-            | 1 = Disabilitas Rungu Wicara
-            | 2 = Kategori lainnya
-            |--------------------------------------------------------------------------
-            */
-
-            if (
-                str_contains(
-                    $typeLower,
-                    'fisik'
-                )
-            ) {
-
-                $physicalPriority = 0;
-
-            } elseif (
-                str_contains(
-                    $typeLower,
-                    'rungu'
-                ) ||
-                str_contains(
-                    $typeLower,
-                    'wicara'
-                )
-            ) {
-
-                $physicalPriority = 1;
-
-            } else {
-
-                $physicalPriority = 2;
-            }
-
-            $ageDifference = $age !== null
-                ? abs(34 - $age)
-                : 999;
-
-            $recommendations[] = [
-                'ppks' => $item,
-                'age' => $age,
-                'age_difference' => $ageDifference,
-                'physical_priority' => $physicalPriority,
-            ];
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | SORT REKOMENDASI
-        |--------------------------------------------------------------------------
-        */
-
-        usort(
-            $recommendations,
-            function ($a, $b) {
-
-                if (
-                    $a['age_difference']
-                    !==
-                    $b['age_difference']
-                ) {
-
-                    return $a['age_difference']
-                        <=>
-                        $b['age_difference'];
-                }
-
-                return $a['physical_priority']
-                    <=>
-                    $b['physical_priority'];
-            }
-        );
-
-        /*
-        |--------------------------------------------------------------------------
-        | BATASI 10 PESERTA
-        |--------------------------------------------------------------------------
-        */
-
-        $recommendations = array_slice(
-            $recommendations,
-            0,
-            10
-        );
-
-        /*
-        |--------------------------------------------------------------------------
         | KIRIM DATA KE BLADE
         |--------------------------------------------------------------------------
+        |
+        | Data recommendation sekarang tidak lagi dibuat di sini.
+        | Akan diambil dari RecommendationService.
+        |--------------------------------------------------------------------------
         */
+        $recommendations = $recommendationController->getRecommendations();
 
         return view(
             'dashboard',
@@ -1010,10 +909,11 @@ class DashboardController extends Controller
                 'stageValues',
 
                 'majorLabels',
-                'majorValues',
-
-                'recommendations'
+                'majorValues'
             )
+            )->with(
+    'recommendations',
+    $recommendations
         );
     }
 
@@ -1088,5 +988,7 @@ class DashboardController extends Controller
 
             return null;
         }
+        
     }
+    
 }

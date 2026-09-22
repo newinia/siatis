@@ -11,6 +11,7 @@ use App\Http\Controllers\PpksKesehatanLanjutanController;
 use App\Http\Controllers\PpksAktifController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SuperAdmin\UserApprovalController;
+use App\Http\Controllers\PpksRecommendationController;
 
 require __DIR__ . '/auth.php';
 
@@ -27,6 +28,11 @@ Route::middleware(['auth'])->group(function () {
         DashboardController::class,
         'index'
     ])->middleware(['auth'])->name('dashboard');
+
+    Route::get(
+        '/dashboard/rekomendasi',
+        [PpksRecommendationController::class, 'index']
+    )->name('dashboard.recommendations');
 
 
     /*
@@ -116,7 +122,8 @@ Route::middleware(['auth'])->group(function () {
         [PpksController::class, 'belumDimulai']
     )->name('ppks.normal.belum-dimulai');
 
-
+    Route::get('/ppks/normal/case-conference/pdf', [PpksController::class, 'caseConferencePdf'])
+        ->name('ppks.normal.case-conference.pdf');
     /*
     |--------------------------------------------------------------------------
     | ASESMEN INSTRUKTUR
@@ -264,6 +271,7 @@ Route::middleware(['auth'])->group(function () {
         '/ppks/normal/case-conference/{ppks}',
         [PpksController::class, 'updateCaseConference']
     )->name('ppks.normal.case-conference.update');
+
 
 
     /*

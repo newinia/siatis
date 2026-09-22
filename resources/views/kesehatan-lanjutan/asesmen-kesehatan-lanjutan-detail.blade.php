@@ -1,4 +1,3 @@
-```blade
 <x-app-layout>
 
     @php
@@ -669,69 +668,88 @@
 
 
 
-            {{-- =================================================
-            HASIL AKHIR
-            ================================================== --}}
+            {{-- ================================================= 
+HASIL AKHIR 
+================================================== --}}
 
-            <div class="detail-section">
+<div class="detail-section"> 
 
-                <div class="detail-section-title">
-                    Hasil Akhir Kesehatan Lanjutan
-                </div>
-
-
-                <div class="assessment-grid">
-
-                    <div class="detail-field">
-
-                        <label for="hasil_akhir">
-                            Hasil Akhir
-                        </label>
+    <div class="detail-section-title"> 
+        Hasil Akhir Kesehatan Lanjutan
+    </div> 
 
 
-                        <select
-                            id="hasil_akhir"
-                            name="hasil_akhir"
-                            {{ $canEdit ? 'required' : 'disabled' }}
-                        >
+    <div class="assessment-grid"> 
 
-                            <option value="">
-                                Pilih Hasil
-                            </option>
+        <div class="detail-field"> 
+
+            <label for="hasil_akhir"> 
+                Hasil Akhir 
+            </label> 
 
 
-                            <option
-                                value="lulus"
-                                {{ old(
-                                    'hasil_akhir',
-                                    $kesehatanLanjutan?->hasil_akhir
-                                ) == 'lulus'
-                                    ? 'selected'
-                                    : '' }}
-                            >
-                                Lulus
-                            </option>
+            <select 
+                id="hasil_akhir" 
+                name="hasil_akhir" 
+                {{ $canEdit ? 'required' : 'disabled' }}
+            > 
+
+                <option value=""> 
+                    Pilih Hasil 
+                </option> 
 
 
-                            <option
-                                value="tidak_lulus"
-                                {{ old(
-                                    'hasil_akhir',
-                                    $kesehatanLanjutan?->hasil_akhir
-                                ) == 'tidak_lulus'
-                                    ? 'selected'
-                                    : '' }}
-                            >
-                                Tidak Lulus
-                            </option>
+                {{-- LULUS --}}
 
-                        </select>
+                <option 
+                    value="lulus"
+                    {{ old( 
+                        'hasil_akhir', 
+                        $kesehatanLanjutan?->hasil_akhir
+                    ) == 'lulus'
+                        ? 'selected'
+                        : '' }}
+                > 
+                    Lulus
+                </option> 
 
-                    </div>
 
-                </div>
+                {{-- TIDAK LULUS --}}
 
-            </div>
+                <option 
+                    value="tidak_lulus"
+                    {{ old( 
+                        'hasil_akhir', 
+                        $kesehatanLanjutan?->hasil_akhir
+                    ) == 'tidak_lulus'
+                        ? 'selected'
+                        : '' }}
+                > 
+                    Tidak Lulus
+                </option>
+
+
+                {{-- PENDING --}}
+
+                <option 
+                    value="pending"
+                    {{ old( 
+                        'hasil_akhir', 
+                        $kesehatanLanjutan?->hasil_akhir
+                    ) == 'pending'
+                        ? 'selected'
+                        : '' }}
+                > 
+                    Pending
+                </option>
+
+            </select> 
+
+        </div> 
+
+    </div> 
+
+</div>
 
 
 
@@ -962,4 +980,4 @@
     </div>
 
 </x-app-layout>
-```
+
