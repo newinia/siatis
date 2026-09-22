@@ -111,22 +111,34 @@
                 {{-- =================================================
                 SEARCH
                 ================================================== --}}
-                <div
-                    class="search"
-                    id="searchWrapper"
-                >
+                <form
+    method="GET"
+    action="{{ url()->current() }}"
+    class="search"
+    id="searchForm"
+>
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+    >
+        <circle cx="11" cy="11" r="7" />
+        <path d="m20 20-3.5-3.5" />
+    </svg>
 
-                    <span class="material-symbols-outlined">
-                        search
-                    </span>
-
-                    <input
-                        type="text"
-                        id="searchInput"
-                        placeholder="Cari Nama atau NIK"
-                    >
-
-                </div>
+    <input
+        type="text"
+        name="search"
+        id="searchInput"
+        value="{{ request('search') }}"
+        placeholder="Cari Nama atau NIK"
+        autocomplete="off"
+    >
+</form>
 
 
                 {{-- =================================================
@@ -540,7 +552,7 @@
 
         @endif
 
-    </div>  
+    </div>
 
 
     {{-- =====================================================
@@ -549,9 +561,6 @@
     <script>
 
         document.addEventListener('DOMContentLoaded', function () {
-
-            const searchInput =
-                document.getElementById('searchInput');
 
             const filterPpks =
                 document.getElementById('filterPpks');
@@ -568,91 +577,53 @@
             /* =================================================
                FILTER DATA
             ================================================== */
-
             function filterData() {
 
-                const search =
-                    searchInput
-                        ? searchInput.value
-                            .toLowerCase()
-                            .trim()
-                        : '';
+    const ppks =
+        filterPpks
+            ? filterPpks.value
+                .toLowerCase()
+                .trim()
+            : '';
+
+    const status =
+        filterStatus
+            ? filterStatus.value
+                .toLowerCase()
+                .trim()
+            : '';
 
 
-                const ppks =
-                    filterPpks
-                        ? filterPpks.value
-                            .toLowerCase()
-                            .trim()
-                        : '';
+    rows.forEach(function (row) {
+
+        const jenisPpks =
+            row.dataset.ppks || '';
+
+        const rowStatus =
+            row.dataset.status || '';
 
 
-                const status =
-                    filterStatus
-                        ? filterStatus.value
-                            .toLowerCase()
-                            .trim()
-                        : '';
+        const matchPpks =
+            !ppks ||
+            jenisPpks.includes(ppks);
 
 
-                rows.forEach(function (row) {
-
-                    const nama =
-                        row.dataset.nama || '';
-
-
-                    const nik =
-                        row.dataset.nik || '';
+        const matchStatus =
+            !status ||
+            rowStatus === status;
 
 
-                    const jenisPpks =
-                        row.dataset.ppks || '';
+        row.style.display =
+            matchPpks &&
+            matchStatus
+                ? ''
+                : 'none';
+
+    });
+
+}
 
 
-                    const rowStatus =
-                        row.dataset.status || '';
-
-
-                    const matchSearch =
-                        !search ||
-                        nama.includes(search) ||
-                        nik.includes(search);
-
-
-                    const matchPpks =
-                        !ppks ||
-                        jenisPpks.includes(ppks);
-
-
-                    const matchStatus =
-                        !status ||
-                        rowStatus === status;
-
-
-                    row.style.display =
-                        matchSearch &&
-                        matchPpks &&
-                        matchStatus
-                            ? ''
-                            : 'none';
-
-                });
-
-            }
-
-
-            /* =================================================
-               SEARCH
-            ================================================== */
-
-            if (searchInput) {
-
-                searchInput.addEventListener(
-                    'input',
-                    filterData
-                );
-
-            }
 
 
             /* =================================================

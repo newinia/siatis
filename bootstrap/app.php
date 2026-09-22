@@ -11,6 +11,11 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
+
+    ->withProviders([
+        \Barryvdh\DomPDF\ServiceProvider::class,
+    ])
+
     ->withMiddleware(function (Middleware $middleware): void {
         //
     })
@@ -18,4 +23,5 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*'),
         );
-    })->create();
+    })
+    ->create();

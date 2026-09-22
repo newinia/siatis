@@ -99,16 +99,34 @@
             <div class="filter-group">
 
                 {{-- SEARCH --}}
-                <div class="search" id="searchWrapper">
+                <form
+    method="GET"
+    action="{{ url()->current() }}"
+    class="search"
+    id="searchForm"
+>
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+    >
+        <circle cx="11" cy="11" r="7" />
+        <path d="m20 20-3.5-3.5" />
+    </svg>
 
-                    <span class="material-symbols-outlined">
-                        search
-                    </span>
-
-                    <input type="text" id="searchInput" placeholder="Cari Nama atau NIK">
-
-                </div>
-
+    <input
+        type="text"
+        name="search"
+        id="searchInput"
+        value="{{ request('search') }}"
+        placeholder="Cari Nama atau NIK"
+        autocomplete="off"
+    >
+</form>
 
                 {{-- FILTER JENIS PPKS --}}
                 <div class="select-wrapper">
@@ -534,181 +552,161 @@
     ====================================================== --}}
     <script>
 
-        document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function () {
 
-            const searchInput =
-                document.getElementById('searchInput');
+        const filterPpks =
+            document.getElementById('filterPpks');
 
+        const rows =
+            document.querySelectorAll(
+                '#dataTable tr[data-nama]'
+            );
 
-            const filterPpks =
-                document.getElementById('filterPpks');
+        const startDate =
+            document.getElementById('startDate');
 
+        const endDate =
+            document.getElementById('endDate');
 
-            const rows =
-                document.querySelectorAll(
-                    '#dataTable tr[data-nama]'
-                );
+        const resetDate =
+            document.getElementById('resetDate');
 
+        const applyDate =
+            document.getElementById('applyDate');
 
-            const startDate =
-                document.getElementById('startDate');
 
+        /* =================================================
+           FILTER DATA
+        ================================================== */
 
-            const endDate =
-                document.getElementById('endDate');
+        function filterData() {
 
+            const ppks =
+                filterPpks
+                    ? filterPpks.value.toLowerCase().trim()
+                    : '';
 
-            const resetDate =
-                document.getElementById('resetDate');
+            const start =
+                startDate
+                    ? startDate.value
+                    : '';
 
+            const end =
+                endDate
+                    ? endDate.value
+                    : '';
 
-            const applyDate =
-                document.getElementById('applyDate');
 
+            rows.forEach(function (row) {
 
-            /* =================================================
-               FILTER DATA
-            ================================================== */
+                const jenisPpks =
+                    row.dataset.ppks || '';
 
-            function filterData() {
+                const tanggal =
+                    row.dataset.tanggal || '';
 
-                const search =
-                    searchInput.value
-                        .toLowerCase()
-                        .trim();
 
+                /* =================================================
+                   FILTER JENIS PPKS
+                ================================================== */
 
-                const ppks =
-                    filterPpks.value
-                        .toLowerCase()
-                        .trim();
+                const matchPpks =
+                    !ppks ||
+                    jenisPpks.includes(ppks);
 
 
-                const start =
-                    startDate.value;
+                /* =================================================
+                   FILTER TANGGAL
+                ================================================== */
 
+                let matchDate = true;
 
-                const end =
-                    endDate.value;
 
+                if (start && tanggal) {
 
-                rows.forEach(row => {
+                    matchDate =
+                        tanggal >= start;
 
-                    const nama =
-                        row.dataset.nama || '';
+                }
 
 
-                    const nik =
-                        row.dataset.nik || '';
+                if (end && tanggal) {
 
+                    matchDate =
+                        matchDate &&
+                        tanggal <= end;
 
-                    const jenisPpks =
-                        row.dataset.ppks || '';
+                }
 
 
-                    const tanggal =
-                        row.dataset.tanggal || '';
+                /* =================================================
+                   TAMPILKAN DATA
+                ================================================== */
 
+                row.style.display =
+                    matchPpks && matchDate
+                        ? ''
+                        : 'none';
 
-                    const matchSearch =
-                        !search ||
-                        nama.includes(search) ||
-                        nik.includes(search);
+            });
 
+        }
 
-                    const matchPpks =
-                        !ppks ||
-                        jenisPpks.includes(ppks);
 
+        /* =================================================
+           FILTER JENIS PPKS
+        ================================================== */
 
-                    let matchDate = true;
+        if (filterPpks) {
 
+            filterPpks.addEventListener(
+                'change',
+                filterData
+            );
 
-                    if (start && tanggal) {
+        }
 
-                        matchDate =
-                            tanggal >= start;
 
-                    }
+        /* =================================================
+           FILTER TANGGAL
+        ================================================== */
 
+        if (applyDate) {
 
-                    if (end && tanggal) {
+            applyDate.addEventListener(
+                'click',
+                filterData
+            );
 
-                        matchDate =
-                            matchDate &&
-                            tanggal <= end;
+        }
 
-                    }
 
+        /* =================================================
+           RESET TANGGAL
+        ================================================== */
 
-                    row.style.display =
-                        matchSearch &&
-                            matchPpks &&
-                            matchDate
-                            ? ''
-                            : 'none';
+        if (resetDate) {
 
-                });
+            resetDate.addEventListener(
+                'click',
+                function () {
 
-            }
-
-
-            /* =================================================
-               EVENT FILTER
-            ================================================== */
-
-            if (searchInput) {
-
-                searchInput.addEventListener(
-                    'input',
-                    filterData
-                );
-
-            }
-
-
-            if (filterPpks) {
-
-                filterPpks.addEventListener(
-                    'change',
-                    filterData
-                );
-
-            }
-
-
-            /* =================================================
-               DATE
-            ================================================== */
-
-            if (applyDate) {
-
-                applyDate.addEventListener(
-                    'click',
-                    filterData
-                );
-
-            }
-
-
-            if (resetDate) {
-
-                resetDate.addEventListener(
-                    'click',
-                    function () {
-
+                    if (startDate) {
                         startDate.value = '';
-                        endDate.value = '';
-
-                        filterData();
-
                     }
-                );
 
-            }
+                    if (endDate) {
+                        endDate.value = '';
+                    }
 
-        });
+                    filterData();
 
-    </script>
+                }
+            );
 
+        }
+
+    });
+
+</script>
 </x-app-layout>

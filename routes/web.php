@@ -94,10 +94,6 @@ Route::middleware(['auth'])->group(function () {
         [PpksImportController::class, 'process']
     )->name('ppks.import.process');
 
-    Route::post(
-        '/ppks/import/recheck',
-        [PpksImportController::class, 'recheck']
-    )->name('ppks.import.recheck');
 
 
     /*
@@ -116,7 +112,8 @@ Route::middleware(['auth'])->group(function () {
         [PpksController::class, 'belumDimulai']
     )->name('ppks.normal.belum-dimulai');
 
-
+    Route::get('/ppks/normal/case-conference/pdf', [PpksController::class, 'caseConferencePdf'])
+    ->name('ppks.normal.case-conference.pdf');
     /*
     |--------------------------------------------------------------------------
     | ASESMEN INSTRUKTUR
@@ -264,6 +261,7 @@ Route::middleware(['auth'])->group(function () {
         '/ppks/normal/case-conference/{ppks}',
         [PpksController::class, 'updateCaseConference']
     )->name('ppks.normal.case-conference.update');
+
 
 
     /*

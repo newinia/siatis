@@ -6,9 +6,15 @@
 
     <meta charset="utf-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
 
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta
+        name="csrf-token"
+        content="{{ csrf_token() }}"
+    >
 
     <title>
         {{ config('app.name', 'SIATIS') }}
@@ -43,11 +49,6 @@
 
 </head>
 
-
-{{-- =====================================================
-ALPINE DIPINDAH LANGSUNG KE BODY
-STRUKTUR DISAMAKAN DENGAN KODINGAN B
-====================================================== --}}
 
 <body
     x-data="{
@@ -93,16 +94,18 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 >
 
 
-    {{-- =================================================
+    {{-- =====================================================
     SIDEBAR DESKTOP
-    ================================================== --}}
+    ====================================================== --}}
 
     <aside
         class="app-sidebar"
         :class="{ 'sidebar-closed': !sidebarOpen }"
     >
 
-        {{-- HEADER SIDEBAR --}}
+        {{-- =================================================
+        SIDEBAR HEADER
+        ================================================== --}}
 
         <div class="sidebar-header">
 
@@ -126,15 +129,20 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                 <a
                     href="{{ route('dashboard') }}"
-                    class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}"
+                    class="nav-item nav-single-item
+                        {{ request()->routeIs('dashboard') ? 'active' : '' }}"
                 >
 
-                    <span class="material-symbols-outlined nav-icon">
-                        dashboard
-                    </span>
+                    <span class="nav-left">
 
-                    <span class="nav-text">
-                        Dashboard
+                        <span class="material-symbols-outlined nav-icon">
+                            dashboard
+                        </span>
+
+                        <span class="nav-text">
+                            Dashboard
+                        </span>
+
                     </span>
 
                 </a>
@@ -154,15 +162,20 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                 <a
                     href="{{ route('admin.index') }}"
-                    class="nav-item {{ request()->routeIs('admin.*') ? 'active' : '' }}"
+                    class="nav-item nav-single-item
+                        {{ request()->routeIs('admin.*') ? 'active' : '' }}"
                 >
 
-                    <span class="material-symbols-outlined nav-icon">
-                        manage_accounts
-                    </span>
+                    <span class="nav-left">
 
-                    <span class="nav-text">
-                        Daftar Admin
+                        <span class="material-symbols-outlined nav-icon">
+                            manage_accounts
+                        </span>
+
+                        <span class="nav-text">
+                            Daftar Admin
+                        </span>
+
                     </span>
 
                 </a>
@@ -178,17 +191,18 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                 <button
                     type="button"
-                    class="nav-item nav-parent {{
-                        request()->routeIs(
+                    class="nav-item nav-parent
+                        {{ request()->routeIs(
                             'ppks.import',
                             'ppks.normal',
                             'ppks.manual',
                             'ppks.normal.create',
                             'ppks.normal.edit',
                             'ppks.perlu-diperiksa'
-                        ) ? 'active' : ''
-                    }}"
-                    :class="{ 'menu-open': ppksOpen }"
+                        ) ? 'active' : '' }}"
+                    :class="{
+                        'menu-open': ppksOpen
+                    }"
                     @click="ppksOpen = !ppksOpen"
                 >
 
@@ -222,8 +236,11 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.import') }}"
-                        class="nav-submenu-item {{ request()->routeIs('ppks.import') ? 'active' : '' }}"
+                        class="nav-submenu-item
+                            {{ request()->routeIs('ppks.import') ? 'active' : '' }}"
                     >
+
+                        <span class="submenu-indicator"></span>
 
                         <span>
                             Import Data
@@ -234,8 +251,11 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.normal') }}"
-                        class="nav-submenu-item {{ request()->routeIs('ppks.normal') ? 'active' : '' }}"
+                        class="nav-submenu-item
+                            {{ request()->routeIs('ppks.normal') ? 'active' : '' }}"
                     >
+
+                        <span class="submenu-indicator"></span>
 
                         <span>
                             Data Normal
@@ -246,14 +266,17 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.manual') }}"
-                        class="nav-submenu-item {{
-                            request()->routeIs('ppks.manual') ||
-                            request()->routeIs('ppks.normal.create') ||
-                            request()->routeIs('ppks.normal.edit')
-                            ? 'active'
-                            : ''
-                        }}"
+                        class="nav-submenu-item
+                            {{
+                                request()->routeIs('ppks.manual') ||
+                                request()->routeIs('ppks.normal.create') ||
+                                request()->routeIs('ppks.normal.edit')
+                                    ? 'active'
+                                    : ''
+                            }}"
                     >
+
+                        <span class="submenu-indicator"></span>
 
                         <span>
                             Tambah Data
@@ -264,8 +287,11 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.perlu-diperiksa') }}"
-                        class="nav-submenu-item {{ request()->routeIs('ppks.perlu-diperiksa') ? 'active' : '' }}"
+                        class="nav-submenu-item
+                            {{ request()->routeIs('ppks.perlu-diperiksa') ? 'active' : '' }}"
                     >
+
+                        <span class="submenu-indicator"></span>
 
                         <span>
                             Perlu Pemeriksaan
@@ -286,15 +312,16 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                 <button
                     type="button"
-                    class="nav-item nav-parent {{
-                        request()->routeIs(
+                    class="nav-item nav-parent
+                        {{ request()->routeIs(
                             'ppks.normal.instruktur',
                             'ppks.normal.asesmen-instruktur.lulus',
                             'ppks.normal.asesmen-instruktur.pending',
                             'ppks.normal.asesmen-instruktur.tidak-lulus'
-                        ) ? 'active' : ''
-                    }}"
-                    :class="{ 'menu-open': instructorOpen }"
+                        ) ? 'active' : '' }}"
+                    :class="{
+                        'menu-open': instructorOpen
+                    }"
                     @click="instructorOpen = !instructorOpen"
                 >
 
@@ -328,8 +355,11 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.normal.instruktur') }}"
-                        class="nav-submenu-item {{ request()->routeIs('ppks.normal.instruktur') ? 'active' : '' }}"
+                        class="nav-submenu-item
+                            {{ request()->routeIs('ppks.normal.instruktur') ? 'active' : '' }}"
                     >
+
+                        <span class="submenu-indicator"></span>
 
                         <span>
                             Belum Asesmen
@@ -340,8 +370,11 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.normal.asesmen-instruktur.lulus') }}"
-                        class="nav-submenu-item {{ request()->routeIs('ppks.normal.asesmen-instruktur.lulus') ? 'active' : '' }}"
+                        class="nav-submenu-item
+                            {{ request()->routeIs('ppks.normal.asesmen-instruktur.lulus') ? 'active' : '' }}"
                     >
+
+                        <span class="submenu-indicator"></span>
 
                         <span>
                             Data Lulus
@@ -352,8 +385,11 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.normal.asesmen-instruktur.pending') }}"
-                        class="nav-submenu-item {{ request()->routeIs('ppks.normal.asesmen-instruktur.pending') ? 'active' : '' }}"
+                        class="nav-submenu-item
+                            {{ request()->routeIs('ppks.normal.asesmen-instruktur.pending') ? 'active' : '' }}"
                     >
+
+                        <span class="submenu-indicator"></span>
 
                         <span>
                             Data Pending
@@ -364,8 +400,11 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.normal.asesmen-instruktur.tidak-lulus') }}"
-                        class="nav-submenu-item {{ request()->routeIs('ppks.normal.asesmen-instruktur.tidak-lulus') ? 'active' : '' }}"
+                        class="nav-submenu-item
+                            {{ request()->routeIs('ppks.normal.asesmen-instruktur.tidak-lulus') ? 'active' : '' }}"
                     >
+
+                        <span class="submenu-indicator"></span>
 
                         <span>
                             Data Tidak Lulus
@@ -386,15 +425,16 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                 <button
                     type="button"
-                    class="nav-item nav-parent {{
-                        request()->routeIs(
+                    class="nav-item nav-parent
+                        {{ request()->routeIs(
                             'ppks.normal.kesehatan',
                             'ppks.normal.asesmen-kesehatan.lulus',
                             'ppks.normal.asesmen-kesehatan.pending',
                             'ppks.normal.asesmen-kesehatan.tidak-lulus'
-                        ) ? 'active' : ''
-                    }}"
-                    :class="{ 'menu-open': healthOpen }"
+                        ) ? 'active' : '' }}"
+                    :class="{
+                        'menu-open': healthOpen
+                    }"
                     @click="healthOpen = !healthOpen"
                 >
 
@@ -428,8 +468,11 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.normal.kesehatan') }}"
-                        class="nav-submenu-item {{ request()->routeIs('ppks.normal.kesehatan') ? 'active' : '' }}"
+                        class="nav-submenu-item
+                            {{ request()->routeIs('ppks.normal.kesehatan') ? 'active' : '' }}"
                     >
+
+                        <span class="submenu-indicator"></span>
 
                         <span>
                             Belum Asesmen
@@ -440,8 +483,11 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.normal.asesmen-kesehatan.lulus') }}"
-                        class="nav-submenu-item {{ request()->routeIs('ppks.normal.asesmen-kesehatan.lulus') ? 'active' : '' }}"
+                        class="nav-submenu-item
+                            {{ request()->routeIs('ppks.normal.asesmen-kesehatan.lulus') ? 'active' : '' }}"
                     >
+
+                        <span class="submenu-indicator"></span>
 
                         <span>
                             Data Lulus
@@ -452,8 +498,11 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.normal.asesmen-kesehatan.pending') }}"
-                        class="nav-submenu-item {{ request()->routeIs('ppks.normal.asesmen-kesehatan.pending') ? 'active' : '' }}"
+                        class="nav-submenu-item
+                            {{ request()->routeIs('ppks.normal.asesmen-kesehatan.pending') ? 'active' : '' }}"
                     >
+
+                        <span class="submenu-indicator"></span>
 
                         <span>
                             Data Pending
@@ -464,8 +513,11 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.normal.asesmen-kesehatan.tidak-lulus') }}"
-                        class="nav-submenu-item {{ request()->routeIs('ppks.normal.asesmen-kesehatan.tidak-lulus') ? 'active' : '' }}"
+                        class="nav-submenu-item
+                            {{ request()->routeIs('ppks.normal.asesmen-kesehatan.tidak-lulus') ? 'active' : '' }}"
                     >
+
+                        <span class="submenu-indicator"></span>
 
                         <span>
                             Data Tidak Lulus
@@ -486,13 +538,14 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                 <button
                     type="button"
-                    class="nav-item nav-parent {{
-                        request()->routeIs(
+                    class="nav-item nav-parent
+                        {{ request()->routeIs(
                             'ppks.normal.case-conference.belum',
                             'ppks.normal.case-conference.sudah'
-                        ) ? 'active' : ''
-                    }}"
-                    :class="{ 'menu-open': caseConferenceOpen }"
+                        ) ? 'active' : '' }}"
+                    :class="{
+                        'menu-open': caseConferenceOpen
+                    }"
                     @click="caseConferenceOpen = !caseConferenceOpen"
                 >
 
@@ -526,8 +579,11 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.normal.case-conference.belum') }}"
-                        class="nav-submenu-item {{ request()->routeIs('ppks.normal.case-conference.belum') ? 'active' : '' }}"
+                        class="nav-submenu-item
+                            {{ request()->routeIs('ppks.normal.case-conference.belum') ? 'active' : '' }}"
                     >
+
+                        <span class="submenu-indicator"></span>
 
                         <span>
                             Belum Dilakukan
@@ -538,11 +594,14 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.normal.case-conference.sudah') }}"
-                        class="nav-submenu-item {{ request()->routeIs('ppks.normal.case-conference.sudah') ? 'active' : '' }}"
+                        class="nav-submenu-item
+                            {{ request()->routeIs('ppks.normal.case-conference.sudah') ? 'active' : '' }}"
                     >
 
+                        <span class="submenu-indicator"></span>
+
                         <span>
-                           Sudah Dilakukan
+                            Sudah Dilakukan
                         </span>
 
                     </a>
@@ -560,15 +619,20 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                 <a
                     href="{{ route('ppks.normal.pemanggilan') }}"
-                    class="nav-item {{ request()->routeIs('ppks.normal.pemanggilan') ? 'active' : '' }}"
+                    class="nav-item nav-single-item
+                        {{ request()->routeIs('ppks.normal.pemanggilan') ? 'active' : '' }}"
                 >
 
-                    <span class="material-symbols-outlined nav-icon">
-                        record_voice_over
-                    </span>
+                    <span class="nav-left">
 
-                    <span class="nav-text">
-                        Pemanggilan Peserta
+                        <span class="material-symbols-outlined nav-icon">
+                            record_voice_over
+                        </span>
+
+                        <span class="nav-text">
+                            Pemanggilan Peserta
+                        </span>
+
                     </span>
 
                 </a>
@@ -584,16 +648,17 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                 <button
                     type="button"
-                    class="nav-item nav-parent {{
-                        request()->routeIs(
+                    class="nav-item nav-parent
+                        {{ request()->routeIs(
                             'ppks.normal.kesehatan-lanjutan',
                             'ppks.normal.kesehatan-lanjutan.lulus',
                             'ppks.normal.kesehatan-lanjutan.pending',
                             'ppks.normal.kesehatan-lanjutan.tidak-lulus',
                             'ppks.normal.kesehatan-lanjutan.detail'
-                        ) ? 'active' : ''
-                    }}"
-                    :class="{ 'menu-open': healthLanjutanOpen }"
+                        ) ? 'active' : '' }}"
+                    :class="{
+                        'menu-open': healthLanjutanOpen
+                    }"
                     @click="healthLanjutanOpen = !healthLanjutanOpen"
                 >
 
@@ -627,13 +692,16 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.normal.kesehatan-lanjutan') }}"
-                        class="nav-submenu-item {{
-                            request()->routeIs(
-                                'ppks.normal.kesehatan-lanjutan',
-                                'ppks.normal.kesehatan-lanjutan.detail'
-                            ) ? 'active' : ''
-                        }}"
+                        class="nav-submenu-item
+                            {{
+                                request()->routeIs(
+                                    'ppks.normal.kesehatan-lanjutan',
+                                    'ppks.normal.kesehatan-lanjutan.detail'
+                                ) ? 'active' : ''
+                            }}"
                     >
+
+                        <span class="submenu-indicator"></span>
 
                         <span>
                             Belum Asesmen
@@ -644,8 +712,11 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.normal.kesehatan-lanjutan.lulus') }}"
-                        class="nav-submenu-item {{ request()->routeIs('ppks.normal.kesehatan-lanjutan.lulus') ? 'active' : '' }}"
+                        class="nav-submenu-item
+                            {{ request()->routeIs('ppks.normal.kesehatan-lanjutan.lulus') ? 'active' : '' }}"
                     >
+
+                        <span class="submenu-indicator"></span>
 
                         <span>
                             Data Lulus
@@ -656,8 +727,11 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.normal.kesehatan-lanjutan.pending') }}"
-                        class="nav-submenu-item {{ request()->routeIs('ppks.normal.kesehatan-lanjutan.pending') ? 'active' : '' }}"
+                        class="nav-submenu-item
+                            {{ request()->routeIs('ppks.normal.kesehatan-lanjutan.pending') ? 'active' : '' }}"
                     >
+
+                        <span class="submenu-indicator"></span>
 
                         <span>
                             Data Pending
@@ -668,8 +742,11 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.normal.kesehatan-lanjutan.tidak-lulus') }}"
-                        class="nav-submenu-item {{ request()->routeIs('ppks.normal.kesehatan-lanjutan.tidak-lulus') ? 'active' : '' }}"
+                        class="nav-submenu-item
+                            {{ request()->routeIs('ppks.normal.kesehatan-lanjutan.tidak-lulus') ? 'active' : '' }}"
                     >
+
+                        <span class="submenu-indicator"></span>
 
                         <span>
                             Data Tidak Lulus
@@ -688,15 +765,20 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
             <a
                 href="{{ route('ppks.normal.peserta-aktif') }}"
-                class="nav-item {{ request()->routeIs('ppks.normal.peserta-aktif') ? 'active' : '' }}"
+                class="nav-item nav-single-item
+                    {{ request()->routeIs('ppks.normal.peserta-aktif') ? 'active' : '' }}"
             >
 
-                <span class="material-symbols-outlined nav-icon">
-                    group
-                </span>
+                <span class="nav-left">
 
-                <span class="nav-text">
-                    Peserta Aktif
+                    <span class="material-symbols-outlined nav-icon">
+                        group
+                    </span>
+
+                    <span class="nav-text">
+                        Peserta Aktif
+                    </span>
+
                 </span>
 
             </a>
@@ -842,13 +924,16 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
         <nav class="mobile-nav-menu">
 
 
-            {{-- DASHBOARD --}}
+            {{-- =================================================
+            DASHBOARD MOBILE
+            ================================================== --}}
 
             @if (Route::has('dashboard'))
 
                 <a
                     href="{{ route('dashboard') }}"
-                    class="mobile-nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}"
+                    class="mobile-nav-item
+                        {{ request()->routeIs('dashboard') ? 'active' : '' }}"
                     @click="mobileOpen = false"
                 >
 
@@ -865,7 +950,9 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
             @endif
 
 
-            {{-- DAFTAR ADMIN --}}
+            {{-- =================================================
+            DAFTAR ADMIN MOBILE
+            ================================================== --}}
 
             @if (
                 Auth::check() &&
@@ -875,7 +962,8 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                 <a
                     href="{{ route('admin.index') }}"
-                    class="mobile-nav-item {{ request()->routeIs('admin.*') ? 'active' : '' }}"
+                    class="mobile-nav-item
+                        {{ request()->routeIs('admin.*') ? 'active' : '' }}"
                     @click="mobileOpen = false"
                 >
 
@@ -900,17 +988,18 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                 <button
                     type="button"
-                    class="mobile-nav-parent {{
-                        request()->routeIs(
+                    class="mobile-nav-parent
+                        {{ request()->routeIs(
                             'ppks.import',
                             'ppks.normal',
                             'ppks.manual',
                             'ppks.normal.create',
                             'ppks.normal.edit',
                             'ppks.perlu-diperiksa'
-                        ) ? 'active' : ''
-                    }}"
-                    :class="{ 'menu-open': ppksOpen }"
+                        ) ? 'active' : '' }}"
+                    :class="{
+                        'menu-open': ppksOpen
+                    }"
                     @click="ppksOpen = !ppksOpen"
                 >
 
@@ -944,9 +1033,12 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.import') }}"
-                        class="mobile-submenu-item {{ request()->routeIs('ppks.import') ? 'active' : '' }}"
+                        class="mobile-submenu-item
+                            {{ request()->routeIs('ppks.import') ? 'active' : '' }}"
                         @click="mobileOpen = false"
                     >
+
+                        <span class="submenu-indicator"></span>
 
                         <span>
                             Import Data
@@ -957,9 +1049,12 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.normal') }}"
-                        class="mobile-submenu-item {{ request()->routeIs('ppks.normal') ? 'active' : '' }}"
+                        class="mobile-submenu-item
+                            {{ request()->routeIs('ppks.normal') ? 'active' : '' }}"
                         @click="mobileOpen = false"
                     >
+
+                        <span class="submenu-indicator"></span>
 
                         <span>
                             Data Normal
@@ -970,15 +1065,18 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.manual') }}"
-                        class="mobile-submenu-item {{
-                            request()->routeIs('ppks.manual') ||
-                            request()->routeIs('ppks.normal.create') ||
-                            request()->routeIs('ppks.normal.edit')
-                            ? 'active'
-                            : ''
-                        }}"
+                        class="mobile-submenu-item
+                            {{
+                                request()->routeIs('ppks.manual') ||
+                                request()->routeIs('ppks.normal.create') ||
+                                request()->routeIs('ppks.normal.edit')
+                                    ? 'active'
+                                    : ''
+                            }}"
                         @click="mobileOpen = false"
                     >
+
+                        <span class="submenu-indicator"></span>
 
                         <span>
                             Tambah Data
@@ -989,9 +1087,12 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.perlu-diperiksa') }}"
-                        class="mobile-submenu-item {{ request()->routeIs('ppks.perlu-diperiksa') ? 'active' : '' }}"
+                        class="mobile-submenu-item
+                            {{ request()->routeIs('ppks.perlu-diperiksa') ? 'active' : '' }}"
                         @click="mobileOpen = false"
                     >
+
+                        <span class="submenu-indicator"></span>
 
                         <span>
                             Perlu Pemeriksaan
@@ -1012,15 +1113,16 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                 <button
                     type="button"
-                    class="mobile-nav-parent {{
-                        request()->routeIs(
+                    class="mobile-nav-parent
+                        {{ request()->routeIs(
                             'ppks.normal.instruktur',
                             'ppks.normal.asesmen-instruktur.lulus',
                             'ppks.normal.asesmen-instruktur.pending',
                             'ppks.normal.asesmen-instruktur.tidak-lulus'
-                        ) ? 'active' : ''
-                    }}"
-                    :class="{ 'menu-open': instructorOpen }"
+                        ) ? 'active' : '' }}"
+                    :class="{
+                        'menu-open': instructorOpen
+                    }"
                     @click="instructorOpen = !instructorOpen"
                 >
 
@@ -1054,10 +1156,12 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.normal.instruktur') }}"
-                        class="mobile-submenu-item {{ request()->routeIs('ppks.normal.instruktur') ? 'active' : '' }}"
+                        class="mobile-submenu-item
+                            {{ request()->routeIs('ppks.normal.instruktur') ? 'active' : '' }}"
                         @click="mobileOpen = false"
                     >
 
+                        <span class="submenu-indicator"></span>
 
                         <span>
                             Belum Asesmen
@@ -1068,9 +1172,12 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.normal.asesmen-instruktur.lulus') }}"
-                        class="mobile-submenu-item {{ request()->routeIs('ppks.normal.asesmen-instruktur.lulus') ? 'active' : '' }}"
+                        class="mobile-submenu-item
+                            {{ request()->routeIs('ppks.normal.asesmen-instruktur.lulus') ? 'active' : '' }}"
                         @click="mobileOpen = false"
                     >
+
+                        <span class="submenu-indicator"></span>
 
                         <span>
                             Data Lulus
@@ -1081,9 +1188,12 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.normal.asesmen-instruktur.pending') }}"
-                        class="mobile-submenu-item {{ request()->routeIs('ppks.normal.asesmen-instruktur.pending') ? 'active' : '' }}"
+                        class="mobile-submenu-item
+                            {{ request()->routeIs('ppks.normal.asesmen-instruktur.pending') ? 'active' : '' }}"
                         @click="mobileOpen = false"
                     >
+
+                        <span class="submenu-indicator"></span>
 
                         <span>
                             Data Pending
@@ -1094,10 +1204,12 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.normal.asesmen-instruktur.tidak-lulus') }}"
-                        class="mobile-submenu-item {{ request()->routeIs('ppks.normal.asesmen-instruktur.tidak-lulus') ? 'active' : '' }}"
+                        class="mobile-submenu-item
+                            {{ request()->routeIs('ppks.normal.asesmen-instruktur.tidak-lulus') ? 'active' : '' }}"
                         @click="mobileOpen = false"
                     >
 
+                        <span class="submenu-indicator"></span>
 
                         <span>
                             Data Tidak Lulus
@@ -1118,15 +1230,16 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                 <button
                     type="button"
-                    class="mobile-nav-parent {{
-                        request()->routeIs(
+                    class="mobile-nav-parent
+                        {{ request()->routeIs(
                             'ppks.normal.kesehatan',
                             'ppks.normal.asesmen-kesehatan.lulus',
                             'ppks.normal.asesmen-kesehatan.pending',
                             'ppks.normal.asesmen-kesehatan.tidak-lulus'
-                        ) ? 'active' : ''
-                    }}"
-                    :class="{ 'menu-open': healthOpen }"
+                        ) ? 'active' : '' }}"
+                    :class="{
+                        'menu-open': healthOpen
+                    }"
                     @click="healthOpen = !healthOpen"
                 >
 
@@ -1160,10 +1273,12 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.normal.kesehatan') }}"
-                        class="mobile-submenu-item {{ request()->routeIs('ppks.normal.kesehatan') ? 'active' : '' }}"
+                        class="mobile-submenu-item
+                            {{ request()->routeIs('ppks.normal.kesehatan') ? 'active' : '' }}"
                         @click="mobileOpen = false"
                     >
 
+                        <span class="submenu-indicator"></span>
 
                         <span>
                             Belum Asesmen
@@ -1174,10 +1289,12 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.normal.asesmen-kesehatan.lulus') }}"
-                        class="mobile-submenu-item {{ request()->routeIs('ppks.normal.asesmen-kesehatan.lulus') ? 'active' : '' }}"
+                        class="mobile-submenu-item
+                            {{ request()->routeIs('ppks.normal.asesmen-kesehatan.lulus') ? 'active' : '' }}"
                         @click="mobileOpen = false"
                     >
 
+                        <span class="submenu-indicator"></span>
 
                         <span>
                             Data Lulus
@@ -1188,9 +1305,12 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.normal.asesmen-kesehatan.pending') }}"
-                        class="mobile-submenu-item {{ request()->routeIs('ppks.normal.asesmen-kesehatan.pending') ? 'active' : '' }}"
+                        class="mobile-submenu-item
+                            {{ request()->routeIs('ppks.normal.asesmen-kesehatan.pending') ? 'active' : '' }}"
                         @click="mobileOpen = false"
                     >
+
+                        <span class="submenu-indicator"></span>
 
                         <span>
                             Data Pending
@@ -1201,10 +1321,12 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.normal.asesmen-kesehatan.tidak-lulus') }}"
-                        class="mobile-submenu-item {{ request()->routeIs('ppks.normal.asesmen-kesehatan.tidak-lulus') ? 'active' : '' }}"
+                        class="mobile-submenu-item
+                            {{ request()->routeIs('ppks.normal.asesmen-kesehatan.tidak-lulus') ? 'active' : '' }}"
                         @click="mobileOpen = false"
                     >
 
+                        <span class="submenu-indicator"></span>
 
                         <span>
                             Data Tidak Lulus
@@ -1225,13 +1347,14 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                 <button
                     type="button"
-                    class="mobile-nav-parent {{
-                        request()->routeIs(
+                    class="mobile-nav-parent
+                        {{ request()->routeIs(
                             'ppks.normal.case-conference.belum',
                             'ppks.normal.case-conference.sudah'
-                        ) ? 'active' : ''
-                    }}"
-                    :class="{ 'menu-open': caseConferenceOpen }"
+                        ) ? 'active' : '' }}"
+                    :class="{
+                        'menu-open': caseConferenceOpen
+                    }"
                     @click="caseConferenceOpen = !caseConferenceOpen"
                 >
 
@@ -1265,11 +1388,12 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.normal.case-conference.belum') }}"
-                        class="mobile-submenu-item {{ request()->routeIs('ppks.normal.case-conference.belum') ? 'active' : '' }}"
+                        class="mobile-submenu-item
+                            {{ request()->routeIs('ppks.normal.case-conference.belum') ? 'active' : '' }}"
                         @click="mobileOpen = false"
                     >
 
-
+                        <span class="submenu-indicator"></span>
 
                         <span>
                             Belum Dilakukan
@@ -1280,11 +1404,12 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.normal.case-conference.sudah') }}"
-                        class="mobile-submenu-item {{ request()->routeIs('ppks.normal.case-conference.sudah') ? 'active' : '' }}"
+                        class="mobile-submenu-item
+                            {{ request()->routeIs('ppks.normal.case-conference.sudah') ? 'active' : '' }}"
                         @click="mobileOpen = false"
                     >
 
-
+                        <span class="submenu-indicator"></span>
 
                         <span>
                             Sudah Dilakukan
@@ -1297,13 +1422,16 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
             </div>
 
 
-            {{-- PEMANGGILAN PESERTA --}}
+            {{-- =================================================
+            PEMANGGILAN PESERTA MOBILE
+            ================================================== --}}
 
             @if (Route::has('ppks.normal.pemanggilan'))
 
                 <a
                     href="{{ route('ppks.normal.pemanggilan') }}"
-                    class="mobile-nav-item {{ request()->routeIs('ppks.normal.pemanggilan') ? 'active' : '' }}"
+                    class="mobile-nav-item
+                        {{ request()->routeIs('ppks.normal.pemanggilan') ? 'active' : '' }}"
                     @click="mobileOpen = false"
                 >
 
@@ -1328,16 +1456,17 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                 <button
                     type="button"
-                    class="mobile-nav-parent {{
-                        request()->routeIs(
+                    class="mobile-nav-parent
+                        {{ request()->routeIs(
                             'ppks.normal.kesehatan-lanjutan',
                             'ppks.normal.kesehatan-lanjutan.lulus',
                             'ppks.normal.kesehatan-lanjutan.pending',
                             'ppks.normal.kesehatan-lanjutan.tidak-lulus',
                             'ppks.normal.kesehatan-lanjutan.detail'
-                        ) ? 'active' : ''
-                    }}"
-                    :class="{ 'menu-open': healthLanjutanOpen }"
+                        ) ? 'active' : '' }}"
+                    :class="{
+                        'menu-open': healthLanjutanOpen
+                    }"
                     @click="healthLanjutanOpen = !healthLanjutanOpen"
                 >
 
@@ -1371,14 +1500,17 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.normal.kesehatan-lanjutan') }}"
-                        class="mobile-submenu-item {{
-                            request()->routeIs(
-                                'ppks.normal.kesehatan-lanjutan',
-                                'ppks.normal.kesehatan-lanjutan.detail'
-                            ) ? 'active' : ''
-                        }}"
+                        class="mobile-submenu-item
+                            {{
+                                request()->routeIs(
+                                    'ppks.normal.kesehatan-lanjutan',
+                                    'ppks.normal.kesehatan-lanjutan.detail'
+                                ) ? 'active' : ''
+                            }}"
                         @click="mobileOpen = false"
                     >
+
+                        <span class="submenu-indicator"></span>
 
                         <span>
                             Belum Asesmen
@@ -1389,9 +1521,12 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.normal.kesehatan-lanjutan.lulus') }}"
-                        class="mobile-submenu-item {{ request()->routeIs('ppks.normal.kesehatan-lanjutan.lulus') ? 'active' : '' }}"
+                        class="mobile-submenu-item
+                            {{ request()->routeIs('ppks.normal.kesehatan-lanjutan.lulus') ? 'active' : '' }}"
                         @click="mobileOpen = false"
                     >
+
+                        <span class="submenu-indicator"></span>
 
                         <span>
                             Data Lulus
@@ -1402,9 +1537,12 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.normal.kesehatan-lanjutan.pending') }}"
-                        class="mobile-submenu-item {{ request()->routeIs('ppks.normal.kesehatan-lanjutan.pending') ? 'active' : '' }}"
+                        class="mobile-submenu-item
+                            {{ request()->routeIs('ppks.normal.kesehatan-lanjutan.pending') ? 'active' : '' }}"
                         @click="mobileOpen = false"
                     >
+
+                        <span class="submenu-indicator"></span>
 
                         <span>
                             Data Pending
@@ -1415,9 +1553,12 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
 
                     <a
                         href="{{ route('ppks.normal.kesehatan-lanjutan.tidak-lulus') }}"
-                        class="mobile-submenu-item {{ request()->routeIs('ppks.normal.kesehatan-lanjutan.tidak-lulus') ? 'active' : '' }}"
+                        class="mobile-submenu-item
+                            {{ request()->routeIs('ppks.normal.kesehatan-lanjutan.tidak-lulus') ? 'active' : '' }}"
                         @click="mobileOpen = false"
                     >
+
+                        <span class="submenu-indicator"></span>
 
                         <span>
                             Data Tidak Lulus
@@ -1430,11 +1571,14 @@ STRUKTUR DISAMAKAN DENGAN KODINGAN B
             </div>
 
 
-            {{-- PESERTA AKTIF MOBILE --}}
+            {{-- =================================================
+            PESERTA AKTIF MOBILE
+            ================================================== --}}
 
             <a
                 href="{{ route('ppks.normal.peserta-aktif') }}"
-                class="mobile-nav-item {{ request()->routeIs('ppks.normal.peserta-aktif') ? 'active' : '' }}"
+                class="mobile-nav-item
+                    {{ request()->routeIs('ppks.normal.peserta-aktif') ? 'active' : '' }}"
                 @click="mobileOpen = false"
             >
 

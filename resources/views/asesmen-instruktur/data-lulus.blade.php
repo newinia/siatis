@@ -159,45 +159,35 @@
             <div class="filter-group">
 
                 {{-- SEARCH --}}
+<form
+    method="GET"
+    action="{{ url()->current() }}"
+    class="search"
+    id="searchForm"
+>
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+    >
+        <circle cx="11" cy="11" r="7" />
+        <path d="m20 20-3.5-3.5" />
+    </svg>
 
-                <div
-                    class="search"
-                    id="searchWrapper"
-                >
-
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                    >
-
-                        <circle
-                            cx="11"
-                            cy="11"
-                            r="7"
-                        />
-
-                        <path d="m20 20-3.5-3.5" />
-
-                    </svg>
-
-
-                    <input
-                        type="text"
-                        id="searchInput"
-                        placeholder="Cari Nama atau NIK"
-                        autocomplete="off"
-                    >
-
-                </div>
-
-
-
-                {{-- FILTER JENIS PPKS --}}
+    <input
+        type="text"
+        name="search"
+        id="searchInput"
+        value="{{ request('search') }}"
+        placeholder="Cari Nama atau NIK"
+        autocomplete="off"
+    >
+</form>
+                   {{-- FILTER JENIS PPKS --}}
 
                 <div class="select-wrapper">
 
@@ -583,470 +573,409 @@
     JAVASCRIPT FILTER
     ========================================================= --}}
 
-    <script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
 
-        document.addEventListener('DOMContentLoaded', function () {
+    const ppksFilter =
+        document.getElementById('ppksFilter');
 
-            const searchInput =
-                document.getElementById('searchInput');
+    const resetAllFilters =
+        document.getElementById('resetAllFilters');
 
-            const searchWrapper =
-                document.getElementById('searchWrapper');
-
-            const ppksFilter =
-                document.getElementById('ppksFilter');
-
-            const resetAllFilters =
-                document.getElementById('resetAllFilters');
-
-            const tableRows =
-                document.querySelectorAll(
-                    '.table tbody tr[data-nama]'
-                );
+    const tableRows =
+        document.querySelectorAll(
+            '.table tbody tr[data-nama]'
+        );
 
 
-            const dateFilterButton =
-                document.getElementById('dateFilterButton');
+    /* =====================================================
+       DATE FILTER
+    ===================================================== */
 
-            const datePicker =
-                document.getElementById('datePicker');
+    const dateFilterButton =
+        document.getElementById('dateFilterButton');
 
-            const dateFilterText =
-                document.getElementById('dateFilterText');
+    const datePicker =
+        document.getElementById('datePicker');
 
-            const startDate =
-                document.getElementById('startDate');
+    const dateFilterText =
+        document.getElementById('dateFilterText');
 
-            const endDate =
-                document.getElementById('endDate');
+    const startDate =
+        document.getElementById('startDate');
 
-            const applyDate =
-                document.getElementById('applyDate');
+    const endDate =
+        document.getElementById('endDate');
 
-            const resetDate =
-                document.getElementById('resetDate');
+    const applyDate =
+        document.getElementById('applyDate');
+
+    const resetDate =
+        document.getElementById('resetDate');
 
 
+    /* =====================================================
+       FILTER TABLE
 
-            /* =====================================================
-               UPDATE FILTER STATE
-            ===================================================== */
+       SEARCH NAMA / NIK TIDAK DILAKUKAN DI SINI.
+       SEARCH SUDAH DILAKUKAN OLEH CONTROLLER
+       SEBELUM PAGINATION.
+    ===================================================== */
 
-            function updateFilterState() {
+    function filterTable() {
 
-                if (searchWrapper && searchInput) {
+        const ppks =
+            ppksFilter
+                ? ppksFilter.value.toLowerCase().trim()
+                : '';
 
-                    searchWrapper.classList.toggle(
-                        'active',
-                        searchInput.value.trim() !== ''
-                    );
+        const start =
+            startDate
+                ? startDate.value
+                : '';
+
+        const end =
+            endDate
+                ? endDate.value
+                : '';
+
+        let number = 1;
+
+
+        tableRows.forEach(function (row) {
+
+            const jenis =
+                row.dataset.ppks || '';
+
+            const tanggal =
+                row.dataset.tanggal || '';
+
+
+            /* =================================================
+               FILTER JENIS PPKS
+            ================================================= */
+
+            const matchPpks =
+                ppks === '' ||
+                jenis === ppks;
+
+
+            /* =================================================
+               FILTER TANGGAL
+            ================================================= */
+
+            let matchDate = true;
+
+
+            if (start) {
+
+                if (!tanggal || tanggal < start) {
+
+                    matchDate = false;
 
                 }
 
+            }
 
-                if (ppksFilter) {
 
-                    ppksFilter.classList.toggle(
-                        'active',
-                        ppksFilter.value !== ''
-                    );
+            if (end) {
+
+                if (!tanggal || tanggal > end) {
+
+                    matchDate = false;
 
                 }
 
             }
 
 
+            /* =================================================
+               HASIL AKHIR
+            ================================================= */
 
-            /* =====================================================
-               FILTER TABLE
-            ===================================================== */
+            const show =
+                matchPpks &&
+                matchDate;
 
-            function filterTable() {
 
-                const search =
-                    searchInput.value
-                        .toLowerCase()
-                        .trim();
+            row.style.display =
+                show
+                    ? ''
+                    : 'none';
 
 
-                const ppks =
-                    ppksFilter.value
-                        .toLowerCase()
-                        .trim();
+            /* =================================================
+               NOMOR URUT
+            ================================================= */
 
+            if (show) {
 
-                const start =
-                    startDate.value;
+                const numberCell =
+                    row.querySelector('.row-number');
 
+                if (numberCell) {
 
-                const end =
-                    endDate.value;
-
-
-                let number = 1;
-
-
-                tableRows.forEach(function (row) {
-
-                    const nama =
-                        row.dataset.nama || '';
-
-
-                    const nik =
-                        row.dataset.nik || '';
-
-
-                    const jenis =
-                        row.dataset.ppks || '';
-
-
-                    const tanggal =
-                        row.dataset.tanggal || '';
-
-
-
-                    /* =================================================
-                       SEARCH
-                    ================================================= */
-
-                    const matchSearch =
-                        nama.includes(search) ||
-                        nik.includes(search);
-
-
-
-                    /* =================================================
-                       FILTER PPKS
-                    ================================================= */
-
-                    const matchPpks =
-                        ppks === '' ||
-                        jenis === ppks;
-
-
-
-                    /* =================================================
-                       FILTER TANGGAL
-                    ================================================= */
-
-                    let matchDate = true;
-
-
-                    if (start) {
-
-                        if (!tanggal) {
-
-                            matchDate = false;
-
-                        } else {
-
-                            matchDate =
-                                tanggal >= start;
-
-                        }
-
-                    }
-
-
-                    if (end && matchDate) {
-
-                        if (!tanggal) {
-
-                            matchDate = false;
-
-                        } else {
-
-                            matchDate =
-                                tanggal <= end;
-
-                        }
-
-                    }
-
-
-
-                    /* =================================================
-                       HASIL AKHIR FILTER
-                    ================================================= */
-
-                    const show =
-                        matchSearch &&
-                        matchPpks &&
-                        matchDate;
-
-
-                    row.style.display =
-                        show ? '' : 'none';
-
-
-
-                    /* =================================================
-                       NOMOR URUT
-                    ================================================= */
-
-                    if (show) {
-
-                        const numberCell =
-                            row.querySelector('.row-number');
-
-
-                        if (numberCell) {
-
-                            numberCell.textContent =
-                                number++;
-
-                        }
-
-                    }
-
-                });
-
-
-                updateFilterState();
-
-            }
-
-
-
-            /* =====================================================
-               SEARCH
-            ===================================================== */
-
-            if (searchInput) {
-
-                searchInput.addEventListener(
-                    'input',
-                    filterTable
-                );
-
-            }
-
-
-
-            /* =====================================================
-               FILTER PPKS
-            ===================================================== */
-
-            if (ppksFilter) {
-
-                ppksFilter.addEventListener(
-                    'change',
-                    filterTable
-                );
-
-            }
-
-
-
-            /* =====================================================
-               RESET ALL FILTER
-            ===================================================== */
-
-            if (resetAllFilters) {
-
-                resetAllFilters.addEventListener(
-                    'click',
-                    function () {
-
-                        searchInput.value = '';
-
-                        ppksFilter.value = '';
-
-                        startDate.value = '';
-
-                        endDate.value = '';
-
-                        dateFilterText.textContent =
-                            'Pilih Tanggal';
-
-                        datePicker.classList.remove('active');
-
-                        filterTable();
-
-                    }
-                );
-
-            }
-
-
-
-            /* =====================================================
-               DATE PICKER
-            ===================================================== */
-
-            if (dateFilterButton && datePicker) {
-
-                dateFilterButton.addEventListener(
-                    'click',
-                    function (event) {
-
-                        event.stopPropagation();
-
-                        datePicker.classList.toggle(
-                            'active'
-                        );
-
-                    }
-                );
-
-
-                datePicker.addEventListener(
-                    'click',
-                    function (event) {
-
-                        event.stopPropagation();
-
-                    }
-                );
-
-            }
-
-
-
-            /* =====================================================
-               APPLY DATE
-            ===================================================== */
-
-            if (applyDate) {
-
-                applyDate.addEventListener(
-                    'click',
-                    function () {
-
-                        const start =
-                            startDate.value;
-
-
-                        const end =
-                            endDate.value;
-
-
-                        if (!start || !end) {
-
-                            alert(
-                                'Silakan pilih tanggal awal dan tanggal akhir.'
-                            );
-
-                            return;
-
-                        }
-
-
-                        if (start > end) {
-
-                            alert(
-                                'Tanggal awal tidak boleh lebih besar dari tanggal akhir.'
-                            );
-
-                            return;
-
-                        }
-
-
-                        dateFilterText.textContent =
-                            formatDate(start)
-                            + ' - '
-                            + formatDate(end);
-
-
-                        datePicker.classList.remove(
-                            'active'
-                        );
-
-
-                        filterTable();
-
-                    }
-                );
-
-            }
-
-
-
-            /* =====================================================
-               RESET DATE
-            ===================================================== */
-
-            if (resetDate) {
-
-                resetDate.addEventListener(
-                    'click',
-                    function () {
-
-                        startDate.value = '';
-
-                        endDate.value = '';
-
-                        dateFilterText.textContent =
-                            'Pilih Tanggal';
-
-                        datePicker.classList.remove(
-                            'active'
-                        );
-
-                        filterTable();
-
-                    }
-                );
-
-            }
-
-
-
-            /* =====================================================
-               FORMAT DATE
-            ===================================================== */
-
-            function formatDate(value) {
-
-                const date =
-                    new Date(
-                        value + 'T00:00:00'
-                    );
-
-
-                return date.toLocaleDateString(
-                    'id-ID',
-                    {
-                        day: '2-digit',
-                        month: 'short',
-                        year: 'numeric'
-                    }
-                );
-
-            }
-
-
-
-            /* =====================================================
-               CLOSE DATE PICKER
-            ===================================================== */
-
-            document.addEventListener(
-                'click',
-                function () {
-
-                    if (datePicker) {
-
-                        datePicker.classList.remove(
-                            'active'
-                        );
-
-                    }
+                    numberCell.textContent =
+                        number++;
 
                 }
-            );
 
-
-
-            /* =====================================================
-               INITIAL FILTER
-            ===================================================== */
-
-            filterTable();
+            }
 
         });
 
-    </script>
+
+        /* =================================================
+           ACTIVE STATE FILTER PPKS
+        ================================================= */
+
+        if (ppksFilter) {
+
+            ppksFilter.classList.toggle(
+                'active',
+                ppksFilter.value !== ''
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       FILTER PPKS
+    ===================================================== */
+
+    if (ppksFilter) {
+
+        ppksFilter.addEventListener(
+            'change',
+            filterTable
+        );
+
+    }
+
+
+    /* =====================================================
+       RESET SEMUA FILTER
+    ===================================================== */
+
+    if (resetAllFilters) {
+
+        resetAllFilters.addEventListener(
+            'click',
+            function () {
+
+                /*
+                 * Search menggunakan GET.
+                 * Jadi reset harus menghilangkan
+                 * parameter search dari URL.
+                 */
+
+                window.location.href =
+                    window.location.pathname;
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       BUKA DATE PICKER
+    ===================================================== */
+
+    if (dateFilterButton && datePicker) {
+
+        dateFilterButton.addEventListener(
+            'click',
+            function (event) {
+
+                event.stopPropagation();
+
+                datePicker.classList.toggle(
+                    'active'
+                );
+
+            }
+        );
+
+
+        datePicker.addEventListener(
+            'click',
+            function (event) {
+
+                event.stopPropagation();
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       TERAPKAN TANGGAL
+    ===================================================== */
+
+    if (applyDate) {
+
+        applyDate.addEventListener(
+            'click',
+            function () {
+
+                const start =
+                    startDate
+                        ? startDate.value
+                        : '';
+
+                const end =
+                    endDate
+                        ? endDate.value
+                        : '';
+
+
+                if (!start || !end) {
+
+                    alert(
+                        'Silakan pilih tanggal awal dan tanggal akhir.'
+                    );
+
+                    return;
+
+                }
+
+
+                if (start > end) {
+
+                    alert(
+                        'Tanggal awal tidak boleh lebih besar dari tanggal akhir.'
+                    );
+
+                    return;
+
+                }
+
+
+                if (dateFilterText) {
+
+                    dateFilterText.textContent =
+                        formatDate(start)
+                        + ' - '
+                        + formatDate(end);
+
+                }
+
+
+                if (datePicker) {
+
+                    datePicker.classList.remove(
+                        'active'
+                    );
+
+                }
+
+
+                filterTable();
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       RESET TANGGAL
+    ===================================================== */
+
+    if (resetDate) {
+
+        resetDate.addEventListener(
+            'click',
+            function () {
+
+                if (startDate) {
+                    startDate.value = '';
+                }
+
+                if (endDate) {
+                    endDate.value = '';
+                }
+
+                if (dateFilterText) {
+
+                    dateFilterText.textContent =
+                        'Pilih Tanggal';
+
+                }
+
+                if (datePicker) {
+
+                    datePicker.classList.remove(
+                        'active'
+                    );
+
+                }
+
+                filterTable();
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       FORMAT DATE
+    ===================================================== */
+
+    function formatDate(value) {
+
+        const date =
+            new Date(
+                value + 'T00:00:00'
+            );
+
+        return date.toLocaleDateString(
+            'id-ID',
+            {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric'
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       CLOSE DATE PICKER
+    ===================================================== */
+
+    document.addEventListener(
+        'click',
+        function () {
+
+            if (datePicker) {
+
+                datePicker.classList.remove(
+                    'active'
+                );
+
+            }
+
+        }
+    );
+
+
+    /* =====================================================
+       INITIAL FILTER
+    ===================================================== */
+
+    filterTable();
+
+});
+</script>
+
+
+
 
 </x-app-layout>

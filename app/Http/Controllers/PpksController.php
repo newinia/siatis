@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Http\Controllers;
 
 use App\Models\Ppks;
@@ -1923,46 +1924,65 @@ KesehatanAwal::updateOrCreate(
             compact('ppks')
         );
     }
+public function caseConferenceBelum(
+    Request $request
+): View {
+    $query = Ppks::query()
+        // Wajib sudah lulus asesmen kesehatan awal
+        ->whereHas('prosesPesertas', function ($query) {
+            $query
+                ->where('tahap', 'kesehatan_awal')
+                ->where('status', 'lulus');
+        })
 
-    public function caseConferenceBelum()
-    {
-        $data = Ppks::query()
-            // Wajib sudah lulus asesmen kesehatan awal
-            ->whereHas('prosesPesertas', function ($query) {
-                $query->where('tahap', 'kesehatan_awal')
-                    ->where('status', 'lulus');
-            })
+        // Case Conference:
+        // boleh belum punya record,
+        // atau sudah ada tetapi masih belum/sedang diperiksa
+        ->where(function ($query) {
+            $query
+                ->whereDoesntHave('prosesPesertas', function ($q) {
+                    $q->where('tahap', 'case_conference');
+                })
+                ->orWhereHas('prosesPesertas', function ($q) {
+                    $q
+                        ->where('tahap', 'case_conference')
+                        ->whereIn('status', [
+                            'belum',
+                            'sedang_diperiksa',
+                        ]);
+                });
+        })
 
-            // Case Conference:
-            // boleh belum punya record,
-            // atau sudah ada tetapi masih belum/sedang diperiksa
-            ->where(function ($query) {
-                $query
-                    ->whereDoesntHave('prosesPesertas', function ($q) {
-                        $q->where('tahap', 'case_conference');
-                    })
-                    ->orWhereHas('prosesPesertas', function ($q) {
-                        $q->where('tahap', 'case_conference')
-                            ->whereIn('status', [
-                                'belum',
-                                'sedang_diperiksa',
-                            ]);
-                    });
-            })
+        ->with([
+            'prosesPesertas' => function ($q) {
+                $q
+                    ->whereIn('tahap', [
+                        'kesehatan_awal',
+                        'case_conference',
+                    ])
+                    ->orderByDesc('tanggal_proses')
+                    ->orderByDesc('created_at');
+            }
+        ]);
 
-            ->with('prosesPesertas')
-            ->latest('id')
-            ->paginate(20);
+    // SEARCH NAMA / NIK
+    $this->applySearch($query, $request);
 
-        return view(
-            'case-conference.case-conference-belum',
-            compact('data')
-        );
-    }
+    $data = $query
+        ->orderByDesc('id')
+        ->paginate(20)
+        ->withQueryString();
 
-public function caseConferenceSudah()
-{
-    $data = Ppks::query()
+    return view(
+        'case-conference.case-conference-belum',
+        compact('data')
+    );
+}
+
+public function caseConferenceSudah(
+    Request $request
+): View {
+    $query = Ppks::query()
         ->whereHas('prosesPesertas', function ($query) {
             $query
                 ->where('tahap', 'case_conference')
@@ -1988,14 +2008,32 @@ public function caseConferenceSudah()
                 LIMIT 1
             ) DESC
         ")
-        ->orderByDesc('ppks.id')
-        ->paginate(20);
+        ->orderByDesc('ppks.id');
+
+    /*
+    |--------------------------------------------------------------------------
+    | SEARCH NAMA / NIK
+    |--------------------------------------------------------------------------
+    */
+
+    $this->applySearch($query, $request);
+
+    /*
+    |--------------------------------------------------------------------------
+    | PAGINATION
+    |--------------------------------------------------------------------------
+    */
+
+    $data = $query
+        ->paginate(20)
+        ->withQueryString();
 
     return view(
         'case-conference.case-conference-sudah',
         compact('data')
     );
 }
+
 public function caseConferencePdf(Request $request)
 {
     $gelombang = $request->gelombang;

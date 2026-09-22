@@ -81,10 +81,10 @@ class PpksImportController extends Controller
         GoogleSheetService $googleSheetService
     ): JsonResponse {
         $importLog = ImportLog::create([
-    'status' => 'proses',
-    'message' => 'Import sedang diproses.',
-    'started_at' => now(),
-]);
+            'status' => 'proses',
+            'message' => 'Import sedang diproses.',
+            'started_at' => now(),
+        ]);
 
         try {
 
@@ -525,6 +525,7 @@ class PpksImportController extends Controller
                 RecheckResult::create([
                     'sheet_row' => 2 + $index,
                     'data' => $data,
+                    'jenis' => 'sheet',
                     'status' => $status,
                 ]);
             }

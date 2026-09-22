@@ -131,7 +131,7 @@
                         </div>
 
                         <span class="import-action-number">
-                            01
+                         
                         </span>
 
                     </div>
@@ -179,71 +179,7 @@
                 </div>
 
 
-                {{-- =================================================
-                SINKRONISASI
-                ================================================== --}}
 
-                <div class="import-action-card">
-
-                    <div class="import-action-top">
-
-                        <div class="import-action-icon orange">
-
-                            <span class="material-symbols-outlined">
-                                sync
-                            </span>
-
-                        </div>
-
-                        <span class="import-action-number">
-                            02
-                        </span>
-
-                    </div>
-
-
-                    <div class="import-action-content">
-
-                        <h3>
-                            Sinkronkan Data
-                        </h3>
-
-                        <p>
-                            Memeriksa dan memperbarui data peserta yang sudah
-                            tersimpan berdasarkan data terbaru.
-                        </p>
-
-                    </div>
-
-
-                    <form
-                        action="{{ route('ppks.import.recheck') }}"
-                        method="POST"
-                    >
-
-                        @csrf
-
-                        <button
-                            type="submit"
-                            class="import-action-button warning"
-                            onclick="return confirm('Sinkronkan data peserta dengan Google Sheets sekarang?')"
-                        >
-
-                            <span>
-                                Sinkronkan Data
-                            </span>
-
-                            <span class="material-symbols-outlined">
-                                arrow_forward
-                            </span>
-
-                        </button>
-
-                    </form>
-
-                </div>
-
-            </div>
 
         </section>
 
@@ -673,10 +609,8 @@
 
         .import-action-grid {
             display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-
+            grid-template-columns: minmax(0, 1fr);
             gap: 14px;
-
             margin-top: 22px;
         }
 
@@ -729,10 +663,6 @@
             color: var(--blue);
         }
 
-        .import-action-icon.orange {
-            background: var(--orange-light);
-            color: var(--orange);
-        }
 
         .import-action-icon .material-symbols-outlined {
             font-size: 20px;

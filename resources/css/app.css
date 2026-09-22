@@ -1127,7 +1127,9 @@ a {
 }
 
 
-/* Header */
+/* =========================================================
+   SIDEBAR HEADER
+========================================================= */
 
 .sidebar-header {
     padding: 24px 20px 16px;
@@ -1142,14 +1144,18 @@ a {
 .sidebar-divider {
     height: 1px;
     margin-top: 15px;
+
     background: var(--border);
 }
 
 
-/* Menu */
+/* =========================================================
+   SIDEBAR MENU
+========================================================= */
 
 .sidebar-menu {
     flex: 1;
+
     padding: 12px;
 
     overflow-y: auto;
@@ -1159,7 +1165,14 @@ a {
     width: 100%;
 }
 
+
+/* =========================================================
+   NAV ITEM
+========================================================= */
+
 .nav-item {
+    position: relative;
+
     width: 100%;
     min-height: 46px;
 
@@ -1167,7 +1180,7 @@ a {
     align-items: center;
     gap: 12px;
 
-    margin-bottom: 3px;
+    margin-bottom: 4px;
     padding: 0 12px;
 
     border: 0;
@@ -1179,22 +1192,69 @@ a {
     font: 500 12px "Poppins", sans-serif;
 
     cursor: pointer;
-    transition: .2s;
+
+    transition:
+        background-color .2s ease,
+        color .2s ease,
+        box-shadow .2s ease,
+        transform .2s ease;
 }
+
+
+/* Hover */
 
 .nav-item:hover {
     background: var(--background);
 }
 
+
+/* =========================================================
+   ACTIVE SINGLE ITEM
+   Dashboard / Admin / Pemanggilan / Peserta Aktif
+========================================================= */
+
 .nav-item.active {
     background: var(--blue);
     color: var(--white);
+
     font-weight: 600;
+
+    box-shadow:
+        0 5px 14px rgba(32, 93, 145, .18);
 }
 
 .nav-item.active:hover {
     background: var(--blue);
+    color: var(--white);
 }
+
+
+/*
+|--------------------------------------------------------------------------
+| Active indicator sebelah kiri
+|--------------------------------------------------------------------------
+*/
+
+.nav-item.active::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    top: 9px;
+    bottom: 9px;
+
+    width: 4px;
+
+    border-radius: 0 5px 5px 0;
+
+    background: var(--white);
+}
+
+
+/* =========================================================
+   NAV ICON
+========================================================= */
 
 .nav-icon {
     width: 22px;
@@ -1202,43 +1262,144 @@ a {
 
     display: flex;
     justify-content: center;
+
+    transition:
+        color .2s ease,
+        transform .2s ease;
 }
 
+.nav-item.active .nav-icon {
+    color: var(--white);
+}
+
+
+/* =========================================================
+   NAV TEXT
+========================================================= */
 .nav-text {
     flex: 1;
+
+    min-width: 0;
+
+    display: block;
 
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+
+    text-align: left;
 }
 
+
+/* =========================================================
+   NAV LEFT
+========================================================= */
 .nav-left {
     flex: 1;
 
     display: flex;
     align-items: center;
+    justify-content: flex-start;
+
     gap: 12px;
 
     min-width: 0;
+    text-align: left;
 }
+
+/* =========================================================
+   NAV PARENT
+========================================================= */
 
 .nav-parent {
     justify-content: space-between;
 }
+
+
+/*
+|--------------------------------------------------------------------------
+| PENTING:
+| Parent yang sedang aktif HARUS tetap biru walaupun submenu terbuka.
+|--------------------------------------------------------------------------
+*/
 
 .nav-parent.menu-open {
     background: transparent;
     color: var(--text);
 }
 
-.nav-parent.menu-open:hover {
+
+/*
+|--------------------------------------------------------------------------
+| Kalau parent aktif + submenu terbuka
+|--------------------------------------------------------------------------
+*/
+
+.nav-parent.active.menu-open {
+    background: var(--blue);
+    color: var(--white);
+
+    font-weight: 600;
+
+    box-shadow:
+        0 5px 14px rgba(32, 93, 145, .18);
+}
+
+.nav-parent.active.menu-open:hover {
+    background: var(--blue);
+    color: var(--white);
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Icon parent aktif
+|--------------------------------------------------------------------------
+*/
+
+.nav-parent.active .nav-icon {
+    color: var(--white);
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Arrow parent aktif
+|--------------------------------------------------------------------------
+*/
+
+.nav-parent.active .nav-arrow {
+    color: rgba(255, 255, 255, .9);
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Parent terbuka tapi TIDAK sedang berada di halaman tersebut
+|--------------------------------------------------------------------------
+*/
+
+.nav-parent.menu-open:not(.active) {
+    background: var(--background);
+    color: var(--text);
+}
+
+.nav-parent.menu-open:not(.active):hover {
     background: var(--background);
 }
+
+
+/* =========================================================
+   NAV ARROW
+========================================================= */
 
 .nav-arrow,
 .mobile-nav-arrow {
     color: var(--muted);
-    transition: transform .2s ease;
+
+    transition:
+        transform .2s ease,
+        color .2s ease;
 }
 
 .nav-arrow.rotate,
@@ -1247,17 +1408,24 @@ a {
 }
 
 
-/* Submenu */
+/* =========================================================
+   SUBMENU
+========================================================= */
 
 .nav-submenu,
 .mobile-submenu {
     position: relative;
 
     margin-left: 23px;
-    padding: 3px 0 5px 28px;
+    padding: 3px 0 6px 28px;
 
     border-left: 1px solid var(--border);
 }
+
+
+/* =========================================================
+   SUBMENU ITEM
+========================================================= */
 
 .nav-submenu-item,
 .mobile-submenu-item {
@@ -1270,14 +1438,25 @@ a {
 
     padding: 0 10px;
 
-    border-radius: 20px;
+    border-radius: 14px;
 
     color: #6b7280;
 
     font-size: 13px;
+    font-weight: 500;
 
-    transition: .2s;
+    text-decoration: none;
+
+    transition:
+        background-color .2s ease,
+        color .2s ease,
+        padding-left .2s ease;
 }
+
+
+/* =========================================================
+   SUBMENU HOVER
+========================================================= */
 
 .nav-submenu-item:hover,
 .mobile-submenu-item:hover {
@@ -1285,40 +1464,135 @@ a {
     color: var(--blue);
 }
 
+
+/* =========================================================
+   SUBMENU ACTIVE
+========================================================= */
+
+.nav-submenu-item.active,
+.mobile-submenu-item.active {
+    background: var(--blue-light);
+    color: var(--blue);
+
+    font-weight: 600;
+
+    padding-left: 14px;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Garis kecil menuju item
+|--------------------------------------------------------------------------
+*/
+
 .nav-submenu-item::before,
 .mobile-submenu-item::before {
     content: "";
 
     position: absolute;
+
     left: -28px;
 
     width: 20px;
     height: 1px;
 
     background: var(--border);
+
+    transition:
+        background-color .2s ease,
+        height .2s ease;
 }
+
+
+/*
+|--------------------------------------------------------------------------
+| Titik submenu
+|--------------------------------------------------------------------------
+*/
 
 .nav-submenu-item::after,
 .mobile-submenu-item::after {
     content: "";
 
     position: absolute;
+
     left: -31px;
 
     width: 6px;
     height: 6px;
 
     border-radius: 50%;
+
     background: var(--muted);
+
+    transition:
+        background-color .2s ease,
+        width .2s ease,
+        height .2s ease,
+        box-shadow .2s ease;
 }
 
 
-/* Footer */
+/*
+|--------------------------------------------------------------------------
+| Titik ACTIVE
+|--------------------------------------------------------------------------
+*/
+
+.nav-submenu-item.active::after,
+.mobile-submenu-item.active::after {
+    width: 8px;
+    height: 8px;
+
+    background: var(--blue);
+
+    box-shadow:
+        0 0 0 3px var(--blue-light);
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Garis ACTIVE
+|--------------------------------------------------------------------------
+*/
+
+.nav-submenu-item.active::before,
+.mobile-submenu-item.active::before {
+    height: 2px;
+
+    background: var(--blue);
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Hover tidak menghilangkan active
+|--------------------------------------------------------------------------
+*/
+
+.nav-submenu-item.active:hover,
+.mobile-submenu-item.active:hover {
+    background: var(--blue-light);
+    color: var(--blue);
+}
+
+
+/* =========================================================
+   SIDEBAR FOOTER
+========================================================= */
 
 .sidebar-footer {
     padding: 14px;
+
     border-top: 1px solid var(--border);
 }
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
 
 .logout-button {
     width: 100%;
@@ -1339,6 +1613,10 @@ a {
     font: 500 14px "Poppins", sans-serif;
 
     cursor: pointer;
+
+    transition:
+        background-color .2s ease,
+        color .2s ease;
 }
 
 .logout-button:hover {
@@ -1366,7 +1644,7 @@ a {
 
     background: var(--white);
     border: 1px solid var(--border);
-    border-radius:var(--radius);
+    border-radius: var(--radius);
 
     z-index: 900;
 
@@ -1378,7 +1656,9 @@ a {
 }
 
 
-/* Hamburger */
+/* =========================================================
+   HAMBURGER
+========================================================= */
 
 .navbar-hamburger {
     width: 42px;
@@ -1397,6 +1677,10 @@ a {
     color: var(--text);
 
     cursor: pointer;
+
+    transition:
+        background-color .2s ease,
+        color .2s ease;
 }
 
 .navbar-hamburger:hover {
@@ -1405,7 +1689,9 @@ a {
 }
 
 
-/* User */
+/* =========================================================
+   USER
+========================================================= */
 
 .navbar-user {
     margin-left: auto;
@@ -1428,6 +1714,7 @@ a {
     margin-top: 2px;
 
     color: #6b7280;
+
     font-size: 12px;
 }
 
@@ -1445,6 +1732,293 @@ a {
     color: var(--blue);
 }
 
+
+/* =========================================================
+   MOBILE NAVIGATION
+========================================================= */
+
+.mobile-navigation {
+    position: fixed;
+
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    background: var(--white);
+
+    z-index: 2000;
+
+    overflow-y: auto;
+}
+
+
+/* =========================================================
+   MOBILE HEADER
+========================================================= */
+
+.mobile-nav-header {
+    min-height: 70px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 20px;
+
+    border-bottom: 1px solid var(--border);
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.mobile-close-button {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: 0;
+    border-radius: 50%;
+
+    background: transparent;
+    color: var(--text);
+
+    cursor: pointer;
+}
+
+.mobile-close-button:hover {
+    background: var(--background);
+    color: var(--blue);
+}
+
+
+/* =========================================================
+   MOBILE MENU
+========================================================= */
+
+.mobile-nav-menu {
+    padding: 14px 16px;
+}
+
+
+/* =========================================================
+   MOBILE ITEM
+========================================================= */
+
+.mobile-nav-item,
+.mobile-nav-parent {
+    position: relative;
+
+    width: 100%;
+    min-height: 48px;
+
+    display: flex;
+    align-items: center;
+
+    margin-bottom: 5px;
+    padding: 0 14px;
+
+    border: 0;
+    border-radius: 14px;
+
+    background: transparent;
+    color: var(--text);
+
+    font: 500 13px "Poppins", sans-serif;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition:
+        background-color .2s ease,
+        color .2s ease;
+}
+
+
+/* Mobile hover */
+
+.mobile-nav-item:hover,
+.mobile-nav-parent:hover {
+    background: var(--background);
+}
+
+
+/* =========================================================
+   MOBILE PARENT
+========================================================= */
+
+.mobile-nav-parent {
+    justify-content: space-between;
+}
+
+.mobile-nav-parent.menu-open {
+    background: var(--background);
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Mobile parent ACTIVE tetap biru
+|--------------------------------------------------------------------------
+*/
+
+.mobile-nav-parent.active,
+.mobile-nav-parent.active.menu-open {
+    background: var(--blue);
+    color: var(--white);
+
+    font-weight: 600;
+
+    box-shadow:
+        0 5px 14px rgba(32, 93, 145, .18);
+}
+
+.mobile-nav-parent.active:hover,
+.mobile-nav-parent.active.menu-open:hover {
+    background: var(--blue);
+    color: var(--white);
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Mobile parent active indicator
+|--------------------------------------------------------------------------
+*/
+
+.mobile-nav-parent.active::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    top: 9px;
+    bottom: 9px;
+
+    width: 4px;
+
+    border-radius: 0 5px 5px 0;
+
+    background: var(--white);
+}
+
+
+/* =========================================================
+   MOBILE NAV LEFT
+========================================================= */
+
+.mobile-nav-left {
+    flex: 1;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    min-width: 0;
+}
+
+
+/* =========================================================
+   MOBILE SUBMENU
+========================================================= */
+
+.mobile-submenu {
+    margin-left: 18px;
+    padding-left: 28px;
+}
+
+
+/* =========================================================
+   MOBILE SUBMENU ACTIVE
+========================================================= */
+
+.mobile-submenu-item.active {
+    background: var(--blue-light);
+    color: var(--blue);
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   MOBILE LOGOUT
+========================================================= */
+
+.mobile-logout {
+    padding: 14px 16px;
+
+    border-top: 1px solid var(--border);
+}
+
+.mobile-logout-button {
+    width: 100%;
+    min-height: 46px;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 0 14px;
+
+    border: 0;
+    border-radius: 14px;
+
+    background: transparent;
+    color: var(--red);
+
+    font: 500 13px "Poppins", sans-serif;
+
+    cursor: pointer;
+}
+
+.mobile-logout-button:hover {
+    background: var(--red-light);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .app-sidebar {
+        display: none;
+    }
+
+    .top-navbar {
+        top: 10px;
+        left: 10px;
+        right: 10px;
+
+        height: 64px;
+
+        padding: 0 16px;
+    }
+
+    .top-navbar.sidebar-closed {
+        left: 10px;
+    }
+
+    .navbar-user-name {
+        font-size: 13px;
+    }
+
+    .navbar-user-role {
+        font-size: 11px;
+    }
+
+    .navbar-avatar {
+        width: 36px;
+        height: 36px;
+    }
+}
 
 /* =========================================================
    MAIN CONTENT
@@ -5854,4 +6428,129 @@ a {
     }
 
 }
+/* =====================================================
+           PDF BUTTON
+        ===================================================== */
+
+        .pdf-filter-wrapper {
+            position: relative;
+        }
+
+        .pdf-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            height: 40px;
+            min-width: 120px;
+            padding: 0 18px;
+            background: #b42318;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: .15s ease;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .pdf-button:hover {
+            background: #981b12;
+        }
+
+
+        /* =====================================================
+           PDF FILTER POPUP
+        ===================================================== */
+
+        .pdf-filter {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: calc(100% + 8px);
+            width: 270px;
+            padding: 17px;
+            background: #fff;
+            border: 1px solid #dfe4e1;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .10);
+            z-index: 100;
+            box-sizing: border-box;
+        }
+
+        .pdf-filter.active {
+            display: block;
+        }
+
+        .pdf-filter-title {
+            margin-bottom: 14px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #26302a;
+        }
+
+        .pdf-filter-group {
+            margin-bottom: 12px;
+        }
+
+        .pdf-filter-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 12px;
+            color: #69736d;
+        }
+
+        .pdf-filter-group select {
+            width: 100%;
+            height: 38px;
+            padding: 0 10px;
+            border: 1px solid #d9dedb;
+            border-radius: 7px;
+            background: #fff;
+            color: #303932;
+            font-size: 12px;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .pdf-filter-group select:focus {
+            border-color: #286c3a;
+        }
+
+        .pdf-filter-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .pdf-reset,
+        .pdf-generate {
+            border: none;
+            border-radius: 7px;
+            padding: 8px 13px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .pdf-reset {
+            background: #f0f2f0;
+            color: #4e5751;
+        }
+
+        .pdf-reset:hover {
+            background: #e6e9e6;
+        }
+
+        .pdf-generate {
+            background: #b42318;
+            color: #fff;
+        }
+
+        .pdf-generate:hover {
+            background: #981b12;
+        }
+
 

@@ -1,552 +1,13 @@
-```blade
 <x-app-layout>
 
-    <style>
-
-        /* =====================================================
-           PAGE
-        ===================================================== */
-
-        .case-conference-page {
-            width: 100%;
-            padding: 10px 0 35px;
-            color: #172018;
-        }
-
-
-        /* =====================================================
-           HEADER
-        ===================================================== */
-
-        .case-conference-header {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 24px;
-            margin-bottom: 22px;
-        }
-
-        .case-header-left {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .case-header-left h1 {
-            margin: 0;
-            font-size: 28px;
-            line-height: 1.2;
-            font-weight: 700;
-            color: #172018;
-        }
-
-        .case-header-left p {
-            margin: 7px 0 0;
-            color: #68716b;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-
-        /* =====================================================
-           HEADER ACTION
-        ===================================================== */
-
-        .case-header-actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-shrink: 0;
-        }
-
-
-        /* =====================================================
-           PDF BUTTON
-        ===================================================== */
-
-        .pdf-filter-wrapper {
-            position: relative;
-        }
-
-        .pdf-button {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            height: 40px;
-            min-width: 120px;
-            padding: 0 18px;
-            background: #b42318;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 600;
-            transition: .15s ease;
-            white-space: nowrap;
-            cursor: pointer;
-        }
-
-        .pdf-button:hover {
-            background: #981b12;
-        }
-
-
-        /* =====================================================
-           PDF FILTER POPUP
-        ===================================================== */
-
-        .pdf-filter {
-            display: none;
-            position: absolute;
-            right: 0;
-            top: calc(100% + 8px);
-            width: 270px;
-            padding: 17px;
-            background: #fff;
-            border: 1px solid #dfe4e1;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, .10);
-            z-index: 100;
-            box-sizing: border-box;
-        }
-
-        .pdf-filter.active {
-            display: block;
-        }
-
-        .pdf-filter-title {
-            margin-bottom: 14px;
-            font-size: 14px;
-            font-weight: 700;
-            color: #26302a;
-        }
-
-        .pdf-filter-group {
-            margin-bottom: 12px;
-        }
-
-        .pdf-filter-group label {
-            display: block;
-            margin-bottom: 6px;
-            font-size: 12px;
-            color: #69736d;
-        }
-
-        .pdf-filter-group select {
-            width: 100%;
-            height: 38px;
-            padding: 0 10px;
-            border: 1px solid #d9dedb;
-            border-radius: 7px;
-            background: #fff;
-            color: #303932;
-            font-size: 12px;
-            outline: none;
-            box-sizing: border-box;
-        }
-
-        .pdf-filter-group select:focus {
-            border-color: #286c3a;
-        }
-
-        .pdf-filter-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 8px;
-            margin-top: 15px;
-        }
-
-        .pdf-reset,
-        .pdf-generate {
-            border: none;
-            border-radius: 7px;
-            padding: 8px 13px;
-            font-size: 12px;
-            cursor: pointer;
-        }
-
-        .pdf-reset {
-            background: #f0f2f0;
-            color: #4e5751;
-        }
-
-        .pdf-reset:hover {
-            background: #e6e9e6;
-        }
-
-        .pdf-generate {
-            background: #b42318;
-            color: #fff;
-        }
-
-        .pdf-generate:hover {
-            background: #981b12;
-        }
-
-
-        /* =====================================================
-           FILTER
-        ===================================================== */
-
-        .case-filter-wrapper {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 18px;
-            flex-wrap: wrap;
-        }
-
-        .case-search {
-            display: flex;
-            align-items: center;
-            gap: 9px;
-            width: 310px;
-            height: 40px;
-            padding: 0 13px;
-            background: #fff;
-            border: 1px solid #d9dedb;
-            border-radius: 8px;
-            box-sizing: border-box;
-        }
-
-        .case-search:focus-within {
-            border-color: #286c3a;
-        }
-
-        .case-search .material-symbols-outlined {
-            flex-shrink: 0;
-            color: #7a847d;
-            font-size: 19px;
-        }
-
-        .case-search input {
-            width: 100%;
-            border: none;
-            outline: none;
-            background: transparent;
-            font-size: 13px;
-            color: #26302a;
-        }
-
-        .case-search input::placeholder {
-            color: #929a95;
-        }
-
-        .select-wrapper {
-            position: relative;
-        }
-
-        .case-filter-button {
-            height: 40px;
-            min-width: 175px;
-            appearance: none;
-            padding: 0 38px 0 13px;
-            border: 1px solid #d9dedb;
-            border-radius: 8px;
-            background: #fff;
-            color: #4d5751;
-            font-size: 13px;
-            cursor: pointer;
-            outline: none;
-        }
-
-        .case-filter-button:focus {
-            border-color: #286c3a;
-        }
-
-        .select-arrow {
-            position: absolute;
-            right: 11px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 18px;
-            color: #68716b;
-            pointer-events: none;
-        }
-
-
-        /* =====================================================
-           TABLE
-        ===================================================== */
-
-        .table-wrapper {
-            width: 100%;
-            background: #fff;
-            border: 1px solid #e0e4e1;
-            border-radius: 10px;
-            overflow-x: auto;
-            box-sizing: border-box;
-        }
-
-        .table {
-            width: 100%;
-            min-width: 1200px;
-            border-collapse: collapse;
-        }
-
-        .table thead {
-            background: #f7f8f7;
-        }
-
-        .table th {
-            padding: 14px 16px;
-            text-align: left;
-            font-size: 12px;
-            font-weight: 700;
-            color: #59635c;
-            border-bottom: 1px solid #e1e5e2;
-            white-space: nowrap;
-        }
-
-        .table td {
-            padding: 15px 16px;
-            font-size: 13px;
-            color: #303932;
-            border-bottom: 1px solid #edf0ee;
-            vertical-align: middle;
-        }
-
-        .table tbody tr:last-child td {
-            border-bottom: none;
-        }
-
-        .table tbody tr:hover {
-            background: #fafbfa;
-        }
-
-        .row-number {
-            width: 45px;
-            color: #68716b !important;
-        }
-
-        .participant-name {
-            min-width: 180px;
-            font-weight: 600;
-            color: #26302a;
-        }
-
-        .address-cell {
-            min-width: 220px;
-            max-width: 280px;
-            line-height: 1.5;
-        }
-
-        .ppks-cell {
-            min-width: 170px;
-        }
-
-        .jurusan-cell {
-            min-width: 150px;
-        }
-
-        .keterangan-cell {
-            min-width: 220px;
-            max-width: 300px;
-            line-height: 1.5;
-            color: #59635c;
-        }
-
-
-        /* =====================================================
-           RESULT BADGE
-        ===================================================== */
-
-        .result-badge {
-            min-width: 180px;
-            display: inline-flex;
-            align-items: center;
-            gap: 9px;
-            padding: 8px 10px;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: .15s ease;
-            box-sizing: border-box;
-        }
-
-        .result-badge:hover {
-            opacity: .85;
-            transform: translateX(2px);
-        }
-
-        .result-accepted {
-            background: #edf8f0;
-            color: #28733c;
-        }
-
-        .result-rejected {
-            background: #fff0f0;
-            color: #b33b3b;
-        }
-
-        .result-pending {
-            background: #fff8e8;
-            color: #a56a00;
-        }
-
-        .result-icon {
-            font-size: 20px;
-            flex-shrink: 0;
-        }
-
-        .result-content {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-            flex: 1;
-            min-width: 0;
-        }
-
-        .result-title {
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        .result-status {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .status-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            display: inline-block;
-            flex-shrink: 0;
-        }
-
-        .status-dot.accepted {
-            background: #39a354;
-        }
-
-        .status-dot.rejected {
-            background: #c74747;
-        }
-
-        .status-dot.pending {
-            background: #d49317;
-        }
-
-        .result-arrow {
-            font-size: 22px;
-            line-height: 1;
-            color: #6d776f;
-        }
-
-
-        /* =====================================================
-           KETERANGAN
-        ===================================================== */
-
-        .keterangan-lolos {
-            color: #28733c;
-            font-weight: 600;
-        }
-
-        .keterangan-tidak-lolos {
-            color: #b33b3b;
-            font-weight: 600;
-        }
-
-        .keterangan-pending {
-            color: #a56a00;
-            font-weight: 600;
-        }
-
-
-        /* =====================================================
-           EMPTY
-        ===================================================== */
-
-        .empty-state {
-            text-align: center;
-            padding: 55px 20px !important;
-            color: #747d77 !important;
-        }
-
-        .empty-state .material-symbols-outlined {
-            display: block;
-            font-size: 45px;
-            margin-bottom: 10px;
-            color: #9aa39d;
-        }
-
-        .empty-state p {
-            margin: 0;
-            font-size: 14px;
-        }
-
-
-        /* =====================================================
-           PAGINATION
-        ===================================================== */
-
-        .pagination-wrapper {
-            padding: 15px 18px;
-            border-top: 1px solid #edf0ee;
-        }
-
-
-        /* =====================================================
-           RESPONSIVE
-        ===================================================== */
-
-        @media (max-width: 900px) {
-
-            .case-conference-header {
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .case-header-actions {
-                width: 100%;
-            }
-
-            .pdf-filter-wrapper {
-                width: 100%;
-            }
-
-            .pdf-button {
-                width: 100%;
-            }
-
-            .pdf-filter {
-                left: 0;
-                right: auto;
-                width: 100%;
-            }
-
-            .case-search {
-                width: 100%;
-            }
-
-            .select-wrapper {
-                width: 100%;
-            }
-
-            .case-filter-button {
-                width: 100%;
-            }
-
-        }
-
-    </style>
-
-
-    <div class="case-conference-page">
+    <div class="main-page">
 
         {{-- =====================================================
         HEADER
         ====================================================== --}}
+        <div class="main-page-header">
 
-        <div class="case-conference-header">
-
-            <div class="case-header-left">
+            <div>
 
                 <h1>
                     Case Conference
@@ -560,121 +21,108 @@
 
 
             {{-- =================================================
-            HEADER ACTION
+            PDF ACTION
             ================================================== --}}
+            <div class="pdf-filter-wrapper">
 
-            <div class="case-header-actions">
+                <button
+                    type="button"
+                    class="pdf-button"
+                    id="pdfButton"
+                >
+
+                    <span class="material-symbols-outlined">
+                        picture_as_pdf
+                    </span>
+
+                    PDF
+
+                </button>
+
 
                 {{-- =================================================
-                PDF
+                PDF FILTER POPUP
                 ================================================== --}}
+                <div
+                    class="pdf-filter"
+                    id="pdfFilter"
+                >
 
-                <div class="pdf-filter-wrapper">
-
-                    <button
-                        type="button"
-                        class="pdf-button"
-                        id="pdfButton"
-                    >
-
-                        <span class="material-symbols-outlined">
-                            picture_as_pdf
-                        </span>
-
-                        PDF
-
-                    </button>
+                    <div class="pdf-filter-title">
+                        Cetak Data Case Conference
+                    </div>
 
 
-                    {{-- =================================================
-                    PDF FILTER POPUP
-                    ================================================== --}}
+                    {{-- GELOMBANG --}}
+                    <div class="pdf-filter-group">
 
-                    <div
-                        class="pdf-filter"
-                        id="pdfFilter"
-                    >
+                        <label for="pdfGelombang">
+                            Gelombang
+                        </label>
 
-                        <div class="pdf-filter-title">
-                            Cetak Data Case Conference
-                        </div>
+                        <select id="pdfGelombang">
 
+                            <option value="">
+                                Semua Gelombang
+                            </option>
 
-                        {{-- GELOMBANG --}}
+                            @for ($i = 1; $i <= 10; $i++)
 
-                        <div class="pdf-filter-group">
-
-                            <label for="pdfGelombang">
-                                Gelombang
-                            </label>
-
-                            <select id="pdfGelombang">
-
-                                <option value="">
-                                    Semua Gelombang
+                                <option value="{{ $i }}">
+                                    Gelombang {{ $i }}
                                 </option>
 
-                                @for ($i = 1; $i <= 10; $i++)
+                            @endfor
 
-                                    <option value="{{ $i }}">
-                                        Gelombang {{ $i }}
-                                    </option>
+                        </select>
 
-                                @endfor
-
-                            </select>
-
-                        </div>
+                    </div>
 
 
-                        {{-- TAHUN --}}
+                    {{-- TAHUN --}}
+                    <div class="pdf-filter-group">
 
-                        <div class="pdf-filter-group">
+                        <label for="pdfTahun">
+                            Tahun
+                        </label>
 
-                            <label for="pdfTahun">
-                                Tahun
-                            </label>
+                        <select id="pdfTahun">
 
-                            <select id="pdfTahun">
+                            <option value="">
+                                Semua Tahun
+                            </option>
 
-                                <option value="">
-                                    Semua Tahun
+                            @for ($tahun = 2026; $tahun <= 2036; $tahun++)
+
+                                <option value="{{ $tahun }}">
+                                    {{ $tahun }}
                                 </option>
 
-                                @for ($tahun = 2026; $tahun <= 2036; $tahun++)
+                            @endfor
 
-                                    <option value="{{ $tahun }}">
-                                        {{ $tahun }}
-                                    </option>
+                        </select>
 
-                                @endfor
-
-                            </select>
-
-                        </div>
+                    </div>
 
 
-                        {{-- ACTION --}}
+                    {{-- ACTION --}}
+                    <div class="pdf-filter-actions">
 
-                        <div class="pdf-filter-actions">
+                        <button
+                            type="button"
+                            class="pdf-reset"
+                            id="pdfReset"
+                        >
+                            Reset
+                        </button>
 
-                            <button
-                                type="button"
-                                class="pdf-reset"
-                                id="pdfReset"
-                            >
-                                Reset
-                            </button>
-
-                            <button
-                                type="button"
-                                class="pdf-generate"
-                                id="pdfGenerate"
-                            >
-                                Buat PDF
-                            </button>
-
-                        </div>
+                        <button
+                            type="button"
+                            class="pdf-generate"
+                            id="pdfGenerate"
+                        >
+                            Buat PDF
+                        </button>
 
                     </div>
 
@@ -688,111 +136,127 @@
         {{-- =====================================================
         FILTER
         ====================================================== --}}
+        <div class="filter-wrapper">
 
-        <div class="case-filter-wrapper">
+            <div class="filter-group">
 
-            {{-- SEARCH --}}
 
-            <div class="case-search">
-
-                <span class="material-symbols-outlined">
-                    search
-                </span>
-
-                <input
-                    type="text"
-                    id="searchInput"
-                    placeholder="Cari Nama atau NIK"
-                    autocomplete="off"
+                {{-- =================================================
+                SEARCH
+                ================================================== --}}
+                <form
+                    method="GET"
+                    action="{{ url()->current() }}"
+                    class="search"
+                    id="searchForm"
                 >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+                        <circle cx="11" cy="11" r="7" />
+                        <path d="m20 20-3.5-3.5" />
+                    </svg>
 
-            </div>
+                    <input
+                        type="text"
+                        name="search"
+                        id="searchInput"
+                        value="{{ request('search') }}"
+                        placeholder="Cari Nama atau NIK"
+                        autocomplete="off"
+                    >
+                </form>
+
+                {{-- =================================================
+                FILTER JENIS PPKS
+                ================================================== --}}
+                <div class="select-wrapper">
+
+                    <select
+                        id="ppksFilter"
+                        class="filter-button"
+                    >
+
+                        <option value="">
+                            Semua Jenis PPKS
+                        </option>
+
+                        <option value="disabilitas fisik">
+                            Disabilitas Fisik
+                        </option>
+
+                        <option value="disabilitas rungu wicara">
+                            Disabilitas Rungu Wicara
+                        </option>
+
+                        <option value="disabilitas netra">
+                            Disabilitas Netra
+                        </option>
+
+                        <option value="disabilitas mental">
+                            Disabilitas Mental
+                        </option>
+
+                        <option value="disabilitas intelektual">
+                            Disabilitas Intelektual
+                        </option>
+
+                        <option value="kelompok rentan">
+                            Kelompok Rentan
+                        </option>
+
+                        <option value="other">
+                            Other
+                        </option>
+
+                    </select>
+
+                    <span class="material-symbols-outlined select-arrow">
+                        expand_more
+                    </span>
+
+                </div>
 
 
-            {{-- =================================================
-            FILTER JENIS PPKS
-            ================================================== --}}
+                {{-- =================================================
+                FILTER HASIL
+                ================================================== --}}
+                <div class="select-wrapper">
 
-            <div class="select-wrapper">
+                    <select
+                        id="hasilFilter"
+                        class="filter-button"
+                    >
 
-                <select
-                    id="ppksFilter"
-                    class="case-filter-button"
-                >
+                        <option value="">
+                            Semua Hasil
+                        </option>
 
-                    <option value="">
-                        Semua Jenis PPKS
-                    </option>
+                        <option value="diterima">
+                            Diterima
+                        </option>
 
-                    <option value="disabilitas fisik">
-                        Disabilitas Fisik
-                    </option>
+                        <option value="tidak diterima">
+                            Tidak Diterima
+                        </option>
 
-                    <option value="disabilitas rungu wicara">
-                        Disabilitas Rungu Wicara
-                    </option>
+                        <option value="pending">
+                            Pending
+                        </option>
 
-                    <option value="disabilitas netra">
-                        Disabilitas Netra
-                    </option>
+                    </select>
 
-                    <option value="disabilitas mental">
-                        Disabilitas Mental
-                    </option>
+                    <span class="material-symbols-outlined select-arrow">
+                        expand_more
+                    </span>
 
-                    <option value="disabilitas intelektual">
-                        Disabilitas Intelektual
-                    </option>
-
-                    <option value="kelompok rentan">
-                        Kelompok Rentan
-                    </option>
-
-                    <option value="other">
-                        Other
-                    </option>
-
-                </select>
-
-                <span class="material-symbols-outlined select-arrow">
-                    keyboard_arrow_down
-                </span>
-
-            </div>
-
-
-            {{-- =================================================
-            FILTER HASIL
-            ================================================== --}}
-
-            <div class="select-wrapper">
-
-                <select
-                    id="hasilFilter"
-                    class="case-filter-button"
-                >
-
-                    <option value="">
-                        Semua Hasil
-                    </option>
-
-                    <option value="diterima">
-                        Diterima
-                    </option>
-
-                    <option value="tidak diterima">
-                        Tidak Diterima
-                    </option>
-
-                    <option value="pending">
-                        Pending
-                    </option>
-
-                </select>
-
-                <span class="material-symbols-outlined select-arrow">
-                    keyboard_arrow_down
-                </span>
+                </div>
 
             </div>
 
@@ -802,7 +266,6 @@
         {{-- =====================================================
         TABLE
         ====================================================== --}}
-
         <div class="table-wrapper">
 
             <table class="table">
@@ -811,22 +274,48 @@
 
                     <tr>
 
-                        <th>No</th>
-                        <th>Nama</th>
-                        <th>NIK</th>
-                        <th>Alamat</th>
-                        <th>Umur</th>
-                        <th>Jenis PPKS</th>
-                        <th>Jurusan</th>
-                        <th>Hasil</th>
-                        <th>Keterangan</th>
+                        <th width="60">
+                            No
+                        </th>
+
+                        <th>
+                            Nama
+                        </th>
+
+                        <th>
+                            NIK
+                        </th>
+
+                        <th>
+                            Alamat
+                        </th>
+
+                        <th>
+                            Umur
+                        </th>
+
+                        <th>
+                            Jenis PPKS
+                        </th>
+
+                        <th>
+                            Jurusan
+                        </th>
+
+                        <th>
+                            Hasil
+                        </th>
+
+                        <th>
+                            Keterangan
+                        </th>
 
                     </tr>
 
                 </thead>
 
 
-                <tbody id="caseTableBody">
+                <tbody id="dataTable">
 
                     @forelse ($data as $index => $ppks)
 
@@ -854,6 +343,8 @@
                                 ?? $item['nama']
                                 ?? $item['Nama']
                                 ?? $item['NAMA']
+                                ?? $item['nama peserta']
+                                ?? $item['Nama Peserta']
                                 ?? '-';
 
 
@@ -917,6 +408,11 @@
                                 $umur =
                                     $item['usia'] . ' tahun';
 
+                            } elseif (!empty($item['umur'])) {
+
+                                $umur =
+                                    $item['umur'];
+
                             }
 
 
@@ -969,7 +465,7 @@
 
                             /*
                             |--------------------------------------------------------------------------
-                            | STATUS
+                            | STATUS CASE CONFERENCE
                             |--------------------------------------------------------------------------
                             */
 
@@ -977,13 +473,20 @@
                                 $caseConference->status
                                 ?? 'pending';
 
+
+                            /*
+                            |--------------------------------------------------------------------------
+                            | NORMALISASI STATUS
+                            |--------------------------------------------------------------------------
+                            */
+
                             $statusLower =
                                 strtolower(
                                     trim(
                                         str_replace(
-                                            '-',
+                                            ['-', ' '],
                                             '_',
-                                            $status
+                                            (string) $status
                                         )
                                     )
                                 );
@@ -991,7 +494,7 @@
 
                             /*
                             |--------------------------------------------------------------------------
-                            | HASIL
+                            | HASIL CASE CONFERENCE
                             |--------------------------------------------------------------------------
                             */
 
@@ -1007,13 +510,14 @@
                                 )
                             ) {
 
-                                $hasilText = 'Diterima';
+                                $hasilText =
+                                    'Diterima';
 
-                                $hasilClass = 'result-accepted';
+                                $statusClass =
+                                    'diterima';
 
-                                $icon = 'task_alt';
-
-                                $dotClass = 'accepted';
+                                $icon =
+                                    'task_alt';
 
                                 $keteranganClass =
                                     'keterangan-lolos';
@@ -1031,26 +535,28 @@
                                 )
                             ) {
 
-                                $hasilText = 'Tidak Diterima';
+                                $hasilText =
+                                    'Tidak Diterima';
 
-                                $hasilClass = 'result-rejected';
+                                $statusClass =
+                                    'tidak-diterima';
 
-                                $icon = 'cancel';
-
-                                $dotClass = 'rejected';
+                                $icon =
+                                    'cancel';
 
                                 $keteranganClass =
                                     'keterangan-tidak-lolos';
 
                             } else {
 
-                                $hasilText = 'Pending';
+                                $hasilText =
+                                    'Pending';
 
-                                $hasilClass = 'result-pending';
+                                $statusClass =
+                                    'pending';
 
-                                $icon = 'pending';
-
-                                $dotClass = 'pending';
+                                $icon =
+                                    'pending';
 
                                 $keteranganClass =
                                     'keterangan-pending';
@@ -1079,61 +585,84 @@
                             data-hasil="{{ strtolower((string) $hasilText) }}"
                         >
 
-                            {{-- NO --}}
 
+                            {{-- =================================================
+                            NO
+                            ================================================== --}}
                             <td class="row-number">
+
                                 {{ $data->firstItem() + $index }}
+
                             </td>
 
 
-                            {{-- NAMA --}}
-
+                            {{-- =================================================
+                            NAMA
+                            ================================================== --}}
                             <td>
 
                                 <div class="participant-name">
+
                                     {{ $nama }}
+
                                 </div>
 
                             </td>
 
 
-                            {{-- NIK --}}
-
+                            {{-- =================================================
+                            NIK
+                            ================================================== --}}
                             <td>
+
                                 {{ $nik }}
+
                             </td>
 
 
-                            {{-- ALAMAT --}}
-
+                            {{-- =================================================
+                            ALAMAT
+                            ================================================== --}}
                             <td class="address-cell">
+
                                 {{ $alamat }}
+
                             </td>
 
 
-                            {{-- UMUR --}}
-
+                            {{-- =================================================
+                            UMUR
+                            ================================================== --}}
                             <td>
+
                                 {{ $umur }}
+
                             </td>
 
 
-                            {{-- JENIS PPKS --}}
-
+                            {{-- =================================================
+                            JENIS PPKS
+                            ================================================== --}}
                             <td class="ppks-cell">
+
                                 {{ $jenisPpks }}
+
                             </td>
 
 
-                            {{-- JURUSAN --}}
-
+                            {{-- =================================================
+                            JURUSAN
+                            ================================================== --}}
                             <td class="jurusan-cell">
+
                                 {{ $jurusan }}
+
                             </td>
 
 
-                            {{-- HASIL --}}
-
+                            {{-- =================================================
+                            HASIL
+                            ================================================== --}}
                             <td>
 
                                 <a
@@ -1141,23 +670,26 @@
                                         'ppks.normal.case-conference.detail',
                                         $ppks->id
                                     ) }}"
-                                    class="result-badge {{ $hasilClass }}"
+                                    class="result-badge result-case-conference"
                                 >
 
+                                    {{-- RESULT ICON --}}
                                     <span class="material-symbols-outlined result-icon">
-                                        {{ $icon }}
+                                        groups
                                     </span>
 
 
+                                    {{-- RESULT CONTENT --}}
                                     <div class="result-content">
 
                                         <span class="result-title">
                                             Case Conference
                                         </span>
 
-                                        <span class="result-status">
 
-                                            <span class="status-dot {{ $dotClass }}"></span>
+                                        <span class="result-status {{ $statusClass }}">
+
+                                            <span class="status-dot {{ $statusClass }}"></span>
 
                                             {{ $hasilText }}
 
@@ -1166,6 +698,7 @@
                                     </div>
 
 
+                                    {{-- RESULT ARROW --}}
                                     <span class="material-symbols-outlined result-arrow">
                                         chevron_right
                                     </span>
@@ -1175,17 +708,21 @@
                             </td>
 
 
-                            {{-- KETERANGAN --}}
-
+                            {{-- =================================================
+                            KETERANGAN
+                            ================================================== --}}
                             <td class="keterangan-cell">
 
                                 <span class="{{ $keteranganClass }}">
+
                                     {{ $keterangan }}
+
                                 </span>
 
                             </td>
 
                         </tr>
+
 
                     @empty
 
@@ -1201,7 +738,8 @@
                                 </span>
 
                                 <p>
-                                    Belum ada peserta yang telah melakukan Case Conference.
+                                    Belum ada peserta yang telah
+                                    melakukan Case Conference.
                                 </p>
 
                             </td>
@@ -1211,7 +749,9 @@
                     @endforelse
 
 
-                    {{-- EMPTY HASIL FILTER --}}
+                    {{-- =================================================
+                    EMPTY HASIL FILTER
+                    ================================================== --}}
 
                     @if ($data->count())
 
@@ -1251,7 +791,9 @@
             @if ($data->hasPages())
 
                 <div class="pagination-wrapper">
+
                     {{ $data->links() }}
+
                 </div>
 
             @endif
@@ -1273,7 +815,7 @@
 
                 /*
                 |--------------------------------------------------------------------------
-                | ELEMENT
+                | ELEMENT FILTER
                 |--------------------------------------------------------------------------
                 */
 
@@ -1294,7 +836,7 @@
 
                 const tableRows =
                     document.querySelectorAll(
-                        '.case-row'
+                        '#dataTable tr.case-row'
                     );
 
                 const filterEmptyRow =
@@ -1397,11 +939,17 @@
                         function () {
 
                             if (pdfGelombang) {
-                                pdfGelombang.value = '';
+
+                                pdfGelombang.value =
+                                    '';
+
                             }
 
                             if (pdfTahun) {
-                                pdfTahun.value = '';
+
+                                pdfTahun.value =
+                                    '';
+
                             }
 
                         }
@@ -1488,13 +1036,6 @@
 
                 function filterTable() {
 
-                    const searchValue =
-                        searchInput
-                            ? searchInput.value
-                                .toLowerCase()
-                                .trim()
-                            : '';
-
 
                     const ppksValue =
                         ppksFilter
@@ -1512,52 +1053,34 @@
                             : '';
 
 
-                    let found = false;
+                    let found =
+                        false;
 
-                    let visibleNumber = 1;
+
+                    let visibleNumber =
+                        1;
 
 
                     tableRows.forEach(
                         function (row) {
 
-                            const nama =
-                                row.dataset.nama
-                                || '';
 
-                            const nik =
-                                row.dataset.nik
-                                || '';
+
 
                             const ppks =
                                 row.dataset.ppks
                                 || '';
+
 
                             const hasil =
                                 row.dataset.hasil
                                 || '';
 
 
-                            /*
-                            |--------------------------------------------------------------------------
-                            | SEARCH
-                            |--------------------------------------------------------------------------
-                            */
-
-                            const matchSearch =
-                                searchValue === ''
-                                ||
-                                nama.includes(
-                                    searchValue
-                                )
-                                ||
-                                nik.includes(
-                                    searchValue
-                                );
-
 
                             /*
                             |--------------------------------------------------------------------------
-                            | JENIS PPKS
+                            | FILTER JENIS PPKS
                             |--------------------------------------------------------------------------
                             */
 
@@ -1569,7 +1092,7 @@
 
                             /*
                             |--------------------------------------------------------------------------
-                            | HASIL
+                            | FILTER HASIL
                             |--------------------------------------------------------------------------
                             */
 
@@ -1586,8 +1109,6 @@
                             */
 
                             const shouldShow =
-                                matchSearch
-                                &&
                                 matchPpks
                                 &&
                                 matchHasil;
@@ -1595,7 +1116,9 @@
 
                             if (shouldShow) {
 
-                                row.style.display = '';
+                                row.style.display =
+                                    '';
+
 
                                 const numberCell =
                                     row.querySelector(
@@ -1613,7 +1136,8 @@
 
                                 visibleNumber++;
 
-                                found = true;
+                                found =
+                                    true;
 
                             } else {
 
@@ -1644,20 +1168,7 @@
                 }
 
 
-                /*
-                |--------------------------------------------------------------------------
-                | SEARCH EVENT
-                |--------------------------------------------------------------------------
-                */
 
-                if (searchInput) {
-
-                    searchInput.addEventListener(
-                        'input',
-                        filterTable
-                    );
-
-                }
 
 
                 /*
@@ -1726,5 +1237,6 @@
         );
 
     </script>
+
 
 </x-app-layout>

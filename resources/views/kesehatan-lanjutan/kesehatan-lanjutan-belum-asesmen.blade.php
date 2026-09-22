@@ -112,22 +112,34 @@
         <div class="filter-wrapper">
 
             {{-- SEARCH --}}
-            <div class="search">
+            <form
+    method="GET"
+    action="{{ url()->current() }}"
+    class="search"
+    id="searchForm"
+>
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+    >
+        <circle cx="11" cy="11" r="7" />
+        <path d="m20 20-3.5-3.5" />
+    </svg>
 
-                <span class="material-symbols-outlined">
-                    search
-                </span>
-
-                <input
-                    type="text"
-                    id="searchInput"
-                    placeholder="Cari Nama atau NIK"
-                    autocomplete="off"
-                >
-
-            </div>
-
-
+    <input
+        type="text"
+        name="search"
+        id="searchInput"
+        value="{{ request('search') }}"
+        placeholder="Cari Nama atau NIK"
+        autocomplete="off"
+    >
+</form>
             {{-- JENIS PPKS --}}
             <div class="select-wrapper">
 
@@ -1102,10 +1114,7 @@
 
             function filterTable() {
 
-                const search =
-                    searchInput.value
-                        .toLowerCase()
-                        .trim();
+
 
 
                 const ppks =
@@ -1169,18 +1178,7 @@
                         || '';
 
 
-                    /*
-                    |--------------------------------------------------------------------------
-                    | SEARCH
-                    |--------------------------------------------------------------------------
-                    */
 
-                    const matchSearch =
-                        !search
-                        ||
-                        nama.includes(search)
-                        ||
-                        nik.includes(search);
 
 
                     /*
@@ -1271,8 +1269,6 @@
                     */
 
                     const visible =
-                        matchSearch
-                        &&
                         matchPpks
                         &&
                         matchTahapan
@@ -1310,17 +1306,6 @@
 
             }
 
-
-            /*
-            |--------------------------------------------------------------------------
-            | SEARCH
-            |--------------------------------------------------------------------------
-            */
-
-            searchInput.addEventListener(
-                'input',
-                filterTable
-            );
 
 
             /*

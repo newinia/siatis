@@ -160,35 +160,34 @@
 
                 {{-- SEARCH --}}
 
-                <div class="search">
+                <form
+    method="GET"
+    action="{{ url()->current() }}"
+    class="search"
+    id="searchForm"
+>
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+    >
+        <circle cx="11" cy="11" r="7" />
+        <path d="m20 20-3.5-3.5" />
+    </svg>
 
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                    >
-                        <circle
-                            cx="11"
-                            cy="11"
-                            r="7"
-                        ></circle>
-
-                        <path d="m20 20-3.5-3.5"></path>
-
-                    </svg>
-
-                    <input
-                        type="text"
-                        id="searchInput"
-                        placeholder="Cari Nama atau NIK"
-                        autocomplete="off"
-                    >
-
-                </div>
+    <input
+        type="text"
+        name="search"
+        id="searchInput"
+        value="{{ request('search') }}"
+        placeholder="Cari Nama atau NIK"
+        autocomplete="off"
+    >
+</form>
 
 
                 {{-- FILTER JENIS PPKS --}}
@@ -739,7 +738,7 @@
 
                             </td>
 
-                            
+
 
                         </tr>
 
@@ -843,317 +842,293 @@
     {{-- =========================================================
     JAVASCRIPT
     ========================================================== --}}
+<script>
 
-    <script>
+    document.addEventListener('DOMContentLoaded', function () {
 
-        document.addEventListener('DOMContentLoaded', function () {
+        const ppksFilter =
+            document.getElementById('ppksFilter');
 
-            const searchInput =
-                document.getElementById('searchInput');
-
-            const ppksFilter =
-                document.getElementById('ppksFilter');
-
-            const rows =
-                document.querySelectorAll(
-                    '.table tbody tr[data-nama]'
-                );
+        const rows =
+            document.querySelectorAll(
+                '.table tbody tr[data-nama]'
+            );
 
 
-            /* =====================================================
-               DATE ELEMENT
-            ===================================================== */
+        /* =====================================================
+           DATE ELEMENT
+        ===================================================== */
 
-            const dateButton =
-                document.getElementById('dateFilterButton');
+        const dateButton =
+            document.getElementById('dateFilterButton');
 
-            const datePicker =
-                document.getElementById('datePicker');
+        const datePicker =
+            document.getElementById('datePicker');
 
-            const dateText =
-                document.getElementById('dateFilterText');
+        const dateText =
+            document.getElementById('dateFilterText');
 
-            const startDate =
-                document.getElementById('startDate');
+        const startDate =
+            document.getElementById('startDate');
 
-            const endDate =
-                document.getElementById('endDate');
+        const endDate =
+            document.getElementById('endDate');
 
-            const applyDate =
-                document.getElementById('applyDate');
+        const applyDate =
+            document.getElementById('applyDate');
 
-            const resetDate =
-                document.getElementById('resetDate');
+        const resetDate =
+            document.getElementById('resetDate');
 
-            const filterEmptyRow =
-                document.getElementById('filterEmptyRow');
+        const filterEmptyRow =
+            document.getElementById('filterEmptyRow');
 
 
-            /* =====================================================
-               SIMPAN NOMOR ASLI
-            ===================================================== */
+        /* =====================================================
+           SIMPAN NOMOR ASLI
+        ===================================================== */
+
+        rows.forEach(function (row) {
+
+            const numberCell =
+                row.querySelector('.row-number');
+
+            if (numberCell) {
+
+                row.dataset.originalNumber =
+                    numberCell.textContent.trim();
+
+            }
+
+        });
+
+
+        /* =====================================================
+           FILTER TABLE
+        ===================================================== */
+
+        function filterTable() {
+
+            const ppks =
+                ppksFilter
+                    ? ppksFilter.value.toLowerCase().trim()
+                    : '';
+
+            const start =
+                startDate
+                    ? startDate.value
+                    : '';
+
+            const end =
+                endDate
+                    ? endDate.value
+                    : '';
+
+
+            let visibleNumber = 1;
+            let visibleCount = 0;
+
 
             rows.forEach(function (row) {
 
-                const numberCell =
-                    row.querySelector('.row-number');
+                const jenis =
+                    row.dataset.ppks || '';
 
-                if (numberCell) {
+                const tanggal =
+                    row.dataset.tanggal || '';
 
-                    row.dataset.originalNumber =
-                        numberCell.textContent.trim();
+
+                /* =================================================
+                   JENIS PPKS
+                ================================================== */
+
+                const ppksMatch =
+                    !ppks ||
+                    jenis === ppks;
+
+
+                /* =================================================
+                   TANGGAL
+                ================================================== */
+
+                let dateMatch = true;
+
+
+                if (start) {
+
+                    if (
+                        !tanggal ||
+                        tanggal < start
+                    ) {
+
+                        dateMatch = false;
+
+                    }
+
+                }
+
+
+                if (end) {
+
+                    if (
+                        !tanggal ||
+                        tanggal > end
+                    ) {
+
+                        dateMatch = false;
+
+                    }
+
+                }
+
+
+                /* =================================================
+                   HASIL FILTER
+                ================================================== */
+
+                const show =
+                    ppksMatch &&
+                    dateMatch;
+
+
+                row.style.display =
+                    show
+                        ? ''
+                        : 'none';
+
+
+                /* =================================================
+                   NOMOR
+                ================================================== */
+
+                if (show) {
+
+                    visibleCount++;
+
+                    const numberCell =
+                        row.querySelector(
+                            '.row-number'
+                        );
+
+
+                    if (numberCell) {
+
+                        const hasFilter =
+                            ppks !== ''
+                            ||
+                            start !== ''
+                            ||
+                            end !== '';
+
+
+                        if (hasFilter) {
+
+                            numberCell.textContent =
+                                visibleNumber++;
+
+                        } else {
+
+                            numberCell.textContent =
+                                row.dataset.originalNumber;
+
+                        }
+
+                    }
 
                 }
 
             });
 
 
-            /* =====================================================
-               FILTER TABLE
-            ===================================================== */
+            /* =================================================
+               EMPTY FILTER
+            ================================================== */
 
-            function filterTable() {
+            if (filterEmptyRow) {
 
-                const search =
-                    searchInput.value
-                        .toLowerCase()
-                        .trim();
-
-                const ppks =
-                    ppksFilter.value
-                        .toLowerCase()
-                        .trim();
-
-                const start =
-                    startDate.value;
-
-                const end =
-                    endDate.value;
-
-
-                let visibleNumber = 1;
-                let visibleCount = 0;
-
-
-                rows.forEach(function (row) {
-
-                    const nama =
-                        row.dataset.nama || '';
-
-                    const nik =
-                        row.dataset.nik || '';
-
-                    const jenis =
-                        row.dataset.ppks || '';
-
-                    const tanggal =
-                        row.dataset.tanggal || '';
-
-
-                    /* =================================================
-                       SEARCH
-                    ================================================== */
-
-                    const searchMatch =
-                        search === ''
-                        ||
-                        nama.includes(search)
-                        ||
-                        nik.includes(search);
-
-
-                    /* =================================================
-                       JENIS PPKS
-                    ================================================== */
-
-                    const ppksMatch =
-                        ppks === ''
-                        ||
-                        jenis === ppks;
-
-
-                    /* =================================================
-                       TANGGAL
-                    ================================================== */
-
-                    let dateMatch = true;
-
-
-                    if (start) {
-
-                        if (
-                            !tanggal ||
-                            tanggal < start
-                        ) {
-
-                            dateMatch = false;
-
-                        }
-
-                    }
-
-
-                    if (end) {
-
-                        if (
-                            !tanggal ||
-                            tanggal > end
-                        ) {
-
-                            dateMatch = false;
-
-                        }
-
-                    }
-
-
-                    /* =================================================
-                       HASIL FILTER
-                    ================================================== */
-
-                    const show =
-                        searchMatch &&
-                        ppksMatch &&
-                        dateMatch;
-
-
-                    row.style.display =
-                        show
-                            ? ''
-                            : 'none';
-
-
-                    /* =================================================
-                       NOMOR
-                    ================================================== */
-
-                    if (show) {
-
-                        visibleCount++;
-
-                        const numberCell =
-                            row.querySelector(
-                                '.row-number'
-                            );
-
-
-                        if (numberCell) {
-
-                            const hasFilter =
-                                search !== ''
-                                ||
-                                ppks !== ''
-                                ||
-                                start !== ''
-                                ||
-                                end !== '';
-
-
-                            if (hasFilter) {
-
-                                numberCell.textContent =
-                                    visibleNumber++;
-
-                            } else {
-
-                                numberCell.textContent =
-                                    row.dataset.originalNumber;
-
-                            }
-
-                        }
-
-                    }
-
-                });
-
-
-                /* =================================================
-                   EMPTY FILTER
-                ================================================== */
-
-                if (filterEmptyRow) {
-
-                    filterEmptyRow.style.display =
-                        visibleCount === 0
-                            ? 'table-row'
-                            : 'none';
-
-                }
+                filterEmptyRow.style.display =
+                    visibleCount === 0
+                        ? 'table-row'
+                        : 'none';
 
             }
 
-
-            /* =====================================================
-               SEARCH
-            ===================================================== */
-
-            searchInput.addEventListener(
-                'input',
-                filterTable
-            );
+        }
 
 
-            /* =====================================================
-               FILTER PPKS
-            ===================================================== */
+        /* =====================================================
+           FILTER PPKS
+        ===================================================== */
+
+        if (ppksFilter) {
 
             ppksFilter.addEventListener(
                 'change',
                 filterTable
             );
 
-
-            /* =====================================================
-               RESET SEMUA FILTER
-            ===================================================== */
-
-            const resetAllFilters =
-                document.getElementById(
-                    'resetAllFilters'
-                );
+        }
 
 
-            if (resetAllFilters) {
+        /* =====================================================
+           RESET SEMUA FILTER
+        ===================================================== */
 
-                resetAllFilters.addEventListener(
-                    'click',
-                    function () {
+        const resetAllFilters =
+            document.getElementById(
+                'resetAllFilters'
+            );
 
-                        searchInput.value = '';
 
+        if (resetAllFilters) {
+
+            resetAllFilters.addEventListener(
+                'click',
+                function () {
+
+                    if (ppksFilter) {
                         ppksFilter.value = '';
+                    }
 
+                    if (startDate) {
                         startDate.value = '';
+                    }
 
+                    if (endDate) {
                         endDate.value = '';
+                    }
 
+                    if (dateText) {
                         dateText.textContent =
                             'Pilih Tanggal';
+                    }
 
-
+                    if (datePicker) {
                         datePicker.classList.remove(
                             'active'
                         );
+                    }
 
-
+                    if (dateButton) {
                         dateButton.setAttribute(
                             'aria-expanded',
                             'false'
                         );
-
-
-                        filterTable();
-
                     }
-                );
 
-            }
+                    filterTable();
+
+                }
+            );
+
+        }
 
 
-            /* =====================================================
-               BUKA DATE PICKER
-            ===================================================== */
+        /* =====================================================
+           BUKA DATE PICKER
+        ===================================================== */
+
+        if (dateButton && datePicker) {
 
             dateButton.addEventListener(
                 'click',
@@ -1178,10 +1153,14 @@
                 }
             );
 
+        }
 
-            /* =====================================================
-               DATE PICKER CLICK
-            ===================================================== */
+
+        /* =====================================================
+           DATE PICKER CLICK
+        ===================================================== */
+
+        if (datePicker) {
 
             datePicker.addEventListener(
                 'click',
@@ -1192,20 +1171,28 @@
                 }
             );
 
+        }
 
-            /* =====================================================
-               TERAPKAN TANGGAL
-            ===================================================== */
+
+        /* =====================================================
+           TERAPKAN TANGGAL
+        ===================================================== */
+
+        if (applyDate) {
 
             applyDate.addEventListener(
                 'click',
                 function () {
 
                     const start =
-                        startDate.value;
+                        startDate
+                            ? startDate.value
+                            : '';
 
                     const end =
-                        endDate.value;
+                        endDate
+                            ? endDate.value
+                            : '';
 
 
                     if (!start || !end) {
@@ -1230,104 +1217,139 @@
                     }
 
 
-                    dateText.textContent =
-                        formatDate(start)
-                        + ' - '
-                        + formatDate(end);
+                    if (dateText) {
 
+                        dateText.textContent =
+                            formatDate(start)
+                            + ' - '
+                            + formatDate(end);
 
-                    datePicker.classList.remove(
-                        'active'
-                    );
-
-
-                    dateButton.setAttribute(
-                        'aria-expanded',
-                        'false'
-                    );
-
-
-                    filterTable();
-
-                }
-            );
-
-
-            /* =====================================================
-               RESET TANGGAL
-            ===================================================== */
-
-            resetDate.addEventListener(
-                'click',
-                function () {
-
-                    startDate.value = '';
-
-                    endDate.value = '';
-
-                    dateText.textContent =
-                        'Pilih Tanggal';
-
-
-                    datePicker.classList.remove(
-                        'active'
-                    );
-
-
-                    dateButton.setAttribute(
-                        'aria-expanded',
-                        'false'
-                    );
-
-
-                    filterTable();
-
-                }
-            );
-
-
-            /* =====================================================
-               FORMAT TANGGAL
-            ===================================================== */
-
-            function formatDate(value) {
-
-                const date =
-                    new Date(
-                        value + 'T00:00:00'
-                    );
-
-
-                return date.toLocaleDateString(
-                    'id-ID',
-                    {
-                        day: '2-digit',
-                        month: 'short',
-                        year: 'numeric'
                     }
-                );
-
-            }
 
 
-            /* =====================================================
-               TUTUP DATE PICKER
-            ===================================================== */
-
-            document.addEventListener(
-                'click',
-                function () {
-
-                    if (
-                        datePicker.classList.contains(
-                            'active'
-                        )
-                    ) {
+                    if (datePicker) {
 
                         datePicker.classList.remove(
                             'active'
                         );
 
+                    }
+
+
+                    if (dateButton) {
+
+                        dateButton.setAttribute(
+                            'aria-expanded',
+                            'false'
+                        );
+
+                    }
+
+
+                    filterTable();
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           RESET TANGGAL
+        ===================================================== */
+
+        if (resetDate) {
+
+            resetDate.addEventListener(
+                'click',
+                function () {
+
+                    if (startDate) {
+                        startDate.value = '';
+                    }
+
+                    if (endDate) {
+                        endDate.value = '';
+                    }
+
+                    if (dateText) {
+
+                        dateText.textContent =
+                            'Pilih Tanggal';
+
+                    }
+
+                    if (datePicker) {
+
+                        datePicker.classList.remove(
+                            'active'
+                        );
+
+                    }
+
+                    if (dateButton) {
+
+                        dateButton.setAttribute(
+                            'aria-expanded',
+                            'false'
+                        );
+
+                    }
+
+
+                    filterTable();
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           FORMAT TANGGAL
+        ===================================================== */
+
+        function formatDate(value) {
+
+            const date =
+                new Date(
+                    value + 'T00:00:00'
+                );
+
+
+            return date.toLocaleDateString(
+                'id-ID',
+                {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric'
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           TUTUP DATE PICKER
+        ===================================================== */
+
+        document.addEventListener(
+            'click',
+            function () {
+
+                if (
+                    datePicker &&
+                    datePicker.classList.contains(
+                        'active'
+                    )
+                ) {
+
+                    datePicker.classList.remove(
+                        'active'
+                    );
+
+
+                    if (dateButton) {
 
                         dateButton.setAttribute(
                             'aria-expanded',
@@ -1337,17 +1359,20 @@
                     }
 
                 }
-            );
+
+            }
+        );
 
 
-            /* =====================================================
-               FILTER PERTAMA
-            ===================================================== */
+        /* =====================================================
+           FILTER PERTAMA
+        ===================================================== */
 
-            filterTable();
+        filterTable();
 
-        });
+    });
 
-    </script>
+</script>
+
 
 </x-app-layout>

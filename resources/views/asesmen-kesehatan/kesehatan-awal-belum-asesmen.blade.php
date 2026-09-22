@@ -98,23 +98,35 @@
             <div class="filter-group">
 
                 {{-- SEARCH --}}
-                <div
-                    class="search"
-                    id="searchWrapper"
-                >
-                    <span class="material-symbols-outlined">
-                        search
-                    </span>
+                <form
+    method="GET"
+    action="{{ url()->current() }}"
+    class="search"
+    id="searchForm"
+>
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+    >
+        <circle cx="11" cy="11" r="7" />
+        <path d="m20 20-3.5-3.5" />
+    </svg>
 
-                    <input
-                        type="text"
-                        id="searchInput"
-                        placeholder="Cari Nama atau NIK"
-                    >
-                </div>
-
-
-                {{-- FILTER JENIS PPKS --}}
+    <input
+        type="text"
+        name="search"
+        id="searchInput"
+        value="{{ request('search') }}"
+        placeholder="Cari Nama atau NIK"
+        autocomplete="off"
+    >
+</form>
+            {{-- FILTER JENIS PPKS --}}
                 <div class="select-wrapper">
 
                     <select
@@ -677,212 +689,225 @@
     ====================================================== --}}
     <script>
 
-        document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function () {
 
-            const searchInput =
-                document.getElementById('searchInput');
+        const filterPpks =
+            document.getElementById('filterPpks');
 
-            const filterPpks =
-                document.getElementById('filterPpks');
+        const filterStatus =
+            document.getElementById('filterStatus');
 
-            const filterStatus =
-                document.getElementById('filterStatus');
+        const rows =
+            document.querySelectorAll(
+                '#dataTable tr[data-nama]'
+            );
 
-            const rows =
-                document.querySelectorAll('#dataTable tr[data-nama]');
+        const startDate =
+            document.getElementById('startDate');
 
-            const startDate =
-                document.getElementById('startDate');
+        const endDate =
+            document.getElementById('endDate');
 
-            const endDate =
-                document.getElementById('endDate');
+        const resetDate =
+            document.getElementById('resetDate');
 
-            const resetDate =
-                document.getElementById('resetDate');
-
-            const applyDate =
-                document.getElementById('applyDate');
-
-
-            /* =================================================
-               FILTER DATA
-            ================================================== */
-
-            function filterData() {
-
-                const search =
-                    searchInput.value
-                        .toLowerCase()
-                        .trim();
-
-                const ppks =
-                    filterPpks.value
-                        .toLowerCase()
-                        .trim();
-
-                const status =
-                    filterStatus.value
-                        .toLowerCase()
-                        .trim();
-
-                const start =
-                    startDate.value;
-
-                const end =
-                    endDate.value;
+        const applyDate =
+            document.getElementById('applyDate');
 
 
-                rows.forEach(row => {
+        /* =================================================
+           FILTER DATA
+        ================================================== */
 
-                    const nama =
-                        row.dataset.nama || '';
+        function filterData() {
 
-                    const nik =
-                        row.dataset.nik || '';
+            const ppks =
+                filterPpks
+                    ? filterPpks.value.toLowerCase().trim()
+                    : '';
 
-                    const jenisPpks =
-                        row.dataset.ppks || '';
+            const status =
+                filterStatus
+                    ? filterStatus.value.toLowerCase().trim()
+                    : '';
 
-                    const hasil =
-                        row.dataset.hasil || '';
+            const start =
+                startDate
+                    ? startDate.value
+                    : '';
 
-                    const statusKesehatan =
-                        row.dataset.status || '';
-
-                    const tanggal =
-                        row.dataset.tanggal || '';
-
-
-                    const matchSearch =
-                        !search ||
-                        nama.includes(search) ||
-                        nik.includes(search);
-
-
-                    const matchPpks =
-                        !ppks ||
-                        jenisPpks.includes(ppks);
+            const end =
+                endDate
+                    ? endDate.value
+                    : '';
 
 
-                    let matchStatus = true;
+            rows.forEach(function (row) {
 
-                    if (status) {
+                const jenisPpks =
+                    row.dataset.ppks || '';
 
-                        if (status === 'belum asesmen') {
+                const hasil =
+                    row.dataset.hasil || '';
 
-                            matchStatus =
-                                statusKesehatan === 'belum';
+                const statusKesehatan =
+                    row.dataset.status || '';
 
-                        } else if (status === 'sedang diperiksa') {
-
-                            matchStatus =
-                                statusKesehatan === 'sedang_diperiksa';
-
-                        } else {
-
-                            matchStatus =
-                                hasil === status;
-                        }
-                    }
+                const tanggal =
+                    row.dataset.tanggal || '';
 
 
-                    let matchDate = true;
+                /* =================================================
+                   FILTER JENIS PPKS
+                ================================================== */
 
-                    if (start && tanggal) {
+                const matchPpks =
+                    !ppks ||
+                    jenisPpks.includes(ppks);
 
-                        matchDate =
-                            tanggal >= start;
+
+                /* =================================================
+                   FILTER STATUS
+                ================================================== */
+
+                let matchStatus = true;
+
+                if (status) {
+
+                    if (status === 'belum asesmen') {
+
+                        matchStatus =
+                            statusKesehatan === 'belum';
+
+                    } else if (status === 'sedang diperiksa') {
+
+                        matchStatus =
+                            statusKesehatan === 'sedang_diperiksa';
+
+                    } else if (status === 'tidak lulus') {
+
+                        matchStatus =
+                            statusKesehatan === 'tidak_lulus';
+
+                    } else {
+
+                        matchStatus =
+                            statusKesehatan === status;
 
                     }
 
-                    if (end && tanggal) {
-
-                        matchDate =
-                            matchDate &&
-                            tanggal <= end;
-
-                    }
+                }
 
 
-                    row.style.display =
-                        matchSearch &&
-                        matchPpks &&
-                        matchStatus &&
-                        matchDate
-                            ? ''
-                            : 'none';
+                /* =================================================
+                   FILTER TANGGAL
+                ================================================== */
 
-                });
-
-            }
+                let matchDate = true;
 
 
-            /* =================================================
-               EVENT FILTER
-            ================================================== */
+                if (start && tanggal) {
 
-            if (searchInput) {
+                    matchDate =
+                        tanggal >= start;
 
-                searchInput.addEventListener(
-                    'input',
-                    filterData
-                );
-
-            }
+                }
 
 
-            if (filterPpks) {
+                if (end && tanggal) {
 
-                filterPpks.addEventListener(
-                    'change',
-                    filterData
-                );
+                    matchDate =
+                        matchDate &&
+                        tanggal <= end;
 
-            }
-
-
-            if (filterStatus) {
-
-                filterStatus.addEventListener(
-                    'change',
-                    filterData
-                );
-
-            }
+                }
 
 
-            /* =================================================
-               DATE
-            ================================================== */
+                /* =================================================
+                   TAMPILKAN DATA
+                ================================================== */
 
-            if (applyDate) {
+                row.style.display =
+                    matchPpks &&
+                    matchStatus &&
+                    matchDate
+                        ? ''
+                        : 'none';
 
-                applyDate.addEventListener(
-                    'click',
-                    filterData
-                );
+            });
 
-            }
+        }
 
 
-            if (resetDate) {
+        /* =================================================
+           FILTER JENIS PPKS
+        ================================================== */
 
-                resetDate.addEventListener(
-                    'click',
-                    function () {
+        if (filterPpks) {
 
+            filterPpks.addEventListener(
+                'change',
+                filterData
+            );
+
+        }
+
+
+        /* =================================================
+           FILTER STATUS
+        ================================================== */
+
+        if (filterStatus) {
+
+            filterStatus.addEventListener(
+                'change',
+                filterData
+            );
+
+        }
+
+
+        /* =================================================
+           FILTER TANGGAL
+        ================================================== */
+
+        if (applyDate) {
+
+            applyDate.addEventListener(
+                'click',
+                filterData
+            );
+
+        }
+
+
+        /* =================================================
+           RESET TANGGAL
+        ================================================== */
+
+        if (resetDate) {
+
+            resetDate.addEventListener(
+                'click',
+                function () {
+
+                    if (startDate) {
                         startDate.value = '';
-                        endDate.value = '';
-
-                        filterData();
-
                     }
-                );
 
-            }
+                    if (endDate) {
+                        endDate.value = '';
+                    }
 
-        });
+                    filterData();
 
-    </script>
+                }
+            );
+
+        }
+
+    });
+
+</script>
 
 </x-app-layout>
