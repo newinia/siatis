@@ -99,40 +99,45 @@
 
                 {{-- SEARCH --}}
                 <form
-    method="GET"
-    action="{{ url()->current() }}"
-    class="search"
-    id="searchForm"
->
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-    >
-        <circle cx="11" cy="11" r="7" />
-        <path d="m20 20-3.5-3.5" />
-    </svg>
+                    method="GET"
+                    action="{{ url()->current() }}"
+                    class="search"
+                    id="searchForm"
+                >
 
-    <input
-        type="text"
-        name="search"
-        id="searchInput"
-        value="{{ request('search') }}"
-        placeholder="Cari Nama atau NIK"
-        autocomplete="off"
-    >
-</form>
-            {{-- FILTER JENIS PPKS --}}
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+                        <circle cx="11" cy="11" r="7" />
+                        <path d="m20 20-3.5-3.5" />
+                    </svg>
+
+                    <input
+                        type="text"
+                        name="search"
+                        id="searchInput"
+                        value="{{ request('search') }}"
+                        placeholder="Cari Nama atau NIK"
+                        autocomplete="off"
+                    >
+
+                </form>
+
+
+                {{-- FILTER JENIS PPKS --}}
                 <div class="select-wrapper">
 
                     <select
                         id="filterPpks"
                         class="filter-button"
                     >
+
                         <option value="">
                             Semua Jenis PPKS
                         </option>
@@ -160,6 +165,7 @@
                         <option value="kelompok rentan">
                             Kelompok Rentan
                         </option>
+
                     </select>
 
                     <span class="material-symbols-outlined select-arrow">
@@ -176,16 +182,13 @@
                         id="filterStatus"
                         class="filter-button"
                     >
+
                         <option value="">
                             Semua Status
                         </option>
 
                         <option value="belum asesmen">
                             Belum Asesmen
-                        </option>
-
-                        <option value="sedang diperiksa">
-                            Sedang Diperiksa
                         </option>
 
                         <option value="lulus">
@@ -199,6 +202,7 @@
                         <option value="tidak lulus">
                             Tidak Lulus
                         </option>
+
                     </select>
 
                     <span class="material-symbols-outlined select-arrow">
@@ -220,6 +224,7 @@
             <table class="table">
 
                 <thead>
+
                     <tr>
                         <th width="60">No</th>
                         <th>Nama</th>
@@ -230,7 +235,9 @@
                         <th>Hasil</th>
                         <th>Keterangan</th>
                     </tr>
+
                 </thead>
+
 
                 <tbody id="dataTable">
 
@@ -343,19 +350,42 @@
                             */
 
                             $tanggalProses =
-                                $prosesInstruktur?->tanggal_proses
+                                $prosesKesehatan?->tanggal_proses
+                                ?? $prosesKesehatan?->created_at
+                                ?? $prosesInstruktur?->tanggal_proses
                                 ?? $prosesInstruktur?->created_at
                                 ?? $item->updated_at;
 
 
                             /*
                             |--------------------------------------------------------------------------
-                            | STATUS KESEHATAN
+                            | STATUS DATABASE
+                            |
+                            | Database kesehatan awal hanya memiliki:
+                            | lulus
+                            | pending
+                            | tidak_lulus
+                            |
+                            | Jika belum ada record kesehatan awal,
+                            | status database = null.
                             |--------------------------------------------------------------------------
                             */
 
                             $statusKesehatan =
-                                $prosesKesehatan?->status ?? 'belum';
+                                $prosesKesehatan?->status;
+
+
+                            /*
+                            |--------------------------------------------------------------------------
+                            | STATUS TAMPILAN
+                            |
+                            | "belum" hanya status tampilan.
+                            | Tidak disimpan ke database.
+                            |--------------------------------------------------------------------------
+                            */
+
+                            $statusTampilan =
+                                $statusKesehatan ?? 'belum';
 
 
                             /*
@@ -364,19 +394,7 @@
                             |--------------------------------------------------------------------------
                             */
 
-                            switch ($statusKesehatan) {
-
-                                case 'sedang_diperiksa':
-
-                                    $hasil = 'Sedang Diperiksa';
-
-                                    $keterangan =
-                                        'Asesmen Kesehatan Awal Sedang Berlangsung';
-
-                                    $statusClass = 'pending';
-
-                                    break;
-
+                            switch ($statusTampilan) {
 
                                 case 'lulus':
 
@@ -415,9 +433,10 @@
 
 
                                 case 'belum':
+
                                 default:
 
-                                    $hasil = 'Belum Dimulai';
+                                    $hasil = 'Belum Asesmen';
 
                                     $keterangan =
                                         'Menunggu Asesmen Kesehatan Awal';
@@ -430,37 +449,26 @@
                         @endphp
 
 
-<<<<<<< HEAD
+                        {{-- =================================================
+                        ROW
+                        ================================================== --}}
                         <tr
                             data-nama="{{ strtolower($nama) }}"
                             data-nik="{{ $nik }}"
                             data-ppks="{{ strtolower($jenisPpks) }}"
                             data-tahapan="asesmen kesehatan awal"
                             data-hasil="{{ strtolower($hasil) }}"
-                            data-status="{{ $statusKesehatan }}"
+                            data-status="{{ $statusTampilan }}"
                             data-tanggal="{{ $tanggalProses ? \Carbon\Carbon::parse($tanggalProses)->format('Y-m-d') : '' }}"
                         >
-=======
-                            <a href="{{ route('ppks.normal.asesmen-kesehatan.awal', ['ppks' => $item->id]) }}"
-                                class="result-badge
-                                @if($status === 'passed')
-                                    result-passed
-                                @elseif($status === 'rejected')
-                                    result-rejected
-                                @elseif($status === 'pending')
-                                    result-pending
-                                @elseif($status === 'processing')
-                                    result-processing
-                                @else
-                                    result-not-done
-                                @endif">>
->>>>>>> origin/development
 
                             {{-- =================================================
                             NO
                             ================================================== --}}
                             <td class="row-number">
+
                                 {{ $ppks->firstItem() + $index }}
+
                             </td>
 
 
@@ -468,9 +476,11 @@
                             NAMA
                             ================================================== --}}
                             <td>
+
                                 <div class="participant-name">
                                     {{ $nama }}
                                 </div>
+
                             </td>
 
 
@@ -513,27 +523,23 @@
 
                                 <a
                                     href="{{ route('ppks.normal.asesmen-kesehatan.awal', $item->id) }}"
-                                    class="result-badge {{ $statusKesehatan === 'belum' ? 'result-health' : 'result-health' }}"
+                                    class="result-badge result-health"
                                 >
 
                                     {{-- RESULT ICON --}}
                                     <span class="material-symbols-outlined result-icon">
 
-                                        @if ($statusKesehatan === 'lulus')
+                                        @if ($statusTampilan === 'lulus')
 
                                             check_circle
 
-                                        @elseif ($statusKesehatan === 'tidak_lulus')
+                                        @elseif ($statusTampilan === 'tidak_lulus')
 
                                             cancel
 
-                                        @elseif ($statusKesehatan === 'pending')
+                                        @elseif ($statusTampilan === 'pending')
 
                                             pending
-
-                                        @elseif ($statusKesehatan === 'sedang_diperiksa')
-
-                                            progress_activity
 
                                         @else
 
@@ -554,21 +560,17 @@
 
                                         <span class="result-status {{ $statusClass }}">
 
-                                            @if ($statusKesehatan === 'lulus')
+                                            @if ($statusTampilan === 'lulus')
 
                                                 <span class="status-dot lulus"></span>
 
-                                            @elseif ($statusKesehatan === 'tidak_lulus')
+                                            @elseif ($statusTampilan === 'tidak_lulus')
 
                                                 <span class="status-dot tidak-lulus"></span>
 
-                                            @elseif ($statusKesehatan === 'pending')
+                                            @elseif ($statusTampilan === 'pending')
 
                                                 <span class="status-dot pending"></span>
-
-                                            @elseif ($statusKesehatan === 'sedang_diperiksa')
-
-                                                <span class="status-dot sedang-diperiksa"></span>
 
                                             @else
 
@@ -598,27 +600,21 @@
                             ================================================== --}}
                             <td>
 
-                                @if ($statusKesehatan === 'lulus')
+                                @if ($statusTampilan === 'lulus')
 
                                     <span class="keterangan-lolos">
                                         {{ $keterangan }}
                                     </span>
 
-                                @elseif ($statusKesehatan === 'tidak_lulus')
+                                @elseif ($statusTampilan === 'tidak_lulus')
 
                                     <span class="keterangan-tidak-lolos">
                                         {{ $keterangan }}
                                     </span>
 
-                                @elseif ($statusKesehatan === 'pending')
+                                @elseif ($statusTampilan === 'pending')
 
                                     <span class="keterangan-pending">
-                                        {{ $keterangan }}
-                                    </span>
-
-                                @elseif ($statusKesehatan === 'sedang_diperiksa')
-
-                                    <span class="keterangan-processing">
                                         {{ $keterangan }}
                                     </span>
 
@@ -633,6 +629,7 @@
                             </td>
 
                         </tr>
+
 
                     @empty
 
@@ -689,225 +686,217 @@
     ====================================================== --}}
     <script>
 
-    document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function () {
 
-        const filterPpks =
-            document.getElementById('filterPpks');
+            const filterPpks =
+                document.getElementById('filterPpks');
 
-        const filterStatus =
-            document.getElementById('filterStatus');
+            const filterStatus =
+                document.getElementById('filterStatus');
 
-        const rows =
-            document.querySelectorAll(
-                '#dataTable tr[data-nama]'
-            );
+            const rows =
+                document.querySelectorAll(
+                    '#dataTable tr[data-nama]'
+                );
 
-        const startDate =
-            document.getElementById('startDate');
+            const startDate =
+                document.getElementById('startDate');
 
-        const endDate =
-            document.getElementById('endDate');
+            const endDate =
+                document.getElementById('endDate');
 
-        const resetDate =
-            document.getElementById('resetDate');
+            const resetDate =
+                document.getElementById('resetDate');
 
-        const applyDate =
-            document.getElementById('applyDate');
-
-
-        /* =================================================
-           FILTER DATA
-        ================================================== */
-
-        function filterData() {
-
-            const ppks =
-                filterPpks
-                    ? filterPpks.value.toLowerCase().trim()
-                    : '';
-
-            const status =
-                filterStatus
-                    ? filterStatus.value.toLowerCase().trim()
-                    : '';
-
-            const start =
-                startDate
-                    ? startDate.value
-                    : '';
-
-            const end =
-                endDate
-                    ? endDate.value
-                    : '';
+            const applyDate =
+                document.getElementById('applyDate');
 
 
-            rows.forEach(function (row) {
+            /* =================================================
+               FILTER DATA
+            ================================================== */
 
-                const jenisPpks =
-                    row.dataset.ppks || '';
+            function filterData() {
 
-                const hasil =
-                    row.dataset.hasil || '';
+                const ppks =
+                    filterPpks
+                        ? filterPpks.value.toLowerCase().trim()
+                        : '';
 
-                const statusKesehatan =
-                    row.dataset.status || '';
+                const status =
+                    filterStatus
+                        ? filterStatus.value.toLowerCase().trim()
+                        : '';
 
-                const tanggal =
-                    row.dataset.tanggal || '';
+                const start =
+                    startDate
+                        ? startDate.value
+                        : '';
+
+                const end =
+                    endDate
+                        ? endDate.value
+                        : '';
 
 
-                /* =================================================
-                   FILTER JENIS PPKS
-                ================================================== */
+                rows.forEach(function (row) {
 
-                const matchPpks =
-                    !ppks ||
-                    jenisPpks.includes(ppks);
+                    const jenisPpks =
+                        row.dataset.ppks || '';
+
+                    const statusKesehatan =
+                        row.dataset.status || '';
+
+                    const tanggal =
+                        row.dataset.tanggal || '';
 
 
-                /* =================================================
-                   FILTER STATUS
-                ================================================== */
+                    /* =================================================
+                       FILTER JENIS PPKS
+                    ================================================== */
 
-                let matchStatus = true;
+                    const matchPpks =
+                        !ppks ||
+                        jenisPpks.includes(ppks);
 
-                if (status) {
 
-                    if (status === 'belum asesmen') {
+                    /* =================================================
+                       FILTER STATUS
+                    ================================================== */
 
-                        matchStatus =
-                            statusKesehatan === 'belum';
+                    let matchStatus = true;
 
-                    } else if (status === 'sedang diperiksa') {
+                    if (status) {
 
-                        matchStatus =
-                            statusKesehatan === 'sedang_diperiksa';
+                        if (status === 'belum asesmen') {
 
-                    } else if (status === 'tidak lulus') {
+                            matchStatus =
+                                statusKesehatan === 'belum';
 
-                        matchStatus =
-                            statusKesehatan === 'tidak_lulus';
+                        } else if (status === 'tidak lulus') {
 
-                    } else {
+                            matchStatus =
+                                statusKesehatan === 'tidak_lulus';
 
-                        matchStatus =
-                            statusKesehatan === status;
+                        } else {
+
+                            matchStatus =
+                                statusKesehatan === status;
+
+                        }
 
                     }
 
-                }
+
+                    /* =================================================
+                       FILTER TANGGAL
+                    ================================================== */
+
+                    let matchDate = true;
 
 
-                /* =================================================
-                   FILTER TANGGAL
-                ================================================== */
+                    if (start && tanggal) {
 
-                let matchDate = true;
+                        matchDate =
+                            tanggal >= start;
 
-
-                if (start && tanggal) {
-
-                    matchDate =
-                        tanggal >= start;
-
-                }
-
-
-                if (end && tanggal) {
-
-                    matchDate =
-                        matchDate &&
-                        tanggal <= end;
-
-                }
-
-
-                /* =================================================
-                   TAMPILKAN DATA
-                ================================================== */
-
-                row.style.display =
-                    matchPpks &&
-                    matchStatus &&
-                    matchDate
-                        ? ''
-                        : 'none';
-
-            });
-
-        }
-
-
-        /* =================================================
-           FILTER JENIS PPKS
-        ================================================== */
-
-        if (filterPpks) {
-
-            filterPpks.addEventListener(
-                'change',
-                filterData
-            );
-
-        }
-
-
-        /* =================================================
-           FILTER STATUS
-        ================================================== */
-
-        if (filterStatus) {
-
-            filterStatus.addEventListener(
-                'change',
-                filterData
-            );
-
-        }
-
-
-        /* =================================================
-           FILTER TANGGAL
-        ================================================== */
-
-        if (applyDate) {
-
-            applyDate.addEventListener(
-                'click',
-                filterData
-            );
-
-        }
-
-
-        /* =================================================
-           RESET TANGGAL
-        ================================================== */
-
-        if (resetDate) {
-
-            resetDate.addEventListener(
-                'click',
-                function () {
-
-                    if (startDate) {
-                        startDate.value = '';
                     }
 
-                    if (endDate) {
-                        endDate.value = '';
+
+                    if (end && tanggal) {
+
+                        matchDate =
+                            matchDate &&
+                            tanggal <= end;
+
                     }
 
-                    filterData();
 
-                }
-            );
+                    /* =================================================
+                       TAMPILKAN DATA
+                    ================================================== */
 
-        }
+                    row.style.display =
+                        matchPpks &&
+                        matchStatus &&
+                        matchDate
+                            ? ''
+                            : 'none';
 
-    });
+                });
 
-</script>
+            }
+
+
+            /* =================================================
+               FILTER JENIS PPKS
+            ================================================== */
+
+            if (filterPpks) {
+
+                filterPpks.addEventListener(
+                    'change',
+                    filterData
+                );
+
+            }
+
+
+            /* =================================================
+               FILTER STATUS
+            ================================================== */
+
+            if (filterStatus) {
+
+                filterStatus.addEventListener(
+                    'change',
+                    filterData
+                );
+
+            }
+
+
+            /* =================================================
+               FILTER TANGGAL
+            ================================================== */
+
+            if (applyDate) {
+
+                applyDate.addEventListener(
+                    'click',
+                    filterData
+                );
+
+            }
+
+
+            /* =================================================
+               RESET TANGGAL
+            ================================================== */
+
+            if (resetDate) {
+
+                resetDate.addEventListener(
+                    'click',
+                    function () {
+
+                        if (startDate) {
+                            startDate.value = '';
+                        }
+
+                        if (endDate) {
+                            endDate.value = '';
+                        }
+
+                        filterData();
+
+                    }
+                );
+
+            }
+
+        });
+
+    </script>
 
 </x-app-layout>

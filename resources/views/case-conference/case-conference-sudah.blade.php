@@ -25,11 +25,7 @@
             ================================================== --}}
             <div class="pdf-filter-wrapper">
 
-                <button
-                    type="button"
-                    class="pdf-button"
-                    id="pdfButton"
-                >
+                <button type="button" class="pdf-button" id="pdfButton">
 
                     <span class="material-symbols-outlined">
                         picture_as_pdf
@@ -43,10 +39,7 @@
                 {{-- =================================================
                 PDF FILTER POPUP
                 ================================================== --}}
-                <div
-                    class="pdf-filter"
-                    id="pdfFilter"
-                >
+                <div class="pdf-filter" id="pdfFilter">
 
                     <div class="pdf-filter-title">
                         Cetak Data Case Conference
@@ -108,19 +101,11 @@
                     {{-- ACTION --}}
                     <div class="pdf-filter-actions">
 
-                        <button
-                            type="button"
-                            class="pdf-reset"
-                            id="pdfReset"
-                        >
+                        <button type="button" class="pdf-reset" id="pdfReset">
                             Reset
                         </button>
 
-                        <button
-                            type="button"
-                            class="pdf-generate"
-                            id="pdfGenerate"
-                        >
+                        <button type="button" class="pdf-generate" id="pdfGenerate">
                             Buat PDF
                         </button>
 
@@ -144,42 +129,23 @@
                 {{-- =================================================
                 SEARCH
                 ================================================== --}}
-                <div
-                    class="search"
-                    id="searchWrapper"
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                    >
+                <div class="search" id="searchWrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
                         <circle cx="11" cy="11" r="7" />
                         <path d="m20 20-3.5-3.5" />
                     </svg>
 
-                    <input
-                        type="text"
-                        name="search"
-                        id="searchInput"
-                        value="{{ request('search') }}"
-                        placeholder="Cari Nama atau NIK"
-                        autocomplete="off"
-                    >
-                </form>
+                    <input type="text" name="search" id="searchInput" value="{{ request('search') }}"
+                        placeholder="Cari Nama atau NIK" autocomplete="off">
+                </div>
 
                 {{-- =================================================
                 FILTER JENIS PPKS
                 ================================================== --}}
                 <div class="select-wrapper">
 
-                    <select
-                        id="ppksFilter"
-                        class="filter-button"
-                    >
+                    <select id="ppksFilter" class="filter-button">
 
                         <option value="">
                             Semua Jenis PPKS
@@ -227,10 +193,7 @@
                 ================================================== --}}
                 <div class="select-wrapper">
 
-                    <select
-                        id="hasilFilter"
-                        class="filter-button"
-                    >
+                    <select id="hasilFilter" class="filter-button">
 
                         <option value="">
                             Semua Jenis PPKS
@@ -278,10 +241,7 @@
                 ================================================== --}}
                 <div class="select-wrapper">
 
-                    <select
-                        id="hasilFilter"
-                        class="filter-button"
-                    >
+                    <select id="hasilFilter" class="filter-button">
 
                         <option value="">
                             Semua Hasil
@@ -368,419 +328,409 @@
 
                     @forelse ($data as $index => $ppks)
 
-                        @php
+                                        @php
 
-                            /*
-                            |--------------------------------------------------------------------------
-                            | DATA PPKS
-                            |--------------------------------------------------------------------------
-                            */
+                                            /*
+                                            |--------------------------------------------------------------------------
+                                            | DATA PPKS
+                                            |--------------------------------------------------------------------------
+                                            */
 
-                            $item = is_array($ppks->data ?? null)
-                                ? $ppks->data
-                                : [];
+                                            $item = is_array($ppks->data ?? null)
+                                                ? $ppks->data
+                                                : [];
 
 
-                            /*
-                            |--------------------------------------------------------------------------
-                            | NAMA
-                            |--------------------------------------------------------------------------
-                            */
+                                            /*
+                                            |--------------------------------------------------------------------------
+                                            | NAMA
+                                            |--------------------------------------------------------------------------
+                                            */
 
-                            $nama =
-                                $item['nama_lengkap']
-                                ?? $item['nama']
-                                ?? $item['Nama']
-                                ?? $item['NAMA']
-                                ?? $item['nama peserta']
-                                ?? $item['Nama Peserta']
-                                ?? '-';
+                                            $nama =
+                                                $item['nama_lengkap']
+                                                ?? $item['nama']
+                                                ?? $item['Nama']
+                                                ?? $item['NAMA']
+                                                ?? $item['nama peserta']
+                                                ?? $item['Nama Peserta']
+                                                ?? '-';
 
 
-                            /*
-                            |--------------------------------------------------------------------------
-                            | NIK
-                            |--------------------------------------------------------------------------
-                            */
+                                            /*
+                                            |--------------------------------------------------------------------------
+                                            | NIK
+                                            |--------------------------------------------------------------------------
+                                            */
 
-                            $nik =
-                                $item['nik']
-                                ?? $item['NIK']
-                                ?? $item['Nik']
-                                ?? '-';
+                                            $nik =
+                                                $item['nik']
+                                                ?? $item['NIK']
+                                                ?? $item['Nik']
+                                                ?? '-';
 
 
-                            /*
-                            |--------------------------------------------------------------------------
-                            | ALAMAT
-                            |--------------------------------------------------------------------------
-                            */
+                                            /*
+                                            |--------------------------------------------------------------------------
+                                            | ALAMAT
+                                            |--------------------------------------------------------------------------
+                                            */
 
-                            $alamat =
-                                $item['alamat']
-                                ?? $item['Alamat']
-                                ?? $item['alamat_lengkap']
-                                ?? $item['Alamat Lengkap']
-                                ?? $item['alamat_domisili']
-                                ?? $item['Alamat Domisili']
-                                ?? '-';
+                                            $alamat =
+                                                $item['alamat']
+                                                ?? $item['Alamat']
+                                                ?? $item['alamat_lengkap']
+                                                ?? $item['Alamat Lengkap']
+                                                ?? $item['alamat_domisili']
+                                                ?? $item['Alamat Domisili']
+                                                ?? '-';
 
 
-                            /*
-                            |--------------------------------------------------------------------------
-                            | UMUR
-                            |--------------------------------------------------------------------------
-                            */
+                                            /*
+                                            |--------------------------------------------------------------------------
+                                            | UMUR
+                                            |--------------------------------------------------------------------------
+                                            */
 
-                            $umur = '-';
+                                            $umur = '-';
 
-                            if (!empty($item['tanggal_lahir'])) {
+                                            if (!empty($item['tanggal_lahir'])) {
 
-                                try {
-
-                                    $umur =
-                                        \Carbon\Carbon::parse(
-                                            $item['tanggal_lahir']
-                                        )->age . ' tahun';
+                                                try {
+
+                                                    $umur =
+                                                        \Carbon\Carbon::parse(
+                                                            $item['tanggal_lahir']
+                                                        )->age . ' tahun';
 
-                                } catch (\Exception $e) {
+                                                } catch (\Exception $e) {
 
-                                    $umur =
-                                        !empty($item['usia'])
-                                            ? $item['usia'] . ' tahun'
-                                            : '-';
-
-                                }
-
-                            } elseif (!empty($item['usia'])) {
-
-                                $umur =
-                                    $item['usia'] . ' tahun';
-
-                            } elseif (!empty($item['umur'])) {
-
-                                $umur =
-                                    $item['umur'];
-
-                            }
-
-
-                            /*
-                            |--------------------------------------------------------------------------
-                            | JENIS PPKS
-                            |--------------------------------------------------------------------------
-                            */
-
-                            $jenisPpks =
-                                $item['jenis_ppks']
-                                ?? $item['Jenis PPKS']
-                                ?? $item['jenis ppks']
-                                ?? $item['jenis']
-                                ?? $item['Jenis']
-                                ?? '-';
-
-
-                            /*
-                            |--------------------------------------------------------------------------
-                            | JURUSAN
-                            |--------------------------------------------------------------------------
-                            */
-
-                            $jurusan =
-                                $item['jurusan_diterima']
-                                ?? $item['jurusan']
-                                ?? $item['Jurusan']
-                                ?? $item['JURUSAN']
-                                ?? $item['jurusan_yang_diminati']
-                                ?? '-';
-
-
-                            /*
-                            |--------------------------------------------------------------------------
-                            | CASE CONFERENCE TERBARU
-                            |--------------------------------------------------------------------------
-                            */
-
-                            $caseConference = $ppks->prosesPesertas
-                                ->where('tahap', 'case_conference')
-                                ->sortByDesc(function ($proses) {
-
-                                    return $proses->tanggal_proses
-                                        ?? $proses->created_at;
-
-                                })
-                                ->first();
-
-
-                            /*
-                            |--------------------------------------------------------------------------
-                            | STATUS CASE CONFERENCE
-                            |--------------------------------------------------------------------------
-                            */
-
-                            $status =
-                                $caseConference->status
-                                ?? 'pending';
-
-
-                            /*
-                            |--------------------------------------------------------------------------
-                            | NORMALISASI STATUS
-                            |--------------------------------------------------------------------------
-                            */
-
-                            $statusLower =
-                                strtolower(
-                                    trim(
-                                        str_replace(
-                                            ['-', ' '],
-                                            '_',
-                                            (string) $status
-                                        )
-                                    )
-                                );
-
-
-                            /*
-                            |--------------------------------------------------------------------------
-                            | HASIL CASE CONFERENCE
-                            |--------------------------------------------------------------------------
-                            */
+                                                    $umur =
+                                                        !empty($item['usia'])
+                                                        ? $item['usia'] . ' tahun'
+                                                        : '-';
+
+                                                }
+
+                                            } elseif (!empty($item['usia'])) {
+
+                                                $umur =
+                                                    $item['usia'] . ' tahun';
+
+                                            } elseif (!empty($item['umur'])) {
+
+                                                $umur =
+                                                    $item['umur'];
+
+                                            }
+
+
+                                            /*
+                                            |--------------------------------------------------------------------------
+                                            | JENIS PPKS
+                                            |--------------------------------------------------------------------------
+                                            */
+
+                                            $jenisPpks =
+                                                $item['jenis_ppks']
+                                                ?? $item['Jenis PPKS']
+                                                ?? $item['jenis ppks']
+                                                ?? $item['jenis']
+                                                ?? $item['Jenis']
+                                                ?? '-';
+
+
+                                            /*
+                                            |--------------------------------------------------------------------------
+                                            | JURUSAN
+                                            |--------------------------------------------------------------------------
+                                            */
+
+                                            $jurusan =
+                                                $item['jurusan_diterima']
+                                                ?? $item['jurusan']
+                                                ?? $item['Jurusan']
+                                                ?? $item['JURUSAN']
+                                                ?? $item['jurusan_yang_diminati']
+                                                ?? '-';
+
+
+                                            /*
+                                            |--------------------------------------------------------------------------
+                                            | CASE CONFERENCE TERBARU
+                                            |--------------------------------------------------------------------------
+                                            */
+
+                                            $caseConference = $ppks->prosesPesertas
+                                                ->where('tahap', 'case_conference')
+                                                ->sortByDesc(function ($proses) {
+
+                                                    return $proses->tanggal_proses
+                                                        ?? $proses->created_at;
+
+                                                })
+                                                ->first();
+
+
+                                            /*
+                                            |--------------------------------------------------------------------------
+                                            | STATUS CASE CONFERENCE
+                                            |--------------------------------------------------------------------------
+                                            */
+
+                                            $status =
+                                                $caseConference->status
+                                                ?? 'pending';
+
+
+                                            /*
+                                            |--------------------------------------------------------------------------
+                                            | NORMALISASI STATUS
+                                            |--------------------------------------------------------------------------
+                                            */
+
+                                            $statusLower =
+                                                strtolower(
+                                                    trim(
+                                                        str_replace(
+                                                            ['-', ' '],
+                                                            '_',
+                                                            (string) $status
+                                                        )
+                                                    )
+                                                );
 
-                            if (
-                                in_array(
-                                    $statusLower,
-                                    [
-                                        'diterima',
-                                        'lulus',
-                                        'accepted'
-                                    ],
-                                    true
-                                )
-                            ) {
 
-                                $hasilText =
-                                    'Diterima';
+                                            /*
+                                            |--------------------------------------------------------------------------
+                                            | HASIL CASE CONFERENCE
+                                            |--------------------------------------------------------------------------
+                                            */
 
-                                $statusClass =
-                                    'diterima';
+                                            if (
+                                                in_array(
+                                                    $statusLower,
+                                                    [
+                                                        'diterima',
+                                                        'lulus',
+                                                        'accepted'
+                                                    ],
+                                                    true
+                                                )
+                                            ) {
 
-                                $icon =
-                                    'task_alt';
+                                                $hasilText =
+                                                    'Diterima';
 
-                                $keteranganClass =
-                                    'keterangan-lolos';
+                                                $statusClass =
+                                                    'diterima';
 
-                            } elseif (
-                                in_array(
-                                    $statusLower,
-                                    [
-                                        'tidak_diterima',
-                                        'tidak_lulus',
-                                        'ditolak',
-                                        'rejected'
-                                    ],
-                                    true
-                                )
-                            ) {
+                                                $icon =
+                                                    'task_alt';
 
-                                $hasilText =
-                                    'Tidak Diterima';
+                                                $keteranganClass =
+                                                    'keterangan-lolos';
 
-                                $statusClass =
-                                    'tidak-diterima';
+                                            } elseif (
+                                                in_array(
+                                                    $statusLower,
+                                                    [
+                                                        'tidak_diterima',
+                                                        'tidak_lulus',
+                                                        'ditolak',
+                                                        'rejected'
+                                                    ],
+                                                    true
+                                                )
+                                            ) {
 
-                                $icon =
-                                    'cancel';
+                                                $hasilText =
+                                                    'Tidak Diterima';
 
-                                $keteranganClass =
-                                    'keterangan-tidak-lolos';
+                                                $statusClass =
+                                                    'tidak-diterima';
 
-                            } else {
+                                                $icon =
+                                                    'cancel';
 
-                                $hasilText =
-                                    'Pending';
+                                                $keteranganClass =
+                                                    'keterangan-tidak-lolos';
 
-                                $statusClass =
-                                    'pending';
+                                            } else {
 
-                                $icon =
-                                    'pending';
+                                                $hasilText =
+                                                    'Pending';
 
-                                $keteranganClass =
-                                    'keterangan-pending';
+                                                $statusClass =
+                                                    'pending';
 
-                            }
+                                                $icon =
+                                                    'pending';
 
+                                                $keteranganClass =
+                                                    'keterangan-pending';
 
-                            /*
-                            |--------------------------------------------------------------------------
-                            | KETERANGAN
-                            |--------------------------------------------------------------------------
-                            */
+                                            }
 
-                            $keterangan =
-                                $caseConference?->catatan
-                                ?? '-';
 
-                        @endphp
+                                            /*
+                                            |--------------------------------------------------------------------------
+                                            | KETERANGAN
+                                            |--------------------------------------------------------------------------
+                                            */
 
+                                            $keterangan =
+                                                $caseConference?->catatan
+                                                ?? '-';
 
-                        <tr
-                            class="case-row"
-                            data-nama="{{ strtolower((string) $nama) }}"
-                            data-nik="{{ strtolower((string) $nik) }}"
-                            data-ppks="{{ strtolower((string) $jenisPpks) }}"
-                            data-hasil="{{ strtolower((string) $hasilText) }}"
-                        >
+                                        @endphp
 
 
-                            {{-- =================================================
-                            NO
-                            ================================================== --}}
-                            <td class="row-number">
+                                        <tr class="case-row" data-nama="{{ strtolower((string) $nama) }}"
+                                            data-nik="{{ strtolower((string) $nik) }}" data-ppks="{{ strtolower((string) $jenisPpks) }}"
+                                            data-hasil="{{ strtolower((string) $hasilText) }}">
 
-                                {{ $data->firstItem() + $index }}
 
-                            </td>
+                                            {{-- =================================================
+                                            NO
+                                            ================================================== --}}
+                                            <td class="row-number">
 
+                                                {{ $data->firstItem() + $index }}
 
-                            {{-- =================================================
-                            NAMA
-                            ================================================== --}}
-                            <td>
+                                            </td>
 
-                                <div class="participant-name">
 
-                                    {{ $nama }}
+                                            {{-- =================================================
+                                            NAMA
+                                            ================================================== --}}
+                                            <td>
 
-                                </div>
+                                                <div class="participant-name">
 
-                            </td>
+                                                    {{ $nama }}
 
+                                                </div>
 
-                            {{-- =================================================
-                            NIK
-                            ================================================== --}}
-                            <td>
+                                            </td>
 
-                                {{ $nik }}
 
-                            </td>
+                                            {{-- =================================================
+                                            NIK
+                                            ================================================== --}}
+                                            <td>
 
+                                                {{ $nik }}
 
-                            {{-- =================================================
-                            ALAMAT
-                            ================================================== --}}
-                            <td class="address-cell">
+                                            </td>
 
-                                {{ $alamat }}
 
-                            </td>
+                                            {{-- =================================================
+                                            ALAMAT
+                                            ================================================== --}}
+                                            <td class="address-cell">
 
+                                                {{ $alamat }}
 
-                            {{-- =================================================
-                            UMUR
-                            ================================================== --}}
-                            <td>
+                                            </td>
 
-                                {{ $umur }}
 
-                            </td>
+                                            {{-- =================================================
+                                            UMUR
+                                            ================================================== --}}
+                                            <td>
 
+                                                {{ $umur }}
 
-                            {{-- =================================================
-                            JENIS PPKS
-                            ================================================== --}}
-                            <td class="ppks-cell">
+                                            </td>
 
-                                {{ $jenisPpks }}
 
-                            </td>
+                                            {{-- =================================================
+                                            JENIS PPKS
+                                            ================================================== --}}
+                                            <td class="ppks-cell">
 
+                                                {{ $jenisPpks }}
 
-                            {{-- =================================================
-                            JURUSAN
-                            ================================================== --}}
-                            <td class="jurusan-cell">
+                                            </td>
 
-                                {{ $jurusan }}
 
-                            </td>
+                                            {{-- =================================================
+                                            JURUSAN
+                                            ================================================== --}}
+                                            <td class="jurusan-cell">
 
+                                                {{ $jurusan }}
 
-                            {{-- =================================================
-                            HASIL
-                            ================================================== --}}
-                            <td>
+                                            </td>
 
-                                <a
-                                    href="{{ route(
-                                        'ppks.normal.case-conference.detail',
-                                        $ppks->id
-                                    ) }}"
-                                    class="result-badge result-case-conference"
-                                >
 
-                                    {{-- RESULT ICON --}}
-                                    <span class="material-symbols-outlined result-icon">
-                                        groups
-                                    </span>
+                                            {{-- =================================================
+                                            HASIL
+                                            ================================================== --}}
+                                            <td>
 
+                                                <a href="{{ route(
+                            'ppks.normal.case-conference.detail',
+                            $ppks->id
+                        ) }}" class="result-badge result-case-conference">
 
-                                    {{-- RESULT CONTENT --}}
-                                    <div class="result-content">
+                                                    {{-- RESULT ICON --}}
+                                                    <span class="material-symbols-outlined result-icon">
+                                                        groups
+                                                    </span>
 
-                                        <span class="result-title">
-                                            Case Conference
-                                        </span>
 
+                                                    {{-- RESULT CONTENT --}}
+                                                    <div class="result-content">
 
-                                        <span class="result-status {{ $statusClass }}">
+                                                        <span class="result-title">
+                                                            Case Conference
+                                                        </span>
 
-                                            <span class="status-dot {{ $statusClass }}"></span>
 
-                                            {{ $hasilText }}
+                                                        <span class="result-status {{ $statusClass }}">
 
-                                        </span>
+                                                            <span class="status-dot {{ $statusClass }}"></span>
 
-                                    </div>
+                                                            {{ $hasilText }}
 
+                                                        </span>
 
-                                    {{-- RESULT ARROW --}}
-                                    <span class="material-symbols-outlined result-arrow">
-                                        chevron_right
-                                    </span>
+                                                    </div>
 
-                                </a>
 
-                            </td>
+                                                    {{-- RESULT ARROW --}}
+                                                    <span class="material-symbols-outlined result-arrow">
+                                                        chevron_right
+                                                    </span>
 
+                                                </a>
 
-                            {{-- =================================================
-                            KETERANGAN
-                            ================================================== --}}
-                            <td class="keterangan-cell">
+                                            </td>
 
-                                <span class="{{ $keteranganClass }}">
 
-                                    {{ $keterangan }}
+                                            {{-- =================================================
+                                            KETERANGAN
+                                            ================================================== --}}
+                                            <td class="keterangan-cell">
 
-                                </span>
+                                                <span class="{{ $keteranganClass }}">
 
-                            </td>
+                                                    {{ $keterangan }}
 
-                        </tr>
+                                                </span>
+
+                                            </td>
+
+                                        </tr>
 
 
                     @empty
 
                         <tr id="emptyRow">
 
-                            <td
-                                colspan="9"
-                                class="empty-state"
-                            >
+                            <td colspan="9" class="empty-state">
 
                                 <span class="material-symbols-outlined">
                                     event_busy
@@ -804,15 +754,9 @@
 
                     @if ($data->count())
 
-                        <tr
-                            id="filterEmptyRow"
-                            style="display: none;"
-                        >
+                        <tr id="filterEmptyRow" style="display: none;">
 
-                            <td
-                                colspan="9"
-                                class="empty-state"
-                            >
+                            <td colspan="9" class="empty-state">
 
                                 <span class="material-symbols-outlined">
                                     search_off

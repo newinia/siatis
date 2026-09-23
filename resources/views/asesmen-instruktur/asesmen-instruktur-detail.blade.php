@@ -123,9 +123,9 @@
         */
 
         $instrukturProgressStatus = match ($hasilAsesmenInstruktur) {
-            'direkomendasikan' => 'completed',
-            'perlu_ditinjau' => 'pending',
-            'tidak_direkomendasikan' => 'failed',
+            'lulus' => 'completed',
+            'pending' => 'pending',
+            'tidak_lulus' => 'failed',
             default => 'current',
         };
     @endphp
@@ -628,22 +628,22 @@
                             </option>
 
                             <option
-                                value="direkomendasikan"
-                                {{ $hasilAsesmenInstruktur == 'direkomendasikan' ? 'selected' : '' }}
+                                value="lulus"
+                                {{ $hasilAsesmenInstruktur == 'lulus' ? 'selected' : '' }}
                             >
                                 Lulus
                             </option>
 
                             <option
-                                value="perlu_ditinjau"
-                                {{ $hasilAsesmenInstruktur == 'perlu_ditinjau' ? 'selected' : '' }}
+                                value="pending"
+                                {{ $hasilAsesmenInstruktur == 'pending' ? 'selected' : '' }}
                             >
                                 Pending
                             </option>
 
                             <option
-                                value="tidak_direkomendasikan"
-                                {{ $hasilAsesmenInstruktur == 'tidak_direkomendasikan' ? 'selected' : '' }}
+                                value="tidak_lulus"
+                                {{ $hasilAsesmenInstruktur == 'tidak_lulus' ? 'selected' : '' }}
                             >
                                 Tidak Lulus
                             </option>

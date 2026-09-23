@@ -678,20 +678,7 @@
                                                 editRole = @js($user->role);
                                                 editOpen = true;
                                             "
-                                            style="
-                                                height: 28px;
-                                                padding: 0 10px;
-                                                display: inline-flex;
-                                                align-items: center;
-                                                gap: 4px;
-                                                border: none;
-                                                border-radius: 8px;
-                                                background: var(--blue-light);
-                                                color: var(--blue);
-                                                font-family: inherit;
-                                                font-size: 8px;
-                                                font-weight: 500;
-                                                cursor: pointer;
+                                            class="action-btn action-btn-edit"
                                             "
                                         >
 
@@ -720,21 +707,7 @@
 
                                             <button
                                                 type="submit"
-                                                style="
-                                                    height: 28px;
-                                                    padding: 0 10px;
-                                                    display: inline-flex;
-                                                    align-items: center;
-                                                    gap: 4px;
-                                                    border: none;
-                                                    border-radius: 8px;
-                                                    background: var(--red-light);
-                                                    color: var(--red);
-                                                    font-family: inherit;
-                                                    font-size: 8px;
-                                                    font-weight: 500;
-                                                    cursor: pointer;
-                                                "
+                                                class="action-btn action-btn-delete"
                                             >
 
                                                 <span
