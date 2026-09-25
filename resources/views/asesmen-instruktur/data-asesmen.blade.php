@@ -278,7 +278,7 @@
                         <th>NIK</th>
                         <th>Umur</th>
                         <th>Jenis PPKS</th>
-                        <th>Jurusan</th>
+                        <th>Jurusan Peminatan</th>
                         <th>Hasil</th>
 
                     </tr>

@@ -1492,11 +1492,16 @@ a {
 }
 
 .table {
-    width: max-content;
-    min-width: 100%;
+    width: 100%;
+    min-width: 900px;
     border-collapse: collapse;
     font-size: 12px;
+    table-layout: auto;
 }
+
+/* =========================
+   HEADER
+========================= */
 
 .table thead {
     background: var(--blue);
@@ -1505,7 +1510,7 @@ a {
 
 .table th {
     height: 45px;
-    padding: 0 18px;
+    padding: 0 12px;
     text-align: left;
     color: var(--white);
     font-size: 10px;
@@ -1513,10 +1518,50 @@ a {
     white-space: nowrap;
 }
 
-.table th:first-child {
-    width: 35px;
+/* =========================
+   LEBAR KOLOM
+========================= */
+
+.table th:nth-child(1),
+.table td:nth-child(1) {
+    width: 5%;
     text-align: center;
 }
+
+.table th:nth-child(2),
+.table td:nth-child(2) {
+    width: 20%;
+}
+
+.table th:nth-child(3),
+.table td:nth-child(3) {
+    width: 15%;
+}
+
+.table th:nth-child(4),
+.table td:nth-child(4) {
+    width: 8%;
+    text-align: center;
+}
+
+.table th:nth-child(5),
+.table td:nth-child(5) {
+    width: 22%;
+}
+
+.table th:nth-child(6),
+.table td:nth-child(6) {
+    width: 15%;
+}
+
+.table th:nth-child(7),
+.table td:nth-child(7) {
+    width: 15%;
+}
+
+/* =========================
+   BODY
+========================= */
 
 .table tbody tr {
     border-bottom: 1px solid var(--border);
@@ -1533,7 +1578,7 @@ a {
 
 .table td {
     height: 48px;
-    padding: 0 18px;
+    padding: 0 12px;
     color: var(--text-secondary);
     font-size: 9px;
     white-space: nowrap;
@@ -1542,6 +1587,7 @@ a {
 .table td:first-child {
     text-align: center;
 }
+
 
 .result-badge {
     width: 100%;
@@ -3470,7 +3516,7 @@ a {
     position: absolute;
     right: 0;
     top: calc(100% + 8px);
-    width: 270px;
+    width: 300px;
     padding: 17px;
     background: #fff;
     border: 1px solid #dfe4e1;
@@ -3517,6 +3563,132 @@ a {
 
 .pdf-filter-group select:focus {
     border-color: #286c3a;
+}
+/* =========================================================
+   PILIH PESERTA
+========================================================= */
+
+.pdf-peserta-group {
+    margin-top: 4px;
+}
+
+.pdf-peserta-search {
+    margin-top: 7px;
+}
+
+.pdf-peserta-search input {
+    width: 100%;
+    height: 36px;
+    padding: 0 10px;
+    border: 1px solid #d9dedb;
+    border-radius: 7px;
+    background: #fff;
+    color: #303932;
+    font-size: 12px;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.pdf-peserta-search input::placeholder {
+    color: #9aa19d;
+}
+
+.pdf-peserta-search input:focus {
+    border-color: #286c3a;
+}
+
+.pdf-peserta-actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 7px;
+}
+
+.pdf-peserta-actions button {
+    flex: 1;
+    height: 30px;
+    padding: 0 8px;
+    border: 1px solid #d9dedb;
+    border-radius: 6px;
+    background: #f5f7f5;
+    color: #4e5751;
+    font-size: 11px;
+    cursor: pointer;
+    transition: .15s ease;
+}
+
+.pdf-peserta-actions button:hover {
+    background: #e9ece9;
+}
+
+.pdf-peserta-list {
+    max-height: 170px;
+    margin-top: 8px;
+    overflow-y: auto;
+    border: 1px solid #dfe4e1;
+    border-radius: 7px;
+    background: #fff;
+}
+
+.pdf-peserta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 9px;
+    border-bottom: 1px solid #f0f2f0;
+    cursor: pointer;
+    transition: .15s ease;
+}
+
+.pdf-peserta-item:last-child {
+    border-bottom: none;
+}
+
+.pdf-peserta-item:hover {
+    background: #f7f9f7;
+}
+
+.pdf-peserta-checkbox {
+    width: 15px;
+    height: 15px;
+    margin: 0;
+    flex-shrink: 0;
+    accent-color: #286c3a;
+    cursor: pointer;
+}
+
+.pdf-peserta-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.pdf-peserta-nama {
+    overflow: hidden;
+    color: #303932;
+    font-size: 12px;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.pdf-peserta-nik {
+    color: #8a928d;
+    font-size: 10px;
+}
+
+.pdf-peserta-count {
+    margin-top: 6px;
+    color: #69736d;
+    font-size: 10px;
+    text-align: right;
+}
+
+.pdf-peserta-empty {
+    padding: 15px 10px;
+    color: #8a928d;
+    font-size: 11px;
+    text-align: center;
 }
 
 .pdf-filter-actions {

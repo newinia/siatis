@@ -278,7 +278,7 @@
                         <th>NIK</th>
                         <th>Umur</th>
                         <th>Jenis PPKS</th>
-                        <th>Jurusan</th>
+                        <th>Jurusan Peminatan</th>
                         <th>Hasil</th>
                         <th>Keterangan</th>
 
@@ -332,7 +332,6 @@
                                 ?? $item->nik
                                 ?? '-';
 
-
                             /*
                             |----------------------------------------------------------
                             | UMUR
@@ -340,7 +339,8 @@
                             */
 
                             $umur =
-                                $data['umur']
+                                $data['usia']
+                                ?? $data['umur']
                                 ?? '-';
 
 

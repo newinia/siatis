@@ -25,8 +25,7 @@
             </div>
 
             <div class="stat-meta">
-                <span>Seluruh peserta mendaftar</span>
-                <strong>100%</strong>
+                <span>Seluruh peserta terdaftar</span>
             </div>
         </div>
 

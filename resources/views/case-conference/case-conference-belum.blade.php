@@ -253,7 +253,7 @@
                         </th>
 
                         <th>
-                            Jurusan
+                            Jurusan Peminatan
                         </th>
 
                         <th>
@@ -314,7 +314,6 @@
                                 ?? $item['Nik']
                                 ?? '-';
 
-
                             /*
                             |--------------------------------------------------------------------------
                             | UMUR
@@ -322,9 +321,8 @@
                             */
 
                             $umur =
-                                $item['umur']
-                                ?? $item['Umur']
-                                ?? $item['UMUR']
+                                $item['usia']
+                                ?? $item['umur']
                                 ?? '-';
 
 
@@ -350,9 +348,11 @@
                             */
 
                             $jurusan =
-                                $item['jurusan']
+                                $item['jurusan_yang_diminati']
+                                ?? $item['jurusan']
                                 ?? $item['Jurusan']
                                 ?? $item['JURUSAN']
+                                ?? $item['jurusan_pelatihan']
                                 ?? '-';
 
 

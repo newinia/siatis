@@ -27,7 +27,10 @@ class PpksImportController extends Controller
     public function index(): View
     {
         return view('ppks.import', [
-            'totalImported' => Ppks::where('status', 'normal')->count(),
+            'totalImported' => Ppks::where(
+                'status',
+                'normal'
+            )->count(),
 
             'totalPerluDiperiksa' => Ppks::where(
                 'status',
@@ -49,7 +52,6 @@ class PpksImportController extends Controller
     public function process(
         GoogleSheetService $googleSheetService
     ): RedirectResponse {
-
         $result = $this->import($googleSheetService);
 
         $data = $result->getData(true);
@@ -75,6 +77,26 @@ class PpksImportController extends Controller
     |--------------------------------------------------------------------------
     | IMPORT GOOGLE SHEET
     |--------------------------------------------------------------------------
+    |
+    | ATURAN:
+    |
+    | 1. NIK sama + NAMA sama
+    |    -> dianggap data yang sama
+    |    -> jika muncul beberapa kali di Sheet,
+    |       ambil BARIS TERAKHIR
+    |
+    | 2. NIK sama + NAMA sama dan sudah ada di DB
+    |    -> jangan insert
+    |
+    | 3. NIK sama + NAMA berbeda
+    |    -> perlu_diperiksa
+    |
+    | 4. NIK berbeda + identitas sama
+    |    -> perlu_diperiksa
+    |
+    | 5. NIK berbeda + identitas berbeda
+    |    -> normal
+    |
     */
 
     public function import(
@@ -89,12 +111,11 @@ class PpksImportController extends Controller
         try {
 
             /*
-             * HANYA ambil sheet_row milik data Google Sheet.
-             *
-             * Data manual mempunyai:
-             * sheet_row = null
-             * imported_at = null
-             */
+            |--------------------------------------------------------------------------
+            | AMBIL ROW TERAKHIR YANG SUDAH DIPROSES
+            |--------------------------------------------------------------------------
+            */
+
             $lastImportedRow = Ppks::whereNotNull('sheet_row')
                 ->whereNotNull('imported_at')
                 ->where(function ($query) {
@@ -112,30 +133,50 @@ class PpksImportController extends Controller
                 : 2;
 
             /*
-             * Ambil data dari Google Sheet
-             */
+            |--------------------------------------------------------------------------
+            | AMBIL DATA GOOGLE SHEET
+            |--------------------------------------------------------------------------
+            */
+
             $rows = $googleSheetService->getRows(
                 $this->spreadsheetId,
                 $this->sheetName,
                 $startRow
             );
 
+            /*
+            |--------------------------------------------------------------------------
+            | TIDAK ADA DATA BARU
+            |--------------------------------------------------------------------------
+            */
+
             if (empty($rows)) {
+                $message =
+                    'Tidak ada data baru dari Google Sheet.';
 
                 $importLog->update([
                     'status' => 'berhasil',
-                    'message' => 'Tidak ada data baru dari Google Sheet.',
+                    'message' => $message,
+                    'finished_at' => now(),
                 ]);
 
                 return response()->json([
                     'success' => true,
-                    'message' => 'Tidak ada data baru dari Google Sheet.',
+                    'message' => $message,
+                    'inserted' => 0,
+                    'updated' => 0,
+                    'perlu_diperiksa' => 0,
+                    'sudah_ada' => 0,
+                    'duplikat_sheet' => 0,
                 ]);
             }
 
             /*
-             * Pastikan semua row mempunyai 35 kolom
-             */
+            |--------------------------------------------------------------------------
+            | PASTIKAN 35 KOLOM
+            |--------------------------------------------------------------------------
+            */
+
             foreach ($rows as &$row) {
                 $row = array_pad($row, 35, '');
             }
@@ -143,163 +184,230 @@ class PpksImportController extends Controller
             unset($row);
 
             /*
-             |--------------------------------------------------------------------------
-             | Ambil response terbaru berdasarkan NIK
-             |--------------------------------------------------------------------------
-             */
-
-            $latestByNik = [];
-
-            foreach ($rows as $index => $row) {
-
-                $nik = $this->normalizeNik(
-                    $row[2] ?? ''
-                );
-
-                /*
-                 * Kalau NIK kosong, tetap diproses sebagai data baru.
-                 */
-                if ($nik === '') {
-                    $latestByNik['row_' . $index] = [
-                        'row' => $row,
-                        'index' => $index,
-                    ];
-
-                    continue;
-                }
-
-                $latestByNik[$nik] = [
-                    'row' => $row,
-                    'index' => $index,
-                ];
-            }
-
-            /*
-             |--------------------------------------------------------------------------
-             | Cache data PPKS yang sudah ada
-             |--------------------------------------------------------------------------
-             */
+            |--------------------------------------------------------------------------
+            | AMBIL DATA YANG SUDAH ADA DI DATABASE
+            |--------------------------------------------------------------------------
+            */
 
             $existingPpks = Ppks::orderByDesc('sheet_row')
                 ->get();
 
-            $existingByNik = [];
+            /*
+            |--------------------------------------------------------------------------
+            | COLLECTION PEMBANDING
+            |--------------------------------------------------------------------------
+            |
+            | Ini digunakan untuk membandingkan data berikutnya.
+            |
+            | Data baru yang sudah berhasil dibuat juga dimasukkan
+            | supaya konflik antar-data dalam satu proses import
+            | tetap bisa terdeteksi.
+            |
+            */
 
-            foreach ($existingPpks as $ppks) {
-
-                $nik = $this->getNikFromData(
-                    $ppks->data ?? []
-                );
-
-                if ($nik !== '') {
-                    $existingByNik[$nik] = $ppks;
-                }
-            }
+            $comparisonPpks = $existingPpks->values();
 
             /*
-             |--------------------------------------------------------------------------
-             | PROSES SETIAP DATA
-             |--------------------------------------------------------------------------
-             */
+            |--------------------------------------------------------------------------
+            | COUNTER
+            |--------------------------------------------------------------------------
+            */
 
             $inserted = 0;
-            $updated = 0;
             $perluDiperiksa = 0;
+            $sudahAda = 0;
+            $duplikatSheet = 0;
 
-            foreach ($latestByNik as $item) {
+            /*
+            |--------------------------------------------------------------------------
+            | TAHAP 1
+            |--------------------------------------------------------------------------
+            | CARI DATA TERAKHIR DI DALAM GOOGLE SHEET
+            |--------------------------------------------------------------------------
+            |
+            | KUNCI DUPLIKAT:
+            |
+            | NIK + NAMA
+            |
+            | Jadi kalau:
+            |
+            | Row 10 -> NIK 123, Budi
+            | Row 20 -> NIK 123, Budi
+            | Row 30 -> NIK 123, Budi
+            |
+            | yang dipakai hanya Row 30.
+            |
+            */
 
-                $row = $item['row'];
-                $index = $item['index'];
+            $latestRows = [];
 
-                /*
-                 * Row Google Sheet sebenarnya:
-                 *
-                 * startRow + index
-                 */
+            foreach ($rows as $index => $row) {
+
                 $sheetRow = $startRow + $index;
 
-                /*
-                 * Ubah array numerik Google Sheet
-                 * menjadi array associative.
-                 */
                 $data = $this->mapSheetRowToData($row);
 
                 $nik = $this->normalizeNik(
                     $data['nik'] ?? ''
                 );
 
-                /*
-                 * Cari berdasarkan NIK
-                 */
-                $existing = null;
-
-                if ($nik !== '') {
-                    $existing = $existingByNik[$nik] ?? null;
-                }
-
-                /*
-                 * Cari berdasarkan IDENTITAS
-                 */
-                $sameIdentity = $this->findByIdentity(
-                    $data,
-                    $existingPpks
+                $nama = $this->normalize(
+                    $data['nama_lengkap'] ?? ''
                 );
 
                 /*
-                 |--------------------------------------------------------------------------
-                 | RULE 1
-                 |
-                 | NIK sama + identitas sama
-                 | = update data lama
-                 |--------------------------------------------------------------------------
-                 */
+                |--------------------------------------------------------------------------
+                | NIK + NAMA LENGKAP
+                |--------------------------------------------------------------------------
+                */
 
                 if (
-                    $existing &&
-                    $this->sameIdentity(
-                        $existing->data ?? [],
-                        $data
-                    )
+                    $nik !== '' &&
+                    $nama !== ''
                 ) {
+                    $key =
+                        'nik_nama|' .
+                        $nik .
+                        '|' .
+                        $nama;
+                } else {
 
-                    $existing->update([
-                        'sheet_row' => $sheetRow,
-                        'data' => $data,
-                        'status' => 'normal',
-                        'imported_at' => now(),
-                    ]);
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Kalau NIK atau nama kosong,
+                    | jangan digabung dengan data lain.
+                    |--------------------------------------------------------------------------
+                    */
 
-                    $updated++;
+                    $key =
+                        'row|' .
+                        $sheetRow;
+                }
+
+                /*
+                |--------------------------------------------------------------------------
+                | Kalau key sudah ada,
+                | berarti ada duplikat di Sheet.
+                |
+                | Karena kita berjalan dari atas ke bawah,
+                | row terbaru otomatis menggantikan row lama.
+                |--------------------------------------------------------------------------
+                */
+
+                if (isset($latestRows[$key])) {
+                    $duplikatSheet++;
+                }
+
+                $latestRows[$key] = [
+                    'sheetRow' => $sheetRow,
+                    'data' => $data,
+                ];
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | URUTKAN BERDASARKAN SHEET ROW
+            |--------------------------------------------------------------------------
+            */
+
+            uasort(
+                $latestRows,
+                fn ($a, $b) =>
+                    $a['sheetRow'] <=> $b['sheetRow']
+            );
+
+            /*
+            |--------------------------------------------------------------------------
+            | TAHAP 2
+            |--------------------------------------------------------------------------
+            | PROSES DATA TERAKHIR SAJA
+            |--------------------------------------------------------------------------
+            */
+
+            foreach ($latestRows as $item) {
+
+                $sheetRow = $item['sheetRow'];
+
+                $data = $item['data'];
+
+                $nik = $this->normalizeNik(
+                    $data['nik'] ?? ''
+                );
+
+                /*
+                |--------------------------------------------------------------------------
+                | CARI DATA DENGAN NIK + NAMA YANG SAMA
+                |--------------------------------------------------------------------------
+                |
+                | Ini harus dicek PALING DULU.
+                |
+                | Kalau ketemu:
+                |
+                | -> data sudah ada
+                | -> jangan insert
+                | -> jangan perlu pemeriksaan
+                |--------------------------------------------------------------------------
+                */
+
+                $sameNikAndName =
+                    $this->findByNikAndName(
+                        $data,
+                        $comparisonPpks
+                    );
+
+                if ($sameNikAndName) {
+
+                    $sudahAda++;
 
                     continue;
                 }
 
                 /*
-                 |--------------------------------------------------------------------------
-                 | RULE 2
-                 |
-                 | NIK sama + identitas berbeda
-                 | = perlu pemeriksaan
-                 |--------------------------------------------------------------------------
-                 */
+                |--------------------------------------------------------------------------
+                | CARI DATA DENGAN NIK YANG SAMA
+                |--------------------------------------------------------------------------
+                */
 
-                if (
-                    $existing &&
-                    !$this->sameIdentity(
-                        $existing->data ?? [],
-                        $data
-                    )
-                ) {
+                $sameNik = $this->findByNik(
+                    $nik,
+                    $comparisonPpks
+                );
 
-                    Ppks::create([
-                        'sheet_row' => $sheetRow,
-                        'data' => $data,
-                        'status' => 'perlu_diperiksa',
-                        'possible_duplicate_of' => $existing->id,
+                /*
+                |--------------------------------------------------------------------------
+                | RULE:
+                |
+                | NIK SAMA + NAMA BERBEDA
+                |
+                | -> PERLU DIPERIKSA
+                |--------------------------------------------------------------------------
+                */
+
+                if ($sameNik) {
+
+                    $duplicate = Ppks::create([
+                        'sheet_row' =>
+                            $sheetRow,
+
+                        'data' =>
+                            $data,
+
+                        'status' =>
+                            'perlu_diperiksa',
+
+                        'possible_duplicate_of' =>
+                            $sameNik->id,
+
                         'duplicate_note' =>
-                            'NIK sama tetapi identitas berbeda.',
-                        'imported_at' => now(),
+                            'NIK sama tetapi nama berbeda.',
+
+                        'imported_at' =>
+                            now(),
                     ]);
+
+                    $comparisonPpks->prepend(
+                        $duplicate
+                    );
 
                     $perluDiperiksa++;
 
@@ -307,26 +415,62 @@ class PpksImportController extends Controller
                 }
 
                 /*
-                 |--------------------------------------------------------------------------
-                 | RULE 3
-                 |
-                 | NIK berbeda + identitas sama
-                 | = perlu pemeriksaan
-                 |--------------------------------------------------------------------------
-                 */
+                |--------------------------------------------------------------------------
+                | NIK TIDAK DITEMUKAN
+                |--------------------------------------------------------------------------
+                |
+                | Sekarang cari berdasarkan identitas.
+                |
+                | Identitas:
+                |
+                | - Nama
+                | - Jenis Kelamin
+                | - Tempat Lahir
+                | - Tanggal Lahir
+                |
+                */
+
+                $sameIdentity =
+                    $this->findByIdentity(
+                        $data,
+                        $comparisonPpks
+                    );
+
+                /*
+                |--------------------------------------------------------------------------
+                | RULE:
+                |
+                | NIK BERBEDA + IDENTITAS SAMA
+                |
+                | -> PERLU DIPERIKSA
+                |--------------------------------------------------------------------------
+                */
 
                 if ($sameIdentity) {
 
-                    Ppks::create([
-                        'sheet_row' => $sheetRow,
-                        'data' => $data,
-                        'status' => 'perlu_diperiksa',
+                    $duplicate = Ppks::create([
+                        'sheet_row' =>
+                            $sheetRow,
+
+                        'data' =>
+                            $data,
+
+                        'status' =>
+                            'perlu_diperiksa',
+
                         'possible_duplicate_of' =>
                             $sameIdentity->id,
+
                         'duplicate_note' =>
                             'Identitas sama tetapi NIK berbeda.',
-                        'imported_at' => now(),
+
+                        'imported_at' =>
+                            now(),
                     ]);
+
+                    $comparisonPpks->prepend(
+                        $duplicate
+                    );
 
                     $perluDiperiksa++;
 
@@ -334,59 +478,161 @@ class PpksImportController extends Controller
                 }
 
                 /*
-                 |--------------------------------------------------------------------------
-                 | RULE 4
-                 |
-                 | NIK berbeda + identitas berbeda
-                 | = data baru normal
-                 |--------------------------------------------------------------------------
-                 */
+                |--------------------------------------------------------------------------
+                | RULE:
+                |
+                | NIK BERBEDA + IDENTITAS BERBEDA
+                |
+                | -> NORMAL
+                |--------------------------------------------------------------------------
+                */
 
-                Ppks::create([
-                    'sheet_row' => $sheetRow,
-                    'data' => $data,
-                    'status' => 'normal',
-                    'imported_at' => now(),
+                $newPpks = Ppks::create([
+                    'sheet_row' =>
+                        $sheetRow,
+
+                    'data' =>
+                        $data,
+
+                    'status' =>
+                        'normal',
+
+                    'imported_at' =>
+                        now(),
                 ]);
+
+                /*
+                |--------------------------------------------------------------------------
+                | Tambahkan ke collection pembanding.
+                |--------------------------------------------------------------------------
+                */
+
+                $comparisonPpks->prepend(
+                    $newPpks
+                );
 
                 $inserted++;
             }
 
             /*
-             |--------------------------------------------------------------------------
-             | LOG
-             |--------------------------------------------------------------------------
-             */
+            |--------------------------------------------------------------------------
+            | BUAT PESAN HASIL IMPORT
+            |--------------------------------------------------------------------------
+            */
+
+            $parts = [];
+
+            if ($inserted > 0) {
+                $parts[] =
+                    "Data baru: {$inserted}";
+            }
+
+            if ($perluDiperiksa > 0) {
+                $parts[] =
+                    "Perlu pemeriksaan: {$perluDiperiksa}";
+            }
+
+            if ($sudahAda > 0) {
+                $parts[] =
+                    "Sudah ada di database: {$sudahAda}";
+            }
+
+            if ($duplikatSheet > 0) {
+                $parts[] =
+                    "Duplikat dalam Sheet: {$duplikatSheet} " .
+                    "(diambil respons terakhir)";
+            }
+
+            if (empty($parts)) {
+                $parts[] =
+                    'Tidak ada perubahan data.';
+            }
 
             $message =
-                "Import selesai. " .
-                "Data baru: {$inserted}, " .
-                "data diperbarui: {$updated}, " .
-                "perlu pemeriksaan: {$perluDiperiksa}.";
+                'Import selesai. ' .
+                implode(', ', $parts) .
+                '.';
+
+            /*
+            |--------------------------------------------------------------------------
+            | LOG IMPORT
+            |--------------------------------------------------------------------------
+            */
 
             $importLog->update([
                 'status' => 'berhasil',
+
                 'message' => $message,
+
+                'finished_at' => now(),
+
+                'data_ditemukan' =>
+                    count($rows),
+
+                'nik_unik' =>
+                    count($latestRows),
+
+                'data_normal' =>
+                    $inserted,
+
+                'data_perlu_diperiksa' =>
+                    $perluDiperiksa,
+
+                'data_diupdate' =>
+                    0,
             ]);
+
+            /*
+            |--------------------------------------------------------------------------
+            | RESPONSE
+            |--------------------------------------------------------------------------
+            */
 
             return response()->json([
                 'success' => true,
+
                 'message' => $message,
-                'inserted' => $inserted,
-                'updated' => $updated,
-                'perlu_diperiksa' => $perluDiperiksa,
+
+                'inserted' =>
+                    $inserted,
+
+                'updated' =>
+                    0,
+
+                'perlu_diperiksa' =>
+                    $perluDiperiksa,
+
+                'sudah_ada' =>
+                    $sudahAda,
+
+                'duplikat_sheet' =>
+                    $duplikatSheet,
             ]);
 
         } catch (Throwable $e) {
 
+            /*
+            |--------------------------------------------------------------------------
+            | LOG ERROR
+            |--------------------------------------------------------------------------
+            */
+
             $importLog->update([
                 'status' => 'gagal',
-                'message' => $e->getMessage(),
+
+                'message' =>
+                    $e->getMessage(),
+
+                'finished_at' =>
+                    now(),
             ]);
 
             return response()->json([
                 'success' => false,
-                'message' => 'Import gagal: ' . $e->getMessage(),
+
+                'message' =>
+                    'Import gagal: ' .
+                    $e->getMessage(),
             ], 500);
         }
     }
@@ -400,8 +646,13 @@ class PpksImportController extends Controller
     public function recheck(
         GoogleSheetService $googleSheetService
     ): RedirectResponse {
-
         try {
+
+            /*
+            |--------------------------------------------------------------------------
+            | AMBIL SEMUA DATA GOOGLE SHEET
+            |--------------------------------------------------------------------------
+            */
 
             $rows = $googleSheetService->getRows(
                 $this->spreadsheetId,
@@ -418,6 +669,12 @@ class PpksImportController extends Controller
                     );
             }
 
+            /*
+            |--------------------------------------------------------------------------
+            | PASTIKAN 35 KOLOM
+            |--------------------------------------------------------------------------
+            */
+
             foreach ($rows as &$row) {
                 $row = array_pad($row, 35, '');
             }
@@ -425,108 +682,132 @@ class PpksImportController extends Controller
             unset($row);
 
             /*
-             * Ambil response terbaru berdasarkan NIK
-             */
-            $latestByNik = [];
+            |--------------------------------------------------------------------------
+            | DATA DATABASE
+            |--------------------------------------------------------------------------
+            */
 
-            foreach ($rows as $index => $row) {
-
-                $nik = $this->normalizeNik(
-                    $row[2] ?? ''
-                );
-
-                if ($nik === '') {
-                    $latestByNik['row_' . $index] = [
-                        'row' => $row,
-                        'index' => $index,
-                    ];
-
-                    continue;
-                }
-
-                $latestByNik[$nik] = [
-                    'row' => $row,
-                    'index' => $index,
-                ];
-            }
+            $existingPpks = Ppks::orderByDesc('sheet_row')
+                ->get();
 
             /*
-             * Hapus hasil recheck pending sebelumnya
-             */
+            |--------------------------------------------------------------------------
+            | HAPUS HASIL RECHECK PENDING
+            |--------------------------------------------------------------------------
+            */
+
             RecheckResult::where(
                 'status',
                 'pending'
             )->delete();
 
-            $existingPpks = Ppks::orderByDesc('sheet_row')
-                ->get();
+            /*
+            |--------------------------------------------------------------------------
+            | PROSES SEMUA ROW
+            |--------------------------------------------------------------------------
+            */
 
-            foreach ($latestByNik as $item) {
+            foreach ($rows as $index => $row) {
 
-                $row = $item['row'];
-                $index = $item['index'];
+                $data =
+                    $this->mapSheetRowToData($row);
 
-                $data = $this->mapSheetRowToData($row);
-
-                $nik = $this->normalizeNik(
-                    $data['nik'] ?? ''
-                );
-
-                $existing = null;
-
-                foreach ($existingPpks as $ppks) {
-
-                    $existingNik = $this->getNikFromData(
-                        $ppks->data ?? []
+                $nik =
+                    $this->normalizeNik(
+                        $data['nik'] ?? ''
                     );
 
-                    if (
-                        $nik !== '' &&
-                        $nik === $existingNik
-                    ) {
-                        $existing = $ppks;
-                        break;
-                    }
-                }
-
                 /*
-                 * Tentukan hasil recheck
-                 */
-                if ($existing) {
+                |--------------------------------------------------------------------------
+                | CARI NIK + NAMA TERLEBIH DAHULU
+                |--------------------------------------------------------------------------
+                */
 
-                    if (
-                        $this->sameIdentity(
-                            $existing->data ?? [],
-                            $data
-                        )
-                    ) {
-
-                        $status = 'normal';
-
-                    } else {
-
-                        $status = 'perlu_diperiksa';
-                    }
-
-                } else {
-
-                    $sameIdentity = $this->findByIdentity(
+                $sameNikAndName =
+                    $this->findByNikAndName(
                         $data,
                         $existingPpks
                     );
 
-                    if ($sameIdentity) {
-                        $status = 'perlu_diperiksa';
+                /*
+                |--------------------------------------------------------------------------
+                | KALAU SUDAH ADA PERSIS
+                |--------------------------------------------------------------------------
+                */
+
+                if ($sameNikAndName) {
+
+                    $status = 'normal';
+
+                } else {
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | CARI NIK
+                    |--------------------------------------------------------------------------
+                    */
+
+                    $sameNik = $this->findByNik(
+                        $nik,
+                        $existingPpks
+                    );
+
+                    if ($sameNik) {
+
+                        /*
+                        |--------------------------------------------------------------------------
+                        | NIK sama + nama berbeda
+                        |--------------------------------------------------------------------------
+                        */
+
+                        $status =
+                            'perlu_diperiksa';
+
                     } else {
-                        $status = 'normal';
+
+                        /*
+                        |--------------------------------------------------------------------------
+                        | NIK berbeda
+                        |--------------------------------------------------------------------------
+                        */
+
+                        $sameIdentity =
+                            $this->findByIdentity(
+                                $data,
+                                $existingPpks
+                            );
+
+                        if ($sameIdentity) {
+
+                            $status =
+                                'perlu_diperiksa';
+
+                        } else {
+
+                            $status =
+                                'normal';
+                        }
                     }
                 }
 
+                /*
+                |--------------------------------------------------------------------------
+                | SIMPAN HASIL RECHECK
+                |--------------------------------------------------------------------------
+                */
+
                 RecheckResult::create([
-                    'sheet_row' => 2 + $index,
-                    'data' => $data,
-                    'jenis' => 'sheet',
-                    'status' => $status,
+                    'sheet_row' =>
+                        2 + $index,
+
+                    'data' =>
+                        $data,
+
+                    'jenis' =>
+                        'sheet',
+
+                    'status' =>
+                        $status,
                 ]);
             }
 
@@ -543,7 +824,8 @@ class PpksImportController extends Controller
                 ->route('ppks.import')
                 ->with(
                     'error',
-                    'Recheck gagal: ' . $e->getMessage()
+                    'Recheck gagal: ' .
+                    $e->getMessage()
                 );
         }
     }
@@ -671,11 +953,6 @@ class PpksImportController extends Controller
     |--------------------------------------------------------------------------
     | AMBIL NIK
     |--------------------------------------------------------------------------
-    |
-    | Bisa membaca:
-    | - format baru associative
-    | - format lama numeric array
-    |
     */
 
     private function getNikFromData(array $data): string
@@ -689,6 +966,57 @@ class PpksImportController extends Controller
         return $this->normalizeNik(
             $data[2] ?? ''
         );
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | FIND BY NIK + NAMA
+    |--------------------------------------------------------------------------
+    */
+
+    private function findByNikAndName(
+        array $data,
+        $ppksCollection
+    ): ?Ppks {
+
+        $nik = $this->normalizeNik(
+            $data['nik'] ?? ''
+        );
+
+        $nama = $this->normalize(
+            $data['nama_lengkap'] ?? ''
+        );
+
+        if (
+            $nik === '' ||
+            $nama === ''
+        ) {
+            return null;
+        }
+
+        foreach ($ppksCollection as $ppks) {
+
+            $existingNik =
+                $this->getNikFromData(
+                    $ppks->data ?? []
+                );
+
+            $existingNama =
+                $this->normalize(
+                    ($ppks->data ?? [])['nama_lengkap'] ?? ''
+                );
+
+            if (
+                $existingNik !== '' &&
+                $existingNama !== '' &&
+                $existingNik === $nik &&
+                $existingNama === $nama
+            ) {
+                return $ppks;
+            }
+        }
+
+        return null;
     }
 
     /*
@@ -710,9 +1038,10 @@ class PpksImportController extends Controller
 
         foreach ($ppksCollection as $ppks) {
 
-            $existingNik = $this->getNikFromData(
-                $ppks->data ?? []
-            );
+            $existingNik =
+                $this->getNikFromData(
+                    $ppks->data ?? []
+                );
 
             if (
                 $existingNik !== '' &&
@@ -753,125 +1082,119 @@ class PpksImportController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | FIND SIMILAR IDENTITY
-    |--------------------------------------------------------------------------
-    */
-
-    private function findSimilarIdentity(
-        array $data,
-        $ppksCollection
-    ): ?Ppks {
-
-        $identity = $this->getIdentity($data);
-
-        foreach ($ppksCollection as $ppks) {
-
-            $existingIdentity = $this->getIdentity(
-                $ppks->data ?? []
-            );
-
-            if (
-                $identity['nama'] === '' ||
-                $existingIdentity['nama'] === ''
-            ) {
-                continue;
-            }
-
-            similar_text(
-                $identity['nama'],
-                $existingIdentity['nama'],
-                $percentage
-            );
-
-            if ($percentage < 85) {
-                continue;
-            }
-
-            if (
-                $identity['jenis_kelamin'] !== '' &&
-                $existingIdentity['jenis_kelamin'] !== '' &&
-                $identity['jenis_kelamin'] !==
-                $existingIdentity['jenis_kelamin']
-            ) {
-                continue;
-            }
-
-            if (
-                $identity['tempat_lahir'] !== '' &&
-                $existingIdentity['tempat_lahir'] !== '' &&
-                $identity['tempat_lahir'] !==
-                $existingIdentity['tempat_lahir']
-            ) {
-                continue;
-            }
-
-            if (
-                $identity['tanggal_lahir'] !== '' &&
-                $existingIdentity['tanggal_lahir'] !== '' &&
-                $identity['tanggal_lahir'] !==
-                $existingIdentity['tanggal_lahir']
-            ) {
-                continue;
-            }
-
-            return $ppks;
-        }
-
-        return null;
-    }
-
-    /*
-    |--------------------------------------------------------------------------
     | GET IDENTITY
     |--------------------------------------------------------------------------
+    |
+    | Identitas:
+    |
+    | - Nama
+    | - Jenis Kelamin
+    | - Tempat Lahir
+    | - Tanggal Lahir
+    |
     */
 
     private function getIdentity(array $data): array
     {
-        /*
-         * FORMAT BARU
-         */
         if (isset($data['nama_lengkap'])) {
 
             return [
-                'nama' => $this->normalize(
-                    $data['nama_lengkap'] ?? ''
-                ),
+                'nama' =>
+                    $this->normalize(
+                        $data['nama_lengkap'] ?? ''
+                    ),
 
-                'jenis_kelamin' => $this->normalize(
-                    $data['jenis_kelamin'] ?? ''
-                ),
+                'jenis_kelamin' =>
+                    $this->normalize(
+                        $data['jenis_kelamin'] ?? ''
+                    ),
 
-                'tempat_lahir' => $this->normalize(
-                    $data['tempat_lahir'] ?? ''
-                ),
+                'tempat_lahir' =>
+                    $this->normalize(
+                        $data['tempat_lahir'] ?? ''
+                    ),
 
-                'tanggal_lahir' => $this->normalize(
-                    $data['tanggal_lahir'] ?? ''
-                ),
+                'tanggal_lahir' =>
+                    $this->normalizeDate(
+                        $data['tanggal_lahir'] ?? ''
+                    ),
             ];
         }
 
-        /*
-         * FORMAT LAMA
-         */
         return [
-            'nama' => $this->normalize(
-                $data[1] ?? ''
-            ),
+            'nama' =>
+                $this->normalize(
+                    $data[1] ?? ''
+                ),
 
-            'jenis_kelamin' => $this->normalize(
-                $data[3] ?? ''
-            ),
+            'jenis_kelamin' =>
+                $this->normalize(
+                    $data[3] ?? ''
+                ),
 
-            'tempat_lahir' => $this->normalize(
-                $data[4] ?? ''
-            ),
+            'tempat_lahir' =>
+                $this->normalize(
+                    $data[4] ?? ''
+                ),
 
-            'tanggal_lahir' => $this->normalize(
-                $data[5] ?? ''
-            ),
+            'tanggal_lahir' =>
+                $this->normalizeDate(
+                    $data[5] ?? ''
+                ),
         ];
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | NORMALIZE DATE
+    |--------------------------------------------------------------------------
+    */
+
+    private function normalizeDate($value): string
+    {
+        $value = trim((string) $value);
+
+        if ($value === '') {
+            return '';
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Kalau ada waktu setelah tanggal,
+        | ambil bagian tanggal saja.
+        |--------------------------------------------------------------------------
+        */
+
+        if (str_contains($value, ' ')) {
+            $value = explode(' ', $value)[0];
+        }
+
+        $formats = [
+            'd/m/Y',
+            'm/d/Y',
+            'Y-m-d',
+            'd-m-Y',
+            'm-d-Y',
+            'd/m/y',
+            'm/d/y',
+        ];
+
+        foreach ($formats as $format) {
+
+            $date = \DateTime::createFromFormat(
+                $format,
+                $value
+            );
+
+            if (
+                $date !== false &&
+                $date->format($format) === $value
+            ) {
+                return $date->format('Y-m-d');
+            }
+        }
+
+        return $this->normalize($value);
     }
 
     /*
@@ -910,11 +1233,17 @@ class PpksImportController extends Controller
         array $dataB
     ): bool {
 
-        $identityA = $this->getIdentity($dataA);
-        $identityB = $this->getIdentity($dataB);
+        $identityA =
+            $this->getIdentity($dataA);
 
-        $keyA = $this->identityKey($identityA);
-        $keyB = $this->identityKey($identityB);
+        $identityB =
+            $this->getIdentity($dataB);
+
+        $keyA =
+            $this->identityKey($identityA);
+
+        $keyB =
+            $this->identityKey($identityB);
 
         if (
             $keyA === null ||
@@ -938,7 +1267,7 @@ class PpksImportController extends Controller
             '/\D/',
             '',
             (string) $value
-        );
+        ) ?? '';
     }
 
     /*
@@ -953,15 +1282,11 @@ class PpksImportController extends Controller
             trim((string) $value)
         );
 
-        /*
-         * FIX:
-         * sebelumnya regex salah.
-         */
         $value = preg_replace(
             '/\s+/',
             ' ',
             $value
-        );
+        ) ?? '';
 
         return $value;
     }

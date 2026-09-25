@@ -228,7 +228,7 @@
                         </th>
 
                         <th>
-                            Jurusan
+                            Jurusan Peminatan
                         </th>
 
                         <th>

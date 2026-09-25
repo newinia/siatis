@@ -87,13 +87,53 @@
 
 
         /*
-        |--------------------------------------------------------------------------
-        | FOTO PPKS
-        |--------------------------------------------------------------------------
-        */
+|--------------------------------------------------------------------------
+| FOTO PPKS
+|--------------------------------------------------------------------------
+*/
 
-        $foto = $data['upload_foto_full_badan'] ?? null;
+$foto = $data['upload_foto_full_badan'] ?? null;
 
+$fotoUrl = null;
+
+if (!empty($foto)) {
+
+    // DATA MANUAL
+    if (($data['sumber_data'] ?? null) === 'manual') {
+
+        $fotoUrl = asset(
+            'storage/' . ltrim($foto, '/')
+        );
+
+    }
+
+
+    // DATA IMPORT DARI GOOGLE DRIVE
+    else {
+
+        if (
+            preg_match(
+                '/[?&]id=([^&]+)/',
+                $foto,
+                $matches
+            )
+        ) {
+
+            $fileId = $matches[1];
+
+            $fotoUrl = route(
+                'ppks.file',
+                [
+                    'fileId' => $fileId
+                ]
+            );
+
+        } else {
+
+            $fotoUrl = $foto;
+        }
+    }
+}
 
         /*
         |--------------------------------------------------------------------------
@@ -436,38 +476,29 @@
 
                             <div class="participant-photo">
 
-                                @if (!empty($foto))
 
-                                    <img src="{{ asset('storage/' . ltrim($foto, '/')) }}" alt="Foto {{ $nama }}"
-                                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        @if (!empty($fotoUrl))
 
-                                    <div class="photo-placeholder" style="display:none;">
+                            <img src="{{ $fotoUrl }}"
+                                alt="Foto {{ $nama }}"
+                                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
 
-                                        <span class="material-symbols-outlined">
-                                            person
-                                        </span>
+                            <div class="photo-placeholder" style="display:none;">
+                                <span class="material-symbols-outlined">person</span>
+                                <span>Foto tidak dapat ditampilkan</span>
+                            </div>
 
-                                        <span>
-                                            Foto tidak dapat ditampilkan
-                                        </span>
+                        @else
 
-                                    </div>
+                            <div class="photo-placeholder">
+                                <span class="material-symbols-outlined">person</span>
+                                <span>Foto tidak tersedia</span>
+                            </div>
 
-                                @else
+                        @endif
 
-                                    <div class="photo-placeholder">
 
-                                        <span class="material-symbols-outlined">
-                                            person
-                                        </span>
 
-                                        <span>
-                                            Foto tidak tersedia
-                                        </span>
-
-                                    </div>
-
-                                @endif
 
                             </div>
 

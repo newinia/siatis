@@ -1861,20 +1861,45 @@ KesehatanAwal::updateOrCreate(
             $request,
             'case_conference'
         );
+$ppks = $this->applyPpksSorting($query)
+    ->paginate(15)
+    ->withQueryString();
 
-        $ppks = $this->applyPpksSorting($query)
-            ->paginate(15)
-            ->withQueryString();
+/*
+|--------------------------------------------------------------------------
+| DATA PESERTA UNTUK PILIHAN PDF
+|--------------------------------------------------------------------------
+| Tidak menggunakan pagination supaya semua peserta Case Conference
+| bisa muncul di popup PDF.
+*/
 
-        $tahap = 'case_conference';
+$pdfPesertas = Ppks::query()
+    ->where('status', 'normal')
+    ->whereHas('prosesPesertas', function ($q) {
+        $q
+            ->where('tahap', 'case_conference')
+            ->whereIn('status', [
+                'pending',
+                'lulus',
+                'tidak_lulus',
+            ]);
+    })
+    ->get([
+        'id',
+        'data',
+    ]);
 
-        return view(
-            'ppks.normal',
-            compact(
-                'ppks',
-                'tahap'
-            )
-        );
+$tahap = 'case_conference';
+
+return view(
+    'ppks.normal',
+    compact(
+        'ppks',
+        'tahap',
+        'pdfPesertas'
+    )
+);
+
     }
 
     /*
@@ -2025,19 +2050,45 @@ public function caseConferenceSudah(
     */
 
     $data = $query
-        ->paginate(20)
-        ->withQueryString();
+    ->paginate(20)
+    ->withQueryString();
 
-    return view(
-        'case-conference.case-conference-sudah',
-        compact('data')
-    );
+/*
+|--------------------------------------------------------------------------
+| DATA PESERTA UNTUK PILIHAN PDF
+|--------------------------------------------------------------------------
+*/
+
+$pdfPesertas = Ppks::query()
+    ->whereHas('prosesPesertas', function ($q) {
+        $q
+            ->where('tahap', 'case_conference')
+            ->whereIn('status', [
+                'pending',
+                'lulus',
+                'tidak_lulus',
+            ]);
+    })
+    ->get([
+        'id',
+        'data',
+    ]);
+
+return view(
+    'case-conference.case-conference-sudah',
+    compact(
+        'data',
+        'pdfPesertas'
+    )
+);
 }
+
 
 public function caseConferencePdf(Request $request)
 {
     $gelombang = $request->gelombang;
     $tahun = $request->tahun;
+    $ids = $request->input('ids', []);
 
     $data = Ppks::query()
         ->whereHas('prosesPesertas', function ($query) {
@@ -2072,6 +2123,11 @@ public function caseConferencePdf(Request $request)
             );
         })
 
+        // FILTER PESERTA TERPILIH
+        ->when(!empty($ids), function ($query) use ($ids) {
+            $query->whereIn('id', $ids);
+        })
+
         ->orderByDesc('id')
         ->get();
 
@@ -2084,12 +2140,10 @@ public function caseConferencePdf(Request $request)
         )
     );
 
-    // A4 POTRET
     $pdf->setPaper('a4', 'portrait');
 
     return $pdf->stream('data-case-conference.pdf');
 }
-
     /*
     |--------------------------------------------------------------------------
     | UPDATE CASE CONFERENCE
@@ -2609,138 +2663,102 @@ public function caseConferencePdf(Request $request)
     */
 
     private function applySearch(
-        $query,
-        Request $request
-    ): void {
-        if (!$request->filled('search')) {
-            return;
-        }
-
-        $search =
-            trim(
-                $request->search
-            );
-
-        if ($search === '') {
-            return;
-        }
-
-        $searchLike =
-            '%' .
-            $search .
-            '%';
-
-        $query->where(
-            function ($q) use ($searchLike) {
-                $q->where(
-                    'sheet_row',
-                    'like',
-                    $searchLike
-                );
-
-                $q->orWhereRaw(
-                    'LOWER(TRIM(JSON_UNQUOTE(JSON_EXTRACT(ppks.data, "$.nama_lengkap")))) LIKE LOWER(?)',
-                    [$searchLike]
-                );
-
-                $q->orWhereRaw(
-                    'LOWER(TRIM(JSON_UNQUOTE(JSON_EXTRACT(ppks.data, "$.nik")))) LIKE LOWER(?)',
-                    [$searchLike]
-                );
-
-                $q->orWhereRaw(
-                    'LOWER(TRIM(JSON_UNQUOTE(JSON_EXTRACT(ppks.data, "$.jenis_ppks")))) LIKE LOWER(?)',
-                    [$searchLike]
-                );
-            }
-        );
+    $query,
+    Request $request
+): void {
+    if (!$request->filled('search')) {
+        return;
     }
+
+    $search = trim($request->search);
+
+    if ($search === '') {
+        return;
+    }
+
+    $searchLike = '%' . $search . '%';
+
+    $query->where(function ($q) use ($searchLike) {
+
+        // Sheet Row
+        $q->where(
+            'sheet_row',
+            'like',
+            $searchLike
+        );
+
+        // Nama Lengkap
+        $q->orWhereRaw(
+            'LOWER(TRIM(JSON_UNQUOTE(JSON_EXTRACT(ppks.data, "$.nama_lengkap")))) LIKE LOWER(?)',
+            [$searchLike]
+        );
+
+        $q->orWhereRaw(
+            'LOWER(TRIM(JSON_UNQUOTE(JSON_EXTRACT(ppks.data, "$.\"Nama Lengkap\"")))) LIKE LOWER(?)',
+            [$searchLike]
+        );
+
+        // NIK
+        $q->orWhereRaw(
+            'LOWER(TRIM(JSON_UNQUOTE(JSON_EXTRACT(ppks.data, "$.nik")))) LIKE LOWER(?)',
+            [$searchLike]
+        );
+
+        $q->orWhereRaw(
+            'LOWER(TRIM(JSON_UNQUOTE(JSON_EXTRACT(ppks.data, "$.\"NIK\"")))) LIKE LOWER(?)',
+            [$searchLike]
+        );
+
+        // Jenis PPKS
+        $q->orWhereRaw(
+            'LOWER(TRIM(JSON_UNQUOTE(JSON_EXTRACT(ppks.data, "$.jenis_ppks")))) LIKE LOWER(?)',
+            [$searchLike]
+        );
+
+        $q->orWhereRaw(
+            'LOWER(TRIM(JSON_UNQUOTE(JSON_EXTRACT(ppks.data, "$.\"Jenis PPKS\"")))) LIKE LOWER(?)',
+            [$searchLike]
+        );
+
+        // No HP
+        $q->orWhereRaw(
+            'LOWER(TRIM(JSON_UNQUOTE(JSON_EXTRACT(ppks.data, "$.no_hp_1")))) LIKE LOWER(?)',
+            [$searchLike]
+        );
+
+        $q->orWhereRaw(
+            'LOWER(TRIM(JSON_UNQUOTE(JSON_EXTRACT(ppks.data, "$.\"No HP 1\"")))) LIKE LOWER(?)',
+            [$searchLike]
+        );
+
+        $q->orWhereRaw(
+            'LOWER(TRIM(JSON_UNQUOTE(JSON_EXTRACT(ppks.data, "$.\"No Telepon\"")))) LIKE LOWER(?)',
+            [$searchLike]
+        );
+
+        $q->orWhereRaw(
+            'LOWER(TRIM(JSON_UNQUOTE(JSON_EXTRACT(ppks.data, "$.\"No Telepon 1\"")))) LIKE LOWER(?)',
+            [$searchLike]
+        );
+    });
+}
 
 
     /*
     |--------------------------------------------------------------------------
-    | DATA DITERIMA
+    | DATA MANUAL
     |--------------------------------------------------------------------------
     */
 
-    public function diterima(
-        Request $request
-    ): View {
-        $query = Ppks::query()
-            ->where('status', 'diterima')
-            ->with([
-                'prosesPesertas' => function ($q) {
-                    $q
-                        ->orderByDesc('tanggal_proses')
-                        ->orderByDesc('created_at');
-                }
-            ]);
-
-        $this->applySearch(
-            $query,
-            $request
-        );
-
-        $ppks = $this->applyPpksSorting($query)
-            ->paginate(15)
-            ->withQueryString();
-
-        $tahap =
-            'diterima';
-
-        return view(
-            'ppks.normal',
-            compact(
-                'ppks',
-                'tahap'
-            )
-        );
+    public function kesehatanLanjutan()
+    {
+        return $this->hasOne(KesehatanLanjutan::class, 'ppks_id');
     }
-
-
     /*
     |--------------------------------------------------------------------------
-    | DATA TIDAK DITERIMA
+    | FORM TAMBAH DATA MANUAL
     |--------------------------------------------------------------------------
     */
-
-    public function tidakDiterima(
-        Request $request
-    ): View {
-        $query = Ppks::query()
-            ->where(
-                'status',
-                'tidak_diterima'
-            )
-            ->with([
-                'prosesPesertas' => function ($q) {
-                    $q
-                        ->orderByDesc('tanggal_proses')
-                        ->orderByDesc('created_at');
-                }
-            ]);
-
-        $this->applySearch(
-            $query,
-            $request
-        );
-
-        $ppks = $this->applyPpksSorting($query)
-            ->paginate(15)
-            ->withQueryString();
-
-        $tahap =
-            'tidak_diterima';
-
-        return view(
-            'ppks.normal',
-            compact(
-                'ppks',
-                'tahap'
-            )
-        );
-    }
-
 
     /*
     |--------------------------------------------------------------------------
@@ -2776,10 +2794,7 @@ public function caseConferencePdf(Request $request)
         );
     }
 
-    public function kesehatanLanjutan()
-    {
-        return $this->hasOne(KesehatanLanjutan::class, 'ppks_id');
-    }
+
     /*
     |--------------------------------------------------------------------------
     | FORM TAMBAH DATA MANUAL

@@ -23,51 +23,44 @@
             ======================================================= --}}
             <div class="date-filter-wrapper">
 
-                <button
-                    type="button"
-                    class="date-filter"
-                    id="dateFilterButton"
-                >
+                <button type="button" class="date-filter" id="dateFilterButton">
 
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
+                    <svg xmlns="http://www.w3.org/2000/svg"
                         width="16"
                         height="16"
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
-                        stroke-width="1.8"
-                    >
-                        <rect x="3" y="4" width="18" height="18" rx="2"/>
-                        <path d="M16 2v4"/>
-                        <path d="M8 2v4"/>
-                        <path d="M3 10h18"/>
+                        stroke-width="1.8">
+
+                        <rect x="3" y="4" width="18" height="18" rx="2" />
+                        <path d="M16 2v4" />
+                        <path d="M8 2v4" />
+                        <path d="M3 10h18" />
+
                     </svg>
 
                     <span id="dateFilterText">
                         Pilih Tanggal
                     </span>
 
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
+                    <svg xmlns="http://www.w3.org/2000/svg"
                         width="17"
                         height="17"
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
-                        stroke-width="2"
-                    >
-                        <path d="m6 9 6 6 6-6"/>
+                        stroke-width="2">
+
+                        <path d="m6 9 6 6 6-6" />
+
                     </svg>
 
                 </button>
 
 
                 {{-- DATE PICKER --}}
-                <div
-                    class="date-picker"
-                    id="datePicker"
-                >
+                <div class="date-picker" id="datePicker">
 
                     <div class="date-picker-header">
 
@@ -86,10 +79,7 @@
                                 Dari
                             </label>
 
-                            <input
-                                type="date"
-                                id="startDate"
-                            >
+                            <input type="date" id="startDate">
 
                         </div>
 
@@ -100,10 +90,7 @@
                                 Sampai
                             </label>
 
-                            <input
-                                type="date"
-                                id="endDate"
-                            >
+                            <input type="date" id="endDate">
 
                         </div>
 
@@ -112,19 +99,11 @@
 
                     <div class="date-picker-actions">
 
-                        <button
-                            type="button"
-                            id="resetDate"
-                            class="date-reset"
-                        >
+                        <button type="button" id="resetDate" class="date-reset">
                             Reset
                         </button>
 
-                        <button
-                            type="button"
-                            id="applyDate"
-                            class="date-apply"
-                        >
+                        <button type="button" id="applyDate" class="date-apply">
                             Terapkan
                         </button>
 
@@ -142,55 +121,42 @@
         ======================================================= --}}
         <div class="filter-wrapper">
 
-            {{-- =================================================
-            FILTER GROUP
-            Search + 3 Filter
-            ================================================== --}}
             <div class="filter-group">
 
-                {{-- SEARCH --}}
-                <div
-                    class="search"
-                    id="searchWrapper"
-                >
 
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
+                {{-- SEARCH --}}
+                <form method="GET"
+                    action="{{ request()->url() }}"
+                    class="search"
+                    id="searchWrapper">
+
+                    <svg xmlns="http://www.w3.org/2000/svg"
                         width="16"
                         height="16"
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
-                        stroke-width="2"
-                    >
+                        stroke-width="2">
 
-                        <circle
-                            cx="11"
-                            cy="11"
-                            r="7"
-                        />
-
-                        <path d="m20 20-3.5-3.5"/>
+                        <circle cx="11" cy="11" r="7" />
+                        <path d="m20 20-3.5-3.5" />
 
                     </svg>
 
-                    <input
-                        type="text"
+                    <input type="text"
+                        name="search"
                         id="searchInput"
+                        value="{{ request('search') }}"
                         placeholder="Cari Nama atau NIK"
-                        autocomplete="off"
-                    >
+                        autocomplete="off">
 
-                </div>
+                </form>
 
 
                 {{-- FILTER PPKS --}}
                 <div class="select-wrapper">
 
-                    <select
-                        id="ppksFilter"
-                        class="filter-button"
-                    >
+                    <select id="ppksFilter" class="filter-button">
 
                         <option value="">
                             Semua Jenis PPKS
@@ -236,10 +202,7 @@
                 {{-- FILTER TAHAPAN --}}
                 <div class="select-wrapper">
 
-                    <select
-                        id="tahapanFilter"
-                        class="filter-button"
-                    >
+                    <select id="tahapanFilter" class="filter-button">
 
                         <option value="">
                             Semua Jenis Tahapan
@@ -281,10 +244,7 @@
                 {{-- FILTER HASIL --}}
                 <div class="select-wrapper">
 
-                    <select
-                        id="hasilFilter"
-                        class="filter-button"
-                    >
+                    <select id="hasilFilter" class="filter-button">
 
                         <option value="">
                             Semua Hasil
@@ -325,14 +285,10 @@
             </div>
 
 
-            {{-- =================================================
-            RESET SEMUA FILTER
-            ================================================== --}}
-            <button
-                type="button"
+            {{-- RESET SEMUA FILTER --}}
+            <button type="button"
                 id="resetAllFilters"
-                class="filter-reset"
-            >
+                class="filter-reset">
 
                 <span class="material-symbols-outlined">
                     restart_alt
@@ -361,9 +317,8 @@
                         <th>NIK</th>
                         <th>Umur</th>
                         <th>Jenis PPKS</th>
-                        <th>Jurusan</th>
+                        <th>No HP</th>
                         <th>Hasil</th>
-                        <th>Keterangan</th>
 
                     </tr>
 
@@ -413,21 +368,20 @@
 
 
                             /* =====================================================
-                            CASE CONFERENCE
+                            NO HP
                             ===================================================== */
 
-                            $caseConference =
-                                $caseConferences[$peserta->id]
-                                ?? null;
-
-
-                            /* =====================================================
-                            JURUSAN
-                            ===================================================== */
-
-                            $jurusan =
-                                $caseConference?->jurusan_diterima
+                            $noHp =
+                                $data['no_hp_1']
                                 ?? '-';
+
+                            if (is_array($noHp)) {
+                                $noHp = implode(', ', $noHp);
+                            }
+
+                            if (trim((string) $noHp) === '') {
+                                $noHp = '-';
+                            }
 
 
                             /* =====================================================
@@ -442,10 +396,10 @@
                             ROUTE DETAIL
                             ===================================================== */
 
-                            $route =
-                                route(
-                                    'ppks.normal.kesehatan-lanjutan.detail',
-                                    $peserta
+
+                                $route = route(
+                                    'ppks.normal.asesmen-instruktur.data-detail',
+                                    $peserta->id
                                 );
 
 
@@ -496,49 +450,59 @@
                                 );
 
 
-                                if (in_array($tahap, [
-                                    'instruktur',
-                                    'asesmen_instruktur',
-                                    'asesmen instruktur',
-                                ], true)) {
+                                if (
+                                    in_array($tahap, [
+                                        'instruktur',
+                                        'asesmen_instruktur',
+                                        'asesmen instruktur',
+                                    ], true)
+                                ) {
 
                                     $tahapKey = 'instruktur';
 
-                                } elseif (in_array($tahap, [
-                                    'kesehatan',
-                                    'kesehatan_awal',
-                                    'kesehatan awal',
-                                    'asesmen_kesehatan_awal',
-                                    'asesmen kesehatan awal',
-                                ], true)) {
+                                } elseif (
+                                    in_array($tahap, [
+                                        'kesehatan',
+                                        'kesehatan_awal',
+                                        'kesehatan awal',
+                                        'asesmen_kesehatan_awal',
+                                        'asesmen kesehatan awal',
+                                    ], true)
+                                ) {
 
                                     $tahapKey = 'kesehatan_awal';
 
-                                } elseif (in_array($tahap, [
-                                    'case_conference',
-                                    'case-conference',
-                                    'case conference',
-                                    'cc',
-                                ], true)) {
+                                } elseif (
+                                    in_array($tahap, [
+                                        'case_conference',
+                                        'case-conference',
+                                        'case conference',
+                                        'cc',
+                                    ], true)
+                                ) {
 
                                     $tahapKey = 'case_conference';
 
-                                } elseif (in_array($tahap, [
-                                    'kesehatan_lanjutan',
-                                    'kesehatan-lanjutan',
-                                    'kesehatan lanjutan',
-                                    'asesmen_kesehatan_lanjutan',
-                                    'asesmen kesehatan lanjutan',
-                                ], true)) {
+                                } elseif (
+                                    in_array($tahap, [
+                                        'kesehatan_lanjutan',
+                                        'kesehatan-lanjutan',
+                                        'kesehatan lanjutan',
+                                        'asesmen_kesehatan_lanjutan',
+                                        'asesmen kesehatan lanjutan',
+                                    ], true)
+                                ) {
 
                                     $tahapKey = 'kesehatan_lanjutan';
 
-                                } elseif (in_array($tahap, [
-                                    'jadi_siswa',
-                                    'jadi-siswa',
-                                    'jadi siswa',
-                                    'siswa',
-                                ], true)) {
+                                } elseif (
+                                    in_array($tahap, [
+                                        'jadi_siswa',
+                                        'jadi-siswa',
+                                        'jadi siswa',
+                                        'siswa',
+                                    ], true)
+                                ) {
 
                                     $tahapKey = 'jadi_siswa';
 
@@ -616,9 +580,6 @@
 
                                 $badgeClass =
                                     'result-not-done';
-
-                                $keterangan =
-                                    'Peserta belum memulai proses asesmen.';
 
                             } else {
 
@@ -722,11 +683,13 @@
                                 NORMALISASI STATUS
                                 ===================================================== */
 
-                                if (in_array($status, [
-                                    'pending',
-                                    'menunggu',
-                                    'belum',
-                                ], true)) {
+                                if (
+                                    in_array($status, [
+                                        'pending',
+                                        'menunggu',
+                                        'belum',
+                                    ], true)
+                                ) {
 
                                     $hasil =
                                         'Pending';
@@ -738,12 +701,14 @@
                                         'pending';
 
 
-                                } elseif (in_array($status, [
-                                    'lulus',
-                                    'lolos',
-                                    'accepted',
-                                    'diterima',
-                                ], true)) {
+                                } elseif (
+                                    in_array($status, [
+                                        'lulus',
+                                        'lolos',
+                                        'accepted',
+                                        'diterima',
+                                    ], true)
+                                ) {
 
                                     if (
                                         $tahapTerakhir ===
@@ -787,16 +752,18 @@
                                     }
 
 
-                                } elseif (in_array($status, [
-                                    'tidak_lulus',
-                                    'tidak-lulus',
-                                    'tidak lulus',
-                                    'tidak_lolos',
-                                    'tidak-lolos',
-                                    'tidak lolos',
-                                    'rejected',
-                                    'tidak diterima',
-                                ], true)) {
+                                } elseif (
+                                    in_array($status, [
+                                        'tidak_lulus',
+                                        'tidak-lulus',
+                                        'tidak lulus',
+                                        'tidak_lolos',
+                                        'tidak-lolos',
+                                        'tidak lolos',
+                                        'rejected',
+                                        'tidak diterima',
+                                    ], true)
+                                ) {
 
                                     if (
                                         $tahapTerakhir ===
@@ -829,7 +796,7 @@
                                 } else {
 
                                     $hasil =
-                                        'pending';
+                                        'Pending';
 
                                     $hasilClass =
                                         'pending';
@@ -838,15 +805,6 @@
                                         'pending';
 
                                 }
-
-
-                                /* =====================================================
-                                KETERANGAN
-                                ===================================================== */
-
-                                $keterangan =
-                                    $prosesTerakhir->catatan
-                                    ?? '-';
 
                             }
 
@@ -907,36 +865,27 @@
                             </td>
 
 
-                            {{-- JURUSAN --}}
+                            {{-- NO HP --}}
                             <td>
-                                {{ $jurusan }}
+                                {{ $noHp }}
                             </td>
 
+                    {{-- HASIL / TAHAPAN --}}
+                    <td class="hasil-cell">
 
-                            {{-- HASIL / TAHAPAN --}}
-                            <td>
+                        <div class="hasil-wrapper">
+                            <x-result-badge
+                                :route="$route"
+                                :badge-class="$badgeClass"
+                                :hasil-icon="$hasilIcon"
+                                :label-tahapan="$labelTahapan"
+                                :hasil-class="$hasilClass"
+                                :hasil-dot-class="$hasilDotClass"
+                                :hasil="$hasil"
+                            />
+                        </div>
 
-                                {{-- =================================================
-                                RESULT BADGE COMPONENT
-                                ================================================== --}}
-
-                                <x-result-badge
-                                    :route="$route"
-                                    :badge-class="$badgeClass"
-                                    :hasil-icon="$hasilIcon"
-                                    :label-tahapan="$labelTahapan"
-                                    :hasil-class="$hasilClass"
-                                    :hasil-dot-class="$hasilDotClass"
-                                    :hasil="$hasil"
-                                />
-
-                            </td>
-
-
-                            {{-- KETERANGAN --}}
-                            <td>
-                                {{ $keterangan }}
-                            </td>
+                    </td>
 
                         </tr>
 
@@ -945,14 +894,12 @@
 
                         <tr>
 
-                            <td
-                                colspan="8"
+                            <td colspan="7"
                                 style="
                                     text-align: center;
                                     padding: 40px;
                                     color: #6b7280;
-                                "
-                            >
+                                ">
 
                                 Belum ada data normal.
 
@@ -964,19 +911,14 @@
 
 
                     {{-- DATA TIDAK DITEMUKAN --}}
-                    <tr
-                        id="emptyRow"
-                        style="display: none;"
-                    >
+                    <tr id="emptyRow" style="display: none;">
 
-                        <td
-                            colspan="8"
+                        <td colspan="7"
                             style="
                                 text-align: center;
                                 padding: 40px;
                                 color: #6b7280;
-                            "
-                        >
+                            ">
 
                             Data tidak ditemukan.
 
@@ -1137,12 +1079,6 @@
 
                 function filterTable() {
 
-                    const searchValue =
-                        searchInput.value
-                            .toLowerCase()
-                            .trim();
-
-
                     const ppksValue =
                         ppksFilter.value
                             .toLowerCase()
@@ -1177,12 +1113,6 @@
                     tableRows.forEach(
                         function (row) {
 
-                            const nama =
-                                row.dataset.nama || '';
-
-                            const nik =
-                                row.dataset.nik || '';
-
                             const ppks =
                                 row.dataset.ppks || '';
 
@@ -1194,19 +1124,6 @@
 
                             const tanggal =
                                 row.dataset.tanggal || '';
-
-
-                            // =================================================
-                            // SEARCH
-                            // =================================================
-
-                            const matchSearch =
-                                nama.includes(
-                                    searchValue
-                                ) ||
-                                nik.includes(
-                                    searchValue
-                                );
 
 
                             // =================================================
@@ -1271,7 +1188,6 @@
                             // =================================================
 
                             const shouldShow =
-                                matchSearch &&
                                 matchPpks &&
                                 matchTahapan &&
                                 matchHasil &&
@@ -1327,12 +1243,6 @@
                 // EVENTS
                 // =====================================================
 
-                searchInput.addEventListener(
-                    'input',
-                    filterTable
-                );
-
-
                 ppksFilter.addEventListener(
                     'change',
                     filterTable
@@ -1359,6 +1269,14 @@
                     'click',
                     function () {
 
+                        /*
+                         * Search sekarang merupakan
+                         * server-side search.
+                         *
+                         * Jadi reset search harus
+                         * menghapus parameter URL.
+                         */
+
                         searchInput.value = '';
 
                         ppksFilter.value = '';
@@ -1378,6 +1296,32 @@
 
                         datePicker.classList.remove(
                             'active'
+                        );
+
+
+                        /*
+                         * Jika ada search di URL,
+                         * reload halaman tanpa search.
+                         */
+
+                        const url =
+                            new URL(
+                                window.location.href
+                            );
+
+                        url.searchParams.delete(
+                            'search'
+                        );
+
+                        url.searchParams.delete(
+                            'page'
+                        );
+
+
+                        window.history.replaceState(
+                            {},
+                            '',
+                            url
                         );
 
 

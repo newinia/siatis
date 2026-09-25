@@ -174,10 +174,10 @@
                             </option>
 
                             <option
-                                value="kesehatan"
-                                {{ old('role') === 'kesehatan' ? 'selected' : '' }}
+                                value="instruktur"
+                                {{ old('role') === 'instruktur' ? 'selected' : '' }}
                             >
-                                Kesehatan
+                                Instruktur
                             </option>
 
                             <option

@@ -96,7 +96,112 @@
                         </select>
 
                     </div>
+{{-- =================================================
+PILIH PESERTA
+================================================== --}}
+<div class="pdf-filter-group pdf-peserta-group">
 
+    <label>
+        Pilih Peserta
+    </label>
+
+    <div class="pdf-peserta-search">
+        <input
+            type="text"
+            id="pdfPesertaSearch"
+            placeholder="Cari nama atau NIK..."
+            autocomplete="off"
+        >
+    </div>
+
+    <div class="pdf-peserta-actions">
+
+        <button type="button" id="pdfPilihSemua">
+            Pilih Semua
+        </button>
+
+        <button type="button" id="pdfBatalSemua">
+            Batal Semua
+        </button>
+
+    </div>
+
+    <div class="pdf-peserta-list" id="pdfPesertaList">
+
+        @forelse ($pdfPesertas as $peserta)
+
+            @php
+
+                $item = is_array($peserta->data ?? null)
+                    ? $peserta->data
+                    : [];
+
+                $nama =
+                    $item['nama_lengkap']
+                    ?? $item['nama']
+                    ?? $item['Nama']
+                    ?? $item['NAMA']
+                    ?? '-';
+
+                $nik =
+                    $item['nik']
+                    ?? $item['NIK']
+                    ?? $item['Nik']
+                    ?? '-';
+
+                $gelombangPeserta =
+                    $item['gelombang_pelatihan']
+                    ?? '';
+
+                $tahunPeserta =
+                    $item['tahun_pelatihan']
+                    ?? '';
+
+            @endphp
+
+            <label
+                class="pdf-peserta-item"
+                data-nama="{{ strtolower($nama) }}"
+                data-nik="{{ strtolower($nik) }}"
+                data-gelombang="{{ $gelombangPeserta }}"
+                data-tahun="{{ $tahunPeserta }}"
+            >
+
+                <input
+                    type="checkbox"
+                    class="pdf-peserta-checkbox"
+                    value="{{ $peserta->id }}"
+                >
+
+                <div class="pdf-peserta-info">
+
+                    <span class="pdf-peserta-nama">
+                        {{ $nama }}
+                    </span>
+
+                    <span class="pdf-peserta-nik">
+                        NIK: {{ $nik }}
+                    </span>
+
+                </div>
+
+            </label>
+
+        @empty
+
+            <div class="pdf-peserta-empty">
+                Belum ada peserta Case Conference.
+            </div>
+
+        @endforelse
+
+    </div>
+
+    <div class="pdf-peserta-count" id="pdfPesertaCount">
+        0 peserta dipilih
+    </div>
+
+</div>
 
                     {{-- ACTION --}}
                     <div class="pdf-filter-actions">
@@ -924,104 +1029,541 @@
                 | RESET PDF
                 |--------------------------------------------------------------------------
                 */
+if (pdfReset) {
 
-                if (pdfReset) {
+    pdfReset.addEventListener(
+        'click',
+        function () {
 
-                    pdfReset.addEventListener(
-                        'click',
-                        function () {
+            /*
+            |--------------------------------------------------------------------------
+            | RESET GELOMBANG
+            |--------------------------------------------------------------------------
+            */
 
-                            if (pdfGelombang) {
+            if (pdfGelombang) {
 
-                                pdfGelombang.value =
-                                    '';
+                pdfGelombang.value =
+                    '';
 
-                            }
+            }
 
-                            if (pdfTahun) {
 
-                                pdfTahun.value =
-                                    '';
+            /*
+            |--------------------------------------------------------------------------
+            | RESET TAHUN
+            |--------------------------------------------------------------------------
+            */
 
-                            }
+            if (pdfTahun) {
 
-                        }
+                pdfTahun.value =
+                    '';
+
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | RESET PENCARIAN PESERTA
+            |--------------------------------------------------------------------------
+            */
+
+            if (pdfPesertaSearch) {
+
+                pdfPesertaSearch.value =
+                    '';
+
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | RESET CHECKBOX PESERTA
+            |--------------------------------------------------------------------------
+            */
+
+            const pesertaCheckboxes =
+                document.querySelectorAll(
+                    '.pdf-peserta-checkbox'
+                );
+
+            pesertaCheckboxes.forEach(
+                function (checkbox) {
+
+                    checkbox.checked =
+                        false;
+
+                }
+            );
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | TAMPILKAN SEMUA PESERTA LAGI
+            |--------------------------------------------------------------------------
+            */
+
+            filterPdfPeserta();
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | UPDATE JUMLAH PESERTA
+            |--------------------------------------------------------------------------
+            */
+
+            updatePdfPesertaCount();
+
+        }
+    );
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| BUAT PDF
+|--------------------------------------------------------------------------
+*/
+
+if (pdfGenerate) {
+
+    pdfGenerate.addEventListener(
+        'click',
+        function () {
+
+            const gelombang =
+                pdfGelombang
+                    ? pdfGelombang.value
+                    : '';
+
+            const tahun =
+                pdfTahun
+                    ? pdfTahun.value
+                    : '';
+
+
+            const url =
+                new URL(
+                    "{{ route('ppks.normal.case-conference.pdf') }}",
+                    window.location.origin
+                );
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | FILTER GELOMBANG
+            |--------------------------------------------------------------------------
+            */
+
+            if (gelombang) {
+
+                url.searchParams.set(
+                    'gelombang',
+                    gelombang
+                );
+
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | FILTER TAHUN
+            |--------------------------------------------------------------------------
+            */
+
+            if (tahun) {
+
+                url.searchParams.set(
+                    'tahun',
+                    tahun
+                );
+
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | PESERTA TERPILIH
+            |--------------------------------------------------------------------------
+            */
+
+            const selectedPeserta =
+                document.querySelectorAll(
+                    '.pdf-peserta-checkbox:checked'
+                );
+
+
+            selectedPeserta.forEach(
+                function (checkbox) {
+
+                    url.searchParams.append(
+                        'ids[]',
+                        checkbox.value
                     );
 
                 }
+            );
 
 
-                /*
-                |--------------------------------------------------------------------------
-                | BUAT PDF
-                |--------------------------------------------------------------------------
-                */
+            /*
+            |--------------------------------------------------------------------------
+            | BUKA PDF
+            |--------------------------------------------------------------------------
+            */
 
-                if (pdfGenerate) {
-
-                    pdfGenerate.addEventListener(
-                        'click',
-                        function () {
-
-                            const gelombang =
-                                pdfGelombang
-                                    ? pdfGelombang.value
-                                    : '';
-
-                            const tahun =
-                                pdfTahun
-                                    ? pdfTahun.value
-                                    : '';
+            window.open(
+                url.toString(),
+                '_blank'
+            );
 
 
-                            const url =
-                                new URL(
-                                    "{{ route('ppks.normal.case-conference.pdf') }}",
-                                    window.location.origin
-                                );
+            /*
+            |--------------------------------------------------------------------------
+            | TUTUP POPUP
+            |--------------------------------------------------------------------------
+            */
+
+            if (pdfFilter) {
+
+                pdfFilter.classList.remove(
+                    'active'
+                );
+
+            }
+
+        }
+    );
+
+}
+/*
+|--------------------------------------------------------------------------
+| PILIH PESERTA PDF
+|--------------------------------------------------------------------------
+*/
+
+const pdfPesertaSearch =
+    document.getElementById(
+        'pdfPesertaSearch'
+    );
+
+const pdfPesertaList =
+    document.getElementById(
+        'pdfPesertaList'
+    );
+
+const pdfPilihSemua =
+    document.getElementById(
+        'pdfPilihSemua'
+    );
+
+const pdfBatalSemua =
+    document.getElementById(
+        'pdfBatalSemua'
+    );
+
+const pdfPesertaCount =
+    document.getElementById(
+        'pdfPesertaCount'
+    );
 
 
-                            if (gelombang) {
+/*
+|--------------------------------------------------------------------------
+| UPDATE JUMLAH PESERTA
+|--------------------------------------------------------------------------
+*/
 
-                                url.searchParams.set(
-                                    'gelombang',
-                                    gelombang
-                                );
+function updatePdfPesertaCount() {
 
-                            }
+    const checked =
+        document.querySelectorAll(
+            '.pdf-peserta-checkbox:checked'
+        );
+
+    if (pdfPesertaCount) {
+
+        pdfPesertaCount.textContent =
+            checked.length +
+            ' peserta dipilih';
+
+    }
+
+}
 
 
-                            if (tahun) {
+/*
+|--------------------------------------------------------------------------
+| FILTER DAFTAR PESERTA
+|--------------------------------------------------------------------------
+*/
 
-                                url.searchParams.set(
-                                    'tahun',
-                                    tahun
-                                );
+function filterPdfPeserta() {
 
-                            }
+    const search =
+        pdfPesertaSearch
+            ? pdfPesertaSearch.value
+                .toLowerCase()
+                .trim()
+            : '';
+
+    const gelombang =
+        pdfGelombang
+            ? pdfGelombang.value
+            : '';
+
+    const tahun =
+        pdfTahun
+            ? pdfTahun.value
+            : '';
 
 
-                            window.open(
-                                url.toString(),
-                                '_blank'
+    const pesertaItems =
+        document.querySelectorAll(
+            '.pdf-peserta-item'
+        );
+
+
+    pesertaItems.forEach(
+        function (item) {
+
+            const nama =
+                item.dataset.nama
+                || '';
+
+            const nik =
+                item.dataset.nik
+                || '';
+
+            const itemGelombang =
+                item.dataset.gelombang
+                || '';
+
+            const itemTahun =
+                item.dataset.tahun
+                || '';
+
+
+            const matchSearch =
+                search === ''
+                ||
+                nama.includes(search)
+                ||
+                nik.includes(search);
+
+
+            const matchGelombang =
+                gelombang === ''
+                ||
+                itemGelombang === gelombang;
+
+
+            const matchTahun =
+                tahun === ''
+                ||
+                itemTahun === tahun;
+
+
+            if (
+                matchSearch
+                &&
+                matchGelombang
+                &&
+                matchTahun
+            ) {
+
+                item.style.display =
+                    '';
+
+            } else {
+
+                item.style.display =
+                    'none';
+
+            }
+
+        }
+    );
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| SEARCH PESERTA
+|--------------------------------------------------------------------------
+*/
+
+if (pdfPesertaSearch) {
+
+    pdfPesertaSearch.addEventListener(
+        'input',
+        filterPdfPeserta
+    );
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| FILTER GELOMBANG
+|--------------------------------------------------------------------------
+*/
+
+if (pdfGelombang) {
+
+    pdfGelombang.addEventListener(
+        'change',
+        filterPdfPeserta
+    );
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| FILTER TAHUN
+|--------------------------------------------------------------------------
+*/
+
+if (pdfTahun) {
+
+    pdfTahun.addEventListener(
+        'change',
+        filterPdfPeserta
+    );
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| CHECKBOX PESERTA
+|--------------------------------------------------------------------------
+*/
+
+document.addEventListener(
+    'change',
+    function (event) {
+
+        if (
+            event.target.classList.contains(
+                'pdf-peserta-checkbox'
+            )
+        ) {
+
+            updatePdfPesertaCount();
+
+        }
+
+    }
+);
+
+
+/*
+|--------------------------------------------------------------------------
+| PILIH SEMUA
+|--------------------------------------------------------------------------
+*/
+
+if (pdfPilihSemua) {
+
+    pdfPilihSemua.addEventListener(
+        'click',
+        function () {
+
+            const pesertaItems =
+                document.querySelectorAll(
+                    '.pdf-peserta-item'
+                );
+
+            pesertaItems.forEach(
+                function (item) {
+
+                    if (
+                        item.style.display !==
+                        'none'
+                    ) {
+
+                        const checkbox =
+                            item.querySelector(
+                                '.pdf-peserta-checkbox'
                             );
 
+                        if (checkbox) {
 
-                            if (pdfFilter) {
-
-                                pdfFilter.classList.remove(
-                                    'active'
-                                );
-
-                            }
+                            checkbox.checked =
+                                true;
 
                         }
-                    );
+
+                    }
 
                 }
+            );
+
+            updatePdfPesertaCount();
+
+        }
+    );
+
+}
 
 
-                /*
+/*
+|--------------------------------------------------------------------------
+| BATAL SEMUA
+|--------------------------------------------------------------------------
+*/
+
+if (pdfBatalSemua) {
+
+    pdfBatalSemua.addEventListener(
+        'click',
+        function () {
+
+            const pesertaItems =
+                document.querySelectorAll(
+                    '.pdf-peserta-item'
+                );
+
+            pesertaItems.forEach(
+                function (item) {
+
+                    const checkbox =
+                        item.querySelector(
+                            '.pdf-peserta-checkbox'
+                        );
+
+                    if (checkbox) {
+
+                        checkbox.checked =
+                            false;
+
+                    }
+
+                }
+            );
+
+            updatePdfPesertaCount();
+
+        }
+    );
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| INITIAL
+|--------------------------------------------------------------------------
+*/
+
+filterPdfPeserta();
+
+updatePdfPesertaCount();
+
+                                /*
                 |--------------------------------------------------------------------------
                 | FILTER TABLE
                 |--------------------------------------------------------------------------
