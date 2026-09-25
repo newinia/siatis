@@ -516,12 +516,11 @@
                                 <div class="empty-state">
 
                                     <span class="material-symbols-outlined">
-                                        event_busy
+                                        assignment_late
                                     </span>
 
                                     <p>
-                                        Belum ada peserta yang perlu
-                                        melakukan Case Conference.
+                                        Belum ada data PPKS yang lulus Case Conference
                                     </p>
 
                                 </div>

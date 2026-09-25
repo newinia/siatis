@@ -503,17 +503,19 @@
 
                         <tr>
 
-                            <td colspan="8" style="text-align:center; padding:40px;">
+                            <td
+                                colspan="8"
+                                style="text-align:center; padding:40px;"
+                            >
 
                                 <div class="empty-state">
 
                                     <span class="material-symbols-outlined">
-                                        folder_open
+                                        assignment_late
                                     </span>
 
                                     <p>
-                                        Belum ada data peserta yang lulus
-                                        Asesmen Kesehatan Awal.
+                                        Belum ada data PPKS yang belum Asesmen Kesehatan Awal
                                     </p>
 
                                 </div>

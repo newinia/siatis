@@ -30,10 +30,10 @@
         </div>
 
 
-        {{-- SUDAH DILAYANI --}}
+        {{-- DITERIMA --}}
         <div class="stat-card">
             <div class="stat-header">
-                <span class="stat-title">Sudah Dilayani</span>
+                <span class="stat-title">Diterima</span>
 
                 <span class="material-symbols-outlined stat-icon green">
                     task_alt
@@ -41,12 +41,12 @@
             </div>
 
             <div class="stat-value">
-                {{ number_format($sudahDilayani) }}
+                {{ number_format($diterima) }}
                 <span>peserta</span>
             </div>
 
             <div class="stat-progress">
-                <div class="stat-progress-fill green" style="width: {{ $sudahDilayaniPercentage }}%"></div>
+                <div class="stat-progress-fill green" style="width: {{ $diterimaPercentage }}%"></div>
             </div>
 
             <div class="stat-meta">
@@ -55,29 +55,29 @@
                 </span>
 
                 <strong>
-                    {{ $sudahDilayaniPercentage }}%
+                    {{ $diterimaPercentage }}%
                 </strong>
             </div>
         </div>
 
 
-        {{-- BELUM DILAYANI --}}
+        {{-- TIDAK DITERIMA --}}
         <div class="stat-card">
             <div class="stat-header">
-                <span class="stat-title">Belum Dilayani</span>
+                <span class="stat-title">Tidak Diterima</span>
 
-                <span class="material-symbols-outlined stat-icon orange">
-                    pending_actions
+                <span class="material-symbols-outlined stat-icon red">
+                    cancel
                 </span>
             </div>
 
             <div class="stat-value">
-                {{ number_format($belumDilayani) }}
+                {{ number_format($tidakDiterima) }}
                 <span>peserta</span>
             </div>
 
             <div class="stat-progress">
-                <div class="stat-progress-fill orange" style="width: {{ $belumDilayaniPercentage }}%"></div>
+                <div class="stat-progress-fill red" style="width: {{ $tidakDiterimaPercentage }}%"></div>
             </div>
 
             <div class="stat-meta">
@@ -86,11 +86,10 @@
                 </span>
 
                 <strong>
-                    {{ $belumDilayaniPercentage }}%
+                    {{ $tidakDiterimaPercentage }}%
                 </strong>
             </div>
         </div>
-
 
         {{-- PENDING --}}
         <div class="stat-card">
@@ -590,8 +589,23 @@
 
                         <tr>
 
-                            <td colspan="8" style="text-align: center;">
-                                Belum ada peserta pending.
+                            <td
+                                colspan="8"
+                                style="text-align:center; padding:40px;"
+                            >
+
+                                <div class="empty-state">
+
+                                    <span class="material-symbols-outlined">
+                                        assignment_late
+                                    </span>
+
+                                    <p>
+                                        Belum ada data PPKS yang pending 
+                                    </p>
+
+                                </div>
+
                             </td>
 
                         </tr>

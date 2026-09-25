@@ -294,28 +294,26 @@
 
                     <tr>
 
-                        <td
-                            colspan="7"
-                            style="
-                                text-align: center;
-                                padding: 40px;
-                                color: var(--muted);
-                            "
-                        >
+                            <td
+                                colspan="8"
+                                style="text-align:center; padding:40px;"
+                            >
 
-                            @if(request()->filled('search'))
+                                <div class="empty-state">
 
-                                Data tidak ditemukan.
+                                    <span class="material-symbols-outlined">
+                                        assignment_late
+                                    </span>
 
-                            @else
+                                    <p>
+                                        Belum ada data PPKS yang diinput secara manual
+                                    </p>
 
-                                Belum ada data manual.
+                                </div>
 
-                            @endif
+                            </td>
 
-                        </td>
-
-                    </tr>
+                        </tr>
 
                 @endforelse
 

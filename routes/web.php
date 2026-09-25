@@ -12,6 +12,7 @@ use App\Http\Controllers\PpksAktifController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SuperAdmin\UserApprovalController;
 use App\Http\Controllers\PpksRecommendationController;
+use App\Http\Controllers\DocumentController;
 
 require __DIR__ . '/auth.php';
 
@@ -120,6 +121,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/ppks/normal/case-conference/pdf', [PpksController::class, 'caseConferencePdf'])
         ->name('ppks.normal.case-conference.pdf');
+    Route::get(
+        '/ppks/normal/pemanggilan/pdf',
+        [DocumentController::class, 'pemanggilanPdf']
+    )->name('ppks.normal.pemanggilan.pdf');
     /*
     |--------------------------------------------------------------------------
     | ASESMEN INSTRUKTUR

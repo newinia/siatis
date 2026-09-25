@@ -628,30 +628,30 @@
 
 
                     @empty
+                    <tr>
 
-                        <tr>
+                            <td
+                                colspan="8"
+                                style="text-align:center; padding:40px;"
+                            >
 
-                            <td colspan="9" class="empty-state">
-
-                                <div class="empty-state-icon">
+                                <div class="empty-state">
 
                                     <span class="material-symbols-outlined">
                                         assignment_late
                                     </span>
 
+                                    <p>
+                                        Belum ada data PPKS yang lulus Asesmen Intsruktur
+                                    </p>
+
                                 </div>
-
-                                <p class="empty-state-title">
-                                    Belum ada data Pending
-                                </p>
-
-                                <p class="empty-state-text">
-                                    Belum ada data PPKS yang berstatus Pending setelah Asesmen Instruktur.
-                                </p>
 
                             </td>
 
                         </tr>
+
+                    
 
                     @endforelse
 

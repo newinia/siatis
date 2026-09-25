@@ -28,7 +28,7 @@ class PpksAktifController extends Controller
             ->keyBy('ppks_id');
 
         return view(
-            'peserta-aktif',
+            'peserta-aktif.peserta-aktif',
             [
                 'ppks' => $ppks,
                 'caseConferences' => $caseConferences,

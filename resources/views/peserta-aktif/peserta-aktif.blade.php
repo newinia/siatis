@@ -410,15 +410,21 @@
                         <tr>
 
                             <td
-                                colspan="7"
-                                style="
-                                    text-align: center;
-                                    padding: 40px;
-                                    color: var(--muted);
-                                "
+                                colspan="8"
+                                style="text-align:center; padding:40px;"
                             >
 
-                                Belum ada peserta aktif.
+                                <div class="empty-state">
+
+                                    <span class="material-symbols-outlined">
+                                        assignment_late
+                                    </span>
+
+                                    <p>
+                                        Belum ada data PPKS yang menjadi Peserta Aktif
+                                    </p>
+
+                                </div>
 
                             </td>
 

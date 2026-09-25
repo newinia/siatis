@@ -25,13 +25,8 @@
 
                 <button type="button" class="date-filter" id="dateFilterButton">
 
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.8">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="1.8">
 
                         <rect x="3" y="4" width="18" height="18" rx="2" />
                         <path d="M16 2v4" />
@@ -44,13 +39,8 @@
                         Pilih Tanggal
                     </span>
 
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                        width="17"
-                        height="17"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
 
                         <path d="m6 9 6 6 6-6" />
 
@@ -125,30 +115,18 @@
 
 
                 {{-- SEARCH --}}
-                <form method="GET"
-                    action="{{ request()->url() }}"
-                    class="search"
-                    id="searchWrapper">
+                <form method="GET" action="{{ request()->url() }}" class="search" id="searchWrapper">
 
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
 
                         <circle cx="11" cy="11" r="7" />
                         <path d="m20 20-3.5-3.5" />
 
                     </svg>
 
-                    <input type="text"
-                        name="search"
-                        id="searchInput"
-                        value="{{ request('search') }}"
-                        placeholder="Cari Nama atau NIK"
-                        autocomplete="off">
+                    <input type="text" name="search" id="searchInput" value="{{ request('search') }}"
+                        placeholder="Cari Nama atau NIK" autocomplete="off">
 
                 </form>
 
@@ -286,9 +264,7 @@
 
 
             {{-- RESET SEMUA FILTER --}}
-            <button type="button"
-                id="resetAllFilters"
-                class="filter-reset">
+            <button type="button" id="resetAllFilters" class="filter-reset">
 
                 <span class="material-symbols-outlined">
                     restart_alt
@@ -396,7 +372,7 @@
                             ROUTE DETAIL
                             ===================================================== */
 
-
+                            $route =
                                 $route = route(
                                     'ppks.normal.asesmen-instruktur.data-detail',
                                     $peserta->id
@@ -744,10 +720,10 @@
                                             'Lulus';
 
                                         $hasilClass =
-                                            'lolos';
+                                            'lulus';
 
                                         $hasilDotClass =
-                                            'lolos';
+                                            'lulus';
 
                                     }
 
@@ -826,14 +802,9 @@
                         @endphp
 
 
-                        <tr
-                            data-nama="{{ strtolower($nama) }}"
-                            data-nik="{{ strtolower($nik) }}"
-                            data-ppks="{{ strtolower($jenisPpks) }}"
-                            data-tahapan="{{ $tahapanFilterValue }}"
-                            data-hasil="{{ $hasilFilterValue }}"
-                            data-tanggal="{{ $tanggal ?? '' }}"
-                        >
+                        <tr data-nama="{{ strtolower($nama) }}" data-nik="{{ strtolower($nik) }}"
+                            data-ppks="{{ strtolower($jenisPpks) }}" data-tahapan="{{ $tahapanFilterValue }}"
+                            data-hasil="{{ $hasilFilterValue }}" data-tanggal="{{ $tanggal ?? '' }}">
 
                             {{-- NO --}}
                             <td class="row-number">
@@ -885,7 +856,11 @@
                             />
                         </div>
 
-                    </td>
+                                <x-result-badge :route="$route" :badge-class="$badgeClass" :hasil-icon="$hasilIcon"
+                                    :label-tahapan="$labelTahapan" :hasil-class="$hasilClass"
+                                    :hasil-dot-class="$hasilDotClass" :hasil="$hasil" />
+
+                            </td>
 
                         </tr>
 
@@ -894,14 +869,22 @@
 
                         <tr>
 
-                            <td colspan="7"
-                                style="
-                                    text-align: center;
-                                    padding: 40px;
-                                    color: #6b7280;
-                                ">
+                            <td
+                                colspan="8"
+                                style="text-align:center; padding:40px;"
+                            >
 
-                                Belum ada data normal.
+                                <div class="empty-state">
+
+                                    <span class="material-symbols-outlined">
+                                        assignment_late
+                                    </span>
+
+                                    <p>
+                                        Belum ada data PPKS yang masuk 
+                                    </p>
+
+                                </div>
 
                             </td>
 
@@ -913,8 +896,7 @@
                     {{-- DATA TIDAK DITEMUKAN --}}
                     <tr id="emptyRow" style="display: none;">
 
-                        <td colspan="7"
-                            style="
+                        <td colspan="7" style="
                                 text-align: center;
                                 padding: 40px;
                                 color: #6b7280;

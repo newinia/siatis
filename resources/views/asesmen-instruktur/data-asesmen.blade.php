@@ -735,34 +735,30 @@
                         @endforeach
 
                     @else
+                    <tr>
 
-                        <tr>
+                            <td
+                                colspan="8"
+                                style="text-align:center; padding:40px;"
+                            >
 
-                            <td colspan="7" style="
-                                        text-align:center;
-                                        padding:40px;
-                                        color:#6b7280;
-                                    ">
-                                Data tidak ditemukan.
+                                <div class="empty-state">
+
+                                    <span class="material-symbols-outlined">
+                                        folder_open
+                                    </span>
+
+                                    <p>
+                                        Belum ada data yang dapat diolah
+                                    </p>
+
+                                </div>
+
                             </td>
 
                         </tr>
 
                     @endif
-
-
-                    {{-- EMPTY FILTER --}}
-                    <tr id="emptyRow" style="display:none;">
-
-                        <td colspan="8" style="
-                                text-align:center;
-                                padding:40px;
-                                color:#6b7280;
-                            ">
-                            Data tidak ditemukan.
-                        </td>
-
-                    </tr>
 
                 </tbody>
 

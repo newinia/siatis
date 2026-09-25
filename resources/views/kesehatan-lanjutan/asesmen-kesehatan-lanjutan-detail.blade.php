@@ -75,13 +75,10 @@
         $hasilAkhir = $kesehatanLanjutan?->hasil_akhir;
 
         $kesehatanProgressStatus = match ($hasilAkhir) {
-
             'lulus' => 'completed',
-
             'tidak_lulus' => 'failed',
-
+            'pending' => 'pending',
             default => 'current',
-
         };
 
         $lulusKesehatanLanjutan = (
@@ -113,9 +110,7 @@
                 4 => 'completed',
                 5 => $kesehatanProgressStatus
             ]"
-            final-status="waiting"
         />
-
 
 
         {{-- =====================================================
@@ -134,7 +129,6 @@
         >
 
             @csrf
-
 
 
             {{-- =================================================
@@ -157,7 +151,6 @@
                 </span>
 
             </a>
-
 
 
             {{-- =================================================
@@ -191,7 +184,6 @@
                     </div>
 
 
-
                     {{-- NIK --}}
 
                     <div class="detail-field">
@@ -207,7 +199,6 @@
                         >
 
                     </div>
-
 
 
                     {{-- UMUR --}}
@@ -227,7 +218,6 @@
                     </div>
 
 
-
                     {{-- JENIS PPKS --}}
 
                     <div class="detail-field">
@@ -243,7 +233,6 @@
                         >
 
                     </div>
-
 
 
                     {{-- JURUSAN --}}
@@ -266,7 +255,6 @@
                 </div>
 
             </div>
-
 
 
             {{-- =================================================
@@ -305,7 +293,6 @@
                         >
 
                     </div>
-
 
 
                     {{-- =================================================
@@ -363,7 +350,6 @@
                             </select>
 
 
-
                             {{-- TAHUN --}}
 
                             <select
@@ -398,7 +384,6 @@
                         </div>
 
                     </div>
-
 
 
                     {{-- =================================================
@@ -441,7 +426,6 @@
                         </select>
 
                     </div>
-
 
 
                     {{-- =================================================
@@ -508,7 +492,6 @@
                     </div>
 
 
-
                     {{-- =================================================
                     ASESMEN PSIKOLOGI
                     ================================================== --}}
@@ -571,7 +554,6 @@
                         </select>
 
                     </div>
-
 
 
                     {{-- =================================================
@@ -641,7 +623,6 @@
                 </div>
 
 
-
                 {{-- =================================================
                 CATATAN
                 ================================================== --}}
@@ -667,90 +648,88 @@
             </div>
 
 
+            {{-- =================================================
+            HASIL AKHIR
+            ================================================== --}}
 
-            {{-- ================================================= 
-HASIL AKHIR 
-================================================== --}}
+            <div class="detail-section">
 
-<div class="detail-section"> 
-
-    <div class="detail-section-title"> 
-        Hasil Akhir Kesehatan Lanjutan
-    </div> 
-
-
-    <div class="assessment-grid"> 
-
-        <div class="detail-field"> 
-
-            <label for="hasil_akhir"> 
-                Hasil Akhir 
-            </label> 
+                <div class="detail-section-title">
+                    Hasil Akhir Kesehatan Lanjutan
+                </div>
 
 
-            <select 
-                id="hasil_akhir" 
-                name="hasil_akhir" 
-                {{ $canEdit ? 'required' : 'disabled' }}
-            > 
+                <div class="assessment-grid">
 
-                <option value=""> 
-                    Pilih Hasil 
-                </option> 
+                    <div class="detail-field">
+
+                        <label for="hasil_akhir">
+                            Hasil Akhir
+                        </label>
 
 
-                {{-- LULUS --}}
+                        <select
+                            id="hasil_akhir"
+                            name="hasil_akhir"
+                            {{ $canEdit ? 'required' : 'disabled' }}
+                        >
 
-                <option 
-                    value="lulus"
-                    {{ old( 
-                        'hasil_akhir', 
-                        $kesehatanLanjutan?->hasil_akhir
-                    ) == 'lulus'
-                        ? 'selected'
-                        : '' }}
-                > 
-                    Lulus
-                </option> 
+                            <option value="">
+                                Pilih Hasil
+                            </option>
 
 
-                {{-- TIDAK LULUS --}}
+                            {{-- LULUS --}}
 
-                <option 
-                    value="tidak_lulus"
-                    {{ old( 
-                        'hasil_akhir', 
-                        $kesehatanLanjutan?->hasil_akhir
-                    ) == 'tidak_lulus'
-                        ? 'selected'
-                        : '' }}
-                > 
-                    Tidak Lulus
-                </option>
+                            <option
+                                value="lulus"
+                                {{ old(
+                                    'hasil_akhir',
+                                    $kesehatanLanjutan?->hasil_akhir
+                                ) == 'lulus'
+                                    ? 'selected'
+                                    : '' }}
+                            >
+                                Lulus
+                            </option>
 
 
-                {{-- PENDING --}}
+                            {{-- TIDAK LULUS --}}
 
-                <option 
-                    value="pending"
-                    {{ old( 
-                        'hasil_akhir', 
-                        $kesehatanLanjutan?->hasil_akhir
-                    ) == 'pending'
-                        ? 'selected'
-                        : '' }}
-                > 
-                    Pending
-                </option>
+                            <option
+                                value="tidak_lulus"
+                                {{ old(
+                                    'hasil_akhir',
+                                    $kesehatanLanjutan?->hasil_akhir
+                                ) == 'tidak_lulus'
+                                    ? 'selected'
+                                    : '' }}
+                            >
+                                Tidak Lulus
+                            </option>
 
-            </select> 
 
-        </div> 
+                            {{-- PENDING --}}
 
-    </div> 
+                            <option
+                                value="pending"
+                                {{ old(
+                                    'hasil_akhir',
+                                    $kesehatanLanjutan?->hasil_akhir
+                                ) == 'pending'
+                                    ? 'selected'
+                                    : '' }}
+                            >
+                                Pending
+                            </option>
 
-</div>
+                        </select>
 
+                    </div>
+
+                </div>
+
+            </div>
 
 
             {{-- =================================================
@@ -759,24 +738,48 @@ HASIL AKHIR
 
             @if ($errors->any())
 
-                <div class="form-error-message">
+                <div
+                    class="global-popup error show"
+                    x-data
+                >
 
-                    <ul>
+                    <div class="global-popup-box">
 
-                        @foreach ($errors->all() as $error)
+                        <div class="global-popup-icon">
 
-                            <li>
-                                {{ $error }}
-                            </li>
+                            <span class="material-symbols-outlined">
+                                error
+                            </span>
 
-                        @endforeach
+                        </div>
 
-                    </ul>
+
+                        <h3 class="global-popup-title">
+                            Data Belum Lengkap
+                        </h3>
+
+
+                        <div class="global-popup-message">
+
+                            <ul class="global-popup-error-list">
+
+                                @foreach ($errors->all() as $error)
+
+                                    <li>
+                                        {{ $error }}
+                                    </li>
+
+                                @endforeach
+
+                            </ul>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
             @endif
-
 
 
             {{-- =================================================
@@ -793,6 +796,7 @@ HASIL AKHIR
                         :disabled="submitting"
                         @click="showSavePopup = true"
                     >
+
                         <span
                             x-show="!submitting"
                         >
@@ -804,6 +808,7 @@ HASIL AKHIR
                         >
                             Menyimpan...
                         </span>
+
                     </button>
 
                 </div>
@@ -813,19 +818,20 @@ HASIL AKHIR
         </form>
 
 
-
         {{-- =====================================================
         POPUP KONFIRMASI SIMPAN
         ====================================================== --}}
 
         <template x-if="showSavePopup">
 
-            <div class="save-modal-overlay">
+            <div
+                class="global-popup confirm show"
+                @click.self="showSavePopup = false"
+            >
 
-                <div class="save-modal">
+                <div class="global-popup-box">
 
-
-                    <div class="save-modal-icon">
+                    <div class="global-popup-icon">
 
                         <span class="material-symbols-outlined">
                             save
@@ -834,42 +840,42 @@ HASIL AKHIR
                     </div>
 
 
-                    <h3 class="save-modal-title">
+                    <h3 class="global-popup-title">
                         Simpan Data?
                     </h3>
 
 
-                    <p class="save-modal-message">
+                    <p class="global-popup-message">
                         Pastikan data Asesmen Kesehatan Lanjutan
                         sudah sesuai sebelum disimpan.
                     </p>
 
 
-                    <div class="save-modal-actions">
-
+                    <div
+                        class="global-popup-actions "
+                        style="margin-top: 20px;"
+                    >
 
                         {{-- BATAL --}}
 
                         <button
                             type="button"
-                            class="save-modal-cancel"
+                            class="global-popup-btn cancel"
                             @click="showSavePopup = false"
                         >
                             Batal
                         </button>
 
 
-
                         {{-- SIMPAN --}}
 
                         <button
                             type="button"
-                            class="save-modal-button"
+                            class="global-popup-btn primary"
                             @click="$refs.assessmentForm.requestSubmit()"
                         >
                             Simpan
                         </button>
-
 
                     </div>
 
@@ -880,19 +886,17 @@ HASIL AKHIR
         </template>
 
 
-
         {{-- =====================================================
         POPUP BERHASIL
         ====================================================== --}}
 
         @if (session('success'))
 
-            <div class="save-modal-overlay">
+            <div class="global-popup success show">
 
-                <div class="save-modal">
+                <div class="global-popup-box">
 
-
-                    <div class="save-modal-icon">
+                    <div class="global-popup-icon">
 
                         <span class="material-symbols-outlined">
                             check_circle
@@ -901,19 +905,19 @@ HASIL AKHIR
                     </div>
 
 
-                    <h3 class="save-modal-title">
+                    <h3 class="global-popup-title">
                         Berhasil
                     </h3>
 
 
-                    <p class="save-modal-message">
+                    <p class="global-popup-message">
                         {{ session('success') }}
                     </p>
 
 
                     <button
                         type="button"
-                        class="save-modal-button"
+                        class="global-popup-btn primary"
                         @click="window.location.href = '{{ route(
                             'ppks.normal.kesehatan-lanjutan.detail',
                             $ppks
@@ -929,19 +933,17 @@ HASIL AKHIR
         @endif
 
 
-
         {{-- =====================================================
         POPUP ERROR SESSION
         ====================================================== --}}
 
         @if (session('error'))
 
-            <div class="save-modal-overlay">
+            <div class="global-popup error show">
 
-                <div class="save-modal">
+                <div class="global-popup-box">
 
-
-                    <div class="save-modal-icon">
+                    <div class="global-popup-icon">
 
                         <span class="material-symbols-outlined">
                             error
@@ -950,12 +952,12 @@ HASIL AKHIR
                     </div>
 
 
-                    <h3 class="save-modal-title">
+                    <h3 class="global-popup-title">
                         Tidak Dapat Disimpan
                     </h3>
 
 
-                    <p class="save-modal-message">
+                    <p class="global-popup-message">
                         {{ session('error') }}
                     </p>
 
@@ -963,6 +965,7 @@ HASIL AKHIR
                     <button
                         type="button"
                         class="save-modal-button"
+                        style="margin-top: 20px;"
                         @click="window.location.href = '{{ route(
                             'ppks.normal.kesehatan-lanjutan'
                         ) }}'"
@@ -980,4 +983,3 @@ HASIL AKHIR
     </div>
 
 </x-app-layout>
-

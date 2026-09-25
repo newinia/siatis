@@ -643,11 +643,11 @@
                                 <div class="empty-state">
 
                                     <span class="material-symbols-outlined">
-                                        folder_open
+                                        assignment_late
                                     </span>
 
                                     <p>
-                                        Belum ada data Asesmen Kesehatan Awal.
+                                        Belum ada data PPKS yang belum melakukan Asesmen Kesehatan Awal
                                     </p>
 
                                 </div>

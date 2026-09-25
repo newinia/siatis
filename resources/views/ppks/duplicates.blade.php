@@ -1,3 +1,4 @@
+```blade
 <x-app-layout>
 
 <style>

@@ -833,23 +833,28 @@ PILIH PESERTA
 
                     @empty
 
-                        <tr id="emptyRow">
+                        <tr>
 
-                            <td colspan="9" class="empty-state">
+                            <td
+                                colspan="8"
+                                style="text-align:center; padding:40px;"
+                            >
 
-                                <span class="material-symbols-outlined">
-                                    event_busy
-                                </span>
+                                <div class="empty-state">
 
-                                <p>
-                                    Belum ada peserta yang telah
-                                    melakukan Case Conference.
-                                </p>
+                                    <span class="material-symbols-outlined">
+                                        assignment_late
+                                    </span>
+
+                                    <p>
+                                        Belum ada data PPKS yang sudah dilakukan Case Conference
+                                    </p>
+
+                                </div>
 
                             </td>
 
                         </tr>
-
                     @endforelse
 
 

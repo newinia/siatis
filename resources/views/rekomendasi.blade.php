@@ -310,11 +310,26 @@
 
                             <tr>
 
-                                <td colspan="8" style="text-align: center;">
-                                    Belum ada peserta pending.
-                                </td>
+                            <td
+                                colspan="8"
+                                style="text-align:center; padding:40px;"
+                            >
 
-                            </tr>
+                                <div class="empty-state">
+
+                                    <span class="material-symbols-outlined">
+                                        assignment_late
+                                    </span>
+
+                                    <p>
+                                        Belum ada data PPKS yang pending
+                                    </p>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
 
                         @endforelse
 

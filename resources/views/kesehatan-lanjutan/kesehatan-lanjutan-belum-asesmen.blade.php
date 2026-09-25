@@ -992,10 +992,21 @@
 
                             <td
                                 colspan="8"
-                                class="empty-state"
+                                style="text-align:center; padding:40px;"
                             >
-                                Belum ada peserta yang menunggu
-                                Kesehatan Lanjutan.
+
+                                <div class="empty-state">
+
+                                    <span class="material-symbols-outlined">
+                                        assignment_late
+                                    </span>
+
+                                    <p>
+                                        Belum ada data PPKS yang belum melakukan Asesmen Kesehatan Lanjutan
+                                    </p>
+
+                                </div>
+
                             </td>
 
                         </tr>

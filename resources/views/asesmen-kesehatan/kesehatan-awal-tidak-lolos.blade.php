@@ -545,12 +545,11 @@
                                 <div class="empty-state">
 
                                     <span class="material-symbols-outlined">
-                                        folder_open
+                                        assignment_late
                                     </span>
 
                                     <p>
-                                        Belum ada data peserta yang tidak lulus
-                                        Asesmen Kesehatan Awal.
+                                        Belum ada data PPKS yang tidak lulus Asesmen Kesehatan Awal
                                     </p>
 
                                 </div>

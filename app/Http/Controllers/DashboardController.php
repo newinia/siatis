@@ -14,8 +14,11 @@ class DashboardController extends Controller
     /**
      * Dashboard utama
      */
-    public function index(Request $request, PpksRecommendationController $recommendationController): View
-    {
+    public function index(
+        Request $request,
+        PpksRecommendationController $recommendationController
+    ): View {
+
         /*
         |--------------------------------------------------------------------------
         | AMBIL DATA PPKS
@@ -29,6 +32,7 @@ class DashboardController extends Controller
                 'status',
             ])
             ->get();
+
 
         /*
         |--------------------------------------------------------------------------
@@ -52,6 +56,7 @@ class DashboardController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
+
         /*
         |--------------------------------------------------------------------------
         | GROUP PROSES BERDASARKAN PPKS
@@ -59,6 +64,7 @@ class DashboardController extends Controller
         */
 
         $prosesByPpks = $prosesPesertas->groupBy('ppks_id');
+
 
         /*
         |--------------------------------------------------------------------------
@@ -96,6 +102,7 @@ class DashboardController extends Controller
             ->values()
             ->toArray();
 
+
         /*
         |--------------------------------------------------------------------------
         | TENTUKAN TAHUN YANG DIPILIH
@@ -118,6 +125,7 @@ class DashboardController extends Controller
         $selectedYear = $selectedYear !== null
             ? (int) $selectedYear
             : null;
+
 
         /*
         |--------------------------------------------------------------------------
@@ -156,6 +164,7 @@ class DashboardController extends Controller
             }
         }
 
+
         /*
         |--------------------------------------------------------------------------
         | LABEL BULAN
@@ -181,15 +190,66 @@ class DashboardController extends Controller
             $monthlyRegistrations
         );
 
+
         /*
         |--------------------------------------------------------------------------
-        | STATISTIK STATUS CASE CONFERENCE
+        | STATISTIK STATUS PESERTA
+        |--------------------------------------------------------------------------
+        |
+        | DITERIMA
+        | ---------------------------------------------------------------
+        | Peserta dianggap diterima apabila:
+        |
+        | tahap  = kesehatan_lanjutan
+        | status = lulus
+        |
+        |
+        | TIDAK DITERIMA
+        | ---------------------------------------------------------------
+        | Peserta dianggap tidak diterima apabila:
+        |
+        | status = tidak_lulus
+        |
+        | Tahap tidak dibatasi.
+        |
+        | Bisa berasal dari:
+        | - instruktur
+        | - kesehatan_awal
+        | - case_conference
+        | - kesehatan_lanjutan
+        |
         |--------------------------------------------------------------------------
         */
 
-        $sudahDilayani = 0;
+        $diterima = $prosesPesertas
+            ->where('tahap', 'kesehatan_lanjutan')
+            ->where('status', 'lulus')
+            ->pluck('ppks_id')
+            ->unique()
+            ->count();
+
+
+        $tidakDiterima = $prosesPesertas
+            ->where('status', 'tidak_lulus')
+            ->pluck('ppks_id')
+            ->unique()
+            ->count();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | PENDING
+        |--------------------------------------------------------------------------
+        |
+        | Untuk sementara logika pending tetap mengikuti
+        | logika dashboard sebelumnya:
+        |
+        | mengambil CASE CONFERENCE terbaru.
+        |
+        |--------------------------------------------------------------------------
+        */
+
         $pending = 0;
-        $belumDilayani = 0;
 
         foreach ($ppks as $item) {
 
@@ -199,9 +259,10 @@ class DashboardController extends Controller
                     collect()
                 );
 
+
             /*
             |--------------------------------------------------------------------------
-            | Ambil CASE CONFERENCE TERBARU
+            | AMBIL CASE CONFERENCE TERBARU
             |--------------------------------------------------------------------------
             */
 
@@ -211,6 +272,7 @@ class DashboardController extends Controller
                     'case_conference'
                 )
                 ->sortByDesc(function ($process) {
+
                     return [
                         optional(
                             $process->tanggal_proses
@@ -223,43 +285,25 @@ class DashboardController extends Controller
                 })
                 ->first();
 
+
             if (!$caseConference) {
-
-                $belumDilayani++;
-
                 continue;
             }
 
+
             /*
             |--------------------------------------------------------------------------
-            | STATUS CASE CONFERENCE
+            | STATUS CASE CONFERENCE PENDING
             |--------------------------------------------------------------------------
             */
 
             if (
-                in_array(
-                    $caseConference->status,
-                    [
-                        'lulus',
-                        'tidak_lulus',
-                    ],
-                    true
-                )
-            ) {
-
-                $sudahDilayani++;
-
-            } elseif (
                 $caseConference->status === 'pending'
             ) {
-
                 $pending++;
-
-            } else {
-
-                $belumDilayani++;
             }
         }
+
 
         /*
         |--------------------------------------------------------------------------
@@ -269,25 +313,28 @@ class DashboardController extends Controller
 
         $totalPendaftar = $ppks->count();
 
+
         /*
         |--------------------------------------------------------------------------
         | PERSENTASE STATISTIK
         |--------------------------------------------------------------------------
         */
 
-        $sudahDilayaniPercentage = $totalPendaftar > 0
+        $diterimaPercentage = $totalPendaftar > 0
             ? round(
-                ($sudahDilayani / $totalPendaftar) * 100,
+                ($diterima / $totalPendaftar) * 100,
                 1
             )
             : 0;
 
-        $belumDilayaniPercentage = $totalPendaftar > 0
+
+        $tidakDiterimaPercentage = $totalPendaftar > 0
             ? round(
-                ($belumDilayani / $totalPendaftar) * 100,
+                ($tidakDiterima / $totalPendaftar) * 100,
                 1
             )
             : 0;
+
 
         $pendingPercentage = $totalPendaftar > 0
             ? round(
@@ -295,6 +342,7 @@ class DashboardController extends Controller
                 1
             )
             : 0;
+
 
         /*
         |--------------------------------------------------------------------------
@@ -339,6 +387,7 @@ class DashboardController extends Controller
             $topProvinces
         );
 
+
         /*
         |--------------------------------------------------------------------------
         | JENIS PPKS
@@ -367,6 +416,7 @@ class DashboardController extends Controller
             'Other',
         ];
 
+
         /*
         |--------------------------------------------------------------------------
         | INISIALISASI SEMUA KATEGORI
@@ -378,6 +428,7 @@ class DashboardController extends Controller
         foreach ($ppksCategories as $category) {
             $disabilityCounts[$category] = 0;
         }
+
 
         /*
         |--------------------------------------------------------------------------
@@ -395,6 +446,7 @@ class DashboardController extends Controller
                 )
             );
 
+
             /*
             |--------------------------------------------------------------------------
             | KOSONG -> OTHER
@@ -407,6 +459,7 @@ class DashboardController extends Controller
 
                 continue;
             }
+
 
             /*
             |--------------------------------------------------------------------------
@@ -424,6 +477,7 @@ class DashboardController extends Controller
 
             $matchedCategory = null;
 
+
             /*
             |--------------------------------------------------------------------------
             | DISABILITAS FISIK
@@ -440,6 +494,7 @@ class DashboardController extends Controller
                 $matchedCategory =
                     'Disabilitas Fisik';
             }
+
 
             /*
             |--------------------------------------------------------------------------
@@ -462,6 +517,7 @@ class DashboardController extends Controller
                     'Disabilitas Rungu Wicara';
             }
 
+
             /*
             |--------------------------------------------------------------------------
             | NETRA
@@ -478,6 +534,7 @@ class DashboardController extends Controller
                 $matchedCategory =
                     'Disabilitas Netra';
             }
+
 
             /*
             |--------------------------------------------------------------------------
@@ -496,6 +553,7 @@ class DashboardController extends Controller
                     'Disabilitas Mental';
             }
 
+
             /*
             |--------------------------------------------------------------------------
             | INTELEKTUAL
@@ -512,6 +570,7 @@ class DashboardController extends Controller
                 $matchedCategory =
                     'Disabilitas Intelektual';
             }
+
 
             /*
             |--------------------------------------------------------------------------
@@ -530,6 +589,7 @@ class DashboardController extends Controller
                     'Kelompok Rentan';
             }
 
+
             /*
             |--------------------------------------------------------------------------
             | JIKA TIDAK SESUAI 6 KATEGORI -> OTHER
@@ -543,12 +603,10 @@ class DashboardController extends Controller
             $disabilityCounts[$matchedCategory]++;
         }
 
+
         /*
         |--------------------------------------------------------------------------
         | LABEL DAN VALUE JENIS PPKS
-        |--------------------------------------------------------------------------
-        |
-        | Urutan tetap sesuai kategori yang sudah ditentukan.
         |--------------------------------------------------------------------------
         */
 
@@ -560,20 +618,21 @@ class DashboardController extends Controller
             $disabilityCounts
         );
 
+
         /*
         |--------------------------------------------------------------------------
         | JURUSAN YANG DIMINATI
         |--------------------------------------------------------------------------
         |
-        | KATEGORI DISPLAY TETAP 8:
+        | KATEGORI DISPLAY:
         |
-        | 1. Komputer
-        | 2. Desain Grafis
+        | 1. Desain Grafis
+        | 2. Contact Center
         | 3. Penjahitan
-        | 4. Elektro
-        | 5. Las
-        | 6. Contact Center
-        | 7. Otomotif
+        | 4. Komputer
+        | 5. Otomotif
+        | 6. Elektro
+        | 7. Las
         | 8. Other
         |
         |--------------------------------------------------------------------------
@@ -597,6 +656,7 @@ class DashboardController extends Controller
 
         $majorCounts['Other'] = 0;
 
+
         foreach ($ppks as $item) {
 
             $major = trim(
@@ -606,6 +666,7 @@ class DashboardController extends Controller
                     ''
                 )
             );
+
 
             /*
             |--------------------------------------------------------------------------
@@ -619,6 +680,7 @@ class DashboardController extends Controller
 
                 continue;
             }
+
 
             /*
             |--------------------------------------------------------------------------
@@ -635,6 +697,7 @@ class DashboardController extends Controller
             );
 
             $matched = false;
+
 
             /*
             |--------------------------------------------------------------------------
@@ -662,6 +725,7 @@ class DashboardController extends Controller
                 }
             }
 
+
             /*
             |--------------------------------------------------------------------------
             | TIDAK COCOK -> OTHER
@@ -682,6 +746,7 @@ class DashboardController extends Controller
             $majorCounts
         );
 
+
         /*
         |--------------------------------------------------------------------------
         | TAHAPAN PESERTA
@@ -698,6 +763,7 @@ class DashboardController extends Controller
             'Tidak Lulus' => 0,
         ];
 
+
         foreach ($ppks as $item) {
 
             $processes = $prosesByPpks
@@ -705,6 +771,7 @@ class DashboardController extends Controller
                     $item->id,
                     collect()
                 );
+
 
             /*
             |--------------------------------------------------------------------------
@@ -746,6 +813,7 @@ class DashboardController extends Controller
                 }
             }
 
+
             /*
             |--------------------------------------------------------------------------
             | PRIORITAS STATUS
@@ -759,12 +827,14 @@ class DashboardController extends Controller
                 return $process->status === 'pending';
             });
 
+
             $hasTidakLulus = collect(
                 $latestByStage
             )->contains(function ($process) {
 
                 return $process->status === 'tidak_lulus';
             });
+
 
             if ($hasPending) {
 
@@ -773,12 +843,14 @@ class DashboardController extends Controller
                 continue;
             }
 
+
             if ($hasTidakLulus) {
 
                 $stageCounts['Tidak Lulus']++;
 
                 continue;
             }
+
 
             /*
             |--------------------------------------------------------------------------
@@ -808,6 +880,7 @@ class DashboardController extends Controller
                     continue;
                 }
 
+
                 switch ($stage) {
 
                     case 'kesehatan_lanjutan':
@@ -818,6 +891,7 @@ class DashboardController extends Controller
 
                         break;
 
+
                     case 'case_conference':
 
                         $stageCounts[
@@ -826,6 +900,7 @@ class DashboardController extends Controller
 
                         break;
 
+
                     case 'kesehatan_awal':
 
                         $stageCounts[
@@ -833,6 +908,7 @@ class DashboardController extends Controller
                         ]++;
 
                         break;
+
 
                     case 'instruktur':
 
@@ -848,6 +924,7 @@ class DashboardController extends Controller
                 break;
             }
 
+
             /*
             |--------------------------------------------------------------------------
             | BELUM ADA PROSES
@@ -860,6 +937,7 @@ class DashboardController extends Controller
             }
         }
 
+
         $stageLabels = array_keys(
             $stageCounts
         );
@@ -868,27 +946,35 @@ class DashboardController extends Controller
             $stageCounts
         );
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | REKOMENDASI
+        |--------------------------------------------------------------------------
+        */
+
+        $recommendations =
+            $recommendationController
+                ->getRecommendations();
+
+
         /*
         |--------------------------------------------------------------------------
         | KIRIM DATA KE BLADE
         |--------------------------------------------------------------------------
-        |
-        | Data recommendation sekarang tidak lagi dibuat di sini.
-        | Akan diambil dari RecommendationService.
-        |--------------------------------------------------------------------------
         */
-        $recommendations = $recommendationController->getRecommendations();
 
         return view(
             'dashboard',
             compact(
+
                 'totalPendaftar',
 
-                'sudahDilayani',
-                'sudahDilayaniPercentage',
+                'diterima',
+                'diterimaPercentage',
 
-                'belumDilayani',
-                'belumDilayaniPercentage',
+                'tidakDiterima',
+                'tidakDiterimaPercentage',
 
                 'pending',
                 'pendingPercentage',
@@ -911,11 +997,12 @@ class DashboardController extends Controller
                 'majorLabels',
                 'majorValues'
             )
-            )->with(
-    'recommendations',
-    $recommendations
+        )->with(
+            'recommendations',
+            $recommendations
         );
     }
+
 
     /**
      * Parse timestamp dari data Google Sheets / database.
@@ -933,6 +1020,7 @@ class DashboardController extends Controller
         if ($timestamp === '') {
             return null;
         }
+
 
         /*
         |--------------------------------------------------------------------------
@@ -957,6 +1045,7 @@ class DashboardController extends Controller
             'd-m-Y H:i',
         ];
 
+
         foreach ($formats as $format) {
 
             try {
@@ -971,6 +1060,7 @@ class DashboardController extends Controller
                 // Lanjut ke format berikutnya
             }
         }
+
 
         /*
         |--------------------------------------------------------------------------
@@ -988,7 +1078,5 @@ class DashboardController extends Controller
 
             return null;
         }
-        
     }
-    
 }

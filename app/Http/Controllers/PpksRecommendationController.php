@@ -4,38 +4,26 @@ namespace App\Http\Controllers;
 
 use App\Models\Ppks;
 use App\Models\ProsesPeserta;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class PpksRecommendationController extends Controller
 {
     /**
-     * Mendapatkan seluruh rekomendasi peserta pending.
+     * Ambil data rekomendasi peserta pending.
      *
-     * Prioritas tahap:
-     * 1. Asesmen Instruktur
-     * 2. Case Conference
-     * 3. Asesmen Kesehatan Awal
-     * 4. Kesehatan Lanjutan
-     *
-     * Setelah prioritas tahap:
-     * 1. Umur paling dekat dengan 18 tahun
-     * 2. Disabilitas Fisik
-     * 3. Disabilitas Rungu Wicara
-     * 4. Kategori lainnya
-     *
-     * Catatan:
-     * - Penentuan pending berdasarkan STATUS, bukan waktu.
-     * - Satu PPKS hanya muncul satu kali.
-     * - Jika satu PPKS memiliki beberapa tahap pending,
-     *   hanya tahap dengan prioritas tertinggi yang ditampilkan.
+     * Prioritas:
+     * 1. Umur 18 → 19 → 20 → ... → 35
+     * 2. Jika umur sama:
+     *    Fisik → Rungu Wicara → lainnya
      */
-    public function getRecommendations(): array
+    public function getRecommendations()
     {
         /*
         |--------------------------------------------------------------------------
-        | AMBIL DATA PPKS
+        | Ambil data PPKS
         |--------------------------------------------------------------------------
         */
-
         $ppks = Ppks::query()
             ->select([
                 'id',
@@ -46,11 +34,10 @@ class PpksRecommendationController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | AMBIL SELURUH PROSES PESERTA
+        | Ambil proses peserta
         |--------------------------------------------------------------------------
         */
-
-        $prosesPesertas = ProsesPeserta::query()
+        $prosesPeserta = ProsesPeserta::query()
             ->select([
                 'id',
                 'ppks_id',
@@ -66,42 +53,18 @@ class PpksRecommendationController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | GROUP PROSES BERDASARKAN PPKS
+        | Kelompokkan proses berdasarkan PPKS
         |--------------------------------------------------------------------------
         */
-
-        $prosesByPpks = $prosesPesertas->groupBy('ppks_id');
-
-        /*
-        |--------------------------------------------------------------------------
-        | PRIORITAS TAHAP REKOMENDASI
-        |--------------------------------------------------------------------------
-        |
-        | Semakin kecil angka = semakin tinggi prioritas.
-        |
-        */
-
-        $stagePriority = [
-            'instruktur' => 0,
-            'case_conference' => 1,
-            'kesehatan_awal' => 2,
-            'kesehatan_lanjutan' => 3,
-        ];
-
-        /*
-        |--------------------------------------------------------------------------
-        | INISIALISASI REKOMENDASI
-        |--------------------------------------------------------------------------
-        */
+        $prosesByPpks = $prosesPeserta->groupBy('ppks_id');
 
         $recommendations = [];
 
         /*
         |--------------------------------------------------------------------------
-        | CEK SETIAP PPKS
+        | Cari peserta yang memiliki proses PENDING
         |--------------------------------------------------------------------------
         */
-
         foreach ($ppks as $item) {
 
             $processes = $prosesByPpks->get(
@@ -111,150 +74,94 @@ class PpksRecommendationController extends Controller
 
             /*
             |--------------------------------------------------------------------------
-            | CARI STATUS PENDING BERDASARKAN PRIORITAS TAHAP
+            | Ambil proses pending terbaru
             |--------------------------------------------------------------------------
-            |
-            | Kita TIDAK menentukan pending berdasarkan tanggal.
-            |
-            | Yang dicek adalah:
-            |
-            | "Apakah PPKS ini memiliki proses dengan tahap tersebut
-            |  dan status = pending?"
-            |
-            | Kalau ada, tahap tersebut menjadi rekomendasi.
-            |
-            | Kalau ada lebih dari satu tahap pending, yang dipilih
-            | adalah tahap dengan prioritas paling tinggi.
-            |
             */
-
-            $selectedPendingProcess = null;
-            $selectedStage = null;
-            $selectedStagePriority = null;
-
-            foreach ($stagePriority as $stage => $priority) {
-
-                /*
-                |--------------------------------------------------------------------------
-                | CARI PROSES PENDING PADA TAHAP INI
-                |--------------------------------------------------------------------------
-                */
-
-                $pendingProcess = $processes
-                    ->where('tahap', $stage)
-                    ->where('status', 'pending')
-                    ->first();
-
-                /*
-                |--------------------------------------------------------------------------
-                | TIDAK ADA PENDING PADA TAHAP INI
-                |--------------------------------------------------------------------------
-                */
-
-                if (!$pendingProcess) {
-                    continue;
-                }
-
-                /*
-                |--------------------------------------------------------------------------
-                | DITEMUKAN PENDING
-                |--------------------------------------------------------------------------
-                */
-
-                $selectedPendingProcess = $pendingProcess;
-                $selectedStage = $stage;
-                $selectedStagePriority = $priority;
-
-                /*
-                |--------------------------------------------------------------------------
-                | BERHENTI
-                |--------------------------------------------------------------------------
-                |
-                | Karena tahap sudah ditemukan berdasarkan urutan prioritas,
-                | tidak perlu mengecek tahap berikutnya.
-                |
-                */
-
-                break;
-            }
+            $pendingProcess = $processes
+                ->filter(function ($process) {
+                    return strtolower(
+                        trim((string) $process->status)
+                    ) === 'pending';
+                })
+                ->sortByDesc(function ($process) {
+                    return $process->created_at
+                        ?? $process->tanggal_proses;
+                })
+                ->first();
 
             /*
             |--------------------------------------------------------------------------
-            | TIDAK ADA PENDING
+            | Kalau tidak ada pending, lewati
             |--------------------------------------------------------------------------
             */
-
-            if (!$selectedPendingProcess) {
+            if (!$pendingProcess) {
                 continue;
             }
 
             /*
             |--------------------------------------------------------------------------
-            | AMBIL UMUR
+            | Ambil data peserta
             |--------------------------------------------------------------------------
             */
+            $data = is_array($item->data)
+                ? $item->data
+                : [];
 
-            $age = data_get(
-                $item->data,
-                'usia'
-            );
+            /*
+            |--------------------------------------------------------------------------
+            | Ambil umur
+            |--------------------------------------------------------------------------
+            */
+            $ageRaw = $data['usia'] ?? null;
 
-            $age = is_numeric($age)
-                ? (int) $age
+            $age = is_numeric($ageRaw)
+                ? (int) $ageRaw
                 : null;
 
             /*
             |--------------------------------------------------------------------------
-            | HITUNG JARAK UMUR DARI 18 TAHUN
+            | Hanya umur 18 - 35 tahun
             |--------------------------------------------------------------------------
             */
-
-            $ageDifference = $age !== null
-                ? abs(18 - $age)
-                : PHP_INT_MAX;
+            if (
+                $age === null ||
+                $age < 18 ||
+                $age > 35
+            ) {
+                continue;
+            }
 
             /*
             |--------------------------------------------------------------------------
-            | AMBIL JENIS PPKS
+            | Ambil jenis disabilitas
             |--------------------------------------------------------------------------
             */
+            $disabilityType =
+                $data['jenis_ppks']
+                ?? $data['jenis_disabilitas']
+                ?? $data['jenis_disabilitas_ppks']
+                ?? '';
 
-            $type = trim(
-                (string) data_get(
-                    $item->data,
-                    'jenis_ppks',
-                    ''
-                )
+            $disabilityType = trim(
+                (string) $disabilityType
+            );
+
+            $normalizedType = strtolower(
+                $disabilityType
             );
 
             /*
             |--------------------------------------------------------------------------
-            | NORMALISASI JENIS PPKS
+            | Prioritas disabilitas
+            |
+            | 0 = Fisik
+            | 1 = Rungu Wicara
+            | 2 = Lainnya
             |--------------------------------------------------------------------------
             */
-
-            $typeLower = mb_strtolower(
-                preg_replace(
-                    '/\s+/',
-                    ' ',
-                    $type
-                )
-            );
-
-            /*
-            |--------------------------------------------------------------------------
-            | PRIORITAS JENIS PPKS
-            |--------------------------------------------------------------------------
-            |
-            | 0 = Disabilitas Fisik
-            | 1 = Disabilitas Rungu Wicara
-            | 2 = Kategori lainnya
-            |
-            */
-
             if (
                 str_contains(
-                    $typeLower,
+                    $normalizedType,
                     'fisik'
                 )
             ) {
@@ -263,11 +170,11 @@ class PpksRecommendationController extends Controller
 
             } elseif (
                 str_contains(
-                    $typeLower,
+                    $normalizedType,
                     'rungu'
                 ) ||
                 str_contains(
-                    $typeLower,
+                    $normalizedType,
                     'wicara'
                 )
             ) {
@@ -281,115 +188,96 @@ class PpksRecommendationController extends Controller
 
             /*
             |--------------------------------------------------------------------------
-            | SIMPAN REKOMENDASI
+            | Simpan kandidat rekomendasi
             |--------------------------------------------------------------------------
             */
-
             $recommendations[] = [
                 'ppks' => $item,
 
-                'pending_process' => $selectedPendingProcess,
-
-                'pending_stage' => $selectedStage,
-
-                'stage_priority' => $selectedStagePriority,
+                'data' => $data,
 
                 'age' => $age,
 
-                'age_difference' => $ageDifference,
+                'disability_type' => $disabilityType,
 
-                'physical_priority' => $physicalPriority,
+                'physical_priority' =>
+                    $physicalPriority,
+
+                'process' => $pendingProcess,
+
+                'pending_process' =>
+                    $pendingProcess,
+
+                'pending_stage' =>
+                    $pendingProcess->tahap,
+
+                'alasan_pending' =>
+                    $pendingProcess->alasan_pending,
+
+                'catatan' =>
+                    $pendingProcess->catatan,
+
+                'tanggal_panggil_kembali' =>
+                    $pendingProcess->tanggal_panggil_kembali,
+
+                'tanggal_proses' =>
+                    $pendingProcess->tanggal_proses,
             ];
         }
 
         /*
         |--------------------------------------------------------------------------
-        | URUTKAN REKOMENDASI
+        | SORTING REKOMENDASI
         |--------------------------------------------------------------------------
         |
-        | Urutan:
+        | PRIORITAS PERTAMA:
+        | UMUR
         |
-        | 1. Prioritas tahap
-        | 2. Umur paling dekat dengan 18
-        | 3. Disabilitas Fisik
-        | 4. Disabilitas Rungu Wicara
-        | 5. Kategori lainnya
+        | 18 → 19 → 20 → 21 → ... → 35
         |
+        | PRIORITAS KEDUA:
+        | JENIS DISABILITAS
+        |
+        | Fisik → Rungu Wicara → lainnya
+        |
+        |--------------------------------------------------------------------------
         */
-
         usort(
             $recommendations,
             function ($a, $b) {
 
                 /*
                 |--------------------------------------------------------------------------
-                | PRIORITAS TAHAP
+                | 1. UMUR TERLEBIH DAHULU
                 |--------------------------------------------------------------------------
                 */
-
-                if (
-                    $a['stage_priority']
-                    !==
-                    $b['stage_priority']
-                ) {
-
-                    return
-                        $a['stage_priority']
-                        <=>
-                        $b['stage_priority'];
+                if ($a['age'] !== $b['age']) {
+                    return $a['age'] <=> $b['age'];
                 }
 
                 /*
                 |--------------------------------------------------------------------------
-                | JARAK UMUR DARI 18
+                | 2. KALAU UMUR SAMA, BARU DISABILITAS
                 |--------------------------------------------------------------------------
                 */
-
-                if (
-                    $a['age_difference']
-                    !==
-                    $b['age_difference']
-                ) {
-
-                    return
-                        $a['age_difference']
-                        <=>
-                        $b['age_difference'];
-                }
-
-                /*
-                |--------------------------------------------------------------------------
-                | PRIORITAS JENIS PPKS
-                |--------------------------------------------------------------------------
-                */
-
-                return
-                    $a['physical_priority']
-                    <=>
-                    $b['physical_priority'];
+                return $a['physical_priority']
+                    <=> $b['physical_priority'];
             }
         );
 
-        /*
-        |--------------------------------------------------------------------------
-        | KEMBALIKAN SEMUA REKOMENDASI
-        |--------------------------------------------------------------------------
-        |
-        | Tidak menggunakan array_slice().
-        |
-        | Semua PPKS yang memiliki status pending
-        | akan dikembalikan.
-        |
-        */
-
         return $recommendations;
     }
-    public function index()
+
+    /**
+     * Halaman rekomendasi.
+     */
+    public function index(Request $request): View
     {
-        $recommendations = $this->getRecommendations();
+        $recommendations =
+            $this->getRecommendations();
 
         return view(
-            'rekomendasi',
+            'ppks.normal.rekomendasi',
             compact('recommendations')
         );
     }

@@ -10,26 +10,8 @@
      * pending   = sedang menunggu
      * failed    = tidak lulus
      * waiting   = belum masuk tahap
-     *
-     * Contoh:
-     * [
-     *     1 => 'completed',
-     *     2 => 'completed',
-     *     3 => 'current',
-     *     4 => 'waiting',
-     *     5 => 'waiting',
-     * ]
      */
     'stageStatuses' => [],
-
-    /*
-     * Status hasil akhir.
-     *
-     * active   = Peserta Aktif
-     * inactive = Tidak Aktif
-     * waiting  = Belum ada hasil
-     */
-    'finalStatus' => 'waiting',
 ])
 
 @php
@@ -113,6 +95,7 @@
         {{-- =================================================
             STEP
         ================================================== --}}
+
         <div class="progress-step {{ $status }}">
 
             <div class="progress-circle">
@@ -137,7 +120,7 @@
                 @elseif ($status === 'pending')
 
                     <span class="material-symbols-outlined">
-                        schedule
+                        hourglass_empty
                     </span>
 
 
@@ -169,6 +152,7 @@
         {{-- =================================================
             LINE
         ================================================== --}}
+
         @if (!$loop->last)
 
             @php
@@ -176,9 +160,7 @@
                  * Garis hanya aktif kalau tahap sebelumnya
                  * benar-benar COMPLETED.
                  *
-                 * Jadi khusus detail:
-                 * Step 1 boleh centang,
-                 * tetapi garis tetap tidak aktif.
+                 * Kalau FAILED, garis tidak dilanjutkan.
                  */
                 $lineCompleted =
                     !$detail &&
@@ -190,73 +172,5 @@
         @endif
 
     @endforeach
-
-
-    {{-- =====================================================
-        LINE MENUJU HASIL AKHIR
-    ====================================================== --}}
-
-    @php
-        /*
-         * Garis menuju hasil akhir hanya aktif
-         * jika Kesehatan Lanjutan sudah selesai.
-         */
-        $finalLineCompleted =
-            !$detail &&
-            $getStageStatus(5) === 'completed';
-    @endphp
-
-    <div class="progress-line {{ $finalLineCompleted ? 'completed' : '' }}"></div>
-
-
-    {{-- =====================================================
-        HASIL AKHIR
-    ====================================================== --}}
-
-    @php
-        $finalStepClass = match ($finalStatus) {
-            'active' => 'active',
-            'inactive' => 'inactive',
-            default => 'waiting',
-        };
-    @endphp
-
-    <div class="progress-step final-step {{ $finalStepClass }}">
-
-        <div class="progress-circle">
-
-            {{-- PESERTA AKTIF --}}
-            @if ($finalStatus === 'active')
-
-                <span class="material-symbols-outlined">
-                    check
-                </span>
-
-
-            {{-- TIDAK AKTIF --}}
-            @elseif ($finalStatus === 'inactive')
-
-                <span class="material-symbols-outlined">
-                    close
-                </span>
-
-
-            {{-- BELUM ADA HASIL --}}
-            @else
-
-                <span class="progress-number">
-                    6
-                </span>
-
-            @endif
-
-        </div>
-
-
-        <span class="progress-label">
-            Hasil<br>Akhir
-        </span>
-
-    </div>
 
 </section>

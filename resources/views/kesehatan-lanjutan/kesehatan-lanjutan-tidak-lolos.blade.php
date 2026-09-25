@@ -517,11 +517,20 @@
 
                             <td
                                 colspan="8"
-                                class="empty-state"
+                                style="text-align:center; padding:40px;"
                             >
 
-                                Belum ada peserta yang tidak lulus
-                                Kesehatan Lanjutan.
+                                <div class="empty-state">
+
+                                    <span class="material-symbols-outlined">
+                                        assignment_late
+                                    </span>
+
+                                    <p>
+                                        Belum ada data PPKS yang tidka lulus Asesmen Kesehatan Lanjutan
+                                    </p>
+
+                                </div>
 
                             </td>
 
@@ -529,25 +538,6 @@
 
                     @endforelse
 
-
-                    {{-- =================================================
-                    EMPTY FILTER
-                    ================================================== --}}
-                    <tr
-                        id="emptyRow"
-                        style="display: none;"
-                    >
-
-                        <td
-                            colspan="8"
-                            class="empty-state"
-                        >
-
-                            Data tidak ditemukan.
-
-                        </td>
-
-                    </tr>
 
                 </tbody>
 

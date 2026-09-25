@@ -438,24 +438,26 @@
 
                             <tr>
 
-                                <td colspan="6">
+                            <td
+                                colspan="8"
+                                style="text-align:center; padding:40px;"
+                            >
 
-                                    <div class="import-empty">
+                                <div class="empty-state">
 
-                                        <span class="material-symbols-outlined">
-                                            history
-                                        </span>
+                                    <span class="material-symbols-outlined">
+                                        assignment_late
+                                    </span>
 
-                                        <strong>
-                                            Belum ada riwayat import
-                                        </strong>
+                                    <p>
+                                        Belum ada riwayat import
+                                    </p>
 
-                                    </div>
+                                </div>
 
-                                </td>
+                            </td>
 
-                            </tr>
-
+                        </tr>
                         @endforelse
 
                     </tbody>

@@ -57,7 +57,7 @@ class PpksPemanggilanController extends Controller
         // =====================================================
 
         return view(
-            'pemanggilan-peserta',
+            'pemanggilan.pemanggilan-peserta',
             compact(
                 'pesertas',
                 'caseConferences'
