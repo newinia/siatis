@@ -19,94 +19,7 @@
 
             </div>
 
-
-            {{-- =================================================
-            DATE FILTER
-            ================================================== --}}
-
-            <div class="date-filter-wrapper">
-
-                <button type="button" class="date-filter" id="dateFilterButton">
-
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="1.8">
-                        <rect x="3" y="4" width="18" height="18" rx="2" />
-
-                        <path d="M16 2v4" />
-                        <path d="M8 2v4" />
-                        <path d="M3 10h18" />
-                    </svg>
-
-
-                    <span id="dateFilterText">
-                        Pilih Tanggal
-                    </span>
-
-
-                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2">
-                        <path d="m6 9 6 6 6-6" />
-                    </svg>
-
-                </button>
-
-
-                <div class="date-picker" id="datePicker">
-
-                    <div class="date-picker-header">
-
-                        <strong>
-                            Pilih Rentang Tanggal
-                        </strong>
-
-                    </div>
-
-
-                    <div class="date-input-group">
-
-                        <div>
-
-                            <label for="startDate">
-                                Dari
-                            </label>
-
-                            <input type="date" id="startDate">
-
-                        </div>
-
-
-                        <div>
-
-                            <label for="endDate">
-                                Sampai
-                            </label>
-
-                            <input type="date" id="endDate">
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="date-picker-actions">
-
-                        <button type="button" id="resetDate" class="date-reset">
-                            Reset
-                        </button>
-
-
-                        <button type="button" id="applyDate" class="date-apply">
-                            Terapkan
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
         </div>
-
 
 
         {{-- =====================================================
@@ -117,22 +30,60 @@
 
             <div class="filter-group">
 
-                {{-- SEARCH --}}
-                <form method="GET" action="{{ url()->current() }}" class="search" id="searchForm">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2">
-                        <circle cx="11" cy="11" r="7" />
-                        <path d="m20 20-3.5-3.5" />
+                {{-- =================================================
+                SEARCH NAMA / NIK
+                SEARCH DIPROSES OLEH CONTROLLER
+                ================================================== --}}
+
+                <form
+                    method="GET"
+                    action="{{ url()->current() }}"
+                    class="search"
+                    id="searchForm"
+                >
+
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+                        <circle
+                            cx="11"
+                            cy="11"
+                            r="7"
+                        />
+
+                        <path
+                            d="m20 20-3.5-3.5"
+                        />
                     </svg>
 
-                    <input type="text" name="search" id="searchInput" value="{{ request('search') }}"
-                        placeholder="Cari Nama atau NIK" autocomplete="off">
+                    <input
+                        type="text"
+                        name="search"
+                        id="searchInput"
+                        value="{{ request('search') }}"
+                        placeholder="Cari Nama atau NIK"
+                        autocomplete="off"
+                    >
+
                 </form>
-                {{-- FILTER JENIS PPKS --}}
+
+
+                {{-- =================================================
+                FILTER JENIS PPKS
+                ================================================== --}}
 
                 <div class="select-wrapper">
 
-                    <select id="ppksFilter" class="filter-button">
+                    <select
+                        id="ppksFilter"
+                        class="filter-button"
+                    >
 
                         <option value="">
                             Semua Jenis PPKS
@@ -168,7 +119,6 @@
 
                     </select>
 
-
                     <span class="material-symbols-outlined select-arrow">
                         keyboard_arrow_down
                     </span>
@@ -176,10 +126,15 @@
                 </div>
 
 
+                {{-- =================================================
+                RESET FILTER
+                ================================================== --}}
 
-                {{-- RESET FILTER --}}
-
-                <button type="button" id="resetAllFilters" class="filter-reset">
+                <button
+                    type="button"
+                    id="resetAllFilters"
+                    class="filter-reset"
+                >
 
                     <span class="material-symbols-outlined">
                         restart_alt
@@ -192,7 +147,6 @@
             </div>
 
         </div>
-
 
 
         {{-- =====================================================
@@ -225,236 +179,258 @@
 
                     @forelse ($ppks as $index => $item)
 
-                                    @php
-
-                                        /*
-                                        |----------------------------------------------------------
-                                        | DATA PPKS
-                                        |----------------------------------------------------------
-                                        */
+                        @php
+
+                            /*
+                            |--------------------------------------------------------------------------
+                            | DATA PPKS
+                            |--------------------------------------------------------------------------
+                            */
 
-                                        $data = is_array($item->data)
-                                            ? $item->data
-                                            : (
-                                                json_decode(
-                                                    $item->data ?? '{}',
-                                                    true
-                                                ) ?? []
-                                            );
-
-
-                                        /*
-                                        |----------------------------------------------------------
-                                        | NAMA
-                                        |----------------------------------------------------------
-                                        */
-
-                                        $nama =
-                                            $data['nama_lengkap']
-                                            ?? $data['nama']
-                                            ?? '-';
-
-
-                                        /*
-                                        |----------------------------------------------------------
-                                        | NIK
-                                        |----------------------------------------------------------
-                                        */
-
-                                        $nik =
-                                            $data['nik']
-                                            ?? $item->nik
-                                            ?? '-';
+                            $data = is_array($item->data)
+                                ? $item->data
+                                : (
+                                    json_decode(
+                                        $item->data ?? '{}',
+                                        true
+                                    ) ?? []
+                                );
+
+
+                            /*
+                            |--------------------------------------------------------------------------
+                            | NAMA
+                            |--------------------------------------------------------------------------
+                            */
+
+                            $nama =
+                                $data['nama_lengkap']
+                                ?? $data['nama']
+                                ?? '-';
 
-
-                                        /*
-                                        |----------------------------------------------------------
-                                        | UMUR
-                                        |----------------------------------------------------------
-                                        */
+
+                            /*
+                            |--------------------------------------------------------------------------
+                            | NIK
+                            |--------------------------------------------------------------------------
+                            */
 
-                                        $umur =
-                                            $data['umur']
-                                            ?? '-';
+                            $nik =
+                                $data['nik']
+                                ?? $item->nik
+                                ?? '-';
 
 
-                                        /*
-                                        |----------------------------------------------------------
-                                        | JENIS PPKS
-                                        |----------------------------------------------------------
-                                        */
+                            /*
+                            |--------------------------------------------------------------------------
+                            | UMUR
+                            |--------------------------------------------------------------------------
+                            */
 
-                                        $jenisPpks =
-                                            $data['jenis_ppks']
-                                            ?? '-';
+                            $umur =
+                                $data['umur']
+                                ?? '-';
 
 
-                                        /*
-                                        |----------------------------------------------------------
-                                        | JURUSAN
-                                        |----------------------------------------------------------
-                                        */
+                            /*
+                            |--------------------------------------------------------------------------
+                            | JENIS PPKS
+                            |--------------------------------------------------------------------------
+                            */
 
-                                        $jurusan =
-                                            $data['jurusan_yang_diminati']
-                                            ?? $data['jurusan']
-                                            ?? $data['jurusan_pelatihan']
-                                            ?? '-';
+                            $jenisPpks =
+                                $data['jenis_ppks']
+                                ?? '-';
 
 
-                                        /*
-                                        |----------------------------------------------------------
-                                        | PROSES INSTRUKTUR TERAKHIR
-                                        |----------------------------------------------------------
-                                        */
+                            /*
+                            |--------------------------------------------------------------------------
+                            | JURUSAN
+                            |--------------------------------------------------------------------------
+                            */
 
-                                        $prosesInstruktur =
-                                            $item->prosesPesertas
-                                                ->where('tahap', 'instruktur')
-                                                ->sortByDesc(function ($proses) {
+                            $jurusan =
+                                $data['jurusan_yang_diminati']
+                                ?? $data['jurusan']
+                                ?? $data['jurusan_pelatihan']
+                                ?? '-';
 
-                                                    return $proses->tanggal_proses
-                                                        ?? $proses->created_at;
 
-                                                })
-                                                ->first();
+                            /*
+                            |--------------------------------------------------------------------------
+                            | PROSES INSTRUKTUR TERAKHIR
+                            |--------------------------------------------------------------------------
+                            */
 
+                            $prosesInstruktur =
+                                $item->prosesPesertas
+                                    ->where('tahap', 'instruktur')
+                                    ->sortByDesc(function ($proses) {
 
-                                        /*
-                                        |----------------------------------------------------------
-                                        | TANGGAL PROSES
-                                        |----------------------------------------------------------
-                                        */
+                                        return $proses->tanggal_proses
+                                            ?? $proses->created_at;
 
-                                        $tanggal =
-                                            $prosesInstruktur?->tanggal_proses
-                                            ?? $prosesInstruktur?->created_at;
+                                    })
+                                    ->first();
 
 
-                                        /*
-                                        |----------------------------------------------------------
-                                        | KETERANGAN
-                                        |----------------------------------------------------------
-                                        */
+                            /*
+                            |--------------------------------------------------------------------------
+                            | KETERANGAN
+                            |--------------------------------------------------------------------------
+                            */
 
-                                        $keterangan =
-                                            $data['catatan_asesmen_instruktur']
-                                            ?? $prosesInstruktur?->catatan
-                                            ?? '-';
+                            $keterangan =
+                                $data['catatan_asesmen_instruktur']
+                                ?? $prosesInstruktur?->catatan
+                                ?? '-';
 
 
-                                        /*
-                                        |----------------------------------------------------------
-                                        | BADGE
-                                        |----------------------------------------------------------
-                                        */
+                            /*
+                            |--------------------------------------------------------------------------
+                            | BADGE
+                            |--------------------------------------------------------------------------
+                            */
 
-                                        $route =
-                                            route(
-                                                'ppks.normal.asesmen-instruktur.detail',
-                                                $item->id
-                                            );
+                            $route =
+                                route(
+                                    'ppks.normal.asesmen-instruktur.detail',
+                                    $item->id
+                                );
 
-                                        $badgeClass =
-                                            'result-instructor';
+                            $badgeClass =
+                                'result-instructor';
 
-                                        $hasilIcon =
-                                            'assignment';
+                            $hasilIcon =
+                                'assignment';
 
-                                        $labelTahapan =
-                                            'Asesmen Instruktur';
+                            $labelTahapan =
+                                'Asesmen Instruktur';
 
-                                        $hasil =
-                                            'Lulus';
+                            $hasil =
+                                'Lulus';
 
-                                        $hasilClass =
-                                            'lulus';
+                            $hasilClass =
+                                'lulus';
 
-                                        $hasilDotClass =
-                                            'lulus';
+                            $hasilDotClass =
+                                'lulus';
 
-                                    @endphp
+                        @endphp
 
 
-                                    <tr data-nama="{{ strtolower($nama) }}" data-nik="{{ strtolower($nik) }}"
-                                        data-ppks="{{ strtolower($jenisPpks) }}" data-tanggal="{{
-                        $tanggal
-                        ? \Carbon\Carbon::parse($tanggal)->format('Y-m-d')
-                        : ''
-                                            }}">
+                        <tr
+                            data-nama="{{ strtolower($nama) }}"
+                            data-nik="{{ strtolower($nik) }}"
+                            data-ppks="{{ strtolower($jenisPpks) }}"
+                        >
 
-                                        {{-- NO --}}
+                            {{-- =================================================
+                            NO
+                            ================================================== --}}
 
-                                        <td class="row-number">
-                                            {{ $ppks->firstItem() + $index }}
-                                        </td>
+                            <td class="row-number">
 
+                                {{ $ppks->firstItem() + $index }}
 
-                                        {{-- NAMA --}}
+                            </td>
 
-                                        <td>
-                                            {{ $nama }}
-                                        </td>
 
+                            {{-- =================================================
+                            NAMA
+                            ================================================== --}}
 
-                                        {{-- NIK --}}
+                            <td>
 
-                                        <td>
-                                            {{ $nik }}
-                                        </td>
+                                {{ $nama }}
 
+                            </td>
 
-                                        {{-- UMUR --}}
 
-                                        <td>
-                                            {{ $umur }}
-                                        </td>
+                            {{-- =================================================
+                            NIK
+                            ================================================== --}}
 
+                            <td>
 
-                                        {{-- JENIS PPKS --}}
+                                {{ $nik }}
 
-                                        <td>
-                                            {{ $jenisPpks }}
-                                        </td>
+                            </td>
 
 
-                                        {{-- JURUSAN --}}
+                            {{-- =================================================
+                            UMUR
+                            ================================================== --}}
 
-                                        <td>
-                                            {{ $jurusan }}
-                                        </td>
+                            <td>
 
+                                {{ $umur }}
 
-                                        {{-- =================================================
-                                        HASIL
-                                        KHUSUS LULUS INSTRUKTUR
-                                        ================================================== --}}
+                            </td>
 
-                                        <td>
 
-                                            <x-result-badge :route="$route" :badge-class="$badgeClass" :hasil-icon="$hasilIcon"
-                                                :label-tahapan="$labelTahapan" :hasil-class="$hasilClass"
-                                                :hasil-dot-class="$hasilDotClass" :hasil="$hasil" />
+                            {{-- =================================================
+                            JENIS PPKS
+                            ================================================== --}}
 
-                                        </td>
+                            <td>
 
+                                {{ $jenisPpks }}
 
-                                        {{-- KETERANGAN --}}
+                            </td>
 
-                                        <td>
 
-                                            <span class="keterangan-text">
-                                                {{ $keterangan }}
-                                            </span>
+                            {{-- =================================================
+                            JURUSAN
+                            ================================================== --}}
 
-                                        </td>
+                            <td>
 
-                                    </tr>
+                                {{ $jurusan }}
+
+                            </td>
+
+
+                            {{-- =================================================
+                            HASIL
+                            KHUSUS LULUS INSTRUKTUR
+                            ================================================== --}}
+
+                            <td>
+
+                                <x-result-badge
+                                    :route="$route"
+                                    :badge-class="$badgeClass"
+                                    :hasil-icon="$hasilIcon"
+                                    :label-tahapan="$labelTahapan"
+                                    :hasil-class="$hasilClass"
+                                    :hasil-dot-class="$hasilDotClass"
+                                    :hasil="$hasil"
+                                />
+
+                            </td>
+
+
+                            {{-- =================================================
+                            KETERANGAN
+                            ================================================== --}}
+
+                            <td>
+
+                                <span class="keterangan-text">
+
+                                    {{ $keterangan }}
+
+                                </span>
+
+                            </td>
+
+                        </tr>
 
 
                     @empty
 
-                    <tr>
+                        <tr>
 
                             <td
                                 colspan="8"
@@ -468,7 +444,7 @@
                                     </span>
 
                                     <p>
-                                        Belum ada data PPKS yang lulus Asesmen Intsruktur
+                                        Belum ada data PPKS yang lulus Asesmen Instruktur
                                     </p>
 
                                 </div>
@@ -486,7 +462,6 @@
         </div>
 
 
-
         {{-- =====================================================
         PAGINATION
         ====================================================== --}}
@@ -495,7 +470,7 @@
 
             <div class="pagination-wrapper">
 
-                {{ $ppks->links() }}
+                {{ $ppks->withQueryString()->links() }}
 
             </div>
 
@@ -504,414 +479,159 @@
     </div>
 
 
-
     {{-- =========================================================
-    JAVASCRIPT FILTER
+    JAVASCRIPT FILTER JENIS PPKS
     ========================================================= --}}
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
 
-            const ppksFilter =
-                document.getElementById('ppksFilter');
+        document.addEventListener(
+            'DOMContentLoaded',
+            function () {
 
-            const resetAllFilters =
-                document.getElementById('resetAllFilters');
+                const ppksFilter =
+                    document.getElementById('ppksFilter');
 
-            const tableRows =
-                document.querySelectorAll(
-                    '.table tbody tr[data-nama]'
-                );
+                const resetAllFilters =
+                    document.getElementById('resetAllFilters');
 
-
-            /* =====================================================
-               DATE FILTER
-            ===================================================== */
-
-            const dateFilterButton =
-                document.getElementById('dateFilterButton');
-
-            const datePicker =
-                document.getElementById('datePicker');
-
-            const dateFilterText =
-                document.getElementById('dateFilterText');
-
-            const startDate =
-                document.getElementById('startDate');
-
-            const endDate =
-                document.getElementById('endDate');
-
-            const applyDate =
-                document.getElementById('applyDate');
-
-            const resetDate =
-                document.getElementById('resetDate');
+                const tableRows =
+                    document.querySelectorAll(
+                        '.table tbody tr[data-nama]'
+                    );
 
 
-            /* =====================================================
-               FILTER TABLE
-        
-               SEARCH NAMA / NIK TIDAK DILAKUKAN DI SINI.
-               SEARCH SUDAH DILAKUKAN OLEH CONTROLLER
-               SEBELUM PAGINATION.
-            ===================================================== */
+                /* =====================================================
+                FILTER TABLE
+                ===================================================== */
 
-            function filterTable() {
+                function filterTable() {
 
-                const ppks =
-                    ppksFilter
-                        ? ppksFilter.value.toLowerCase().trim()
-                        : '';
-
-                const start =
-                    startDate
-                        ? startDate.value
-                        : '';
-
-                const end =
-                    endDate
-                        ? endDate.value
-                        : '';
-
-                let number = 1;
+                    const ppksValue =
+                        ppksFilter
+                            ? ppksFilter.value
+                                .toLowerCase()
+                                .trim()
+                            : '';
 
 
-                tableRows.forEach(function (row) {
-
-                    const jenis =
-                        row.dataset.ppks || '';
-
-                    const tanggal =
-                        row.dataset.tanggal || '';
+                    let number =
+                        1;
 
 
-                    /* =================================================
-                       FILTER JENIS PPKS
-                    ================================================= */
+                    tableRows.forEach(
+                        function (row) {
 
-                    const matchPpks =
-                        ppks === '' ||
-                        jenis === ppks;
-
-
-                    /* =================================================
-                       FILTER TANGGAL
-                    ================================================= */
-
-                    let matchDate = true;
+                            const jenisPpks =
+                                (
+                                    row.dataset.ppks || ''
+                                ).toLowerCase();
 
 
-                    if (start) {
-
-                        if (!tanggal || tanggal < start) {
-
-                            matchDate = false;
-
-                        }
-
-                    }
+                            const matchPpks =
+                                ppksValue === '' ||
+                                jenisPpks === ppksValue;
 
 
-                    if (end) {
-
-                        if (!tanggal || tanggal > end) {
-
-                            matchDate = false;
-
-                        }
-
-                    }
+                            row.style.display =
+                                matchPpks
+                                    ? ''
+                                    : 'none';
 
 
-                    /* =================================================
-                       HASIL AKHIR
-                    ================================================= */
+                            /* =================================================
+                            NOMOR URUT
+                            ================================================== */
 
-                    const show =
-                        matchPpks &&
-                        matchDate;
+                            if (matchPpks) {
 
-
-                    row.style.display =
-                        show
-                            ? ''
-                            : 'none';
+                                const numberCell =
+                                    row.querySelector(
+                                        '.row-number'
+                                    );
 
 
-                    /* =================================================
-                       NOMOR URUT
-                    ================================================= */
+                                if (numberCell) {
 
-                    if (show) {
+                                    numberCell.textContent =
+                                        number;
 
-                        const numberCell =
-                            row.querySelector('.row-number');
+                                }
 
-                        if (numberCell) {
 
-                            numberCell.textContent =
                                 number++;
 
+                            }
+
                         }
+                    );
+
+
+                    /* =================================================
+                    ACTIVE STATE FILTER
+                    ================================================== */
+
+                    if (ppksFilter) {
+
+                        ppksFilter.classList.toggle(
+                            'active',
+                            ppksFilter.value !== ''
+                        );
 
                     }
 
-                });
+                }
 
 
-                /* =================================================
-                   ACTIVE STATE FILTER PPKS
-                ================================================= */
+                /* =====================================================
+                EVENT FILTER JENIS PPKS
+                ===================================================== */
 
                 if (ppksFilter) {
 
-                    ppksFilter.classList.toggle(
-                        'active',
-                        ppksFilter.value !== ''
+                    ppksFilter.addEventListener(
+                        'change',
+                        filterTable
                     );
 
                 }
 
-            }
 
+                /* =====================================================
+                RESET SEMUA FILTER
+                ===================================================== */
 
-            /* =====================================================
-               FILTER PPKS
-            ===================================================== */
+                if (resetAllFilters) {
 
-            if (ppksFilter) {
+                    resetAllFilters.addEventListener(
+                        'click',
+                        function () {
 
-                ppksFilter.addEventListener(
-                    'change',
-                    filterTable
-                );
+                            /*
+                            Search Nama/NIK menggunakan GET.
+                            Reset menghapus parameter search
+                            dari URL dan mengembalikan halaman
+                            ke kondisi awal.
+                            */
 
-            }
-
-
-            /* =====================================================
-               RESET SEMUA FILTER
-            ===================================================== */
-
-            if (resetAllFilters) {
-
-                resetAllFilters.addEventListener(
-                    'click',
-                    function () {
-
-                        /*
-                         * Search menggunakan GET.
-                         * Jadi reset harus menghilangkan
-                         * parameter search dari URL.
-                         */
-
-                        window.location.href =
-                            window.location.pathname;
-
-                    }
-                );
-
-            }
-
-
-            /* =====================================================
-               BUKA DATE PICKER
-            ===================================================== */
-
-            if (dateFilterButton && datePicker) {
-
-                dateFilterButton.addEventListener(
-                    'click',
-                    function (event) {
-
-                        event.stopPropagation();
-
-                        datePicker.classList.toggle(
-                            'active'
-                        );
-
-                    }
-                );
-
-
-                datePicker.addEventListener(
-                    'click',
-                    function (event) {
-
-                        event.stopPropagation();
-
-                    }
-                );
-
-            }
-
-
-            /* =====================================================
-               TERAPKAN TANGGAL
-            ===================================================== */
-
-            if (applyDate) {
-
-                applyDate.addEventListener(
-                    'click',
-                    function () {
-
-                        const start =
-                            startDate
-                                ? startDate.value
-                                : '';
-
-                        const end =
-                            endDate
-                                ? endDate.value
-                                : '';
-
-
-                        if (!start || !end) {
-
-                            alert(
-                                'Silakan pilih tanggal awal dan tanggal akhir.'
-                            );
-
-                            return;
+                            window.location.href =
+                                window.location.pathname;
 
                         }
-
-
-                        if (start > end) {
-
-                            alert(
-                                'Tanggal awal tidak boleh lebih besar dari tanggal akhir.'
-                            );
-
-                            return;
-
-                        }
-
-
-                        if (dateFilterText) {
-
-                            dateFilterText.textContent =
-                                formatDate(start)
-                                + ' - '
-                                + formatDate(end);
-
-                        }
-
-
-                        if (datePicker) {
-
-                            datePicker.classList.remove(
-                                'active'
-                            );
-
-                        }
-
-
-                        filterTable();
-
-                    }
-                );
-
-            }
-
-
-            /* =====================================================
-               RESET TANGGAL
-            ===================================================== */
-
-            if (resetDate) {
-
-                resetDate.addEventListener(
-                    'click',
-                    function () {
-
-                        if (startDate) {
-                            startDate.value = '';
-                        }
-
-                        if (endDate) {
-                            endDate.value = '';
-                        }
-
-                        if (dateFilterText) {
-
-                            dateFilterText.textContent =
-                                'Pilih Tanggal';
-
-                        }
-
-                        if (datePicker) {
-
-                            datePicker.classList.remove(
-                                'active'
-                            );
-
-                        }
-
-                        filterTable();
-
-                    }
-                );
-
-            }
-
-
-            /* =====================================================
-               FORMAT DATE
-            ===================================================== */
-
-            function formatDate(value) {
-
-                const date =
-                    new Date(
-                        value + 'T00:00:00'
                     );
 
-                return date.toLocaleDateString(
-                    'id-ID',
-                    {
-                        day: '2-digit',
-                        month: 'short',
-                        year: 'numeric'
-                    }
-                );
+                }
+
+
+                /* =====================================================
+                INITIAL FILTER
+                ===================================================== */
+
+                filterTable();
 
             }
+        );
 
-
-            /* =====================================================
-               CLOSE DATE PICKER
-            ===================================================== */
-
-            document.addEventListener(
-                'click',
-                function () {
-
-                    if (datePicker) {
-
-                        datePicker.classList.remove(
-                            'active'
-                        );
-
-                    }
-
-                }
-            );
-
-
-            /* =====================================================
-               INITIAL FILTER
-            ===================================================== */
-
-            filterTable();
-
-        });
     </script>
-
-
-
 
 </x-app-layout>

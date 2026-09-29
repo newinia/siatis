@@ -285,7 +285,7 @@ class PpksKesehatanLanjutanController extends Controller
         */
 
         $petugas = User::query()
-            ->where('role', 'medis')
+            ->whereIn('role', ['medis', 'super_admin'])
             ->where('status', 'approved')
             ->orderBy('name')
             ->get();

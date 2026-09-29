@@ -38,45 +38,45 @@
         |--------------------------------------------------------------------------
         */
 
-    $statusAsesmen = old(
-        'status_asesmen',
-        $asesmenInstruktur?->status_asesmen ?? ''
-    );
+        $statusAsesmen = old(
+            'status_asesmen',
+            $asesmenInstruktur?->status_asesmen ?? ''
+        );
 
-    $baznas = old(
-        'baznas',
-        $asesmenInstruktur?->baznas ?? ''
-    );
+        $baznas = old(
+            'baznas',
+            $asesmenInstruktur?->baznas ?? ''
+        );
 
-    $gelombang = old(
-        'gelombang',
-        $asesmenInstruktur?->gelombang ?? ''
-    );
+        $gelombang = old(
+            'gelombang',
+            $asesmenInstruktur?->gelombang ?? ''
+        );
 
-    $tahun = old(
-        'tahun',
-        $asesmenInstruktur?->tahun ?? ''
-    );
+        $tahun = old(
+            'tahun',
+            $asesmenInstruktur?->tahun ?? ''
+        );
 
-    $tanggalAsesmenDaring = old(
-        'tanggal_asesmen_daring',
-        $asesmenInstruktur?->tanggal_asesmen_daring?->format('Y-m-d') ?? ''
-    );
+        $tanggalAsesmenDaring = old(
+            'tanggal_asesmen_daring',
+            $asesmenInstruktur?->tanggal_asesmen_daring?->format('Y-m-d') ?? ''
+        );
 
-    $petugasAsesmenInstruktur = old(
-        'petugas_asesmen_instruktur',
-        $asesmenInstruktur?->petugas_asesmen_instruktur ?? ''
-    );
+        $petugasAsesmenInstruktur = old(
+            'petugas_asesmen_instruktur',
+            $asesmenInstruktur?->petugas_asesmen_instruktur ?? ''
+        );
 
-    $hasilAsesmenInstruktur = old(
-        'hasil_asesmen_instruktur',
-        $asesmenInstruktur?->hasil_asesmen_instruktur ?? ''
-    );
+        $hasilAsesmenInstruktur = old(
+            'hasil_asesmen_instruktur',
+            $asesmenInstruktur?->hasil_asesmen_instruktur ?? ''
+        );
 
-    $catatanAsesmenInstruktur = old(
-        'catatan_asesmen_instruktur',
-        $asesmenInstruktur?->catatan_asesmen_instruktur ?? ''
-    );
+        $catatanAsesmenInstruktur = old(
+            'catatan_asesmen_instruktur',
+            $asesmenInstruktur?->catatan_asesmen_instruktur ?? ''
+        );
 
 
         /*
@@ -90,25 +90,25 @@
             data_get($data, 'asesmen_luring', false)
         );
 
-    $lokasiAsesmenLuring = old(
-        'lokasi_asesmen_luring',
-        $asesmenInstruktur?->lokasi_asesmen_luring ?? ''
-    );
+        $lokasiAsesmenLuring = old(
+            'lokasi_asesmen_luring',
+            $asesmenInstruktur?->lokasi_asesmen_luring ?? ''
+        );
 
-    $tanggalAsesmenLuring = old(
-        'tanggal_asesmen_luring',
-        $asesmenInstruktur?->tanggal_asesmen_luring?->format('Y-m-d') ?? ''
-    );
+        $tanggalAsesmenLuring = old(
+            'tanggal_asesmen_luring',
+            $asesmenInstruktur?->tanggal_asesmen_luring?->format('Y-m-d') ?? ''
+        );
 
-    $petugasAsesmenLuring = old(
-        'petugas_asesmen_luring',
-        $asesmenInstruktur?->petugas_asesmen_luring ?? ''
-    );
+        $petugasAsesmenLuring = old(
+            'petugas_asesmen_luring',
+            $asesmenInstruktur?->petugas_asesmen_luring ?? ''
+        );
 
-    $hasilAsesmenLuring = old(
-        'hasil_asesmen_luring',
-        $asesmenInstruktur?->hasil_asesmen_luring ?? ''
-    );
+        $hasilAsesmenLuring = old(
+            'hasil_asesmen_luring',
+            $asesmenInstruktur?->hasil_asesmen_luring ?? ''
+        );
 
         $catatanAsesmenLuring = old(
             'catatan_asesmen_luring',
@@ -128,6 +128,16 @@
             'tidak_lulus' => 'failed',
             default => 'current',
         };
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | STATUS KELULUSAN
+        |--------------------------------------------------------------------------
+        */
+
+        $lulusInstruktur = ($hasilAsesmenInstruktur === 'lulus');
+
     @endphp
 
 
@@ -150,7 +160,126 @@
 
     <div
         class="participant-detail-page"
-        x-data="{ showSavePopup: false }"
+        x-data="{
+            showSavePopup: false,
+            submitting: false,
+
+            originalData: {
+                status_asesmen: @js($statusAsesmen),
+                baznas: @js($baznas),
+                gelombang: @js($gelombang),
+                tahun: @js($tahun),
+                tanggal_asesmen_daring: @js($tanggalAsesmenDaring),
+                petugas_asesmen_instruktur: @js($petugasAsesmenInstruktur),
+                hasil_asesmen_instruktur: @js($hasilAsesmenInstruktur),
+                catatan_asesmen_instruktur: @js($catatanAsesmenInstruktur),
+
+                asesmen_luring: @js((bool) $asesmenLuring),
+                lokasi_asesmen_luring: @js($lokasiAsesmenLuring),
+                tanggal_asesmen_luring: @js($tanggalAsesmenLuring),
+                petugas_asesmen_luring: @js($petugasAsesmenLuring),
+                hasil_asesmen_luring: @js($hasilAsesmenLuring),
+                catatan_asesmen_luring: @js($catatanAsesmenLuring)
+            },
+
+            hasChanges: {{ $asesmenInstruktur ? 'false' : 'true' }},
+
+            normalize(value) {
+                return String(value ?? '').trim();
+            },
+
+            checkChanges() {
+
+                const currentData = {
+
+                    status_asesmen:
+                        document.getElementById(
+                            'status_asesmen'
+                        )?.value ?? '',
+
+                    baznas:
+                        document.getElementById(
+                            'baznas'
+                        )?.value ?? '',
+
+                    gelombang:
+                        document.getElementById(
+                            'gelombang'
+                        )?.value ?? '',
+
+                    tahun:
+                        document.getElementById(
+                            'tahun'
+                        )?.value ?? '',
+
+                    tanggal_asesmen_daring:
+                        document.getElementById(
+                            'tanggal_asesmen_daring'
+                        )?.value ?? '',
+
+                    petugas_asesmen_instruktur:
+                        document.getElementById(
+                            'petugas_asesmen_instruktur'
+                        )?.value ?? '',
+
+                    hasil_asesmen_instruktur:
+                        document.getElementById(
+                            'hasil_asesmen_instruktur'
+                        )?.value ?? '',
+
+                    catatan_asesmen_instruktur:
+                        document.getElementById(
+                            'catatan_asesmen_instruktur'
+                        )?.value ?? '',
+
+                    asesmen_luring:
+                        document.getElementById(
+                            'offlineAssessment'
+                        )?.checked ?? false,
+
+                    lokasi_asesmen_luring:
+                        document.getElementById(
+                            'lokasi_asesmen_luring'
+                        )?.value ?? '',
+
+                    tanggal_asesmen_luring:
+                        document.getElementById(
+                            'tanggal_asesmen_luring'
+                        )?.value ?? '',
+
+                    petugas_asesmen_luring:
+                        document.getElementById(
+                            'petugas_asesmen_luring'
+                        )?.value ?? '',
+
+                    hasil_asesmen_luring:
+                        document.getElementById(
+                            'hasil_asesmen_luring'
+                        )?.value ?? '',
+
+                    catatan_asesmen_luring:
+                        document.getElementById(
+                            'catatan_asesmen_luring'
+                        )?.value ?? ''
+                };
+
+                this.hasChanges =
+                    Object.keys(this.originalData).some((key) => {
+
+                        if (key === 'asesmen_luring') {
+                            return Boolean(currentData[key])
+                                !== Boolean(this.originalData[key]);
+                        }
+
+                        return this.normalize(
+                            currentData[key]
+                        ) !== this.normalize(
+                            this.originalData[key]
+                        );
+
+                    });
+            }
+        }"
     >
 
 
@@ -407,7 +536,6 @@
 
                         <div class="wave-year-group">
 
-
                             {{-- GELOMBANG --}}
 
                             <select
@@ -470,8 +598,6 @@
                         </div>
 
 
-                        {{-- ERROR GELOMBANG --}}
-
                         @error('gelombang')
 
                             <div class="form-error">
@@ -480,8 +606,6 @@
 
                         @enderror
 
-
-                        {{-- ERROR TAHUN --}}
 
                         @error('tahun')
 
@@ -986,10 +1110,12 @@
                 BUTTON
             ====================================================== --}}
 
-            <div class="form-action">
+            <div class="form-action detail-actions">
 
 
-                {{-- SIMPAN --}}
+                {{-- =================================================
+                    SIMPAN
+                ================================================== --}}
 
                 @if($canEdit)
 
@@ -998,34 +1124,32 @@
                         class="btn-save"
                         id="submitButton"
                         onclick="validateAndShowSavePopup()"
+                        @disabled(!$canEdit)
+                        x-bind:disabled="
+                            submitting ||
+                            !hasChanges ||
+                            {{ $canEdit ? 'false' : 'true' }}
+                        "
                     >
                         Simpan
                     </button>
 
                 @endif
 
-
-                {{-- SELANJUTNYA --}}
-
-                @if($lulusInstruktur ?? false)
-
-                    <a
-                        href="{{ route('ppks.normal.asesmen-kesehatan.awal', $ppks->id) }}"
-                        class="btn-next btn-success"
-                    >
-                        Selanjutnya
-                    </a>
-
-                @else
-
+                                {{-- =====================================================
+                    SELANJUTNYA
+                    ====================================================== --}}
+                @if($canEdit || ($lulusInstruktur ?? false))
                     <button
                         type="button"
                         class="btn-next btn-success"
-                        onclick="showSessionErrorModal()"
+                        @disabled(!($lulusInstruktur ?? false))
+                        @if($lulusInstruktur ?? false)
+                            onclick="window.location.href='{{ route('ppks.normal.asesmen-kesehatan.awal', $ppks->id) }}'"
+                        @endif
                     >
                         Selanjutnya
                     </button>
-
                 @endif
 
             </div>
@@ -1034,7 +1158,7 @@
 
 
         {{-- =====================================================
-            POPUP BERHASIL
+            POPUP KONFIRMASI SIMPAN
         ====================================================== --}}
 
         @if($canEdit)
@@ -1042,29 +1166,29 @@
             <template x-if="showSavePopup">
 
                 <div
-                    class="global-popup success show"
+                    class="global-popup confirm show"
+                    @click.self="showSavePopup = false"
                     aria-hidden="false"
                 >
 
                     <div class="global-popup-box">
 
-
                         <div class="global-popup-icon">
 
                             <span class="material-symbols-outlined">
-                                check_circle
+                                save
                             </span>
 
                         </div>
 
 
                         <h3 class="global-popup-title">
-                            Berhasil
+                            Menyimpan Data
                         </h3>
 
 
                         <p class="global-popup-message">
-                            Hasil Asesmen Instruktur Berhasil di Input
+                            Pastikan data asesmen instruktur sudah sesuai
                         </p>
 
 
@@ -1072,12 +1196,25 @@
 
                             <button
                                 type="button"
+                                class="global-popup-btn cancel"
+                                @click="showSavePopup = false"
+                            >
+                                Batal
+                            </button>
+
+
+                            <button
+                                type="button"
                                 class="global-popup-btn primary"
                                 @click="
-                                    document.getElementById('asesmenForm').submit();
+                                    submitting = true;
+                                    showSavePopup = false;
+                                    document
+                                        .getElementById('asesmenForm')
+                                        .requestSubmit();
                                 "
                             >
-                                OK
+                                Simpan
                             </button>
 
                         </div>
@@ -1104,7 +1241,6 @@
     >
 
         <div class="global-popup-box">
-
 
             <div class="global-popup-icon">
 
@@ -1133,7 +1269,7 @@
                     class="global-popup-btn primary"
                     onclick="closeSessionErrorModal()"
                 >
-                    OK
+                    Mengerti
                 </button>
 
             </div>
@@ -1154,7 +1290,6 @@
     >
 
         <div class="global-popup-box">
-
 
             <div class="global-popup-icon">
 
@@ -1208,239 +1343,366 @@
 
     <script>
 
-        document.addEventListener('DOMContentLoaded', function () {
+        /*
+        |--------------------------------------------------------------------------
+        | TRIGGER CHECK PERUBAHAN
+        |--------------------------------------------------------------------------
+        */
 
+        function triggerAsesmenChangeCheck() {
 
-            /*
-            |--------------------------------------------------------------------------
-            | ASESMEN LURING
-            |--------------------------------------------------------------------------
-            */
+            const page =
+                document.querySelector(
+                    '.participant-detail-page'
+                );
 
-            const offlineToggle =
-                document.getElementById('offlineAssessment');
+            if (
+                page &&
+                page._x_dataStack &&
+                page._x_dataStack[0]
+            ) {
 
-            const offlineForm =
-                document.getElementById('offlineForm');
-
-            const offlineToggleText =
-                document.getElementById('offlineToggleText');
-
-
-            function updateOfflineState() {
-
-                if (
-                    !offlineToggle ||
-                    !offlineForm ||
-                    !offlineToggleText
-                ) {
-                    return;
-                }
-
-
-                if (offlineToggle.checked) {
-
-                    offlineForm.classList.add('show');
-
-                    offlineToggleText.textContent =
-                        'Aktif';
-
-                } else {
-
-                    offlineForm.classList.remove('show');
-
-                    offlineToggleText.textContent =
-                        'Tidak Aktif';
-
-                }
+                page._x_dataStack[0].checkChanges();
 
             }
-
-
-            if (offlineToggle) {
-
-                @if($canEdit)
-
-                    offlineToggle.addEventListener(
-                        'change',
-                        updateOfflineState
-                    );
-
-                @endif
-
-                updateOfflineState();
-
-            }
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | PREVENT DOUBLE SUBMIT
-            |--------------------------------------------------------------------------
-            */
-
-            const form =
-                document.getElementById('asesmenForm');
-
-
-            @if($canEdit)
-
-                if (form) {
-
-                    form.addEventListener(
-                        'submit',
-                        function () {
-
-                            const submitButton =
-                                document.getElementById(
-                                    'submitButton'
-                                );
-
-
-                            if (submitButton) {
-
-                                submitButton.disabled =
-                                    true;
-
-                                submitButton.textContent =
-                                    'Menyimpan...';
-
-                            }
-
-                        }
-                    );
-
-                }
-
-            @endif
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | HAPUS ERROR INLINE SAAT USER MULAI MENGISI
-            |--------------------------------------------------------------------------
-            */
-
-            if (form) {
-
-                const validationFields = [
-                    'status_asesmen',
-                    'baznas',
-                    'gelombang',
-                    'tahun',
-                    'tanggal_asesmen_daring',
-                    'petugas_asesmen_instruktur',
-                    'hasil_asesmen_instruktur'
-                ];
-
-
-                validationFields.forEach(function (id) {
-
-                    const field =
-                        document.getElementById(id);
-
-
-                    if (!field) {
-                        return;
-                    }
-
-
-                    field.addEventListener(
-                        'change',
-                        function () {
-
-                            if (
-                                field.value &&
-                                field.value.trim()
-                            ) {
-
-                                field.classList.remove(
-                                    'js-validation-error'
-                                );
-
-                                field.classList.remove(
-                                    'has-error'
-                                );
-
-
-                                const parent =
-                                    field.parentNode;
-
-
-                                const error =
-                                    parent.querySelector(
-                                        '.js-form-error'
-                                    );
-
-
-                                if (error) {
-                                    error.remove();
-                                }
-
-                            }
-
-                        }
-                    );
-
-
-                    field.addEventListener(
-                        'input',
-                        function () {
-
-                            if (
-                                field.value &&
-                                field.value.trim()
-                            ) {
-
-                                field.classList.remove(
-                                    'js-validation-error'
-                                );
-
-                                field.classList.remove(
-                                    'has-error'
-                                );
-
-
-                                const parent =
-                                    field.parentNode;
-
-
-                                const error =
-                                    parent.querySelector(
-                                        '.js-form-error'
-                                    );
-
-
-                                if (error) {
-                                    error.remove();
-                                }
-
-                            }
-
-                        }
-                    );
-
-                });
-
-            }
-
-        });
+        }
 
 
         /*
         |--------------------------------------------------------------------------
-        | VALIDASI SEBELUM POPUP BERHASIL
+        | UPDATE ASESMEN LURING
+        |--------------------------------------------------------------------------
+        */
+
+        document.addEventListener(
+            'DOMContentLoaded',
+            function () {
+
+                const offlineToggle =
+                    document.getElementById(
+                        'offlineAssessment'
+                    );
+
+                const offlineForm =
+                    document.getElementById(
+                        'offlineForm'
+                    );
+
+                const offlineToggleText =
+                    document.getElementById(
+                        'offlineToggleText'
+                    );
+
+
+                function updateOfflineState() {
+
+                    if (
+                        !offlineToggle ||
+                        !offlineForm ||
+                        !offlineToggleText
+                    ) {
+                        return;
+                    }
+
+
+                    if (offlineToggle.checked) {
+
+                        offlineForm.classList.add(
+                            'show'
+                        );
+
+                        offlineToggleText.textContent =
+                            'Aktif';
+
+                    } else {
+
+                        offlineForm.classList.remove(
+                            'show'
+                        );
+
+                        offlineToggleText.textContent =
+                            'Tidak Aktif';
+
+                    }
+
+
+                    triggerAsesmenChangeCheck();
+
+                }
+
+
+                if (offlineToggle) {
+
+                    @if($canEdit)
+
+                        offlineToggle.addEventListener(
+                            'change',
+                            updateOfflineState
+                        );
+
+                    @endif
+
+                    updateOfflineState();
+
+                }
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | FIELD VALIDATION ERROR
+                |--------------------------------------------------------------------------
+                */
+
+                const form =
+                    document.getElementById(
+                        'asesmenForm'
+                    );
+
+
+                if (form) {
+
+                    const validationFields = [
+
+                        'status_asesmen',
+                        'baznas',
+                        'gelombang',
+                        'tahun',
+                        'tanggal_asesmen_daring',
+                        'petugas_asesmen_instruktur',
+                        'hasil_asesmen_instruktur',
+                        'lokasi_asesmen_luring',
+                        'tanggal_asesmen_luring',
+                        'petugas_asesmen_luring',
+                        'hasil_asesmen_luring'
+
+                    ];
+
+
+                    validationFields.forEach(
+                        function (id) {
+
+                            const field =
+                                document.getElementById(
+                                    id
+                                );
+
+                            if (!field) {
+                                return;
+                            }
+
+
+                            field.addEventListener(
+                                'change',
+                                function () {
+
+                                    clearFieldValidationError(
+                                        field
+                                    );
+
+                                    triggerAsesmenChangeCheck();
+
+                                }
+                            );
+
+
+                            field.addEventListener(
+                                'input',
+                                function () {
+
+                                    clearFieldValidationError(
+                                        field
+                                    );
+
+                                    triggerAsesmenChangeCheck();
+
+                                }
+                            );
+
+                        }
+                    );
+
+
+                    const textareas = [
+
+                        'catatan_asesmen_instruktur',
+                        'catatan_asesmen_luring'
+
+                    ];
+
+
+                    textareas.forEach(
+                        function (id) {
+
+                            const textarea =
+                                document.getElementById(
+                                    id
+                                );
+
+                            if (!textarea) {
+                                return;
+                            }
+
+
+                            textarea.addEventListener(
+                                'input',
+                                function () {
+
+                                    triggerAsesmenChangeCheck();
+
+                                }
+                            );
+
+                        }
+                    );
+
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | PREVENT DOUBLE SUBMIT
+                    |--------------------------------------------------------------------------
+                    */
+
+                    @if($canEdit)
+
+                        form.addEventListener(
+                            'submit',
+                            function () {
+
+                                const submitButton =
+                                    document.getElementById(
+                                        'submitButton'
+                                    );
+
+                                if (submitButton) {
+
+                                    submitButton.disabled =
+                                        true;
+
+                                    submitButton.textContent =
+                                        'Menyimpan...';
+
+                                }
+
+                            }
+                        );
+
+                    @endif
+
+                }
+
+            }
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | HAPUS ERROR FIELD
+        |--------------------------------------------------------------------------
+        */
+
+        function clearFieldValidationError(field) {
+
+            if (!field) {
+                return;
+            }
+
+
+            if (
+                field.value &&
+                field.value.trim()
+            ) {
+
+                field.classList.remove(
+                    'js-validation-error'
+                );
+
+                field.classList.remove(
+                    'has-error'
+                );
+
+                field.classList.remove(
+                    'form-input-error'
+                );
+
+
+                const parent =
+                    field.parentNode;
+
+                if (parent) {
+
+                    const error =
+                        parent.querySelector(
+                            '.js-form-error'
+                        );
+
+                    if (error) {
+                        error.remove();
+                    }
+
+                }
+
+            }
+
+
+            triggerAsesmenChangeCheck();
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | VALIDASI SIMPAN
         |--------------------------------------------------------------------------
         */
 
         function validateAndShowSavePopup() {
 
             const form =
-                document.getElementById('asesmenForm');
-
+                document.getElementById(
+                    'asesmenForm'
+                );
 
             if (!form) {
                 return;
+            }
+
+
+            const canEdit =
+                @json($canEdit);
+
+            if (!canEdit) {
+                return;
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | CEK PERUBAHAN
+            |--------------------------------------------------------------------------
+            */
+
+            const page =
+                document.querySelector(
+                    '.participant-detail-page'
+                );
+
+
+            if (
+                page &&
+                page._x_dataStack &&
+                page._x_dataStack[0]
+            ) {
+
+                const alpineData =
+                    page._x_dataStack[0];
+
+                alpineData.checkChanges();
+
+
+                if (!alpineData.hasChanges) {
+                    return;
+                }
+
             }
 
 
@@ -1499,155 +1761,152 @@
 
             /*
             |--------------------------------------------------------------------------
-            | HAPUS ERROR VALIDASI JS SEBELUMNYA
+            | HAPUS ERROR JS SEBELUMNYA
             |--------------------------------------------------------------------------
             */
 
             form
-                .querySelectorAll('.js-form-error')
-                .forEach(function (error) {
+                .querySelectorAll(
+                    '.js-form-error'
+                )
+                .forEach(
+                    function (error) {
 
-                    error.remove();
+                        error.remove();
 
-                });
+                    }
+                );
 
 
             form
-                .querySelectorAll('.js-validation-error')
-                .forEach(function (field) {
+                .querySelectorAll(
+                    '.js-validation-error'
+                )
+                .forEach(
+                    function (field) {
 
-                    field.classList.remove(
-                        'has-error'
-                    );
+                        field.classList.remove(
+                            'has-error'
+                        );
 
-                    field.classList.remove(
-                        'js-validation-error'
-                    );
+                        field.classList.remove(
+                            'js-validation-error'
+                        );
 
-                });
+                    }
+                );
 
 
             /*
             |--------------------------------------------------------------------------
-            | CEK FIELD WAJIB
+            | CEK FIELD
             |--------------------------------------------------------------------------
             */
 
-            requiredFields.forEach(function (item) {
+            requiredFields.forEach(
+                function (item) {
 
-                const field =
-                    document.getElementById(item.id);
+                    const field =
+                        document.getElementById(
+                            item.id
+                        );
 
-
-                if (!field || field.disabled) {
-                    return;
-                }
-
-
-                const value =
-                    field.value
-                        ? field.value.trim()
-                        : '';
-
-
-                if (!value) {
-
-                    hasError = true;
-
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | TAMBAHKAN ERROR KE INPUT
-                    |--------------------------------------------------------------------------
-                    */
-
-                    field.classList.add(
-                        'has-error',
-                        'js-validation-error'
-                    );
-
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | BUAT PESAN ERROR DI BAWAH INPUT
-                    |--------------------------------------------------------------------------
-                    */
-
-                    const error =
-                        document.createElement('div');
-
-                    error.className =
-                        'form-error js-form-error';
-
-                    error.textContent =
-                        item.message;
-
-
-                    /*
-                    | Untuk gelombang dan tahun,
-                    | error ditempatkan setelah group.
-                    */
 
                     if (
-                        item.id === 'gelombang' ||
-                        item.id === 'tahun'
+                        !field ||
+                        field.disabled
                     ) {
+                        return;
+                    }
 
-                        const group =
-                            document.querySelector(
-                                '.wave-year-group'
+
+                    const value =
+                        field.value
+                            ? field.value.trim()
+                            : '';
+
+
+                    if (!value) {
+
+                        hasError = true;
+
+
+                        field.classList.add(
+                            'has-error',
+                            'js-validation-error'
+                        );
+
+
+                        const error =
+                            document.createElement(
+                                'div'
                             );
 
+                        error.className =
+                            'form-error js-form-error';
+
+                        error.innerHTML = `
+                            <span>
+                                ${item.message}
+                            </span>
+                        `;
+
+
+                        /*
+                        |--------------------------------------------------------------------------
+                        | GELOMBANG & TAHUN
+                        |--------------------------------------------------------------------------
+                        */
 
                         if (
-                            group &&
-                            !group.parentNode.querySelector(
-                                '.js-form-error'
-                            )
+                            item.id === 'gelombang' ||
+                            item.id === 'tahun'
                         ) {
 
-                            group.parentNode.appendChild(
+                            const group =
+                                document.querySelector(
+                                    '.wave-year-group'
+                                );
+
+
+                            if (
+                                group &&
+                                !group.parentNode.querySelector(
+                                    '.js-form-error'
+                                )
+                            ) {
+
+                                group.parentNode.appendChild(
+                                    error
+                                );
+
+                            }
+
+                        } else {
+
+                            field.parentNode.appendChild(
                                 error
                             );
 
                         }
 
-                    } else {
 
-                        field.parentNode.appendChild(
-                            error
+                        if (!firstErrorField) {
+
+                            firstErrorField =
+                                field;
+
+                        }
+
+
+                        errorMessages.push(
+                            item.message
                         );
 
                     }
 
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | SIMPAN FIELD ERROR PERTAMA
-                    |--------------------------------------------------------------------------
-                    */
-
-                    if (!firstErrorField) {
-
-                        firstErrorField =
-                            field;
-
-                    }
-
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | SIMPAN PESAN UNTUK POPUP
-                    |--------------------------------------------------------------------------
-                    */
-
-                    errorMessages.push(
-                        item.message
-                    );
-
                 }
-
-            });
+            );
 
 
             /*
@@ -1658,46 +1917,33 @@
 
             if (hasError) {
 
-
-                /*
-                |--------------------------------------------------------------------------
-                | TAMPILKAN POPUP ERROR
-                |--------------------------------------------------------------------------
-                */
-
                 showErrorModal(
                     errorMessages
                 );
 
 
-                /*
-                |--------------------------------------------------------------------------
-                | FOKUS KE FIELD ERROR PERTAMA
-                |--------------------------------------------------------------------------
-                */
-
                 if (firstErrorField) {
 
                     firstErrorField.scrollIntoView({
+
                         behavior: 'smooth',
+
                         block: 'center'
+
                     });
 
 
-                    setTimeout(function () {
+                    setTimeout(
+                        function () {
 
-                        firstErrorField.focus();
+                            firstErrorField.focus();
 
-                    }, 300);
+                        },
+                        300
+                    );
 
                 }
 
-
-                /*
-                |--------------------------------------------------------------------------
-                | JANGAN TAMPILKAN POPUP BERHASIL
-                |--------------------------------------------------------------------------
-                */
 
                 return;
 
@@ -1706,30 +1952,71 @@
 
             /*
             |--------------------------------------------------------------------------
-            | SEMUA VALID
-            | TAMPILKAN POPUP BERHASIL
+            | TAMPILKAN POPUP KONFIRMASI
             |--------------------------------------------------------------------------
             */
 
-            const page =
-                document.querySelector(
-                    '.participant-detail-page'
-                );
-
-
             if (
                 page &&
-                page._x_dataStack
+                page._x_dataStack &&
+                page._x_dataStack[0]
             ) {
 
-                const alpineData =
-                    page._x_dataStack[0];
-
-
-                alpineData.showSavePopup =
+                page._x_dataStack[0].showSavePopup =
                     true;
 
             }
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | SELANJUTNYA KE KESEHATAN AWAL
+        |--------------------------------------------------------------------------
+        */
+
+        function handleAsesmenInstrukturNext(event) {
+
+            if (event) {
+                event.preventDefault();
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | CEK HASIL ASESMEN INSTRUKTUR
+            |--------------------------------------------------------------------------
+            */
+
+            const lulusInstruktur =
+                @json($lulusInstruktur);
+
+
+            if (lulusInstruktur) {
+
+                window.location.href =
+                    @json(
+                        route(
+                            'ppks.normal.asesmen-kesehatan.awal',
+                            $ppks->id
+                        )
+                    );
+
+                return true;
+
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | BELUM LULUS
+            |--------------------------------------------------------------------------
+            */
+
+            showSessionErrorModal();
+
+            return false;
 
         }
 
@@ -1747,7 +2034,6 @@
                     'errorModal'
                 );
 
-
             const errorList =
                 document.getElementById(
                     'errorModalList'
@@ -1759,40 +2045,33 @@
             }
 
 
-            /*
-            |--------------------------------------------------------------------------
-            | BERSIHKAN LIST ERROR
-            |--------------------------------------------------------------------------
-            */
-
             if (errorList) {
 
-                errorList.innerHTML = '';
+                errorList.innerHTML =
+                    '';
 
 
-                messages.forEach(function (message) {
+                messages.forEach(
+                    function (message) {
 
-                    const li =
-                        document.createElement('li');
+                        const li =
+                            document.createElement(
+                                'li'
+                            );
 
-                    li.textContent =
-                        message;
+                        li.textContent =
+                            message;
 
 
-                    errorList.appendChild(
-                        li
-                    );
+                        errorList.appendChild(
+                            li
+                        );
 
-                });
+                    }
+                );
 
             }
 
-
-            /*
-            |--------------------------------------------------------------------------
-            | TAMPILKAN POPUP
-            |--------------------------------------------------------------------------
-            */
 
             modal.classList.add(
                 'show'
@@ -1866,6 +2145,12 @@
         }
 
 
+        /*
+        |--------------------------------------------------------------------------
+        | TUTUP SESSION ERROR POPUP
+        |--------------------------------------------------------------------------
+        */
+
         function closeSessionErrorModal() {
 
             const modal =
@@ -1892,7 +2177,7 @@
 
         /*
         |--------------------------------------------------------------------------
-        | CLOSE POPUP KETIKA KLIK AREA LUAR
+        | KLIK AREA LUAR POPUP
         |--------------------------------------------------------------------------
         */
 

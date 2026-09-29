@@ -1,4 +1,5 @@
 <x-app-layout>
+
     <div class="main-page">
 
         {{-- =====================================================
@@ -19,74 +20,6 @@
 
             </div>
 
-
-            {{-- =====================================================
-            DATE FILTER
-            ====================================================== --}}
-            <div class="date-filter-wrapper">
-
-                <div class="date-filter">
-
-                    <div class="date-picker">
-
-                        <div class="date-picker-header">
-
-                            <span class="material-symbols-outlined">
-                                calendar_month
-                            </span>
-
-                            <span>
-                                Filter Tanggal
-                            </span>
-
-                        </div>
-
-
-                        <div class="date-input-group">
-
-                            <div>
-
-                                <label for="startDate">
-                                    Dari
-                                </label>
-
-                                <input type="date" id="startDate" class="date-picker">
-
-                            </div>
-
-
-                            <div>
-
-                                <label for="endDate">
-                                    Sampai
-                                </label>
-
-                                <input type="date" id="endDate" class="date-picker">
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="date-picker-actions">
-
-                            <button type="button" class="date-reset" id="resetDate">
-                                Reset
-                            </button>
-
-
-                            <button type="button" class="date-apply" id="applyDate">
-                                Terapkan
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
         </div>
 
 
@@ -99,37 +32,53 @@
 
                 {{-- SEARCH --}}
                 <form
-    method="GET"
-    action="{{ url()->current() }}"
-    class="search"
-    id="searchForm"
->
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-    >
-        <circle cx="11" cy="11" r="7" />
-        <path d="m20 20-3.5-3.5" />
-    </svg>
+                    method="GET"
+                    action="{{ url()->current() }}"
+                    class="search"
+                    id="searchForm"
+                >
 
-    <input
-        type="text"
-        name="search"
-        id="searchInput"
-        value="{{ request('search') }}"
-        placeholder="Cari Nama atau NIK"
-        autocomplete="off"
-    >
-</form>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+
+                        <circle
+                            cx="11"
+                            cy="11"
+                            r="7"
+                        />
+
+                        <path
+                            d="m20 20-3.5-3.5"
+                        />
+
+                    </svg>
+
+                    <input
+                        type="text"
+                        name="search"
+                        id="searchInput"
+                        value="{{ request('search') }}"
+                        placeholder="Cari Nama atau NIK"
+                        autocomplete="off"
+                    >
+
+                </form>
+
+
                 {{-- FILTER JENIS PPKS --}}
                 <div class="select-wrapper">
 
-                    <select id="filterPpks" class="filter-button">
+                    <select
+                        id="filterPpks"
+                        class="filter-button"
+                    >
 
                         <option value="">
                             Semua Jenis PPKS
@@ -318,26 +267,11 @@
 
                             /*
                             |--------------------------------------------------------------------------
-                            | TANGGAL PROSES
-                            |--------------------------------------------------------------------------
-                            */
-
-                            $tanggalProses =
-                                $prosesKesehatan?->tanggal_proses
-                                ?? $prosesKesehatan?->created_at
-                                ?? $item->updated_at;
-
-
-                            /*
-                            |--------------------------------------------------------------------------
                             | STATUS
                             |--------------------------------------------------------------------------
                             |
-                            | Untuk halaman ini status yang ditampilkan adalah
-                            | PENDING.
-                            |
-                            | Status tetap diambil dari database jika tersedia.
-                            | Jika tidak tersedia, gunakan fallback pending.
+                            | Untuk halaman ini status yang ditampilkan
+                            | adalah PENDING.
                             |
                             */
 
@@ -347,7 +281,7 @@
 
                             /*
                             |--------------------------------------------------------------------------
-                            | HASIL & KETERANGAN
+                            | HASIL
                             |--------------------------------------------------------------------------
                             */
 
@@ -374,10 +308,17 @@
                         @endphp
 
 
-                        <tr data-nama="{{ strtolower($nama) }}" data-nik="{{ $nik }}"
-                            data-ppks="{{ strtolower($jenisPpks) }}" data-tahapan="asesmen kesehatan awal"
-                            data-hasil="pending" data-status="pending"
-                            data-tanggal="{{ $tanggalProses ? \Carbon\Carbon::parse($tanggalProses)->format('Y-m-d') : '' }}">
+                        {{-- =================================================
+                        ROW
+                        ================================================== --}}
+                        <tr
+                            data-nama="{{ strtolower($nama) }}"
+                            data-nik="{{ $nik }}"
+                            data-ppks="{{ strtolower($jenisPpks) }}"
+                            data-tahapan="asesmen kesehatan awal"
+                            data-hasil="pending"
+                            data-status="pending"
+                        >
 
 
                             {{-- =================================================
@@ -449,8 +390,10 @@
                             ================================================== --}}
                             <td>
 
-                                <a href="{{ route('ppks.normal.asesmen-kesehatan.awal', $item->id) }}"
-                                    class="result-badge result-health">
+                                <a
+                                    href="{{ route('ppks.normal.asesmen-kesehatan.awal', $item->id) }}"
+                                    class="result-badge result-health"
+                                >
 
                                     {{-- RESULT ICON --}}
                                     <span class="material-symbols-outlined result-icon">
@@ -519,7 +462,8 @@
                                     </span>
 
                                     <p>
-                                        Belum ada data PPKS yang pending Asesmen Kesehatan
+                                        Belum ada data PPKS yang pending
+                                        Asesmen Kesehatan Awal
                                     </p>
 
                                 </div>
@@ -544,7 +488,7 @@
 
             <div class="pagination-wrapper">
 
-                {{ $ppks->links() }}
+                {{ $ppks->withQueryString()->links() }}
 
             </div>
 
@@ -558,173 +502,75 @@
     ====================================================== --}}
     <script>
 
-    document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function () {
 
-        const filterPpks =
-            document.getElementById('filterPpks');
+            const filterPpks =
+                document.getElementById('filterPpks');
 
 
-        const rows =
-            document.querySelectorAll(
-                '#dataTable tr[data-nama]'
-            );
+            const rows =
+                document.querySelectorAll(
+                    '#dataTable tr[data-nama]'
+                );
 
 
-        const startDate =
-            document.getElementById('startDate');
+            /* =================================================
+               FILTER DATA
+            ================================================== */
 
+            function filterData() {
 
-        const endDate =
-            document.getElementById('endDate');
+                const ppks =
+                    filterPpks
+                        ? filterPpks.value
+                            .toLowerCase()
+                            .trim()
+                        : '';
 
 
-        const resetDate =
-            document.getElementById('resetDate');
+                rows.forEach(function (row) {
 
+                    const jenisPpks =
+                        row.dataset.ppks || '';
 
-        const applyDate =
-            document.getElementById('applyDate');
 
+                    const matchPpks =
+                        !ppks ||
+                        jenisPpks.includes(ppks);
 
-        /* =================================================
-           FILTER DATA
-        ================================================== */
 
-        function filterData() {
+                    row.style.display =
+                        matchPpks
+                            ? ''
+                            : 'none';
 
-            const ppks =
-                filterPpks
-                    ? filterPpks.value
-                        .toLowerCase()
-                        .trim()
-                    : '';
+                });
 
+            }
 
-            const start =
-                startDate
-                    ? startDate.value
-                    : '';
 
+            /* =================================================
+               FILTER JENIS PPKS
+            ================================================== */
 
-            const end =
-                endDate
-                    ? endDate.value
-                    : '';
+            if (filterPpks) {
 
+                filterPpks.addEventListener(
+                    'change',
+                    filterData
+                );
 
-            rows.forEach(function (row) {
+            }
 
-                const jenisPpks =
-                    row.dataset.ppks || '';
 
+            /* =================================================
+               FILTER PERTAMA KALI
+            ================================================== */
 
-                const tanggal =
-                    row.dataset.tanggal || '';
+            filterData();
 
+        });
 
-                /* =========================================
-                   FILTER JENIS PPKS
-                ========================================== */
-
-                const matchPpks =
-                    !ppks ||
-                    jenisPpks.includes(ppks);
-
-
-                /* =========================================
-                   FILTER TANGGAL
-                ========================================== */
-
-                let matchDate = true;
-
-
-                if (start && tanggal) {
-
-                    matchDate =
-                        tanggal >= start;
-
-                }
-
-
-                if (end && tanggal) {
-
-                    matchDate =
-                        matchDate &&
-                        tanggal <= end;
-
-                }
-
-
-                /* =========================================
-                   TAMPILKAN / SEMBUNYIKAN
-                ========================================== */
-
-                row.style.display =
-                    matchPpks &&
-                    matchDate
-                        ? ''
-                        : 'none';
-
-            });
-
-        }
-
-
-        /* =================================================
-           FILTER JENIS PPKS
-        ================================================== */
-
-        if (filterPpks) {
-
-            filterPpks.addEventListener(
-                'change',
-                filterData
-            );
-
-        }
-
-
-        /* =================================================
-           FILTER TANGGAL
-        ================================================== */
-
-        if (applyDate) {
-
-            applyDate.addEventListener(
-                'click',
-                filterData
-            );
-
-        }
-
-
-        /* =================================================
-           RESET TANGGAL
-        ================================================== */
-
-        if (resetDate) {
-
-            resetDate.addEventListener(
-                'click',
-                function () {
-
-                    if (startDate) {
-                        startDate.value = '';
-                    }
-
-                    if (endDate) {
-                        endDate.value = '';
-                    }
-
-                    filterData();
-
-                }
-            );
-
-        }
-
-    });
-
-</script>
+    </script>
 
 </x-app-layout>

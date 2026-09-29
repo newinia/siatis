@@ -18,27 +18,146 @@ class PpksPemanggilanController extends Controller
      * - Data PPKS normal
      * - Sudah diterima Case Conference
      *
-     * Status pemanggilan diambil dari tabel
-     * pemanggilan_pesertas.
+     * Filter:
+     * - Search Nama / NIK
+     * - Status Pemanggilan
+     * - Gelombang
+     * - Tahun
      */
-    public function index()
+    public function index(Request $request)
     {
         // =====================================================
-        // AMBIL PESERTA YANG DITERIMA CASE CONFERENCE
+        // AMBIL PARAMETER FILTER
         // =====================================================
 
-        $pesertas = Ppks::query()
+        $search = trim((string) $request->input('search', ''));
+
+        $status = trim((string) $request->input('status', ''));
+
+        $gelombang = trim((string) $request->input('gelombang', ''));
+
+        $tahun = trim((string) $request->input('tahun', ''));
+
+
+        // =====================================================
+        // QUERY PESERTA
+        // =====================================================
+
+        $query = Ppks::query()
+
+            // Hanya data normal
             ->where('status', 'normal')
 
+            // Hanya peserta yang Case Conference-nya diterima
             ->whereIn('id', function ($query) {
                 $query->select('ppks_id')
                     ->from('case_conferences')
                     ->where('hasil', 'diterima');
             })
 
-            ->with('pemanggilanPeserta')
+            // Relasi pemanggilan peserta
+            ->with('pemanggilanPeserta');
 
-            ->get();
+
+        // =====================================================
+        // FILTER SEARCH
+        // NAMA / NIK
+        // =====================================================
+
+        if ($search !== '') {
+
+            $query->where(function ($q) use ($search) {
+
+                $searchLower = strtolower($search);
+
+                $q->whereRaw(
+                    "LOWER(JSON_UNQUOTE(JSON_EXTRACT(data, '$.nama_lengkap'))) LIKE ?",
+                    ["%{$searchLower}%"]
+                )
+
+                ->orWhereRaw(
+                    "JSON_UNQUOTE(JSON_EXTRACT(data, '$.nik')) LIKE ?",
+                    ["%{$search}%"]
+                );
+
+            });
+        }
+
+
+        // =====================================================
+        // FILTER STATUS PEMANGGILAN
+        // =====================================================
+
+        if ($status !== '') {
+
+            $query->whereHas('pemanggilanPeserta', function ($q) use ($status) {
+
+                $q->where(
+                    'status_pemanggilan',
+                    $status
+                );
+
+            });
+        }
+
+
+        // =====================================================
+        // FILTER GELOMBANG
+        //
+        // Data gelombang berasal dari:
+        // case_conferences.gelombang_pelatihan
+        // =====================================================
+
+        if ($gelombang !== '') {
+
+            $query->whereIn('id', function ($q) use ($gelombang) {
+
+                $q->select('ppks_id')
+                    ->from('case_conferences')
+                    ->where('hasil', 'diterima')
+                    ->where(
+                        'gelombang_pelatihan',
+                        $gelombang
+                    );
+
+            });
+        }
+
+
+        // =====================================================
+        // FILTER TAHUN
+        //
+        // Data tahun berasal dari:
+        // case_conferences.tahun_pelatihan
+        // =====================================================
+
+        if ($tahun !== '') {
+
+            $query->whereIn('id', function ($q) use ($tahun) {
+
+                $q->select('ppks_id')
+                    ->from('case_conferences')
+                    ->where('hasil', 'diterima')
+                    ->where(
+                        'tahun_pelatihan',
+                        $tahun
+                    );
+
+            });
+        }
+
+
+        // =====================================================
+        // PAGINATION
+        //
+        // Filter sudah diterapkan SEBELUM pagination.
+        // Jadi halaman 1, 2, 3 dst mengikuti hasil filter DB.
+        // =====================================================
+
+        $pesertas = $query
+            ->orderBy('id', 'desc')
+            ->paginate(15)
+            ->withQueryString();
 
 
         // =====================================================
@@ -53,6 +172,34 @@ class PpksPemanggilanController extends Controller
 
 
         // =====================================================
+        // DATA UNTUK OPTION GELOMBANG
+        // =====================================================
+
+        $gelombangOptions = DB::table('case_conferences')
+            ->where('hasil', 'diterima')
+            ->whereNotNull('gelombang_pelatihan')
+            ->where('gelombang_pelatihan', '!=', '')
+            ->select('gelombang_pelatihan')
+            ->distinct()
+            ->orderBy('gelombang_pelatihan')
+            ->pluck('gelombang_pelatihan');
+
+
+        // =====================================================
+        // DATA UNTUK OPTION TAHUN
+        // =====================================================
+
+        $tahunOptions = DB::table('case_conferences')
+            ->where('hasil', 'diterima')
+            ->whereNotNull('tahun_pelatihan')
+            ->where('tahun_pelatihan', '!=', '')
+            ->select('tahun_pelatihan')
+            ->distinct()
+            ->orderBy('tahun_pelatihan')
+            ->pluck('tahun_pelatihan');
+
+
+        // =====================================================
         // KIRIM DATA KE BLADE
         // =====================================================
 
@@ -60,7 +207,9 @@ class PpksPemanggilanController extends Controller
             'pemanggilan.pemanggilan-peserta',
             compact(
                 'pesertas',
-                'caseConferences'
+                'caseConferences',
+                'gelombangOptions',
+                'tahunOptions'
             )
         );
     }
@@ -100,6 +249,7 @@ class PpksPemanggilanController extends Controller
         // =====================================================
 
         if ($ppks->status !== 'normal') {
+
             return back()->with(
                 'error',
                 'Data peserta tidak dapat diproses melalui Pemanggilan Peserta.'
@@ -119,6 +269,7 @@ class PpksPemanggilanController extends Controller
 
 
         if (!$caseConference) {
+
             return back()->with(
                 'error',
                 'Peserta belum diterima pada Case Conference.'
@@ -150,6 +301,7 @@ class PpksPemanggilanController extends Controller
             ) &&
             $validated['status_pemanggilan'] === 'belum_dipanggil'
         ) {
+
             return back()->with(
                 'error',
                 'Peserta yang sudah pernah dipanggil tidak dapat dikembalikan menjadi Belum Dipanggil.'
@@ -166,6 +318,7 @@ class PpksPemanggilanController extends Controller
         if (
             $validated['status_pemanggilan'] !== 'sudah_datang'
         ) {
+
             $validated['tanggal_kedatangan'] = null;
         }
 
@@ -173,9 +326,12 @@ class PpksPemanggilanController extends Controller
         // =====================================================
         // TANGGAL PEMANGGILAN OTOMATIS
         //
-        // Jika status sudah dipanggil / belum datang /
-        // sudah datang dan tanggal kosong,
-        // gunakan tanggal hari ini.
+        // Jika status:
+        // - sudah_dipanggil
+        // - belum_datang
+        // - sudah_datang
+        //
+        // dan tanggal kosong, gunakan tanggal hari ini.
         // =====================================================
 
         if (
@@ -189,6 +345,7 @@ class PpksPemanggilanController extends Controller
             ) &&
             empty($validated['tanggal_pemanggilan'])
         ) {
+
             $validated['tanggal_pemanggilan'] =
                 now()->format('Y-m-d');
         }

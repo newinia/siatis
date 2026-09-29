@@ -841,25 +841,14 @@
                                 {{ $noHp }}
                             </td>
 
-                    {{-- HASIL / TAHAPAN --}}
-                    <td class="hasil-cell">
+                            {{-- HASIL / TAHAPAN --}}
+                            <td class="hasil-cell">
 
-                        <div class="hasil-wrapper">
-                            <x-result-badge
-                                :route="$route"
-                                :badge-class="$badgeClass"
-                                :hasil-icon="$hasilIcon"
-                                :label-tahapan="$labelTahapan"
-                                :hasil-class="$hasilClass"
-                                :hasil-dot-class="$hasilDotClass"
-                                :hasil="$hasil"
-                            />
-                        </div>
-
-                                <x-result-badge :route="$route" :badge-class="$badgeClass" :hasil-icon="$hasilIcon"
-                                    :label-tahapan="$labelTahapan" :hasil-class="$hasilClass"
-                                    :hasil-dot-class="$hasilDotClass" :hasil="$hasil" />
-
+                                <div class="hasil-wrapper">
+                                    <x-result-badge :route="$route" :badge-class="$badgeClass" :hasil-icon="$hasilIcon"
+                                        :label-tahapan="$labelTahapan" :hasil-class="$hasilClass"
+                                        :hasil-dot-class="$hasilDotClass" :hasil="$hasil" />
+                                </div>
                             </td>
 
                         </tr>
@@ -869,10 +858,7 @@
 
                         <tr>
 
-                            <td
-                                colspan="8"
-                                style="text-align:center; padding:40px;"
-                            >
+                            <td colspan="8" style="text-align:center; padding:40px;">
 
                                 <div class="empty-state">
 
@@ -881,7 +867,7 @@
                                     </span>
 
                                     <p>
-                                        Belum ada data PPKS yang masuk 
+                                        Belum ada data PPKS yang masuk
                                     </p>
 
                                 </div>

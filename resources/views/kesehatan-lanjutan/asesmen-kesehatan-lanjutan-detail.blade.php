@@ -92,8 +92,457 @@
         class="participant-detail-page"
         x-data="{
             showSavePopup: false,
-            submitting: false
+            showValidationPopup: false,
+            submitting: false,
+            validationErrors: [],
+
+            canEdit: {{ $canEdit ? 'true' : 'false' }},
+
+            hasChanges: {{ $kesehatanLanjutan ? 'false' : 'true' }},
+
+            originalData: {
+                tanggal_asesmen: @js(
+                    old(
+                        'tanggal_asesmen',
+                        $kesehatanLanjutan?->tanggal_asesmen?->format('Y-m-d')
+                    )
+                ),
+
+                gelombang: @js(
+                    old(
+                        'gelombang',
+                        $kesehatanLanjutan?->gelombang
+                    )
+                ),
+
+                tahun: @js(
+                    old(
+                        'tahun',
+                        $kesehatanLanjutan?->tahun
+                    )
+                ),
+
+                petugas_kesehatan: @js(
+                    old(
+                        'petugas_kesehatan',
+                        $kesehatanLanjutan?->petugas_kesehatan
+                    )
+                ),
+
+                hasil_asesmen: @js(
+                    old(
+                        'hasil_asesmen',
+                        $kesehatanLanjutan?->hasil_asesmen
+                    )
+                ),
+
+                status_asesmen_psikologi: @js(
+                    old(
+                        'status_asesmen_psikologi',
+                        $kesehatanLanjutan?->status_asesmen_psikologi
+                    )
+                ),
+
+                status_asesmen_fisioterapis: @js(
+                    old(
+                        'status_asesmen_fisioterapis',
+                        $kesehatanLanjutan?->status_asesmen_fisioterapis
+                    )
+                ),
+
+                catatan_asesmen: @js(
+                    old(
+                        'catatan_asesmen',
+                        $kesehatanLanjutan?->catatan_asesmen
+                    )
+                ),
+
+                hasil_akhir: @js(
+                    old(
+                        'hasil_akhir',
+                        $kesehatanLanjutan?->hasil_akhir
+                    )
+                )
+            },
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | CEK PERUBAHAN DATA
+            |--------------------------------------------------------------------------
+            */
+
+            checkChanges() {
+
+                if (!this.canEdit) {
+                    this.hasChanges = false;
+                    return;
+                }
+
+                const currentData = {
+
+                    tanggal_asesmen:
+                        document.getElementById('tanggal_asesmen')?.value ?? '',
+
+                    gelombang:
+                        document.getElementById('gelombang')?.value ?? '',
+
+                    tahun:
+                        document.getElementById('tahun')?.value ?? '',
+
+                    petugas_kesehatan:
+                        document.getElementById('petugas_kesehatan')?.value ?? '',
+
+                    hasil_asesmen:
+                        document.getElementById('hasil_asesmen')?.value ?? '',
+
+                    status_asesmen_psikologi:
+                        document.getElementById('status_asesmen_psikologi')?.value ?? '',
+
+                    status_asesmen_fisioterapis:
+                        document.getElementById('status_asesmen_fisioterapis')?.value ?? '',
+
+                    catatan_asesmen:
+                        document.getElementById('catatan_asesmen')?.value ?? '',
+
+                    hasil_akhir:
+                        document.getElementById('hasil_akhir')?.value ?? ''
+                };
+
+
+                this.hasChanges =
+                    currentData.tanggal_asesmen !==
+                        String(this.originalData.tanggal_asesmen ?? '') ||
+
+                    currentData.gelombang !==
+                        String(this.originalData.gelombang ?? '') ||
+
+                    currentData.tahun !==
+                        String(this.originalData.tahun ?? '') ||
+
+                    currentData.petugas_kesehatan !==
+                        String(this.originalData.petugas_kesehatan ?? '') ||
+
+                    currentData.hasil_asesmen !==
+                        String(this.originalData.hasil_asesmen ?? '') ||
+
+                    currentData.status_asesmen_psikologi !==
+                        String(this.originalData.status_asesmen_psikologi ?? '') ||
+
+                    currentData.status_asesmen_fisioterapis !==
+                        String(this.originalData.status_asesmen_fisioterapis ?? '') ||
+
+                    currentData.catatan_asesmen !==
+                        String(this.originalData.catatan_asesmen ?? '') ||
+
+                    currentData.hasil_akhir !==
+                        String(this.originalData.hasil_akhir ?? '');
+            },
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | HAPUS ERROR VALIDASI
+            |--------------------------------------------------------------------------
+            */
+
+            clearValidationErrors() {
+
+                this.validationErrors = [];
+
+                document
+                    .querySelectorAll('.js-validation-error')
+                    .forEach(element => {
+
+                        element.classList.remove(
+                            'js-validation-error'
+                        );
+
+                        element.classList.remove(
+                            'has-error'
+                        );
+
+                    });
+
+
+                document
+                    .querySelectorAll('.js-form-error')
+                    .forEach(element => {
+
+                        element.remove();
+
+                    });
+            },
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | VALIDASI SEBELUM POPUP KONFIRMASI
+            |--------------------------------------------------------------------------
+            */
+
+            validateBeforeSave() {
+
+                /*
+                |--------------------------------------------------------------------------
+                | PASTIKAN USER BOLEH EDIT
+                |--------------------------------------------------------------------------
+                */
+
+                if (!this.canEdit) {
+                    return;
+                }
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | CEK APAKAH ADA PERUBAHAN
+                |--------------------------------------------------------------------------
+                */
+
+                this.checkChanges();
+
+
+                if (!this.hasChanges) {
+                    return;
+                }
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | RESET ERROR
+                |--------------------------------------------------------------------------
+                */
+
+                this.clearValidationErrors();
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | FIELD WAJIB
+                |--------------------------------------------------------------------------
+                */
+
+                const requiredFields = [
+
+                    {
+                        id: 'tanggal_asesmen',
+                        message: 'Tanggal Asesmen wajib diisi.'
+                    },
+
+                    {
+                        id: 'gelombang',
+                        message: 'Gelombang wajib dipilih.'
+                    },
+
+                    {
+                        id: 'tahun',
+                        message: 'Tahun wajib dipilih.'
+                    },
+
+                    {
+                        id: 'petugas_kesehatan',
+                        message: 'Petugas Asesmen Kesehatan wajib dipilih.'
+                    },
+
+                    {
+                        id: 'hasil_asesmen',
+                        message: 'Asesmen Kesehatan wajib dipilih.'
+                    },
+
+                    {
+                        id: 'status_asesmen_psikologi',
+                        message: 'Asesmen Psikologi wajib dipilih.'
+                    },
+
+                    {
+                        id: 'status_asesmen_fisioterapis',
+                        message: 'Asesmen Fisioterapis wajib dipilih.'
+                    },
+
+                    {
+                        id: 'hasil_akhir',
+                        message: 'Hasil Akhir wajib dipilih.'
+                    }
+
+                ];
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | CEK FIELD WAJIB
+                |--------------------------------------------------------------------------
+                */
+
+                requiredFields.forEach(field => {
+
+                    const element =
+                        document.getElementById(field.id);
+
+
+                    if (!element) {
+                        return;
+                    }
+
+
+                    const value =
+                        element.value.trim();
+
+
+                    if (!value) {
+
+                        this.validationErrors.push(
+                            field.message
+                        );
+
+
+                        element.classList.add(
+                            'has-error'
+                        );
+
+
+                        element.classList.add(
+                            'js-validation-error'
+                        );
+
+
+                        const errorElement =
+                            document.createElement('div');
+
+
+                        errorElement.className =
+                            'form-error js-form-error';
+
+
+                        errorElement.textContent =
+                            field.message;
+
+
+                        element.parentNode.appendChild(
+                            errorElement
+                        );
+
+                    }
+
+                });
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | ERROR GELOMBANG & TAHUN
+                |--------------------------------------------------------------------------
+                */
+
+                const gelombang =
+                    document.getElementById('gelombang');
+
+                const tahun =
+                    document.getElementById('tahun');
+
+
+                if (
+                    gelombang &&
+                    tahun &&
+                    (!gelombang.value || !tahun.value)
+                ) {
+
+                    const group =
+                        gelombang.closest(
+                            '.wave-year-group'
+                        );
+
+
+                    if (group) {
+
+                        group
+                            .querySelectorAll('select')
+                            .forEach(select => {
+
+                                if (!select.value) {
+
+                                    select.classList.add(
+                                        'has-error'
+                                    );
+
+                                    select.classList.add(
+                                        'js-validation-error'
+                                    );
+
+                                }
+
+                            });
+
+                    }
+
+                }
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | JIKA ADA ERROR
+                |--------------------------------------------------------------------------
+                */
+
+                if (
+                    this.validationErrors.length > 0
+                ) {
+
+                    this.showValidationPopup = true;
+
+
+                    this.$nextTick(() => {
+
+                        const firstError =
+                            document.querySelector(
+                                '.js-validation-error'
+                            );
+
+
+                        if (firstError) {
+
+                            firstError.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'center'
+                            });
+
+
+                            setTimeout(() => {
+
+                                try {
+                                    firstError.focus();
+                                } catch (error) {
+                                    // abaikan
+                                }
+
+                            }, 300);
+
+                        }
+
+                    });
+
+
+                    return;
+                }
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | SEMUA LENGKAP
+                |--------------------------------------------------------------------------
+                |
+                | TAMPILKAN POPUP KONFIRMASI
+                |--------------------------------------------------------------------------
+                */
+
+                this.showSavePopup = true;
+            }
         }"
+
+        x-init="
+            $nextTick(() => {
+                checkChanges();
+            });
+        "
     >
 
 
@@ -290,6 +739,7 @@
                                 $kesehatanLanjutan?->tanggal_asesmen?->format('Y-m-d')
                             ) }}"
                             {{ $canEdit ? 'required' : 'disabled' }}
+                            @change="checkChanges()"
                         >
 
                     </div>
@@ -315,6 +765,7 @@
                                 id="gelombang"
                                 name="gelombang"
                                 {{ $canEdit ? '' : 'disabled' }}
+                                @change="checkChanges()"
                             >
 
                                 <option value="">
@@ -322,30 +773,21 @@
                                 </option>
 
 
-                                <option
-                                    value="1"
-                                    {{ old(
-                                        'gelombang',
-                                        $kesehatanLanjutan?->gelombang
-                                    ) == '1'
-                                        ? 'selected'
-                                        : '' }}
-                                >
-                                    Gelombang 1
-                                </option>
+                                @for ($gelombang = 1; $gelombang <= 4; $gelombang++)
 
+                                    <option
+                                        value="{{ $gelombang }}"
+                                        {{ old(
+                                            'gelombang',
+                                            $kesehatanLanjutan?->gelombang
+                                        ) == $gelombang
+                                            ? 'selected'
+                                            : '' }}
+                                    >
+                                        Gelombang {{ $gelombang }}
+                                    </option>
 
-                                <option
-                                    value="2"
-                                    {{ old(
-                                        'gelombang',
-                                        $kesehatanLanjutan?->gelombang
-                                    ) == '2'
-                                        ? 'selected'
-                                        : '' }}
-                                >
-                                    Gelombang 2
-                                </option>
+                                @endfor
 
                             </select>
 
@@ -356,6 +798,7 @@
                                 id="tahun"
                                 name="tahun"
                                 {{ $canEdit ? '' : 'disabled' }}
+                                @change="checkChanges()"
                             >
 
                                 <option value="">
@@ -363,7 +806,11 @@
                                 </option>
 
 
-                                @for ($tahun = 2026; $tahun <= 2028; $tahun++)
+                                @for (
+                                    $tahun = now()->year - 5;
+                                    $tahun <= now()->year + 1;
+                                    $tahun++
+                                )
 
                                     <option
                                         value="{{ $tahun }}"
@@ -400,6 +847,7 @@
                             id="petugas_kesehatan"
                             name="petugas_kesehatan"
                             {{ $canEdit ? '' : 'disabled' }}
+                            @change="checkChanges()"
                         >
 
                             <option value="">
@@ -442,6 +890,7 @@
                             id="hasil_asesmen"
                             name="hasil_asesmen"
                             {{ $canEdit ? '' : 'disabled' }}
+                            @change="checkChanges()"
                         >
 
                             <option value="">
@@ -506,6 +955,7 @@
                             id="status_asesmen_psikologi"
                             name="status_asesmen_psikologi"
                             {{ $canEdit ? '' : 'disabled' }}
+                            @change="checkChanges()"
                         >
 
                             <option value="">
@@ -570,6 +1020,7 @@
                             id="status_asesmen_fisioterapis"
                             name="status_asesmen_fisioterapis"
                             {{ $canEdit ? '' : 'disabled' }}
+                            @change="checkChanges()"
                         >
 
                             <option value="">
@@ -638,6 +1089,7 @@
                         name="catatan_asesmen"
                         placeholder="Masukkan catatan tambahan (opsional)"
                         {{ $canEdit ? '' : 'disabled' }}
+                        @input="checkChanges()"
                     >{{ old(
                         'catatan_asesmen',
                         $kesehatanLanjutan?->catatan_asesmen
@@ -672,6 +1124,7 @@
                             id="hasil_akhir"
                             name="hasil_akhir"
                             {{ $canEdit ? 'required' : 'disabled' }}
+                            @change="checkChanges()"
                         >
 
                             <option value="">
@@ -733,7 +1186,7 @@
 
 
             {{-- =================================================
-            ERROR VALIDASI
+            ERROR VALIDASI DARI LARAVEL
             ================================================== --}}
 
             @if ($errors->any())
@@ -793,19 +1246,16 @@
                     <button
                         type="button"
                         class="btn-save"
-                        :disabled="submitting"
-                        @click="showSavePopup = true"
+                        id="submitButton"
+                        @click="validateBeforeSave()"
+                        x-bind:disabled="submitting || !canEdit || !hasChanges"
                     >
 
-                        <span
-                            x-show="!submitting"
-                        >
+                        <span x-show="!submitting">
                             Simpan
                         </span>
 
-                        <span
-                            x-show="submitting"
-                        >
+                        <span x-show="submitting">
                             Menyimpan...
                         </span>
 
@@ -819,7 +1269,71 @@
 
 
         {{-- =====================================================
-        POPUP KONFIRMASI SIMPAN
+        POPUP VALIDASI DATA BELUM LENGKAP
+        ====================================================== --}}
+
+        <template x-if="showValidationPopup">
+
+            <div
+                class="global-popup error show"
+                @click.self="showValidationPopup = false"
+            >
+
+                <div class="global-popup-box">
+
+                    <div class="global-popup-icon">
+
+                        <span class="material-symbols-outlined">
+                            error
+                        </span>
+
+                    </div>
+
+
+                    <h3 class="global-popup-title">
+                        Data Belum Lengkap
+                    </h3>
+
+
+                    <div class="global-popup-message">
+
+                        <ul class="global-popup-error-list">
+
+                            <template
+                                x-for="error in validationErrors"
+                                :key="error"
+                            >
+
+                                <li x-text="error"></li>
+
+                            </template>
+
+                        </ul>
+
+                    </div>
+
+
+                    <div class="global-popup-actions">
+
+                        <button
+                            type="button"
+                            class="global-popup-btn primary"
+                            @click="showValidationPopup = false"
+                        >
+                            Mengerti
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </template>
+
+
+        {{-- =====================================================
+        POPUP KONFIRMASI PERUBAHAN
         ====================================================== --}}
 
         <template x-if="showSavePopup">
@@ -841,20 +1355,16 @@
 
 
                     <h3 class="global-popup-title">
-                        Simpan Data?
+                        Menyimpan Data
                     </h3>
 
 
                     <p class="global-popup-message">
-                        Pastikan data Asesmen Kesehatan Lanjutan
-                        sudah sesuai sebelum disimpan.
+                        Pastikan data sudah sesuai
                     </p>
 
 
-                    <div
-                        class="global-popup-actions "
-                        style="margin-top: 20px;"
-                    >
+                    <div class="global-popup-actions">
 
                         {{-- BATAL --}}
 
@@ -872,7 +1382,12 @@
                         <button
                             type="button"
                             class="global-popup-btn primary"
-                            @click="$refs.assessmentForm.requestSubmit()"
+                            :disabled="submitting"
+                            @click="
+                                submitting = true;
+                                showSavePopup = false;
+                                $refs.assessmentForm.requestSubmit();
+                            "
                         >
                             Simpan
                         </button>
@@ -892,7 +1407,15 @@
 
         @if (session('success'))
 
-            <div class="global-popup success show">
+            <div
+                class="global-popup success show"
+                x-data
+                x-init="
+                    setTimeout(() => {
+                        $el.remove();
+                    }, 2500);
+                "
+            >
 
                 <div class="global-popup-box">
 
@@ -913,18 +1436,6 @@
                     <p class="global-popup-message">
                         {{ session('success') }}
                     </p>
-
-
-                    <button
-                        type="button"
-                        class="global-popup-btn primary"
-                        @click="window.location.href = '{{ route(
-                            'ppks.normal.kesehatan-lanjutan.detail',
-                            $ppks
-                        ) }}'"
-                    >
-                        OK
-                    </button>
 
                 </div>
 
@@ -962,16 +1473,20 @@
                     </p>
 
 
-                    <button
-                        type="button"
-                        class="save-modal-button"
-                        style="margin-top: 20px;"
-                        @click="window.location.href = '{{ route(
-                            'ppks.normal.kesehatan-lanjutan'
-                        ) }}'"
-                    >
-                        OK
-                    </button>
+                    <div class="global-popup-actions">
+
+                        <button
+                            type="button"
+                            class="save-modal-button"
+                            style="margin-top: 20px;"
+                            @click="window.location.href = '{{ route(
+                                'ppks.normal.kesehatan-lanjutan'
+                            ) }}'"
+                        >
+                            OK
+                        </button>
+
+                    </div>
 
                 </div>
 

@@ -15,73 +15,6 @@
                 </p>
             </div>
 
-            {{-- DATE FILTER --}}
-            <div class="date-filter-wrapper">
-
-                <button type="button" class="date-filter" id="dateFilterButton">
-
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="1.8">
-                        <rect x="3" y="4" width="18" height="18" rx="2" />
-                        <path d="M16 2v4" />
-                        <path d="M8 2v4" />
-                        <path d="M3 10h18" />
-                    </svg>
-
-                    <span id="dateFilterText">
-                        Pilih Tanggal
-                    </span>
-
-                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2">
-                        <path d="m6 9 6 6 6-6" />
-                    </svg>
-
-                </button>
-
-                {{-- DATE PICKER --}}
-                <div class="date-picker" id="datePicker">
-
-                    <div class="date-picker-header">
-                        <strong>Pilih Rentang Tanggal</strong>
-                    </div>
-
-                    <div class="date-input-group">
-
-                        <div>
-                            <label for="startDate">
-                                Dari
-                            </label>
-
-                            <input type="date" id="startDate">
-                        </div>
-
-                        <div>
-                            <label for="endDate">
-                                Sampai
-                            </label>
-
-                            <input type="date" id="endDate">
-                        </div>
-
-                    </div>
-
-                    <div class="date-picker-actions">
-
-                        <button type="button" id="resetDate" class="date-reset">
-                            Reset
-                        </button>
-
-                        <button type="button" id="applyDate" class="date-apply">
-                            Terapkan
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
         </div>
 
 
@@ -93,38 +26,45 @@
             <div class="filter-group">
 
                 {{-- SEARCH --}}
-                    <form
-                        method="GET"
-                        action="{{ url()->current() }}"
-                        class="search"
-                        id="searchForm"
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2">
-                            <circle cx="11" cy="11" r="7" />
-                            <path d="m20 20-3.5-3.5" />
-                        </svg>
+                <form
+                    method="GET"
+                    action="{{ url()->current() }}"
+                    class="search"
+                    id="searchForm"
+                >
 
-                        <input
-                            type="text"
-                            name="search"
-                            id="searchInput"
-                            value="{{ request('search') }}"
-                            placeholder="Cari Nama atau NIK"
-                            autocomplete="off"
-                        >
-                    </form>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+                        <circle cx="11" cy="11" r="7" />
+                        <path d="m20 20-3.5-3.5" />
+                    </svg>
+
+                    <input
+                        type="text"
+                        name="search"
+                        id="searchInput"
+                        value="{{ request('search') }}"
+                        placeholder="Cari Nama atau NIK"
+                        autocomplete="off"
+                    >
+
+                </form>
 
 
                 {{-- FILTER PPKS --}}
                 <div class="select-wrapper">
 
-                    <select id="ppksFilter" class="filter-button">
+                    <select
+                        id="ppksFilter"
+                        class="filter-button"
+                    >
 
                         <option value="">
                             Semua Jenis PPKS
@@ -166,91 +106,15 @@
 
                 </div>
 
-
-                {{-- FILTER TAHAPAN --}}
-                <div class="select-wrapper">
-
-                    <select id="tahapanFilter" class="filter-button">
-
-                        <option value="">
-                            Semua Jenis Tahapan
-                        </option>
-
-                        <option value="Belum Dimulai">
-                            Belum Dimulai
-                        </option>
-
-                        <option value="Asesmen Instruktur">
-                            Asesmen Instruktur
-                        </option>
-
-                        <option value="Asesmen Kesehatan Awal">
-                            Asesmen Kesehatan Awal
-                        </option>
-
-                        <option value="Case Conference">
-                            Case Conference
-                        </option>
-
-                    </select>
-
-                    <span class="material-symbols-outlined select-arrow">
-                        keyboard_arrow_down
-                    </span>
-
-                </div>
-
-
-                {{-- FILTER HASIL --}}
-                <div class="select-wrapper">
-
-                    <select id="hasilFilter" class="filter-button">
-
-                        <option value="">
-                            Semua Hasil
-                        </option>
-
-                        <option value="Diterima">
-                            Diterima
-                        </option>
-
-                        <option value="Tidak Diterima">
-                            Tidak Diterima
-                        </option>
-
-                        <option value="Belum Dimulai">
-                            Belum Dimulai
-                        </option>
-
-                        <option value="Pending">
-                            Pending
-                        </option>
-
-                        <option value="Lulus">
-                            Lulus
-                        </option>
-
-                        <option value="Tidak Lulus">
-                            Tidak Lulus
-                        </option>
-
-                        <option value="Sedang Diperiksa">
-                            Sedang Diperiksa
-                        </option>
-
-                    </select>
-
-                    <span class="material-symbols-outlined select-arrow">
-                        keyboard_arrow_down
-                    </span>
-
-                </div>
-
             </div>
 
 
             {{-- RESET --}}
-            <button type="button" id="resetAllFilters" class="filter-reset">
+            <button
+                type="button"
+                id="resetAllFilters"
+                class="filter-reset"
+            >
 
                 <span class="material-symbols-outlined">
                     restart_alt
@@ -273,6 +137,7 @@
                 <thead>
 
                     <tr>
+
                         <th>No</th>
                         <th>Nama</th>
                         <th>NIK</th>
@@ -294,229 +159,227 @@
 
                             @php
 
-                                        /*
-                                        |--------------------------------------------------------------------------
-                                        | DATA PPKS
-                                        |--------------------------------------------------------------------------
-                                        */
-
-                                        $data = $item->data;
-
-                                        if (is_string($data)) {
-                                            $data = json_decode($data, true) ?? [];
-                                        }
-
-                                        if (!is_array($data)) {
-                                            $data = [];
-                                        }
+                                /*
+                                |--------------------------------------------------------------------------
+                                | DATA PPKS
+                                |--------------------------------------------------------------------------
+                                */
 
+                                $data = $item->data;
 
-                                        /*
-                                        |--------------------------------------------------------------------------
-                                        | NAMA
-                                        |--------------------------------------------------------------------------
-                                        */
+                                if (is_string($data)) {
+                                    $data = json_decode($data, true) ?? [];
+                                }
 
-                                        if (isset($data['nama_lengkap'])) {
-                                            $nama = $data['nama_lengkap'];
-                                        } else {
-                                            $nama = $data[1] ?? '-';
-                                        }
+                                if (!is_array($data)) {
+                                    $data = [];
+                                }
 
 
-                                        /*
-                                        |--------------------------------------------------------------------------
-                                        | NIK
-                                        |--------------------------------------------------------------------------
-                                        */
+                                /*
+                                |--------------------------------------------------------------------------
+                                | NAMA
+                                |--------------------------------------------------------------------------
+                                */
 
-                                        if (isset($data['nik'])) {
-                                            $nik = $data['nik'];
-                                        } else {
-                                            $nik = $data[2] ?? '-';
-                                        }
+                                if (isset($data['nama_lengkap'])) {
 
+                                    $nama = $data['nama_lengkap'];
 
-                                        /*
-                                        |--------------------------------------------------------------------------
-                                        | UMUR
-                                        |--------------------------------------------------------------------------
-                                        */
+                                } else {
 
-                                        if (
-                                            isset($data['usia']) &&
-                                            $data['usia'] !== ''
-                                        ) {
-                                            $umur = $data['usia'];
-                                        } else {
-                                            $umur = $data[6] ?? '-';
-                                        }
+                                    $nama = $data[1] ?? '-';
 
+                                }
 
-                                        /*
-                                        |--------------------------------------------------------------------------
-                                        | JENIS PPKS
-                                        |--------------------------------------------------------------------------
-                                        */
 
-                                        if (isset($data['jenis_ppks'])) {
-                                            $jenisPpks = $data['jenis_ppks'];
-                                        } else {
-                                            $jenisPpks = $data[12] ?? '-';
-                                        }
+                                /*
+                                |--------------------------------------------------------------------------
+                                | NIK
+                                |--------------------------------------------------------------------------
+                                */
 
+                                if (isset($data['nik'])) {
 
-                                        /*
-                                        |--------------------------------------------------------------------------
-                                        | JURUSAN
-                                        |--------------------------------------------------------------------------
-                                        */
+                                    $nik = $data['nik'];
 
-                                        if (isset($data['jurusan_yang_diminati'])) {
-                                            $jurusan = $data['jurusan_yang_diminati'];
-                                        } else {
-                                            $jurusan = $data[14] ?? '-';
-                                        }
+                                } else {
 
+                                    $nik = $data[2] ?? '-';
 
-                                        /*
-                                        |--------------------------------------------------------------------------
-                                        | PROSES TERBARU
-                                        |--------------------------------------------------------------------------
-                                        */
+                                }
 
-                                        $proses = $item->prosesPesertas
-                                            ->sortByDesc(function ($p) {
-                                                return $p->tanggal_proses ?? $p->created_at;
-                                            })
-                                            ->first();
 
+                                /*
+                                |--------------------------------------------------------------------------
+                                | UMUR
+                                |--------------------------------------------------------------------------
+                                */
 
-                                        /*
-                                        |--------------------------------------------------------------------------
-                                        | TAHAPAN
-                                        |--------------------------------------------------------------------------
-                                        */
+                                if (
+                                    isset($data['usia']) &&
+                                    $data['usia'] !== ''
+                                ) {
 
-                                        if (!$proses) {
+                                    $umur = $data['usia'];
 
-                                            $tahapan = 'Belum Dimulai';
+                                } else {
 
-                                        } elseif ($proses->tahap === 'instruktur') {
+                                    $umur = $data[6] ?? '-';
 
-                                            $tahapan = 'Asesmen Instruktur';
+                                }
 
-                                        } elseif ($proses->tahap === 'kesehatan_awal') {
 
-                                            $tahapan = 'Asesmen Kesehatan Awal';
+                                /*
+                                |--------------------------------------------------------------------------
+                                | JENIS PPKS
+                                |--------------------------------------------------------------------------
+                                */
 
-                                        } elseif ($proses->tahap === 'case_conference') {
+                                if (isset($data['jenis_ppks'])) {
 
-                                            $tahapan = 'Case Conference';
+                                    $jenisPpks = $data['jenis_ppks'];
 
-                                        } else {
+                                } else {
 
-                                            $tahapan = 'Belum Dimulai';
+                                    $jenisPpks = $data[12] ?? '-';
 
-                                        }
+                                }
 
 
-                                        /*
-                                        |--------------------------------------------------------------------------
-                                        | HASIL
-                                        |--------------------------------------------------------------------------
-                                        */
+                                /*
+                                |--------------------------------------------------------------------------
+                                | JURUSAN
+                                |--------------------------------------------------------------------------
+                                */
 
-                                        if ($item->status === 'diterima') {
+                                if (isset($data['jurusan_yang_diminati'])) {
 
-                                            $hasil = 'Diterima';
-                                            $hasilClass = 'diterima';
-                                            $hasilIcon = 'task_alt';
+                                    $jurusan = $data['jurusan_yang_diminati'];
 
-                                        } elseif ($item->status === 'tidak_diterima') {
+                                } else {
 
-                                            $hasil = 'Tidak Diterima';
-                                            $hasilClass = 'tidak-diterima';
-                                            $hasilIcon = 'cancel';
+                                    $jurusan = $data[14] ?? '-';
 
-                                        } elseif (!$proses) {
+                                }
 
-                                            $hasil = 'Belum Dimulai';
-                                            $hasilClass = 'pending';
-                                            $hasilIcon = 'progress_activity';
 
-                                        } elseif ($proses->status === 'pending') {
+                                /*
+                                |--------------------------------------------------------------------------
+                                | PROSES TERBARU
+                                |--------------------------------------------------------------------------
+                                */
 
-                                            $hasil = 'Pending';
-                                            $hasilClass = 'pending';
-                                            $hasilIcon = 'schedule';
+                                $proses = $item->prosesPesertas
+                                    ->sortByDesc(function ($p) {
 
-                                        } elseif ($proses->status === 'lulus') {
+                                        return $p->tanggal_proses
+                                            ?? $p->created_at;
 
-                                            $hasil = 'Lulus';
-                                            $hasilClass = 'lolos';
-                                            $hasilIcon = 'check_circle';
+                                    })
+                                    ->first();
 
-                                        } elseif ($proses->status === 'tidak_lulus') {
 
-                                            $hasil = 'Tidak Lulus';
-                                            $hasilClass = 'tidak-lolos';
-                                            $hasilIcon = 'cancel';
+                                /*
+                                |--------------------------------------------------------------------------
+                                | TAHAPAN
+                                |--------------------------------------------------------------------------
+                                */
 
-                                        } elseif ($proses->status === 'sedang_diperiksa') {
+                                if (!$proses) {
 
-                                            $hasil = 'Sedang Diperiksa';
-                                            $hasilClass = 'pending';
-                                            $hasilIcon = 'pending';
+                                    $tahapan = 'Belum Dimulai';
 
-                                        } else {
+                                } elseif ($proses->tahap === 'instruktur') {
 
-                                            $hasil = ucfirst(
-                                                str_replace(
-                                                    '_',
-                                                    ' ',
-                                                    $proses->status
-                                                )
-                                            );
+                                    $tahapan = 'Asesmen Instruktur';
 
-                                            $hasilClass = 'pending';
-                                            $hasilIcon = 'schedule';
+                                } elseif ($proses->tahap === 'kesehatan_awal') {
 
-                                        }
+                                    $tahapan = 'Asesmen Kesehatan Awal';
 
+                                } elseif ($proses->tahap === 'case_conference') {
 
+                                    $tahapan = 'Case Conference';
 
+                                } else {
 
+                                    $tahapan = 'Belum Dimulai';
 
-                                        /*
-                                        |--------------------------------------------------------------------------
-                                        | TANGGAL
-                                        |--------------------------------------------------------------------------
-                                        */
+                                }
 
-                                        $tanggal = null;
 
-                                        if (
-                                            $proses &&
-                                            $proses->tanggal_proses
-                                        ) {
+                                /*
+                                |--------------------------------------------------------------------------
+                                | HASIL
+                                |--------------------------------------------------------------------------
+                                */
 
-                                            $tanggal = \Carbon\Carbon::parse(
-                                                $proses->tanggal_proses
-                                            )->format('Y-m-d');
+                                if ($item->status === 'diterima') {
 
-                                        } elseif ($item->created_at) {
+                                    $hasil = 'Diterima';
+                                    $hasilClass = 'diterima';
+                                    $hasilIcon = 'task_alt';
 
-                                            $tanggal = $item->created_at->format('Y-m-d');
+                                } elseif ($item->status === 'tidak_diterima') {
 
-                                        }
+                                    $hasil = 'Tidak Diterima';
+                                    $hasilClass = 'tidak-diterima';
+                                    $hasilIcon = 'cancel';
+
+                                } elseif (!$proses) {
+
+                                    $hasil = 'Belum Dimulai';
+                                    $hasilClass = 'pending';
+                                    $hasilIcon = 'progress_activity';
+
+                                } elseif ($proses->status === 'pending') {
+
+                                    $hasil = 'Pending';
+                                    $hasilClass = 'pending';
+                                    $hasilIcon = 'schedule';
+
+                                } elseif ($proses->status === 'lulus') {
+
+                                    $hasil = 'Lulus';
+                                    $hasilClass = 'lolos';
+                                    $hasilIcon = 'check_circle';
+
+                                } elseif ($proses->status === 'tidak_lulus') {
+
+                                    $hasil = 'Tidak Lulus';
+                                    $hasilClass = 'tidak-lolos';
+                                    $hasilIcon = 'cancel';
+
+                                } elseif ($proses->status === 'sedang_diperiksa') {
+
+                                    $hasil = 'Sedang Diperiksa';
+                                    $hasilClass = 'pending';
+                                    $hasilIcon = 'pending';
+
+                                } else {
+
+                                    $hasil = ucfirst(
+                                        str_replace(
+                                            '_',
+                                            ' ',
+                                            $proses->status
+                                        )
+                                    );
+
+                                    $hasilClass = 'pending';
+                                    $hasilIcon = 'schedule';
+
+                                }
 
                             @endphp
 
 
-                            <tr data-nama="{{ strtolower($nama) }}" data-nik="{{ strtolower($nik) }}"
-                                data-ppks="{{ strtolower($jenisPpks) }}" data-tahapan="{{ strtolower($tahapan) }}"
-                                data-hasil="{{ strtolower($hasil) }}" data-tanggal="{{ $tanggal ?? '' }}">
+                            <tr
+                                data-nama="{{ strtolower($nama) }}"
+                                data-nik="{{ strtolower($nik) }}"
+                                data-ppks="{{ strtolower($jenisPpks) }}"
+                            >
 
                                 {{-- NO --}}
                                 <td class="row-number">
@@ -559,7 +422,10 @@
 
                                     @if ($item->status === 'diterima')
 
-                                        <a href="{{ route('ppks.normal') }}" class="result-badge result-accepted">
+                                        <a
+                                            href="{{ route('ppks.normal') }}"
+                                            class="result-badge result-accepted"
+                                        >
 
                                             <span class="material-symbols-outlined result-icon">
                                                 task_alt
@@ -579,9 +445,13 @@
 
                                         </a>
 
+
                                     @elseif ($item->status === 'tidak_diterima')
 
-                                        <a href="{{ route('ppks.normal') }}" class="result-badge result-rejected">
+                                        <a
+                                            href="{{ route('ppks.normal') }}"
+                                            class="result-badge result-rejected"
+                                        >
 
                                             <span class="material-symbols-outlined result-icon">
                                                 cancel
@@ -601,10 +471,13 @@
 
                                         </a>
 
+
                                     @elseif (!$proses)
 
-                                        <a href="{{ route('ppks.normal.asesmen-instruktur.data-detail', $item->id) }}"
-                                            class="result-badge result-not-done">
+                                        <a
+                                            href="{{ route('ppks.normal.asesmen-instruktur.data-detail', $item->id) }}"
+                                            class="result-badge result-not-done"
+                                        >
 
                                             <span class="material-symbols-outlined result-icon">
                                                 progress_activity
@@ -632,10 +505,13 @@
 
                                         </a>
 
+
                                     @elseif ($proses->tahap === 'instruktur')
 
-                                        <a href="{{ route('ppks.normal.asesmen-instruktur.detail', $item->id) }}"
-                                            class="result-badge result-instructor">
+                                        <a
+                                            href="{{ route('ppks.normal.asesmen-instruktur.detail', $item->id) }}"
+                                            class="result-badge result-instructor"
+                                        >
 
                                             <span class="material-symbols-outlined result-icon">
                                                 assignment
@@ -663,9 +539,13 @@
 
                                         </a>
 
+
                                     @elseif ($proses->tahap === 'kesehatan_awal')
 
-                                        <a href="{{ route('ppks.normal') }}" class="result-badge result-health">
+                                        <a
+                                            href="{{ route('ppks.normal') }}"
+                                            class="result-badge result-health"
+                                        >
 
                                             <span class="material-symbols-outlined result-icon">
                                                 medical_services
@@ -693,9 +573,13 @@
 
                                         </a>
 
+
                                     @elseif ($proses->tahap === 'case_conference')
 
-                                        <a href="{{ route('ppks.normal') }}" class="result-badge result-case-conference">
+                                        <a
+                                            href="{{ route('ppks.normal') }}"
+                                            class="result-badge result-case-conference"
+                                        >
 
                                             <span class="material-symbols-outlined result-icon">
                                                 groups
@@ -727,19 +611,18 @@
 
                                 </td>
 
-
-
-
                             </tr>
 
                         @endforeach
 
+
                     @else
-                    <tr>
+
+                        <tr>
 
                             <td
-                                colspan="8"
-                                style="text-align:center; padding:40px;"
+                                colspan="7"
+                                style="text-align: center; padding: 40px;"
                             >
 
                                 <div class="empty-state">
@@ -773,7 +656,9 @@
         @if ($ppks instanceof \Illuminate\Pagination\LengthAwarePaginator)
 
             <div class="pagination-wrapper">
+
                 {{ $ppks->links() }}
+
             </div>
 
         @endif
@@ -784,623 +669,157 @@
     {{-- =====================================================
     JAVASCRIPT
     ====================================================== --}}
-
-<script>
-
-document.addEventListener(
-    'DOMContentLoaded',
-    function () {
-
-        /*
-        |--------------------------------------------------------------------------
-        | ELEMENT
-        |--------------------------------------------------------------------------
-        */
-
-        const ppksFilter =
-            document.getElementById('ppksFilter');
-
-        const tahapanFilter =
-            document.getElementById('tahapanFilter');
-
-        const hasilFilter =
-            document.getElementById('hasilFilter');
-
-        const resetAllFilters =
-            document.getElementById('resetAllFilters');
-
-        const tableRows =
-            document.querySelectorAll(
-                '.table tbody tr[data-nama]'
-            );
-
-        const emptyRow =
-            document.getElementById('emptyRow');
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | DATE
-        |--------------------------------------------------------------------------
-        */
-
-        const dateFilterButton =
-            document.getElementById(
-                'dateFilterButton'
-            );
-
-        const datePicker =
-            document.getElementById(
-                'datePicker'
-            );
-
-        const dateFilterText =
-            document.getElementById(
-                'dateFilterText'
-            );
-
-        const startDate =
-            document.getElementById(
-                'startDate'
-            );
-
-        const endDate =
-            document.getElementById(
-                'endDate'
-            );
-
-        const applyDate =
-            document.getElementById(
-                'applyDate'
-            );
-
-        const resetDate =
-            document.getElementById(
-                'resetDate'
-            );
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | FILTER TABLE
-        |
-        | SEARCH NAMA / NIK TIDAK DIPROSES DI SINI.
-        | SEARCH SUDAH DITANGANI CONTROLLER.
-        |--------------------------------------------------------------------------
-        */
-
-        function filterTable() {
-
-            const ppksValue =
-                ppksFilter
-                    ? ppksFilter.value
-                        .toLowerCase()
-                        .trim()
-                    : '';
-
-            const tahapanValue =
-                tahapanFilter
-                    ? tahapanFilter.value
-                        .toLowerCase()
-                        .trim()
-                    : '';
-
-            const hasilValue =
-                hasilFilter
-                    ? hasilFilter.value
-                        .toLowerCase()
-                        .trim()
-                    : '';
-
-            const selectedStart =
-                startDate
-                    ? startDate.value
-                    : '';
-
-            const selectedEnd =
-                endDate
-                    ? endDate.value
-                    : '';
-
-
-            let visibleNumber =
-                {{ $ppks->firstItem() ?? 1 }};
-
-            let found = false;
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | LOOP DATA
-            |--------------------------------------------------------------------------
-            */
-
-            tableRows.forEach(
-                function (row) {
-
-                    const jenisPpks =
-                        row.dataset.ppks || '';
-
-                    const tahapan =
-                        row.dataset.tahapan || '';
-
-                    const hasil =
-                        row.dataset.hasil || '';
-
-                    const tanggal =
-                        row.dataset.tanggal || '';
-
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | FILTER JENIS PPKS
-                    |--------------------------------------------------------------------------
-                    */
-
-                    const matchPpks =
-                        ppksValue === '' ||
-                        jenisPpks.includes(
-                            ppksValue
-                        );
-
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | FILTER TAHAPAN
-                    |--------------------------------------------------------------------------
-                    */
-
-                    const matchTahapan =
-                        tahapanValue === '' ||
-                        tahapan === tahapanValue;
-
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | FILTER HASIL
-                    |--------------------------------------------------------------------------
-                    */
-
-                    const matchHasil =
-                        hasilValue === '' ||
-                        hasil === hasilValue;
-
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | FILTER TANGGAL
-                    |--------------------------------------------------------------------------
-                    */
-
-                    let matchDate = true;
-
-
-                    if (selectedStart) {
-
-                        matchDate =
-                            tanggal !== '' &&
-                            tanggal >= selectedStart;
-
-                    }
-
-
-                    if (
-                        selectedEnd &&
-                        matchDate
-                    ) {
-
-                        matchDate =
-                            tanggal !== '' &&
-                            tanggal <= selectedEnd;
-
-                    }
-
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | HASIL AKHIR
-                    |--------------------------------------------------------------------------
-                    */
-
-                    const shouldShow =
-                        matchPpks &&
-                        matchTahapan &&
-                        matchHasil &&
-                        matchDate;
-
-
-                    if (shouldShow) {
-
-                        row.style.display = '';
-
-                        const numberCell =
-                            row.querySelector(
-                                '.row-number'
-                            );
-
-
-                        if (numberCell) {
-
-                            numberCell.textContent =
-                                visibleNumber;
-
-                        }
-
-
-                        visibleNumber++;
-
-                        found = true;
-
-                    } else {
-
-                        row.style.display =
-                            'none';
-
-                    }
-
-                }
-            );
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | EMPTY FILTER
-            |--------------------------------------------------------------------------
-            */
-
-            if (emptyRow) {
-
-                emptyRow.style.display =
-                    found
-                        ? 'none'
-                        : 'table-row';
-
-            }
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | ACTIVE STATE
-            |--------------------------------------------------------------------------
-            */
-
-            if (ppksFilter) {
-
-                ppksFilter.classList.toggle(
-                    'active',
-                    ppksFilter.value !== ''
-                );
-
-            }
-
-
-            if (tahapanFilter) {
-
-                tahapanFilter.classList.toggle(
-                    'active',
-                    tahapanFilter.value !== ''
-                );
-
-            }
-
-
-            if (hasilFilter) {
-
-                hasilFilter.classList.toggle(
-                    'active',
-                    hasilFilter.value !== ''
-                );
-
-            }
-
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | FILTER PPKS
-        |--------------------------------------------------------------------------
-        */
-
-        if (ppksFilter) {
-
-            ppksFilter.addEventListener(
-                'change',
-                filterTable
-            );
-
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | FILTER TAHAPAN
-        |--------------------------------------------------------------------------
-        */
-
-        if (tahapanFilter) {
-
-            tahapanFilter.addEventListener(
-                'change',
-                filterTable
-            );
-
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | FILTER HASIL
-        |--------------------------------------------------------------------------
-        */
-
-        if (hasilFilter) {
-
-            hasilFilter.addEventListener(
-                'change',
-                filterTable
-            );
-
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | RESET SEMUA FILTER
-        |--------------------------------------------------------------------------
-        */
-
-        if (resetAllFilters) {
-
-            resetAllFilters.addEventListener(
-                'click',
-                function () {
-
-                    /*
-                    |--------------------------------------------------------------
-                    | Karena SEARCH menggunakan GET,
-                    | reset dilakukan dengan kembali ke URL tanpa query.
-                    |--------------------------------------------------------------
-                    */
-
-                    window.location.href =
-                        window.location.pathname;
-
-                }
-            );
-
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | BUKA DATE PICKER
-        |--------------------------------------------------------------------------
-        */
-
-        if (
-            dateFilterButton &&
-            datePicker
-        ) {
-
-            dateFilterButton.addEventListener(
-                'click',
-                function (event) {
-
-                    event.stopPropagation();
-
-                    datePicker.classList.toggle(
-                        'active'
-                    );
-
-                }
-            );
-
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | DATE PICKER TIDAK MENUTUP SAAT DIKLIK
-        |--------------------------------------------------------------------------
-        */
-
-        if (datePicker) {
-
-            datePicker.addEventListener(
-                'click',
-                function (event) {
-
-                    event.stopPropagation();
-
-                }
-            );
-
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | TERAPKAN TANGGAL
-        |--------------------------------------------------------------------------
-        */
-
-        if (applyDate) {
-
-            applyDate.addEventListener(
-                'click',
-                function () {
-
-                    const start =
-                        startDate
-                            ? startDate.value
-                            : '';
-
-                    const end =
-                        endDate
-                            ? endDate.value
-                            : '';
-
-
-                    if (!start || !end) {
-
-                        alert(
-                            'Silakan pilih tanggal awal dan tanggal akhir.'
-                        );
-
-                        return;
-
-                    }
-
-
-                    if (start > end) {
-
-                        alert(
-                            'Tanggal awal tidak boleh lebih besar dari tanggal akhir.'
-                        );
-
-                        return;
-
-                    }
-
-
-                    if (dateFilterText) {
-
-                        dateFilterText.textContent =
-                            formatDate(start) +
-                            ' - ' +
-                            formatDate(end);
-
-                    }
-
-
-                    if (datePicker) {
-
-                        datePicker.classList.remove(
-                            'active'
-                        );
-
-                    }
-
-
-                    filterTable();
-
-                }
-            );
-
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | RESET TANGGAL
-        |--------------------------------------------------------------------------
-        */
-
-        if (resetDate) {
-
-            resetDate.addEventListener(
-                'click',
-                function () {
-
-                    if (startDate) {
-                        startDate.value = '';
-                    }
-
-                    if (endDate) {
-                        endDate.value = '';
-                    }
-
-
-                    if (dateFilterText) {
-
-                        dateFilterText.textContent =
-                            'Pilih Tanggal';
-
-                    }
-
-
-                    if (datePicker) {
-
-                        datePicker.classList.remove(
-                            'active'
-                        );
-
-                    }
-
-
-                    filterTable();
-
-                }
-            );
-
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | FORMAT DATE
-        |--------------------------------------------------------------------------
-        */
-
-        function formatDate(
-            dateString
-        ) {
-
-            const date =
-                new Date(
-                    dateString +
-                    'T00:00:00'
-                );
-
-
-            return date.toLocaleDateString(
-                'id-ID',
-                {
-                    day: '2-digit',
-                    month: 'short',
-                    year: 'numeric'
-                }
-            );
-
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | CLICK OUTSIDE
-        |--------------------------------------------------------------------------
-        */
+    <script>
 
         document.addEventListener(
-            'click',
+            'DOMContentLoaded',
             function () {
 
-                if (datePicker) {
+                const ppksFilter =
+                    document.getElementById('ppksFilter');
 
-                    datePicker.classList.remove(
-                        'active'
+                const resetAllFilters =
+                    document.getElementById('resetAllFilters');
+
+                const tableRows =
+                    document.querySelectorAll(
+                        '.table tbody tr[data-nama]'
+                    );
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | FILTER JENIS PPKS
+                |--------------------------------------------------------------------------
+                */
+
+                function filterTable() {
+
+                    const ppksValue =
+                        ppksFilter
+                            ? ppksFilter.value
+                                .toLowerCase()
+                                .trim()
+                            : '';
+
+
+                    let visibleNumber =
+                        {{ $ppks->firstItem() ?? 1 }};
+
+
+                    tableRows.forEach(
+                        function (row) {
+
+                            const jenisPpks =
+                                (
+                                    row.dataset.ppks || ''
+                                ).toLowerCase();
+
+
+                            const matchPpks =
+                                ppksValue === '' ||
+                                jenisPpks.includes(
+                                    ppksValue
+                                );
+
+
+                            if (matchPpks) {
+
+                                row.style.display = '';
+
+                                const numberCell =
+                                    row.querySelector(
+                                        '.row-number'
+                                    );
+
+
+                                if (numberCell) {
+
+                                    numberCell.textContent =
+                                        visibleNumber;
+
+                                }
+
+
+                                visibleNumber++;
+
+                            } else {
+
+                                row.style.display =
+                                    'none';
+
+                            }
+
+                        }
+                    );
+
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | ACTIVE STATE FILTER
+                    |--------------------------------------------------------------------------
+                    */
+
+                    if (ppksFilter) {
+
+                        ppksFilter.classList.toggle(
+                            'active',
+                            ppksFilter.value !== ''
+                        );
+
+                    }
+
+                }
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | EVENT FILTER PPKS
+                |--------------------------------------------------------------------------
+                */
+
+                if (ppksFilter) {
+
+                    ppksFilter.addEventListener(
+                        'change',
+                        filterTable
                     );
 
                 }
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | RESET SEMUA FILTER
+                |--------------------------------------------------------------------------
+                */
+
+                if (resetAllFilters) {
+
+                    resetAllFilters.addEventListener(
+                        'click',
+                        function () {
+
+                            window.location.href =
+                                window.location.pathname;
+
+                        }
+                    );
+
+                }
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | INITIAL FILTER
+                |--------------------------------------------------------------------------
+                */
+
+                filterTable();
 
             }
         );
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | INITIAL FILTER
-        |--------------------------------------------------------------------------
-        */
-
-        filterTable();
-
-    }
-);
-
-</script>
-
-
+    </script>
 
 </x-app-layout>

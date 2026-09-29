@@ -15,78 +15,6 @@
                 </p>
             </div>
 
-
-            {{-- =================================================
-            DATE FILTER
-            ================================================== --}}
-            <div class="date-filter-wrapper">
-
-                <button type="button" class="date-filter" id="dateFilterButton">
-
-                    <span class="material-symbols-outlined">
-                        calendar_month
-                    </span>
-
-                    <span id="dateFilterText">
-                        Pilih Tanggal
-                    </span>
-
-                    <span class="material-symbols-outlined">
-                        keyboard_arrow_down
-                    </span>
-
-                </button>
-
-
-                <div class="date-picker" id="datePicker">
-
-                    <div class="date-picker-header">
-                        <strong>Pilih Rentang Tanggal</strong>
-                    </div>
-
-
-                    <div class="date-input-group">
-
-                        <div>
-
-                            <label for="startDate">
-                                Dari
-                            </label>
-
-                            <input type="date" id="startDate">
-
-                        </div>
-
-
-                        <div>
-
-                            <label for="endDate">
-                                Sampai
-                            </label>
-
-                            <input type="date" id="endDate">
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="date-picker-actions">
-
-                        <button type="button" id="resetDate" class="date-reset">
-                            Reset
-                        </button>
-
-                        <button type="button" id="applyDate" class="date-apply">
-                            Terapkan
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
         </div>
 
 
@@ -98,37 +26,51 @@
 
             {{-- SEARCH --}}
             <form
-    method="GET"
-    action="{{ url()->current() }}"
-    class="search"
-    id="searchForm"
->
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-    >
-        <circle cx="11" cy="11" r="7" />
-        <path d="m20 20-3.5-3.5" />
-    </svg>
+                method="GET"
+                action="{{ url()->current() }}"
+                class="search"
+                id="searchForm"
+            >
 
-    <input
-        type="text"
-        name="search"
-        id="searchInput"
-        value="{{ request('search') }}"
-        placeholder="Cari Nama atau NIK"
-        autocomplete="off"
-    >
-</form>
-            {{-- JENIS PPKS --}}
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                >
+
+                    <circle cx="11" cy="11" r="7" />
+
+                    <path d="m20 20-3.5-3.5" />
+
+                </svg>
+
+
+                <input
+                    type="text"
+                    name="search"
+                    id="searchInput"
+                    value="{{ request('search') }}"
+                    placeholder="Cari Nama atau NIK"
+                    autocomplete="off"
+                >
+
+            </form>
+
+
+
+            {{-- =================================================
+            JENIS PPKS
+            ================================================== --}}
             <div class="select-wrapper">
 
-                <select id="ppksFilter" class="filter-button">
+                <select
+                    id="ppksFilter"
+                    class="filter-button"
+                >
 
                     <option value="">
                         Semua Jenis PPKS
@@ -164,53 +106,6 @@
 
                 </select>
 
-                <span class="material-symbols-outlined select-arrow">
-                    keyboard_arrow_down
-                </span>
-
-            </div>
-
-
-            {{-- TAHAPAN --}}
-            <div class="select-wrapper">
-
-                <select id="tahapanFilter" class="filter-button">
-
-                    <option value="">
-                        Semua Jenis Tahapan
-                    </option>
-
-                    <option value="Asesmen Kesehatan Lanjutan">
-                        Asesmen Kesehatan Lanjutan
-                    </option>
-
-                </select>
-
-                <span class="material-symbols-outlined select-arrow">
-                    keyboard_arrow_down
-                </span>
-
-            </div>
-
-
-            {{-- HASIL --}}
-            <div class="select-wrapper">
-
-                <select id="hasilFilter" class="filter-button">
-
-                    <option value="">
-                        Semua Hasil
-                    </option>
-
-                    <option value="Lulus">
-                        Lulus
-                    </option>
-
-                    <option value="Aktif">
-                        Aktif
-                    </option>
-
-                </select>
 
                 <span class="material-symbols-outlined select-arrow">
                     keyboard_arrow_down
@@ -234,17 +129,25 @@
                     <tr>
 
                         <th>No</th>
+
                         <th>Nama</th>
+
                         <th>NIK</th>
+
                         <th>Umur</th>
+
                         <th>Jenis PPKS</th>
+
                         <th>Jurusan</th>
+
                         <th>Hasil</th>
+
                         <th>Keterangan</th>
 
                     </tr>
 
                 </thead>
+
 
 
                 <tbody>
@@ -263,6 +166,7 @@
                                 is_array($peserta->data)
                                 ? $peserta->data
                                 : [];
+
 
 
                             /*
@@ -297,6 +201,7 @@
                                 ?? '-';
 
 
+
                             /*
                             |--------------------------------------------------------------------------
                             | CASE CONFERENCE
@@ -313,19 +218,17 @@
                                 ?? '-';
 
 
+
                             /*
                             |--------------------------------------------------------------------------
                             | KESEHATAN LANJUTAN
                             |--------------------------------------------------------------------------
-                            |
-                            | Halaman ini khusus menampilkan peserta
-                            | yang sudah LULUS Kesehatan Lanjutan.
-                            |
                             */
 
                             $kesehatanLanjutan =
                                 $peserta->kesehatanLanjutan
                                 ?? null;
+
 
 
                             /*
@@ -338,6 +241,7 @@
                                 'Asesmen Kesehatan Lanjutan';
 
 
+
                             /*
                             |--------------------------------------------------------------------------
                             | HASIL
@@ -346,6 +250,7 @@
 
                             $hasil =
                                 'Lulus';
+
 
 
                             /*
@@ -358,28 +263,6 @@
                                 $kesehatanLanjutan?->catatan_asesmen
                                 ?? '-';
 
-
-                            /*
-                            |--------------------------------------------------------------------------
-                            | TANGGAL ASESMEN
-                            |--------------------------------------------------------------------------
-                            |
-                            | Digunakan untuk date filter.
-                            |
-                            */
-
-                            $tanggal = '';
-
-                            if ($kesehatanLanjutan) {
-
-                                $tanggal =
-                                    $kesehatanLanjutan->tanggal_asesmen
-                                    ? \Carbon\Carbon::parse(
-                                        $kesehatanLanjutan->tanggal_asesmen
-                                    )->format('Y-m-d')
-                                    : '';
-
-                            }
 
 
                             /*
@@ -397,56 +280,95 @@
                         @endphp
 
 
-                        <tr data-nama="{{ strtolower($nama) }}" data-nik="{{ strtolower($nik) }}"
-                            data-ppks="{{ strtolower($jenisPpks) }}" data-tahapan="{{ strtolower($tahapan) }}"
-                            data-hasil="{{ strtolower($hasil) }}" data-tanggal="{{ $tanggal }}">
 
-                            {{-- NO --}}
+                        <tr
+                            data-nama="{{ strtolower($nama) }}"
+                            data-nik="{{ strtolower($nik) }}"
+                            data-ppks="{{ strtolower($jenisPpks) }}"
+                        >
+
+
+                            {{-- =================================================
+                            NO
+                            ================================================== --}}
                             <td class="row-number">
+
                                 {{ $index + 1 }}
+
                             </td>
 
 
-                            {{-- NAMA --}}
+
+                            {{-- =================================================
+                            NAMA
+                            ================================================== --}}
                             <td>
+
                                 {{ $nama }}
+
                             </td>
 
 
-                            {{-- NIK --}}
+
+                            {{-- =================================================
+                            NIK
+                            ================================================== --}}
                             <td>
+
                                 {{ $nik }}
+
                             </td>
 
 
-                            {{-- UMUR --}}
+
+                            {{-- =================================================
+                            UMUR
+                            ================================================== --}}
                             <td>
+
                                 {{ $umur }}
+
                             </td>
 
 
-                            {{-- JENIS PPKS --}}
+
+                            {{-- =================================================
+                            JENIS PPKS
+                            ================================================== --}}
                             <td>
+
                                 {{ $jenisPpks }}
+
                             </td>
 
 
-                            {{-- JURUSAN --}}
+
+                            {{-- =================================================
+                            JURUSAN
+                            ================================================== --}}
                             <td>
+
                                 {{ $jurusan }}
+
                             </td>
+
+
 
                             {{-- =================================================
                             HASIL
                             ================================================== --}}
                             <td>
 
-                                <a href="{{ $detailRoute }}" class="result-badge result-health-advanced">
+                                <a
+                                    href="{{ $detailRoute }}"
+                                    class="result-badge result-health-advanced"
+                                >
 
                                     {{-- ICON TAHAPAN --}}
                                     <span class="material-symbols-outlined result-icon">
                                         medical_services
                                     </span>
+
 
 
                                     <div class="result-content">
@@ -455,6 +377,7 @@
                                         <span class="result-title">
                                             Asesmen Kesehatan Lanjutan
                                         </span>
+
 
 
                                         {{-- STATUS --}}
@@ -467,6 +390,7 @@
                                         </span>
 
                                     </div>
+
 
 
                                     {{-- ARROW --}}
@@ -486,12 +410,15 @@
                             <td>
 
                                 <span class="keterangan-lolos">
+
                                     {{ $keterangan }}
+
                                 </span>
 
                             </td>
 
                         </tr>
+
 
                     @empty
 
@@ -521,12 +448,19 @@
                     @endforelse
 
 
+
                     {{-- =================================================
                     EMPTY FILTER
                     ================================================== --}}
-                    <tr id="emptyRow" style="display: none;">
+                    <tr
+                        id="emptyRow"
+                        style="display: none;"
+                    >
 
-                        <td colspan="8" class="empty-state">
+                        <td
+                            colspan="8"
+                            class="empty-state"
+                        >
 
                             Data tidak ditemukan.
 
@@ -551,6 +485,7 @@
 
         document.addEventListener('DOMContentLoaded', function () {
 
+
             /*
             |--------------------------------------------------------------------------
             | ELEMENT
@@ -563,14 +498,6 @@
 
             const ppksFilter =
                 document.getElementById('ppksFilter');
-
-
-            const tahapanFilter =
-                document.getElementById('tahapanFilter');
-
-
-            const hasilFilter =
-                document.getElementById('hasilFilter');
 
 
             const tableRows =
@@ -586,61 +513,16 @@
 
             /*
             |--------------------------------------------------------------------------
-            | DATE ELEMENT
-            |--------------------------------------------------------------------------
-            */
-
-            const dateFilterButton =
-                document.getElementById(
-                    'dateFilterButton'
-                );
-
-
-            const datePicker =
-                document.getElementById(
-                    'datePicker'
-                );
-
-
-            const dateFilterText =
-                document.getElementById(
-                    'dateFilterText'
-                );
-
-
-            const startDate =
-                document.getElementById(
-                    'startDate'
-                );
-
-
-            const endDate =
-                document.getElementById(
-                    'endDate'
-                );
-
-
-            const applyDate =
-                document.getElementById(
-                    'applyDate'
-                );
-
-
-            const resetDate =
-                document.getElementById(
-                    'resetDate'
-                );
-
-
-
-            /*
-            |--------------------------------------------------------------------------
             | FILTER TABLE
             |--------------------------------------------------------------------------
             */
 
             function filterTable() {
 
+                const search =
+                    searchInput.value
+                        .toLowerCase()
+                        .trim();
 
 
                 const ppks =
@@ -649,30 +531,18 @@
                         .trim();
 
 
-                const tahapan =
-                    tahapanFilter.value
-                        .toLowerCase()
-                        .trim();
-
-
-                const hasil =
-                    hasilFilter.value
-                        .toLowerCase()
-                        .trim();
-
-
-                const start =
-                    startDate.value;
-
-
-                const end =
-                    endDate.value;
-
-
                 let visibleCount = 0;
 
 
+
                 tableRows.forEach(function (row) {
+
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | DATA ROW
+                    |--------------------------------------------------------------------------
+                    */
 
                     const nama =
                         row.dataset.nama
@@ -689,29 +559,25 @@
                         || '';
 
 
-                    const tahap =
-                        row.dataset.tahapan
-                        || '';
 
+                    /*
+                    |--------------------------------------------------------------------------
+                    | SEARCH
+                    |--------------------------------------------------------------------------
+                    */
 
-                    const hasilData =
-                        row.dataset.hasil
-                        || '';
-
-
-                    const tanggal =
-                        row.dataset.tanggal
-                        || '';
-
-
-
-
+                    const matchSearch =
+                        !search
+                        ||
+                        nama.includes(search)
+                        ||
+                        nik.includes(search);
 
 
 
                     /*
                     |--------------------------------------------------------------------------
-                    | PPKS
+                    | JENIS PPKS
                     |--------------------------------------------------------------------------
                     */
 
@@ -724,90 +590,14 @@
 
                     /*
                     |--------------------------------------------------------------------------
-                    | TAHAPAN
-                    |--------------------------------------------------------------------------
-                    */
-
-                    const matchTahapan =
-                        !tahapan
-                        ||
-                        tahap === tahapan;
-
-
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | HASIL
-                    |--------------------------------------------------------------------------
-                    */
-
-                    const matchHasil =
-                        !hasil
-                        ||
-                        hasilData === hasil;
-
-
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | TANGGAL
-                    |--------------------------------------------------------------------------
-                    */
-
-                    let matchDate = true;
-
-
-                    if (start || end) {
-
-                        if (!tanggal) {
-
-                            matchDate = false;
-
-                        }
-
-                        else {
-
-                            if (
-                                start
-                                &&
-                                tanggal < start
-                            ) {
-
-                                matchDate = false;
-
-                            }
-
-
-                            if (
-                                end
-                                &&
-                                tanggal > end
-                            ) {
-
-                                matchDate = false;
-
-                            }
-
-                        }
-
-                    }
-
-
-
-                    /*
-                    |--------------------------------------------------------------------------
                     | FINAL RESULT
                     |--------------------------------------------------------------------------
                     */
 
                     const visible =
-                        matchPpks
+                        matchSearch
                         &&
-                        matchTahapan
-                        &&
-                        matchHasil
-                        &&
-                        matchDate;
+                        matchPpks;
 
 
 
@@ -823,9 +613,17 @@
                             : 'none';
 
 
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | NUMBER
+                    |--------------------------------------------------------------------------
+                    */
+
                     if (visible) {
 
                         visibleCount++;
+
 
                         row.querySelector(
                             '.row-number'
@@ -853,226 +651,28 @@
 
 
 
+            /*
+            |--------------------------------------------------------------------------
+            | SEARCH
+            |--------------------------------------------------------------------------
+            */
+
+            searchInput.addEventListener(
+                'input',
+                filterTable
+            );
+
 
 
             /*
             |--------------------------------------------------------------------------
-            | FILTER
+            | JENIS PPKS
             |--------------------------------------------------------------------------
             */
 
             ppksFilter.addEventListener(
                 'change',
                 filterTable
-            );
-
-
-            tahapanFilter.addEventListener(
-                'change',
-                filterTable
-            );
-
-
-            hasilFilter.addEventListener(
-                'change',
-                filterTable
-            );
-
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | DATE PICKER
-            |--------------------------------------------------------------------------
-            */
-
-            dateFilterButton.addEventListener(
-                'click',
-                function (event) {
-
-                    event.stopPropagation();
-
-                    datePicker.classList.toggle(
-                        'active'
-                    );
-
-                }
-            );
-
-
-            datePicker.addEventListener(
-                'click',
-                function (event) {
-
-                    event.stopPropagation();
-
-                }
-            );
-
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | FORMAT DATE
-            |--------------------------------------------------------------------------
-            */
-
-            function formatDate(dateString) {
-
-                if (!dateString) {
-
-                    return '';
-
-                }
-
-
-                const date =
-                    new Date(
-                        dateString + 'T00:00:00'
-                    );
-
-
-                return date.toLocaleDateString(
-                    'id-ID',
-                    {
-                        day: '2-digit',
-                        month: 'short',
-                        year: 'numeric'
-                    }
-                );
-
-            }
-
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | APPLY DATE
-            |--------------------------------------------------------------------------
-            */
-
-            applyDate.addEventListener(
-                'click',
-                function () {
-
-                    const start =
-                        startDate.value;
-
-
-                    const end =
-                        endDate.value;
-
-
-
-                    if (
-                        start
-                        &&
-                        end
-                        &&
-                        start > end
-                    ) {
-
-                        alert(
-                            'Tanggal mulai tidak boleh lebih besar dari tanggal akhir.'
-                        );
-
-                        return;
-
-                    }
-
-
-
-                    if (start && end) {
-
-                        dateFilterText.textContent =
-                            `${formatDate(start)} - ${formatDate(end)}`;
-
-                    }
-
-                    else if (start) {
-
-                        dateFilterText.textContent =
-                            `Mulai ${formatDate(start)}`;
-
-                    }
-
-                    else if (end) {
-
-                        dateFilterText.textContent =
-                            `Sampai ${formatDate(end)}`;
-
-                    }
-
-                    else {
-
-                        dateFilterText.textContent =
-                            'Pilih Tanggal';
-
-                    }
-
-
-
-                    datePicker.classList.remove(
-                        'active'
-                    );
-
-
-                    filterTable();
-
-                }
-            );
-
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | RESET DATE
-            |--------------------------------------------------------------------------
-            */
-
-            resetDate.addEventListener(
-                'click',
-                function () {
-
-                    startDate.value =
-                        '';
-
-
-                    endDate.value =
-                        '';
-
-
-                    dateFilterText.textContent =
-                        'Pilih Tanggal';
-
-
-                    datePicker.classList.remove(
-                        'active'
-                    );
-
-
-                    filterTable();
-
-                }
-            );
-
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | CLOSE DATE PICKER
-            |--------------------------------------------------------------------------
-            */
-
-            document.addEventListener(
-                'click',
-                function () {
-
-                    datePicker.classList.remove(
-                        'active'
-                    );
-
-                }
             );
 
 

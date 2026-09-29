@@ -1,4 +1,3 @@
-
 <x-app-layout>
 
     <div class="main-page">
@@ -22,131 +21,6 @@
 
             </div>
 
-
-            {{-- =================================================
-            DATE FILTER
-            ================================================== --}}
-
-            <div class="date-filter-wrapper">
-
-                <button
-                    type="button"
-                    class="date-filter"
-                    id="dateFilterButton"
-                    aria-expanded="false"
-                >
-
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.8"
-                    >
-                        <rect
-                            x="3"
-                            y="4"
-                            width="18"
-                            height="18"
-                            rx="2"
-                        ></rect>
-
-                        <path d="M16 2v4"></path>
-                        <path d="M8 2v4"></path>
-                        <path d="M3 10h18"></path>
-                    </svg>
-
-                    <span id="dateFilterText">
-                        Pilih Tanggal
-                    </span>
-
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="17"
-                        height="17"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                    >
-                        <path d="m6 9 6 6 6-6"></path>
-                    </svg>
-
-                </button>
-
-
-                <div
-                    class="date-picker"
-                    id="datePicker"
-                >
-
-                    <div class="date-picker-header">
-
-                        <strong>
-                            Pilih Rentang Tanggal
-                        </strong>
-
-                    </div>
-
-
-                    <div class="date-input-group">
-
-                        <div>
-
-                            <label for="startDate">
-                                Dari
-                            </label>
-
-                            <input
-                                type="date"
-                                id="startDate"
-                            >
-
-                        </div>
-
-
-                        <div>
-
-                            <label for="endDate">
-                                Sampai
-                            </label>
-
-                            <input
-                                type="date"
-                                id="endDate"
-                            >
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="date-picker-actions">
-
-                        <button
-                            type="button"
-                            id="resetDate"
-                            class="date-reset"
-                        >
-                            Reset
-                        </button>
-
-                        <button
-                            type="button"
-                            id="applyDate"
-                            class="date-apply"
-                        >
-                            Terapkan
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
         </div>
 
 
@@ -161,33 +35,44 @@
                 {{-- SEARCH --}}
 
                 <form
-    method="GET"
-    action="{{ url()->current() }}"
-    class="search"
-    id="searchForm"
->
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-    >
-        <circle cx="11" cy="11" r="7" />
-        <path d="m20 20-3.5-3.5" />
-    </svg>
+                    method="GET"
+                    action="{{ url()->current() }}"
+                    class="search"
+                    id="searchForm"
+                >
 
-    <input
-        type="text"
-        name="search"
-        id="searchInput"
-        value="{{ request('search') }}"
-        placeholder="Cari Nama atau NIK"
-        autocomplete="off"
-    >
-</form>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+
+                        <circle
+                            cx="11"
+                            cy="11"
+                            r="7"
+                        />
+
+                        <path
+                            d="m20 20-3.5-3.5"
+                        />
+
+                    </svg>
+
+                    <input
+                        type="text"
+                        name="search"
+                        id="searchInput"
+                        value="{{ request('search') }}"
+                        placeholder="Cari Nama atau NIK"
+                        autocomplete="off"
+                    >
+
+                </form>
 
 
                 {{-- FILTER JENIS PPKS --}}
@@ -564,16 +449,6 @@
 
                             /*
                             |--------------------------------------------------------------------------
-                            | TANGGAL
-                            |--------------------------------------------------------------------------
-                            */
-
-                            $tanggal =
-                                $prosesInstruktur?->tanggal_proses;
-
-
-                            /*
-                            |--------------------------------------------------------------------------
                             | KETERANGAN
                             |--------------------------------------------------------------------------
                             */
@@ -601,12 +476,6 @@
                             /*
                             |--------------------------------------------------------------------------
                             | RESULT BADGE
-                            |
-                            | Tahapan = Asesmen Instruktur
-                            | Status  = Tidak Lulus
-                            |
-                            | Route ditentukan oleh halaman,
-                            | bukan oleh component result-badge.
                             |--------------------------------------------------------------------------
                             */
 
@@ -615,17 +484,23 @@
                                 $item->id
                             );
 
-                            $badgeClass = 'result-instructor';
+                            $badgeClass =
+                                'result-instructor';
 
-                            $hasilIcon = 'assignment';
+                            $hasilIcon =
+                                'assignment';
 
-                            $labelTahapan = 'Asesmen Instruktur';
+                            $labelTahapan =
+                                'Asesmen Instruktur';
 
-                            $hasil = 'Tidak Lulus';
+                            $hasil =
+                                'Tidak Lulus';
 
-                            $hasilClass = 'tidak-lulus';
+                            $hasilClass =
+                                'tidak-lulus';
 
-                            $hasilDotClass = 'tidak-lulus';
+                            $hasilDotClass =
+                                'tidak-lulus';
 
                         @endphp
 
@@ -634,7 +509,6 @@
                             data-nama="{{ strtolower((string) $nama) }}"
                             data-nik="{{ strtolower((string) $nik) }}"
                             data-ppks="{{ strtolower((string) $jenisPpks) }}"
-                            data-tanggal="{{ $tanggal ? \Carbon\Carbon::parse($tanggal)->format('Y-m-d') : '' }}"
                         >
 
                             {{-- =================================================
@@ -653,7 +527,8 @@
                             ================================================== --}}
 
                             <td>
-                                    {{ $nama }}
+
+                                {{ $nama }}
 
                             </td>
 
@@ -663,7 +538,9 @@
                             ================================================== --}}
 
                             <td>
+
                                 {{ $nik }}
+
                             </td>
 
 
@@ -672,7 +549,9 @@
                             ================================================== --}}
 
                             <td>
+
                                 {{ $umur }}
+
                             </td>
 
 
@@ -681,7 +560,9 @@
                             ================================================== --}}
 
                             <td>
+
                                 {{ $jenisPpks }}
+
                             </td>
 
 
@@ -690,7 +571,9 @@
                             ================================================== --}}
 
                             <td>
+
                                 {{ $jurusan }}
+
                             </td>
 
 
@@ -738,13 +621,11 @@
 
                             </td>
 
-
-
                         </tr>
 
                     @empty
 
-                       <tr>
+                        <tr>
 
                             <td
                                 colspan="8"
@@ -758,7 +639,8 @@
                                     </span>
 
                                     <p>
-                                        Belum ada data PPKS yang lulus Asesmen Intsruktur
+                                        Belum ada data PPKS yang tidak lulus
+                                        Asesmen Instruktur
                                     </p>
 
                                 </div>
@@ -779,9 +661,10 @@
                         <tr
                             id="filterEmptyRow"
                             class="filter-empty-row"
+                            style="display:none;"
                         >
 
-                            <td colspan="9">
+                            <td colspan="8">
 
                                 <div class="empty-state-icon">
 
@@ -821,7 +704,7 @@
 
             <div class="pagination-wrapper">
 
-                {{ $ppks->links() }}
+                {{ $ppks->withQueryString()->links() }}
 
             </div>
 
@@ -833,537 +716,180 @@
     {{-- =========================================================
     JAVASCRIPT
     ========================================================== --}}
-<script>
 
-    document.addEventListener('DOMContentLoaded', function () {
+    <script>
 
-        const ppksFilter =
-            document.getElementById('ppksFilter');
+        document.addEventListener('DOMContentLoaded', function () {
 
-        const rows =
-            document.querySelectorAll(
-                '.table tbody tr[data-nama]'
-            );
+            const ppksFilter =
+                document.getElementById('ppksFilter');
 
+            const resetAllFilters =
+                document.getElementById('resetAllFilters');
 
-        /* =====================================================
-           DATE ELEMENT
-        ===================================================== */
+            const rows =
+                document.querySelectorAll(
+                    '.table tbody tr[data-nama]'
+                );
 
-        const dateButton =
-            document.getElementById('dateFilterButton');
-
-        const datePicker =
-            document.getElementById('datePicker');
-
-        const dateText =
-            document.getElementById('dateFilterText');
-
-        const startDate =
-            document.getElementById('startDate');
-
-        const endDate =
-            document.getElementById('endDate');
-
-        const applyDate =
-            document.getElementById('applyDate');
-
-        const resetDate =
-            document.getElementById('resetDate');
-
-        const filterEmptyRow =
-            document.getElementById('filterEmptyRow');
+            const filterEmptyRow =
+                document.getElementById('filterEmptyRow');
 
 
-        /* =====================================================
-           SIMPAN NOMOR ASLI
-        ===================================================== */
-
-        rows.forEach(function (row) {
-
-            const numberCell =
-                row.querySelector('.row-number');
-
-            if (numberCell) {
-
-                row.dataset.originalNumber =
-                    numberCell.textContent.trim();
-
-            }
-
-        });
-
-
-        /* =====================================================
-           FILTER TABLE
-        ===================================================== */
-
-        function filterTable() {
-
-            const ppks =
-                ppksFilter
-                    ? ppksFilter.value.toLowerCase().trim()
-                    : '';
-
-            const start =
-                startDate
-                    ? startDate.value
-                    : '';
-
-            const end =
-                endDate
-                    ? endDate.value
-                    : '';
-
-
-            let visibleNumber = 1;
-            let visibleCount = 0;
-
+            /*
+            =====================================================
+            SIMPAN NOMOR AWAL
+            =====================================================
+            */
 
             rows.forEach(function (row) {
 
-                const jenis =
-                    row.dataset.ppks || '';
+                const numberCell =
+                    row.querySelector('.row-number');
 
-                const tanggal =
-                    row.dataset.tanggal || '';
+                if (numberCell) {
 
-
-                /* =================================================
-                   JENIS PPKS
-                ================================================== */
-
-                const ppksMatch =
-                    !ppks ||
-                    jenis === ppks;
-
-
-                /* =================================================
-                   TANGGAL
-                ================================================== */
-
-                let dateMatch = true;
-
-
-                if (start) {
-
-                    if (
-                        !tanggal ||
-                        tanggal < start
-                    ) {
-
-                        dateMatch = false;
-
-                    }
-
-                }
-
-
-                if (end) {
-
-                    if (
-                        !tanggal ||
-                        tanggal > end
-                    ) {
-
-                        dateMatch = false;
-
-                    }
-
-                }
-
-
-                /* =================================================
-                   HASIL FILTER
-                ================================================== */
-
-                const show =
-                    ppksMatch &&
-                    dateMatch;
-
-
-                row.style.display =
-                    show
-                        ? ''
-                        : 'none';
-
-
-                /* =================================================
-                   NOMOR
-                ================================================== */
-
-                if (show) {
-
-                    visibleCount++;
-
-                    const numberCell =
-                        row.querySelector(
-                            '.row-number'
-                        );
-
-
-                    if (numberCell) {
-
-                        const hasFilter =
-                            ppks !== ''
-                            ||
-                            start !== ''
-                            ||
-                            end !== '';
-
-
-                        if (hasFilter) {
-
-                            numberCell.textContent =
-                                visibleNumber++;
-
-                        } else {
-
-                            numberCell.textContent =
-                                row.dataset.originalNumber;
-
-                        }
-
-                    }
+                    row.dataset.originalNumber =
+                        numberCell.textContent.trim();
 
                 }
 
             });
 
 
-            /* =================================================
-               EMPTY FILTER
-            ================================================== */
+            /*
+            =====================================================
+            FILTER TABLE
+            =====================================================
+            */
 
-            if (filterEmptyRow) {
+            function filterTable() {
 
-                filterEmptyRow.style.display =
-                    visibleCount === 0
-                        ? 'table-row'
-                        : 'none';
+                const ppks =
+                    ppksFilter
+                        ? ppksFilter.value
+                            .toLowerCase()
+                            .trim()
+                        : '';
+
+                let visibleNumber = 1;
+                let visibleCount = 0;
+
+
+                rows.forEach(function (row) {
+
+                    const jenis =
+                        (
+                            row.dataset.ppks || ''
+                        ).toLowerCase();
+
+
+                    const ppksMatch =
+                        !ppks ||
+                        jenis === ppks;
+
+
+                    row.style.display =
+                        ppksMatch
+                            ? ''
+                            : 'none';
+
+
+                    if (ppksMatch) {
+
+                        visibleCount++;
+
+                        const numberCell =
+                            row.querySelector(
+                                '.row-number'
+                            );
+
+                        if (numberCell) {
+
+                            if (ppks !== '') {
+
+                                numberCell.textContent =
+                                    visibleNumber++;
+
+                            } else {
+
+                                numberCell.textContent =
+                                    row.dataset.originalNumber;
+
+                            }
+
+                        }
+
+                    }
+
+                });
+
+
+                /*
+                =================================================
+                EMPTY FILTER
+                =================================================
+                */
+
+                if (filterEmptyRow) {
+
+                    filterEmptyRow.style.display =
+                        visibleCount === 0
+                            ? 'table-row'
+                            : 'none';
+
+                }
 
             }
 
-        }
 
+            /*
+            =====================================================
+            FILTER JENIS PPKS
+            =====================================================
+            */
 
-        /* =====================================================
-           FILTER PPKS
-        ===================================================== */
+            if (ppksFilter) {
 
-        if (ppksFilter) {
-
-            ppksFilter.addEventListener(
-                'change',
-                filterTable
-            );
-
-        }
-
-
-        /* =====================================================
-           RESET SEMUA FILTER
-        ===================================================== */
-
-        const resetAllFilters =
-            document.getElementById(
-                'resetAllFilters'
-            );
-
-
-        if (resetAllFilters) {
-
-            resetAllFilters.addEventListener(
-                'click',
-                function () {
-
-                    if (ppksFilter) {
-                        ppksFilter.value = '';
-                    }
-
-                    if (startDate) {
-                        startDate.value = '';
-                    }
-
-                    if (endDate) {
-                        endDate.value = '';
-                    }
-
-                    if (dateText) {
-                        dateText.textContent =
-                            'Pilih Tanggal';
-                    }
-
-                    if (datePicker) {
-                        datePicker.classList.remove(
-                            'active'
-                        );
-                    }
-
-                    if (dateButton) {
-                        dateButton.setAttribute(
-                            'aria-expanded',
-                            'false'
-                        );
-                    }
-
-                    filterTable();
-
-                }
-            );
-
-        }
-
-
-        /* =====================================================
-           BUKA DATE PICKER
-        ===================================================== */
-
-        if (dateButton && datePicker) {
-
-            dateButton.addEventListener(
-                'click',
-                function (event) {
-
-                    event.stopPropagation();
-
-
-                    const active =
-                        datePicker.classList.toggle(
-                            'active'
-                        );
-
-
-                    dateButton.setAttribute(
-                        'aria-expanded',
-                        active
-                            ? 'true'
-                            : 'false'
-                    );
-
-                }
-            );
-
-        }
-
-
-        /* =====================================================
-           DATE PICKER CLICK
-        ===================================================== */
-
-        if (datePicker) {
-
-            datePicker.addEventListener(
-                'click',
-                function (event) {
-
-                    event.stopPropagation();
-
-                }
-            );
-
-        }
-
-
-        /* =====================================================
-           TERAPKAN TANGGAL
-        ===================================================== */
-
-        if (applyDate) {
-
-            applyDate.addEventListener(
-                'click',
-                function () {
-
-                    const start =
-                        startDate
-                            ? startDate.value
-                            : '';
-
-                    const end =
-                        endDate
-                            ? endDate.value
-                            : '';
-
-
-                    if (!start || !end) {
-
-                        alert(
-                            'Silakan pilih tanggal awal dan tanggal akhir.'
-                        );
-
-                        return;
-
-                    }
-
-
-                    if (start > end) {
-
-                        alert(
-                            'Tanggal awal tidak boleh lebih besar dari tanggal akhir.'
-                        );
-
-                        return;
-
-                    }
-
-
-                    if (dateText) {
-
-                        dateText.textContent =
-                            formatDate(start)
-                            + ' - '
-                            + formatDate(end);
-
-                    }
-
-
-                    if (datePicker) {
-
-                        datePicker.classList.remove(
-                            'active'
-                        );
-
-                    }
-
-
-                    if (dateButton) {
-
-                        dateButton.setAttribute(
-                            'aria-expanded',
-                            'false'
-                        );
-
-                    }
-
-
-                    filterTable();
-
-                }
-            );
-
-        }
-
-
-        /* =====================================================
-           RESET TANGGAL
-        ===================================================== */
-
-        if (resetDate) {
-
-            resetDate.addEventListener(
-                'click',
-                function () {
-
-                    if (startDate) {
-                        startDate.value = '';
-                    }
-
-                    if (endDate) {
-                        endDate.value = '';
-                    }
-
-                    if (dateText) {
-
-                        dateText.textContent =
-                            'Pilih Tanggal';
-
-                    }
-
-                    if (datePicker) {
-
-                        datePicker.classList.remove(
-                            'active'
-                        );
-
-                    }
-
-                    if (dateButton) {
-
-                        dateButton.setAttribute(
-                            'aria-expanded',
-                            'false'
-                        );
-
-                    }
-
-
-                    filterTable();
-
-                }
-            );
-
-        }
-
-
-        /* =====================================================
-           FORMAT TANGGAL
-        ===================================================== */
-
-        function formatDate(value) {
-
-            const date =
-                new Date(
-                    value + 'T00:00:00'
+                ppksFilter.addEventListener(
+                    'change',
+                    filterTable
                 );
 
-
-            return date.toLocaleDateString(
-                'id-ID',
-                {
-                    day: '2-digit',
-                    month: 'short',
-                    year: 'numeric'
-                }
-            );
-
-        }
+            }
 
 
-        /* =====================================================
-           TUTUP DATE PICKER
-        ===================================================== */
+            /*
+            =====================================================
+            RESET
+            =====================================================
+            */
 
-        document.addEventListener(
-            'click',
-            function () {
+            if (resetAllFilters) {
 
-                if (
-                    datePicker &&
-                    datePicker.classList.contains(
-                        'active'
-                    )
-                ) {
+                resetAllFilters.addEventListener(
+                    'click',
+                    function () {
 
-                    datePicker.classList.remove(
-                        'active'
-                    );
-
-
-                    if (dateButton) {
-
-                        dateButton.setAttribute(
-                            'aria-expanded',
-                            'false'
-                        );
+                        window.location.href =
+                            window.location.pathname;
 
                     }
-
-                }
+                );
 
             }
-        );
 
 
-        /* =====================================================
-           FILTER PERTAMA
-        ===================================================== */
+            /*
+            =====================================================
+            FILTER AWAL
+            =====================================================
+            */
 
-        filterTable();
+            filterTable();
 
-    });
+        });
 
-</script>
-
+    </script>
 
 </x-app-layout>

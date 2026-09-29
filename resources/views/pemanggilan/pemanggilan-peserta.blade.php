@@ -115,20 +115,26 @@
         {{-- =====================================================
         FILTER
         ====================================================== --}}
-        <div class="filter-wrapper">
+        <form method="GET" action="{{ url()->current() }}" class="filter-wrapper" id="filterForm">
 
             {{-- SEARCH --}}
             <div class="search">
-
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2">
-                    <circle cx="11" cy="11" r="7" />
+                        stroke="currentColor" stroke-width="2">
 
-                    <path d="m20 20-3.5-3.5" />
-                </svg>
+                        <circle cx="11" cy="11" r="7" />
+                        <path d="m20 20-3.5-3.5" />
 
+                    </svg>
 
-                <input type="text" id="searchInput" placeholder="Cari Nama atau NIK" autocomplete="off">
+                <input
+                    type="text"
+                    name="search"
+                    id="searchInput"
+                    value="{{ request('search') }}"
+                    placeholder="Cari Nama atau NIK"
+                    autocomplete="off"
+                >
 
             </div>
 
@@ -136,30 +142,44 @@
             {{-- FILTER STATUS --}}
             <div class="select-wrapper">
 
-                <select id="statusFilter" class="filter-button">
+                <select
+                    name="status"
+                    id="statusFilter"
+                    class="filter-button"
+                    onchange="this.form.submit()"
+                >
 
-                    <option value="">
-                        Semua Status
-                    </option>
+                    <option value="">Semua Status</option>
 
-                    <option value="belum_dipanggil">
+                    <option
+                        value="belum_dipanggil"
+                        @selected(request('status') === 'belum_dipanggil')
+                    >
                         Belum Dipanggil
                     </option>
 
-                    <option value="sudah_dipanggil">
+                    <option
+                        value="sudah_dipanggil"
+                        @selected(request('status') === 'sudah_dipanggil')
+                    >
                         Sudah Dipanggil
                     </option>
 
-                    <option value="belum_datang">
+                    <option
+                        value="belum_datang"
+                        @selected(request('status') === 'belum_datang')
+                    >
                         Belum Datang
                     </option>
 
-                    <option value="sudah_datang">
+                    <option
+                        value="sudah_datang"
+                        @selected(request('status') === 'sudah_datang')
+                    >
                         Sudah Datang
                     </option>
 
                 </select>
-
 
                 <span class="material-symbols-outlined select-arrow">
                     keyboard_arrow_down
@@ -167,7 +187,89 @@
 
             </div>
 
-        </div>
+
+            {{-- FILTER GELOMBANG --}}
+            <div class="select-wrapper">
+
+                <select
+                    name="gelombang"
+                    id="gelombangFilter"
+                    class="filter-button"
+                    onchange="this.form.submit()"
+                >
+
+                    <option value="">Semua Gelombang</option>
+
+                    @foreach ($gelombangOptions as $gelombangOption)
+
+                        <option
+                            value="{{ $gelombangOption }}"
+                            @selected((string) request('gelombang') === (string) $gelombangOption)
+                        >
+                            Gelombang {{ $gelombangOption }}
+                        </option>
+
+                    @endforeach
+
+                </select>
+
+                <span class="material-symbols-outlined select-arrow">
+                    keyboard_arrow_down
+                </span>
+
+            </div>
+
+
+            {{-- FILTER TAHUN --}}
+            <div class="select-wrapper">
+
+                <select
+                    name="tahun"
+                    id="tahunFilter"
+                    class="filter-button"
+                    onchange="this.form.submit()"
+                >
+
+                    <option value="">Semua Tahun</option>
+
+                    @foreach ($tahunOptions as $tahunOption)
+
+                        <option
+                            value="{{ $tahunOption }}"
+                            @selected((string) request('tahun') === (string) $tahunOption)
+                        >
+                            {{ $tahunOption }}
+                        </option>
+
+                    @endforeach
+
+                </select>
+
+                <span class="material-symbols-outlined select-arrow">
+                    keyboard_arrow_down
+                </span>
+
+            </div>
+
+
+            {{-- RESET --}}
+            @if (
+                request()->filled('search') ||
+                request()->filled('status') ||
+                request()->filled('gelombang') ||
+                request()->filled('tahun')
+            )
+
+                <a href="{{ url()->current() }}" class="filter-reset">
+                    <span class="material-symbols-outlined">
+                    restart_alt
+                </span>
+                    Reset
+                </a>
+
+            @endif
+
+        </form>
 
 
         {{-- =====================================================
@@ -428,7 +530,7 @@
 
                                             {{-- NO --}}
                                             <td class="row-number">
-                                                {{ $index + 1 }}
+                                                {{ $pesertas->firstItem() + $index }}
                                             </td>
 
 
@@ -526,24 +628,23 @@
                     @endforelse
 
 
-                    {{-- EMPTY FILTER --}}
-                    @if ($pesertas->count() > 0)
-
-                        <tr id="emptyFilterRow" style="display: none;">
-
-                            <td colspan="8" style="text-align: center; padding: 30px;">
-                                Data tidak ditemukan.
-                            </td>
-
-                        </tr>
-
-                    @endif
-
                 </tbody>
 
             </table>
 
         </div>
+
+
+        {{-- =====================================================
+        PAGINATION
+        ====================================================== --}}
+        @if ($pesertas->hasPages())
+
+            <div class="pagination-wrapper">
+                {{ $pesertas->withQueryString()->links() }}
+            </div>
+
+        @endif
 
     </div>
 
@@ -811,37 +912,6 @@
             |--------------------------------------------------------------------------
             */
 
-            const searchInput =
-                document.getElementById('searchInput');
-
-            const statusFilter =
-                document.getElementById('statusFilter');
-
-            const dateFilterButton =
-                document.getElementById('dateFilterButton');
-
-            const dateFilterText =
-                document.getElementById('dateFilterText');
-
-            const datePicker =
-                document.getElementById('datePicker');
-
-            const startDate =
-                document.getElementById('startDate');
-
-            const endDate =
-                document.getElementById('endDate');
-
-            const resetDate =
-                document.getElementById('resetDate');
-
-            const applyDate =
-                document.getElementById('applyDate');
-
-            const emptyFilterRow =
-                document.getElementById('emptyFilterRow');
-
-
             /*
             |--------------------------------------------------------------------------
             | ==============================================================
@@ -1101,443 +1171,6 @@
                 document.getElementById(
                     'popupTanggalKedatangan'
                 );
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | ==============================================================
-            | DATA TANGGAL AKTIF
-            | ==============================================================
-            |--------------------------------------------------------------------------
-            */
-
-            let activeStartDate = '';
-
-            let activeEndDate = '';
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | DATE PICKER TOGGLE
-            | ==============================================================
-            |--------------------------------------------------------------------------
-            */
-
-            if (
-                dateFilterButton &&
-                datePicker
-            ) {
-
-                dateFilterButton.addEventListener(
-                    'click',
-                    function (event) {
-
-                        event.stopPropagation();
-
-                        datePicker.classList.toggle(
-                            'show'
-                        );
-
-                    }
-                );
-
-            }
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | CLOSE DATE PICKER
-            | ==============================================================
-            |--------------------------------------------------------------------------
-            */
-
-            document.addEventListener(
-                'click',
-                function (event) {
-
-                    if (
-                        datePicker &&
-                        dateFilterButton &&
-                        !datePicker.contains(
-                            event.target
-                        ) &&
-                        !dateFilterButton.contains(
-                            event.target
-                        )
-                    ) {
-
-                        datePicker.classList.remove(
-                            'show'
-                        );
-
-                    }
-
-                }
-            );
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | FILTER FUNCTION
-            | ==============================================================
-            |--------------------------------------------------------------------------
-            */
-
-            function applyFilters() {
-
-                const searchValue =
-                    (
-                        searchInput?.value ||
-                        ''
-                    )
-                        .toLowerCase()
-                        .trim();
-
-
-                const selectedStatus =
-                    statusFilter?.value ||
-                    '';
-
-
-                const rows =
-                    document.querySelectorAll(
-                        'tbody tr[data-nama]'
-                    );
-
-
-                let visibleCount = 0;
-
-
-                rows.forEach(
-                    function (row) {
-
-                        const nama =
-                            row.dataset.nama ||
-                            '';
-
-                        const nik =
-                            row.dataset.nik ||
-                            '';
-
-                        const status =
-                            row.dataset.status ||
-                            '';
-
-                        const tanggal =
-                            row.dataset.tanggal ||
-                            '';
-
-
-                        const matchSearch =
-                            !searchValue ||
-                            nama.includes(
-                                searchValue
-                            ) ||
-                            nik.includes(
-                                searchValue
-                            );
-
-
-                        const matchStatus =
-                            !selectedStatus ||
-                            status === selectedStatus;
-
-
-                        let matchDate = true;
-
-
-                        if (activeStartDate) {
-
-                            matchDate =
-                                tanggal &&
-                                tanggal >=
-                                activeStartDate;
-
-                        }
-
-
-                        if (
-                            matchDate &&
-                            activeEndDate
-                        ) {
-
-                            matchDate =
-                                tanggal &&
-                                tanggal <=
-                                activeEndDate;
-
-                        }
-
-
-                        const show =
-                            matchSearch &&
-                            matchStatus &&
-                            matchDate;
-
-
-                        row.style.display =
-                            show
-                                ? ''
-                                : 'none';
-
-
-                        if (show) {
-
-                            visibleCount++;
-
-                        }
-
-                    }
-                );
-
-
-                if (emptyFilterRow) {
-
-                    emptyFilterRow.style.display =
-                        visibleCount === 0
-                            ? ''
-                            : 'none';
-
-                }
-
-
-                let nomor = 1;
-
-
-                rows.forEach(
-                    function (row) {
-
-                        if (
-                            row.style.display !==
-                            'none'
-                        ) {
-
-                            const numberCell =
-                                row.querySelector(
-                                    '.row-number'
-                                );
-
-
-                            if (numberCell) {
-
-                                numberCell.textContent =
-                                    nomor++;
-
-                            }
-
-                        }
-
-                    }
-                );
-
-            }
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | SEARCH EVENT
-            |--------------------------------------------------------------------------
-            */
-
-            if (searchInput) {
-
-                searchInput.addEventListener(
-                    'input',
-                    applyFilters
-                );
-
-            }
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | STATUS EVENT
-            |--------------------------------------------------------------------------
-            */
-
-            if (statusFilter) {
-
-                statusFilter.addEventListener(
-                    'change',
-                    applyFilters
-                );
-
-            }
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | APPLY DATE
-            |--------------------------------------------------------------------------
-            */
-
-            if (applyDate) {
-
-                applyDate.addEventListener(
-                    'click',
-                    function () {
-
-                        const start =
-                            startDate?.value ||
-                            '';
-
-                        const end =
-                            endDate?.value ||
-                            '';
-
-
-                        if (
-                            start &&
-                            end &&
-                            start > end
-                        ) {
-
-                            alert(
-                                'Tanggal "Dari" tidak boleh lebih besar dari tanggal "Sampai".'
-                            );
-
-                            return;
-
-                        }
-
-
-                        activeStartDate =
-                            start;
-
-                        activeEndDate =
-                            end;
-
-
-                        if (dateFilterText) {
-
-                            if (
-                                start &&
-                                end
-                            ) {
-
-                                dateFilterText.textContent =
-                                    `${formatDate(start)} - ${formatDate(end)}`;
-
-                            } else if (start) {
-
-                                dateFilterText.textContent =
-                                    `Dari ${formatDate(start)}`;
-
-                            } else if (end) {
-
-                                dateFilterText.textContent =
-                                    `Sampai ${formatDate(end)}`;
-
-                            } else {
-
-                                dateFilterText.textContent =
-                                    'Pilih Tanggal';
-
-                            }
-
-                        }
-
-
-                        datePicker?.classList.remove(
-                            'show'
-                        );
-
-
-                        applyFilters();
-
-                    }
-                );
-
-            }
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | RESET DATE
-            |--------------------------------------------------------------------------
-            */
-
-            if (resetDate) {
-
-                resetDate.addEventListener(
-                    'click',
-                    function () {
-
-                        if (startDate) {
-
-                            startDate.value =
-                                '';
-
-                        }
-
-
-                        if (endDate) {
-
-                            endDate.value =
-                                '';
-
-                        }
-
-
-                        activeStartDate =
-                            '';
-
-                        activeEndDate =
-                            '';
-
-
-                        if (dateFilterText) {
-
-                            dateFilterText.textContent =
-                                'Pilih Tanggal';
-
-                        }
-
-
-                        datePicker?.classList.remove(
-                            'show'
-                        );
-
-
-                        applyFilters();
-
-                    }
-                );
-
-            }
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | FORMAT DATE
-            |--------------------------------------------------------------------------
-            */
-
-            function formatDate(dateString) {
-
-                if (!dateString) {
-
-                    return '';
-
-                }
-
-
-                const parts =
-                    dateString.split('-');
-
-
-                if (
-                    parts.length !== 3
-                ) {
-
-                    return dateString;
-
-                }
-
-
-                return `${parts[2]}-${parts[1]}-${parts[0]}`;
-
-            }
 
 
             /*
@@ -1878,8 +1511,6 @@
             | INITIAL
             |--------------------------------------------------------------------------
             */
-
-            applyFilters();
 
         });
 
